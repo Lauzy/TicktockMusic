@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Ticktock</string>
+
+    <string name="navigation_drawer_open">打开</string>
+    <string name="navigation_drawer_close">关闭</string>
+
+    <string name="action_search">搜索</string>
+    <string name="author">Lauzy</string>
+    <string name="drawer_music">曲库</string>
+    <string name="drawer_favorite">喜欢</string>
+    <string name="drawer_recent">最近播放</string>
+    <string name="drawer_setting">设置</string>
+    <string name="drawer_about">关于</string>
+    <string name="drawer_exit">退出</string>
+
+    <string name="setting_theme">主题颜色</string>
+    <string name="choose_theme">选择主题颜色</string>
+    <string name="confirm">确认</string>
+    <string name="cancel">取消</string>
+
+    <!-- <string name="count_song"><xliff:g id="count">%d</xliff:g> 首歌</string>
+     <string name="count_songs"><xliff:g id="count">%d</xliff:g> 首歌</string>
+     <string name="count_album"><xliff:g id="count">%d</xliff:g> 张专辑</string>
+     <string name="count_albums"><xliff:g id="count">%d</xliff:g> 张专辑</string>
+     <string name="count_artist"><xliff:g id="count">%d</xliff:g> 位艺术家</string>
+     <string name="count_artists"><xliff:g id="count">%d</xliff:g> 位艺术家</string>-->
+
+</resources>

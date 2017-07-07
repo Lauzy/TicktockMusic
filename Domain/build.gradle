@@ -1,0 +1,20 @@
+apply plugin: 'java'
+
+configurations {
+    provided
+}
+
+dependencies {
+    def domainDependencies = rootProject.ext.domainDependencies
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    provided domainDependencies.javaxAnnotation
+    compile domainDependencies.javaxInject
+    compile domainDependencies.rxJava
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"

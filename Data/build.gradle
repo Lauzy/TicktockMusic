@@ -1,0 +1,42 @@
+apply plugin: 'com.android.library'
+
+android {
+
+    def globalConfiguration = rootProject.extensions.getByName("ext")
+
+    compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
+    buildToolsVersion globalConfiguration["androidBuildToolsVersion"]
+
+    defaultConfig {
+        minSdkVersion globalConfiguration["androidMinSdkVersion"]
+        targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
+        versionCode globalConfiguration["androidVersionCode"]
+        versionName globalConfiguration["androidVersionName"]
+        testInstrumentationRunner globalConfiguration["testInstrumentationRunner"]
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    def supportDependencies = rootProject.ext.supportDependencies
+    def testDependencies = rootProject.ext.testDependencies
+    def dataDependencies = rootProject.ext.dataDependencies
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile testDependencies.espresso, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    compile presentationDependencies.rxJava
+    compile presentationDependencies.dagger
+    annotationProcessor presentationDependencies.daggerCompiler
+    compile dataDependencies.okHttp
+    compile dataDependencies.gson
+    compile dataDependencies.javaxInject
+    testCompile testDependencies.junit
+}

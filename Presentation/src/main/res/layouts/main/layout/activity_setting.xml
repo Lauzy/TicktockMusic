@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.lauzy.freedom.librarys.widght.TickLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_setting"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.freedom.lauzy.ticktockmusic.ui.SettingActivity">
+
+    <include layout="@layout/layout_toolbar"/>
+
+    <com.lauzy.freedom.librarys.widght.TickLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:id="@+id/layout_choose_theme"
+        android:gravity="center_vertical"
+        android:paddingTop="@dimen/dp_15"
+        android:paddingBottom="@dimen/dp_15"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:orientation="horizontal">
+
+        <com.lauzy.freedom.librarys.widght.TickTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="@string/setting_theme"
+            app:enable_ripple="false"/>
+
+        <com.lauzy.freedom.librarys.widght.CircleImageView
+            android:id="@+id/img_choose_color"
+            android:layout_width="@dimen/dp_24"
+            android:layout_height="@dimen/dp_24"
+            android:src="@color/theme_color_primary"/>
+
+    </com.lauzy.freedom.librarys.widght.TickLinearLayout>
+
+</com.lauzy.freedom.librarys.widght.TickLinearLayout>

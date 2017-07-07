@@ -1,0 +1,89 @@
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+ext {
+    //Android
+    androidBuildToolsVersion = "25.0.2"
+    androidMinSdkVersion = 21
+    androidTargetSdkVersion = 25
+    androidCompileSdkVersion = 25
+
+    //Libraries
+    daggerVersion = '2.11'
+    butterKnifeVersion = '8.6.0'
+    rxJavaVersion = '2.1.1'
+    rxAndroidVersion = '2.0.1'
+    gsonVersion = '2.8.1'
+    okHttpVersion = '3.8.1'
+    javaxAnnotationVersion = '1.0'
+    javaxInjectVersion = '1'
+    androidAnnotationsVersion = '25.3.1'
+    androidDesignVersion = '25.3.1'
+    supportVersion = '25.3.1'
+    constraintLayoutVersion = '1.0.2'
+    logVersion = '2.1.1'
+    glideVersion = '4.0.0-RC1'
+    skinChangeVersion = '0.1.6@aar'
+    materialDialog = '0.9.4.5'
+
+    //Development
+    leakCanaryVersion = '1.3.1'
+
+    //test
+    jUnitVersion = '4.12'
+    espressoVersion = '2.2.2'
+
+    supportDependencies = [
+            appcompatV7: "com.android.support:appcompat-v7:${supportVersion}",
+            supportV4  : "com.android.support:support-v4:${supportVersion}",
+            design     : "com.android.support:design:${androidDesignVersion}",
+            constraint : "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}"
+    ]
+
+    libDependencies = [
+            log           : "com.orhanobut:logger:${logVersion}",
+            glide         : "com.github.bumptech.glide:glide:${glideVersion}",
+            glideCompiler : "com.github.bumptech.glide:compiler:${glideVersion}",
+            skinChange    : "com.bilibili:magicasakura:${skinChangeVersion}",
+            materialDialog: "com.afollestad.material-dialogs:commons:${materialDialog}",
+    ]
+
+    presentationDependencies = [
+            daggerCompiler     : "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger             : "com.google.dagger:dagger:${daggerVersion}",
+            butterKnife        : "com.jakewharton:butterknife:${butterKnifeVersion}",
+            butterKnifeCompiler: "com.jakewharton:butterknife-compiler:${butterKnifeVersion}",
+            rxJava             : "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
+            rxAndroid          : "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
+    ]
+
+    domainDependencies = [
+            javaxAnnotation: "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
+            javaxInject    : "javax.inject:javax.inject:${javaxInjectVersion}",
+            rxJava         : "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
+    ]
+
+    dataDependencies = [
+            daggerCompiler    : "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger            : "com.google.dagger:dagger:${daggerVersion}",
+            okHttp            : "com.squareup.okhttp3:okhttp:${okHttpVersion}",
+            gson              : "com.google.code.gson:gson:${gsonVersion}",
+            rxJava            : "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
+            rxAndroid         : "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
+            javaxInject       : "javax.inject:javax.inject:${javaxInjectVersion}",
+            androidAnnotations: "com.android.support:support-annotations:${androidAnnotationsVersion}"
+    ]
+
+    developmentDependencies = [
+            leakCanary: "com.squareup.leakcanary:leakcanary-android:${leakCanaryVersion}",
+    ]
+
+    testDependencies = [
+            junit   : "junit:junit:${jUnitVersion}",
+            espresso: "com.android.support.test.espresso:espresso-core:${espressoVersion}",
+//            testingSupportLib: "com.android.support.test:testing-support-lib:${testingSupportLibVersion}",
+    ]
+}

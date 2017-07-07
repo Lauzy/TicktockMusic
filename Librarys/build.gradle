@@ -1,0 +1,41 @@
+apply plugin: 'com.android.library'
+
+android {
+    def globalConfiguration = rootProject.extensions.getByName("ext")
+
+    compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
+    buildToolsVersion globalConfiguration["androidBuildToolsVersion"]
+
+    defaultConfig {
+        minSdkVersion globalConfiguration["androidMinSdkVersion"]
+        targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
+        versionCode globalConfiguration["androidVersionCode"]
+        versionName globalConfiguration["androidVersionName"]
+        testInstrumentationRunner globalConfiguration["testInstrumentationRunner"]
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    def supportDependencies = rootProject.ext.supportDependencies
+    def testDependencies = rootProject.ext.testDependencies
+    def libDependencies = rootProject.ext.libDependencies
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile testDependencies.espresso, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    compile supportDependencies.appcompatV7
+    compile libDependencies.log
+    compile libDependencies.glide
+    compile libDependencies.skinChange
+    compile libDependencies.materialDialog
+    annotationProcessor libDependencies.glideCompiler
+    testCompile testDependencies.junit
+
+}
