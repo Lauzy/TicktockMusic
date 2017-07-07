@@ -58,6 +58,6 @@ dependencies {
     compile presentationDependencies.butterKnife
     annotationProcessor presentationDependencies.butterKnifeCompiler
     testCompile testDependencies.junit
-    compile project(':Librarys')
+    compile project(':Libraries')
     compile project(':Data')
 }
