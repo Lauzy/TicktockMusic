@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 import com.freedom.lauzy.ticktockmusic.TicktockApplication;
 import com.freedom.lauzy.ticktockmusic.dagger.scope.ContextLife;
-import com.lauzy.freedom.data.RetrofitHelper;
+import com.lauzy.freedom.data.net.RetrofitHelper;
 
 import javax.inject.Singleton;
 

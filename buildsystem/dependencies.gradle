@@ -70,6 +70,7 @@ ext {
             daggerCompiler    : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger            : "com.google.dagger:dagger:${daggerVersion}",
             okHttp            : "com.squareup.okhttp3:okhttp:${okHttpVersion}",
+            okHttpInterceptor : "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}",
             gson              : "com.google.code.gson:gson:${gsonVersion}",
             rxJava            : "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
             rxAndroid         : "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
