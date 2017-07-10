@@ -21,19 +21,28 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class RetrofitHelper {
+public enum RetrofitHelper {
+
+    INSTANCE;
 
     private Context mContext;
     private Retrofit mRetrofit;
 
-    public RetrofitHelper(Context context) {
-        mContext = context;
+    RetrofitHelper() {
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(NetConstants.BASE_API)
                 .client(initOkHttp())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
+    }
+
+    public void setContext(Context context) {
+        mContext = context;
+    }
+
+    public <T> T createApi(Class<T> paramClass) {
+        return mRetrofit.create(paramClass);
     }
 
     private OkHttpClient initOkHttp() {

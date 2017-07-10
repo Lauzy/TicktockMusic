@@ -16,7 +16,7 @@ import retrofit2.http.Query;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public interface SongApi {
+public interface SongService {
 
     @GET
     Observable<List<SongListBean>> getSongList(@Query(NetConstants.Param.METHOD) String method,
