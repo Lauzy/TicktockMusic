@@ -3,6 +3,7 @@ package com.lauzy.freedom.librarys;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
 /**
@@ -22,6 +23,10 @@ public class LogUtil {
         RELEASE
     }
 
+    static {
+        Logger.addLogAdapter(new AndroidLogAdapter());
+    }
+
     /**
      * Sets DEVELOP or RELEASE modd
      *
@@ -33,17 +38,17 @@ public class LogUtil {
 
     public static void e(@NonNull String tag, String content) {
         if (MODE == Mode.DEVOLOP && !TextUtils.isEmpty(content))
-            Logger.e(checkTag(tag), content);
+            Logger.t(checkTag(tag)).e(content);
     }
 
     public static void i(@NonNull String tag, String content) {
         if (MODE == Mode.DEVOLOP && !TextUtils.isEmpty(content))
-            Logger.i(checkTag(tag), content);
+            Logger.t(checkTag(tag)).i(content);
     }
 
     public static void d(@NonNull String tag, String content) {
         if (MODE == Mode.DEVOLOP && !TextUtils.isEmpty(content))
-            Logger.d(checkTag(tag), content);
+            Logger.t(checkTag(tag)).d(content);
     }
 
     public static void json(String content) {

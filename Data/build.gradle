@@ -38,6 +38,10 @@ dependencies {
     compile dataDependencies.okHttp
     compile dataDependencies.okHttpInterceptor
     compile dataDependencies.gson
+    compile dataDependencies.retrofit
+    compile dataDependencies.gsonConverter
+    compile dataDependencies.rxJava2Adapter
     compile dataDependencies.javaxInject
+    compile dataDependencies.androidAnnotations
     testCompile testDependencies.junit
 }

@@ -1,8 +1,5 @@
 package com.lauzy.freedom.data.exception;
 
-import com.freedom.lauzy.exception.ErrorBundle;
-import com.freedom.lauzy.model.ErrorBean;
-
 /**
  * Desc : 错误信息
  * Author : Lauzy
@@ -10,24 +7,16 @@ import com.freedom.lauzy.model.ErrorBean;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class ErrorMsgException extends Exception implements ErrorBundle {
+public class ErrorMsgException extends Exception {
 
-    private static final String LTAG = ErrorMsgException.class.getSimpleName();
-    private ErrorBean mErrorBean;
-
-    public ErrorMsgException(ErrorBean errorBean) {
-        super("The error code is " + errorBean.error_code +
-                " ; the error message is " + errorBean.error_msg);
-        mErrorBean = errorBean;
+    public ErrorMsgException() {
     }
 
-    @Override
-    public Exception getException() {
-        return mErrorBean == null ? new Exception(LTAG + " : api error. ") : new ErrorMsgException(mErrorBean);
+    public ErrorMsgException(String message) {
+        super(message);
     }
 
-    @Override
-    public String getErrorMessage() {
-        return mErrorBean == null ? LTAG + " : api error. " : new ErrorMsgException(mErrorBean).getMessage();
+    public ErrorMsgException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

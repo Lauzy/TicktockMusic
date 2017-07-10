@@ -4,10 +4,15 @@ import android.content.Context;
 
 import com.lauzy.freedom.data.BuildConfig;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Desc : RetrofitHelper
@@ -18,7 +23,17 @@ import okhttp3.logging.HttpLoggingInterceptor;
  */
 public class RetrofitHelper {
 
-    public RetrofitHelper() {
+    private Context mContext;
+    private Retrofit mRetrofit;
+
+    public RetrofitHelper(Context context) {
+        mContext = context;
+        mRetrofit = new Retrofit.Builder()
+                .baseUrl(NetConstants.BASE_API)
+                .client(initOkHttp())
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
     }
 
     private OkHttpClient initOkHttp() {
@@ -29,12 +44,14 @@ public class RetrofitHelper {
             builder.addInterceptor(loggingInterceptor);
         }
 
-       /* File cacheFile = new File(CacheUtils.getCacheDir(mContext), "cache");
-        Cache cache = new Cache(cacheFile, 1024 * 1024 * 50);
-        CacheInterceptor cacheInterceptor = new CacheInterceptor(mContext);
-        builder.cache(cache);
-        builder.interceptors().add(cacheInterceptor);//添加本地缓存拦截器，用来拦截本地缓存
-        builder.networkInterceptors().add(cacheInterceptor);//添加网络拦截器，用来拦截网络数据*/
+        if (null != mContext) {
+            File cacheFile = new File(CacheUtils.getCacheDir(mContext));
+            Cache cache = new Cache(cacheFile, 1024 * 1024 * 50);
+            CacheInterceptor cacheInterceptor = new CacheInterceptor(mContext);
+            builder.cache(cache);
+            builder.addInterceptor(cacheInterceptor);
+//            builder.networkInterceptors().add(cacheInterceptor);//添加网络拦截器，用来拦截网络数据
+        }
 
         builder.connectTimeout(10, TimeUnit.SECONDS);
         builder.readTimeout(10, TimeUnit.SECONDS);
@@ -44,7 +61,7 @@ public class RetrofitHelper {
         return builder.build();
     }
 
-    static class CacheUtils {
+    private static class CacheUtils {
 
         static String getCacheDir(Context context) {
             String cacheDir;

@@ -3,7 +3,7 @@ package com.freedom.lauzy.interactor;
 import com.freedom.lauzy.executor.PostExecutionThread;
 import com.freedom.lauzy.executor.ThreadExecutor;
 import com.freedom.lauzy.model.SongListBean;
-import com.freedom.lauzy.repository.Repository;
+import com.freedom.lauzy.repository.SongRepository;
 
 import java.util.List;
 
@@ -20,19 +20,19 @@ import io.reactivex.Observable;
  */
 public class GetSongList extends UseCase<List<SongListBean>, GetSongList.Params> {
 
-    private final Repository mRepository;
+    private final SongRepository mSongRepository;
 
     @Inject
-    protected GetSongList(Repository repository, ThreadExecutor threadExecutor,
-                PostExecutionThread postExecutionThread) {
+    protected GetSongList(SongRepository songRepository, ThreadExecutor threadExecutor,
+                          PostExecutionThread postExecutionThread) {
         super(threadExecutor, postExecutionThread);
-        mRepository = repository;
+        mSongRepository = songRepository;
     }
 
 
     @Override
     Observable<List<SongListBean>> buildUseCaseObservable(GetSongList.Params params) {
-        return mRepository.getSongList(params.method, params.type, params.offset, params.size);
+        return mSongRepository.getSongList(params.method, params.type, params.offset, params.size);
     }
 
     public static final class Params {

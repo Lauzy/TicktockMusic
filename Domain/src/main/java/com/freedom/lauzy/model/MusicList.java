@@ -10,7 +10,7 @@ import java.util.List;
  * Email : freedompaladin@gmail.com
  */
 public class MusicList {
-    public BillboardBean billboard;
     public int error_code;
+    public BillboardBean billboard;
     public List<SongListBean> song_list;
 }

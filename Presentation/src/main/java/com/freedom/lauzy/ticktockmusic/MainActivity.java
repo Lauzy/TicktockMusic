@@ -16,7 +16,6 @@ import com.freedom.lauzy.ticktockmusic.dagger.component.DaggerActivityComponent;
 import com.freedom.lauzy.ticktockmusic.dagger.module.ActivityModule;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -116,11 +115,6 @@ public class MainActivity extends BaseActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @OnClick(R.id.buttonTheme)
-    public void onClick() {
-
     }
 
     private void setDrawItemColor() {

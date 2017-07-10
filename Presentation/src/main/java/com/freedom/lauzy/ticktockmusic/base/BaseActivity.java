@@ -55,8 +55,32 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
         loadData();
     }
 
+    protected abstract void initInject();
+
+    protected ActivityComponent setUpActivityComponent() {
+        return DaggerActivityComponent.builder()
+                .applicationComponent(((TicktockApplication) getApplication()).getApplicationComponent())
+                .activityModule(new ActivityModule(this))
+                .build();
+    }
+
+    private void setViews() {
+        setStatusBar();
+        setContentView(getLayoutRes());
+        mBind = ButterKnife.bind(this);
+        setToolbar();
+        initViews();
+        subscribeThemeEvent();
+    }
+
+    protected abstract int getLayoutRes();
+
+    protected abstract void initViews();
+
+    protected abstract void loadData();
+
     /**
-     * register theme change event
+     * subscribe theme change event
      */
     private void subscribeThemeEvent() {
         Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(ThemeEvent.class,
@@ -81,30 +105,6 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
                 });
         RxBus.INSTANCE.addDisposable(this, disposable);
     }
-
-    protected abstract void initInject();
-
-    protected ActivityComponent setUpActivityComponent() {
-        return DaggerActivityComponent.builder()
-                .applicationComponent(((TicktockApplication) getApplication()).getApplicationComponent())
-                .activityModule(new ActivityModule(this))
-                .build();
-    }
-
-    private void setViews() {
-        setStatusBar();
-        setContentView(getLayoutRes());
-        mBind = ButterKnife.bind(this);
-        setToolbar();
-        initViews();
-        subscribeThemeEvent();
-    }
-
-    protected abstract int getLayoutRes();
-
-    protected abstract void initViews();
-
-    protected abstract void loadData();
 
     private void setToolbar() {
         mToolbar = (TickToolbar) findViewById(R.id.toolbar_common);
