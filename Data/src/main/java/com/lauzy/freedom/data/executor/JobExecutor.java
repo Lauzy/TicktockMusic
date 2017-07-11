@@ -1,4 +1,4 @@
-package com.lauzy.freedom.data;
+package com.lauzy.freedom.data.executor;
 
 import android.support.annotation.NonNull;
 

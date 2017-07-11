@@ -1,4 +1,4 @@
-package com.lauzy.freedom.data.net;
+package com.lauzy.freedom.data.net.interceptor;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

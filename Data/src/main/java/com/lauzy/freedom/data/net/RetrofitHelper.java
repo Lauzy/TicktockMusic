@@ -3,6 +3,9 @@ package com.lauzy.freedom.data.net;
 import android.content.Context;
 
 import com.lauzy.freedom.data.BuildConfig;
+import com.lauzy.freedom.data.net.constants.NetConstants;
+import com.lauzy.freedom.data.net.interceptor.CacheInterceptor;
+import com.lauzy.freedom.data.net.retrofit.TickJsonConverterFactory;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -12,7 +15,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Desc : RetrofitHelper
@@ -21,31 +23,27 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public enum RetrofitHelper {
-
-    INSTANCE;
-
-    private Context mContext;
+public class RetrofitHelper {
     private Retrofit mRetrofit;
 
-    RetrofitHelper() {
+    public RetrofitHelper(Context context) {
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(NetConstants.BASE_API)
-                .client(initOkHttp())
-                .addConverterFactory(GsonConverterFactory.create())
+                .client(initOkHttp(context))
+                .addConverterFactory(TickJsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
     }
 
-    public void setContext(Context context) {
+   /* public void setContext(Context context) {
         mContext = context;
-    }
+    }*/
 
     public <T> T createApi(Class<T> paramClass) {
         return mRetrofit.create(paramClass);
     }
 
-    private OkHttpClient initOkHttp() {
+    private OkHttpClient initOkHttp(Context context) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
@@ -53,10 +51,10 @@ public enum RetrofitHelper {
             builder.addInterceptor(loggingInterceptor);
         }
 
-        if (null != mContext) {
-            File cacheFile = new File(CacheUtils.getCacheDir(mContext));
+        if (null != context) {
+            File cacheFile = new File(CacheUtils.getCacheDir(context));
             Cache cache = new Cache(cacheFile, 1024 * 1024 * 50);
-            CacheInterceptor cacheInterceptor = new CacheInterceptor(mContext);
+            CacheInterceptor cacheInterceptor = new CacheInterceptor(context);
             builder.cache(cache);
             builder.addInterceptor(cacheInterceptor);
 //            builder.networkInterceptors().add(cacheInterceptor);//添加网络拦截器，用来拦截网络数据

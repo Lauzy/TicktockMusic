@@ -7,16 +7,20 @@ package com.lauzy.freedom.data.exception;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class ErrorMsgException extends Exception {
+public class ErrorMsgException extends RuntimeException {
 
-    public ErrorMsgException() {
-    }
+    private int mErrCode;
 
-    public ErrorMsgException(String message) {
+    public ErrorMsgException(int errCode, String message) {
         super(message);
+        mErrCode = errCode;
     }
 
-    public ErrorMsgException(String message, Throwable cause) {
-        super(message, cause);
+    public int getErrCode() {
+        return mErrCode;
+    }
+
+    public void setErrCode(int errCode) {
+        mErrCode = errCode;
     }
 }

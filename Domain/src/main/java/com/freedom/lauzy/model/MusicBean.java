@@ -1,13 +1,15 @@
 package com.freedom.lauzy.model;
 
+import java.util.List;
+
 /**
- * Desc : error
+ * Desc : MusicBean
  * Author : Lauzy
- * Date : 2017/7/7
+ * Date : 2017/7/11
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class ErrorBean {
+public class MusicBean {
     public int error_code;
-    public String error_msg;
+    public List<SongListBean> song_list;
 }
