@@ -41,9 +41,9 @@ public class ApplicationModule {
         return mApplication.getSharedPreferences(CONFIG_NAME, Context.MODE_PRIVATE);
     }
 
-    @Provides
+    /*@Provides
     @Singleton
     RetrofitHelper provideRetrofitHelper() {
         return new RetrofitHelper();
-    }
+    }*/
 }
