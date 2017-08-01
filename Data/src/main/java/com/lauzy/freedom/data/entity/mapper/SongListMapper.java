@@ -18,6 +18,7 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class SongListMapper {
+
     @Inject
     public SongListMapper() {
     }

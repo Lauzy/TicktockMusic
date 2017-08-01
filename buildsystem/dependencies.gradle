@@ -75,7 +75,7 @@ ext {
             gson              : "com.google.code.gson:gson:${gsonVersion}",
             retrofit          : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
             gsonConverter     : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
-            rxJava2Adapter    : "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}",
+            rxJava2Adapter    : "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}",
             rxJava            : "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
             rxAndroid         : "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
             javaxInject       : "javax.inject:javax.inject:${javaxInjectVersion}",

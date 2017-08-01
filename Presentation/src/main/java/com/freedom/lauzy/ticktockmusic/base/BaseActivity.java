@@ -42,27 +42,26 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
     @Inject
     protected Navigator mNavigator;
 
+    @Inject
     protected T mPresenter;
 
     private Unbinder mBind;
     private Toolbar mToolbar;
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initInject();
         setViews();
+        initInject();
+        subscribeThemeEvent();
+        if (null != mPresenter) {
+            mPresenter.attachView(this);
+        }
         loadData();
     }
 
     protected abstract void initInject();
-
-    protected ActivityComponent setUpActivityComponent() {
-        return DaggerActivityComponent.builder()
-                .applicationComponent(((TicktockApplication) getApplication()).getApplicationComponent())
-                .activityModule(new ActivityModule(this))
-                .build();
-    }
 
     private void setViews() {
         setStatusBar();
@@ -70,7 +69,6 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
         mBind = ButterKnife.bind(this);
         setToolbar();
         initViews();
-        subscribeThemeEvent();
     }
 
     protected abstract int getLayoutRes();
@@ -78,6 +76,13 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
     protected abstract void initViews();
 
     protected abstract void loadData();
+
+    protected ActivityComponent getActivityComponent() {
+        return DaggerActivityComponent.builder()
+                .applicationComponent(((TicktockApplication) getApplication()).getApplicationComponent())
+                .activityModule(new ActivityModule(this))
+                .build();
+    }
 
     /**
      * subscribe theme change event
@@ -154,6 +159,9 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
     protected void onDestroy() {
         super.onDestroy();
         mBind.unbind();
+        if (null != mPresenter) {
+            mPresenter.detachView();
+        }
         RxBus.INSTANCE.dispose(this);
     }
 }

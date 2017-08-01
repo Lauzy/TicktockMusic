@@ -2,6 +2,9 @@ package com.freedom.lauzy.ticktockmusic.dagger.component;
 
 import android.content.Context;
 
+import com.freedom.lauzy.executor.PostExecutionThread;
+import com.freedom.lauzy.executor.ThreadExecutor;
+import com.freedom.lauzy.repository.SongRepository;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
 import com.freedom.lauzy.ticktockmusic.dagger.module.ApplicationModule;
 import com.freedom.lauzy.ticktockmusic.dagger.scope.ContextLife;
@@ -24,4 +27,11 @@ public interface ApplicationComponent {
 
     @ContextLife()
     Context getApplication();
+
+    ThreadExecutor threadExecutor();
+
+    PostExecutionThread postExecutionThread();
+
+    SongRepository songRepository();
+
 }

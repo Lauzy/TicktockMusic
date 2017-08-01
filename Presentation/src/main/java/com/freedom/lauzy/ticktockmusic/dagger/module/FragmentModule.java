@@ -1,10 +1,8 @@
 package com.freedom.lauzy.ticktockmusic.dagger.module;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v4.app.Fragment;
 
-import com.freedom.lauzy.ticktockmusic.dagger.scope.ContextLife;
 import com.freedom.lauzy.ticktockmusic.dagger.scope.PerFragment;
 
 import dagger.Module;
@@ -23,13 +21,6 @@ public class FragmentModule {
 
     public FragmentModule(Fragment fragment) {
         mFragment = fragment;
-    }
-
-    @Provides
-    @PerFragment
-    @ContextLife("Activity")
-    public Context provideActivityContext() {
-        return mFragment.getActivity();
     }
 
     @Provides

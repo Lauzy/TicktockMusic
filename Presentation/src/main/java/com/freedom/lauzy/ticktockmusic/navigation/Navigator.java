@@ -3,10 +3,9 @@ package com.freedom.lauzy.ticktockmusic.navigation;
 import android.content.Context;
 import android.content.Intent;
 
-import com.freedom.lauzy.ticktockmusic.ui.SettingActivity;
+import com.freedom.lauzy.ticktockmusic.module.ui.SettingActivity;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Desc : Class used to navigate through the application.

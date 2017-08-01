@@ -12,26 +12,26 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 
 /**
- * Desc :
+ * Desc : 音乐数据列表用例
  * Author : Lauzy
  * Date : 2017/7/6
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class GetSongList extends UseCase<List<SongListBean>, GetSongList.Params> {
+public class GetSongListUseCase extends UseCase<List<SongListBean>, GetSongListUseCase.Params> {
 
     private final SongRepository mSongRepository;
 
     @Inject
-    protected GetSongList(SongRepository songRepository, ThreadExecutor threadExecutor,
-                          PostExecutionThread postExecutionThread) {
+    protected GetSongListUseCase(SongRepository songRepository, ThreadExecutor threadExecutor,
+                                 PostExecutionThread postExecutionThread) {
         super(threadExecutor, postExecutionThread);
         mSongRepository = songRepository;
     }
 
 
     @Override
-    Observable<List<SongListBean>> buildUseCaseObservable(GetSongList.Params params) {
+    Observable<List<SongListBean>> buildUseCaseObservable(GetSongListUseCase.Params params) {
         return mSongRepository.getSongList(params.method, params.type, params.offset, params.size);
     }
 

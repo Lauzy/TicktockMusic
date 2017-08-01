@@ -1,5 +1,7 @@
 package com.freedom.lauzy.ticktockmusic.dagger.component;
 
+import android.app.Activity;
+
 import com.freedom.lauzy.ticktockmusic.dagger.module.FragmentModule;
 import com.freedom.lauzy.ticktockmusic.dagger.scope.PerFragment;
 
@@ -15,5 +17,5 @@ import dagger.Component;
 @PerFragment
 @Component(dependencies = ApplicationComponent.class, modules = FragmentModule.class)
 public interface FragmentComponent {
-
+    Activity getActivity();
 }

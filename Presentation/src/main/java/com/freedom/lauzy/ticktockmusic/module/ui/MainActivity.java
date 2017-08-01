@@ -1,4 +1,4 @@
-package com.freedom.lauzy.ticktockmusic;
+package com.freedom.lauzy.ticktockmusic.module.ui;
 
 import android.content.res.ColorStateList;
 import android.support.annotation.NonNull;
@@ -11,14 +11,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.bilibili.magicasakura.utils.ThemeUtils;
+import com.freedom.lauzy.ticktockmusic.module.MainPresenter;
+import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
-import com.freedom.lauzy.ticktockmusic.dagger.component.DaggerActivityComponent;
-import com.freedom.lauzy.ticktockmusic.dagger.module.ActivityModule;
+import com.freedom.lauzy.ticktockmusic.base.IBaseView;
 
 import butterknife.BindView;
 
-public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity<MainPresenter>
+        implements NavigationView.OnNavigationItemSelectedListener, IBaseView {
 
     @BindView(R.id.toolbar_common)
     Toolbar mToolbarCommon;
@@ -34,10 +35,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     protected void initInject() {
-        DaggerActivityComponent.builder()
-                .applicationComponent(((TicktockApplication) getApplication()).getApplicationComponent())
-                .activityModule(new ActivityModule(this))
-                .build().inject(this);
+        getActivityComponent().inject(this);
     }
 
     @Override
@@ -62,6 +60,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     protected void loadData() {
+        mPresenter.getData();
     }
 
     @Override

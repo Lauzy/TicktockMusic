@@ -3,9 +3,15 @@ package com.freedom.lauzy.ticktockmusic.dagger.module;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.freedom.lauzy.executor.PostExecutionThread;
+import com.freedom.lauzy.executor.ThreadExecutor;
+import com.freedom.lauzy.repository.SongRepository;
 import com.freedom.lauzy.ticktockmusic.TicktockApplication;
+import com.freedom.lauzy.ticktockmusic.UIThread;
 import com.freedom.lauzy.ticktockmusic.dagger.scope.ContextLife;
+import com.lauzy.freedom.data.executor.JobExecutor;
 import com.lauzy.freedom.data.net.RetrofitHelper;
+import com.lauzy.freedom.data.repository.SongRepositoryImpl;
 
 import javax.inject.Singleton;
 
@@ -41,9 +47,21 @@ public class ApplicationModule {
         return mApplication.getSharedPreferences(CONFIG_NAME, Context.MODE_PRIVATE);
     }
 
-    /*@Provides
+    @Provides
     @Singleton
-    RetrofitHelper provideRetrofitHelper() {
-        return new RetrofitHelper();
-    }*/
+    ThreadExecutor provideThreadExecutor(JobExecutor jobExecutor) {
+        return jobExecutor;
+    }
+
+    @Provides
+    @Singleton
+    PostExecutionThread providePostExecutionThread(UIThread uiThread) {
+        return uiThread;
+    }
+
+    @Provides
+    @Singleton
+    SongRepository provideSongRepository(SongRepositoryImpl userDataRepository) {
+        return userDataRepository;
+    }
 }

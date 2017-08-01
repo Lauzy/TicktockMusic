@@ -2,7 +2,7 @@ package com.freedom.lauzy.ticktockmusic.dagger.component;
 
 import android.app.Activity;
 
-import com.freedom.lauzy.ticktockmusic.MainActivity;
+import com.freedom.lauzy.ticktockmusic.module.ui.MainActivity;
 import com.freedom.lauzy.ticktockmusic.dagger.module.ActivityModule;
 import com.freedom.lauzy.ticktockmusic.dagger.scope.PerActivity;
 
@@ -19,7 +19,7 @@ import dagger.Component;
 @PerActivity
 @Component(dependencies = ApplicationComponent.class, modules = ActivityModule.class)
 public interface ActivityComponent {
-    Activity activity();
+    Activity getActivity();
 
     void inject(MainActivity mainActivity);
 }

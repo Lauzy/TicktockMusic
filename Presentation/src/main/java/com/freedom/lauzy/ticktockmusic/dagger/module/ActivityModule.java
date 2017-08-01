@@ -31,8 +31,6 @@ public class ActivityModule {
     }
 
     @Provides
-    @PerActivity
-    @ContextLife("Activity")
     public Context provideActivityContext() {
         return mActivity;
     }
