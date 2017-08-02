@@ -42,7 +42,7 @@ public enum RetrofitHelper {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             builder.addInterceptor(loggingInterceptor);
         }
         builder.addInterceptor(new UserAgentInterceptor());//reset User-Agent

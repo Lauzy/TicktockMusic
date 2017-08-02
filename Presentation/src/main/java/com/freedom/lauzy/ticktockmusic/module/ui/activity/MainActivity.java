@@ -1,32 +1,37 @@
-package com.freedom.lauzy.ticktockmusic.module.ui;
+package com.freedom.lauzy.ticktockmusic.module.ui.activity;
 
 import android.content.res.ColorStateList;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.bilibili.magicasakura.utils.ThemeUtils;
-import com.freedom.lauzy.ticktockmusic.module.MainPresenter;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
-import com.freedom.lauzy.ticktockmusic.base.IBaseView;
+import com.freedom.lauzy.ticktockmusic.module.MainPresenter;
+import com.freedom.lauzy.ticktockmusic.module.ui.fragment.LocalMusicFragment;
+import com.freedom.lauzy.ticktockmusic.module.ui.fragment.NetMusicFragment;
 
 import butterknife.BindView;
 
 public class MainActivity extends BaseActivity<MainPresenter>
-        implements NavigationView.OnNavigationItemSelectedListener, IBaseView {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.toolbar_common)
-    Toolbar mToolbarCommon;
+    private static final String NET_MUSIC_FRAGMENT = "NetMusicFragment";
+    private static final String LOCAL_MUSIC_FRAGMENT = "LocalMusicFragment";
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view)
     NavigationView mNavView;
+    private LocalMusicFragment mLocalMusicFragment;
+    private NetMusicFragment mNetMusicFragment;
 
     @Override
     protected int getLayoutRes() {
@@ -44,10 +49,6 @@ public class MainActivity extends BaseActivity<MainPresenter>
     }
 
     private void initDrawer() {
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                mToolbarCommon, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
         mNavView.setNavigationItemSelectedListener(this);
         mNavView.setCheckedItem(R.id.nav_music);
     }
@@ -60,15 +61,42 @@ public class MainActivity extends BaseActivity<MainPresenter>
 
     @Override
     protected void loadData() {
-        mPresenter.getData();
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (null == savedInstanceState) {
+            mLocalMusicFragment = LocalMusicFragment.newInstance();
+            mNetMusicFragment = NetMusicFragment.newInstance();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.layout_main, mLocalMusicFragment, LOCAL_MUSIC_FRAGMENT)
+                    .add(R.id.layout_main, mNetMusicFragment, NET_MUSIC_FRAGMENT)
+                    .hide(mNetMusicFragment)
+                    .show(mLocalMusicFragment)
+                    .commit();
+        } else {
+            mLocalMusicFragment = (LocalMusicFragment) getSupportFragmentManager()
+                    .findFragmentByTag(LOCAL_MUSIC_FRAGMENT);
+            mNetMusicFragment = (NetMusicFragment) getSupportFragmentManager()
+                    .findFragmentByTag(NET_MUSIC_FRAGMENT);
+            getSupportFragmentManager().beginTransaction()
+                    .show(mLocalMusicFragment)
+                    .hide(mNetMusicFragment)
+                    .commit();
+        }
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
         switch (item.getItemId()) {
             case R.id.nav_music:
+                transaction.show(mLocalMusicFragment).hide(mNetMusicFragment);
                 break;
             case R.id.nav_favorite:
+                transaction.show(mNetMusicFragment).hide(mLocalMusicFragment);
                 break;
             case R.id.nav_recent:
                 break;
@@ -81,6 +109,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
                 break;
 
         }
+        transaction.commit();
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }

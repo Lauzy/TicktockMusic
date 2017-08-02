@@ -1,0 +1,41 @@
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.freedom.lauzy.ticktockmusic.module.ui.fragment.LocalMusicFragment">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            layout="@layout/layout_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways"/>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_local_music"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:tabBackground="?selectableItemBackgroundBorderless"
+            app:tabGravity="center"
+            app:tabIndicatorColor="@color/white"
+            app:tabMaxWidth="@dimen/dp_80"
+            app:tabMinWidth="@dimen/dp_80"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextColor="@color/white_trans">
+        </android.support.design.widget.TabLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_local_music"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+</android.support.design.widget.CoordinatorLayout>

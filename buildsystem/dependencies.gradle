@@ -68,6 +68,7 @@ ext {
     ]
 
     dataDependencies = [
+            log           : "com.orhanobut:logger:${logVersion}",
             daggerCompiler    : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger            : "com.google.dagger:dagger:${daggerVersion}",
             okHttp            : "com.squareup.okhttp3:okhttp:${okHttpVersion}",

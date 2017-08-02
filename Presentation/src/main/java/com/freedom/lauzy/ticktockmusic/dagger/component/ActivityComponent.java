@@ -2,7 +2,7 @@ package com.freedom.lauzy.ticktockmusic.dagger.component;
 
 import android.app.Activity;
 
-import com.freedom.lauzy.ticktockmusic.module.ui.MainActivity;
+import com.freedom.lauzy.ticktockmusic.module.ui.activity.MainActivity;
 import com.freedom.lauzy.ticktockmusic.dagger.module.ActivityModule;
 import com.freedom.lauzy.ticktockmusic.dagger.scope.PerActivity;
 

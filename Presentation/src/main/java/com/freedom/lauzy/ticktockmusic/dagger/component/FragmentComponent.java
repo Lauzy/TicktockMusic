@@ -4,6 +4,8 @@ import android.app.Activity;
 
 import com.freedom.lauzy.ticktockmusic.dagger.module.FragmentModule;
 import com.freedom.lauzy.ticktockmusic.dagger.scope.PerFragment;
+import com.freedom.lauzy.ticktockmusic.module.ui.fragment.LocalMusicFragment;
+import com.freedom.lauzy.ticktockmusic.module.ui.fragment.NetMusicFragment;
 
 import dagger.Component;
 
@@ -18,4 +20,8 @@ import dagger.Component;
 @Component(dependencies = ApplicationComponent.class, modules = FragmentModule.class)
 public interface FragmentComponent {
     Activity getActivity();
+
+    void inject(LocalMusicFragment musicFragment);
+
+    void inject(NetMusicFragment netMusicFragment);
 }

@@ -11,9 +11,8 @@ import javax.inject.Inject;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class MainPresenter extends BasePresenter {
-
+public class LocalMusicPresenter extends BasePresenter {
     @Inject
-    public MainPresenter() {
+    public LocalMusicPresenter() {
     }
 }

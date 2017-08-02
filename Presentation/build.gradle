@@ -44,8 +44,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            versionNameSuffix "-debug"
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+        }
         release {
             minifyEnabled false
+            zipAlignEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -69,6 +77,9 @@ dependencies {
     compile presentationDependencies.butterKnife
     annotationProcessor presentationDependencies.butterKnifeCompiler
     testCompile testDependencies.junit
-    compile project(':Libraries')
-    compile project(':Data')
+    releaseCompile project(path: ':Libraries', configuration: 'release')
+    debugCompile project(path: ':Libraries', configuration: 'debug')
+    releaseCompile project(path: ':Data', configuration: 'release')
+    debugCompile project(path: ':Data', configuration: 'debug')
+    compile 'com.android.support:support-v4:25.3.1'
 }
