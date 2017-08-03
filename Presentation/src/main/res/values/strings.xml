@@ -7,5 +7,18 @@
     <string name="action_settings">Settings</string>
     <string name="author">Lauzy</string>
 
+    <string name="action_search">search</string>
+    <string name="drawer_music">music</string>
+    <string name="drawer_favorite">favorite</string>
+    <string name="drawer_recent">recently</string>
+    <string name="drawer_setting">setting</string>
+    <string name="drawer_about">about</string>
+    <string name="drawer_exit">exit</string>
+
+    <string name="setting_theme">Theme Color</string>
+    <string name="choose_theme">Choose Theme Color</string>
+    <string name="confirm">yes</string>
+    <string name="cancel">no</string>
+
 
 </resources>

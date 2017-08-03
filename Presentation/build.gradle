@@ -14,6 +14,9 @@ android {
         versionName globalConfiguration["androidVersionName"]
         testInstrumentationRunner globalConfiguration["testInstrumentationRunner"]
         testApplicationId globalConfiguration["testApplicationId"]
+        jackOptions {
+            enabled true
+        }
     }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'
@@ -56,6 +59,10 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
     }
 }
 

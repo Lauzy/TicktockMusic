@@ -13,11 +13,11 @@ import android.view.View;
 import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.RxBus;
-import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.TicktockApplication;
 import com.freedom.lauzy.ticktockmusic.dagger.component.ActivityComponent;
 import com.freedom.lauzy.ticktockmusic.dagger.component.DaggerActivityComponent;
 import com.freedom.lauzy.ticktockmusic.dagger.module.ActivityModule;
+import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.navigation.Navigator;
 import com.freedom.lauzy.ticktockmusic.utils.ScreenUtils;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
@@ -26,9 +26,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 /**
  * Desc : BaseActivity
@@ -89,25 +87,20 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
      */
     private void subscribeThemeEvent() {
         Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(ThemeEvent.class,
-                new Consumer<ThemeEvent>() {
+                themeEvent -> ThemeUtils.refreshUI(BaseActivity.this, new ThemeUtils.ExtraRefreshable() {
                     @Override
-                    public void accept(@NonNull ThemeEvent themeEvent) throws Exception {
-                        ThemeUtils.refreshUI(BaseActivity.this, new ThemeUtils.ExtraRefreshable() {
-                            @Override
-                            public void refreshGlobal(Activity activity) {
-                                ActivityManager.TaskDescription taskDescription = new ActivityManager
-                                        .TaskDescription(null, null, ThemeUtils.getThemeAttrColor(activity,
-                                        android.R.attr.colorPrimary));
-                                setTaskDescription(taskDescription);
-                            }
-
-                            @Override
-                            public void refreshSpecificView(View view) {
-
-                            }
-                        });
+                    public void refreshGlobal(Activity activity) {
+                        ActivityManager.TaskDescription taskDescription = new ActivityManager
+                                .TaskDescription(null, null, ThemeUtils.getThemeAttrColor(activity,
+                                android.R.attr.colorPrimary));
+                        setTaskDescription(taskDescription);
                     }
-                });
+
+                    @Override
+                    public void refreshSpecificView(View view) {
+
+                    }
+                }));
         RxBus.INSTANCE.addDisposable(this, disposable);
     }
 
@@ -141,7 +134,10 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) onBackPressed();
+        if (item.getItemId() == android.R.id.home) {
+            super.onBackPressed();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 

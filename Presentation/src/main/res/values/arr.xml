@@ -10,4 +10,10 @@
         <item>@color/orange</item>
         <item>@color/red</item>
     </integer-array>
+
+    <string-array name="LocalMusicTitleArr">
+        <item>@string/music</item>
+        <item>@string/singer</item>
+    </string-array>
+
 </resources>

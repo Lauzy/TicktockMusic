@@ -20,6 +20,10 @@
     <string name="confirm">确认</string>
     <string name="cancel">取消</string>
 
+    <!--local -->
+    <string name="music">歌曲</string>
+    <string name="singer">歌手</string>
+
     <!-- <string name="count_song"><xliff:g id="count">%d</xliff:g> 首歌</string>
      <string name="count_songs"><xliff:g id="count">%d</xliff:g> 首歌</string>
      <string name="count_album"><xliff:g id="count">%d</xliff:g> 张专辑</string>

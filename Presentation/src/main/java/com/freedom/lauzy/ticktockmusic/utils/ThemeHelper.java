@@ -146,5 +146,4 @@ public class ThemeHelper {
         }
         return colorId;
     }
-
 }

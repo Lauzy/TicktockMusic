@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,12 +14,15 @@ import android.view.MenuItem;
 
 import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.ticktockmusic.R;
+import com.freedom.lauzy.ticktockmusic.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
+import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.module.MainPresenter;
 import com.freedom.lauzy.ticktockmusic.module.ui.fragment.LocalMusicFragment;
 import com.freedom.lauzy.ticktockmusic.module.ui.fragment.NetMusicFragment;
 
 import butterknife.BindView;
+import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends BaseActivity<MainPresenter>
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -54,23 +57,34 @@ public class MainActivity extends BaseActivity<MainPresenter>
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        loadFragments(savedInstanceState);
+        subscribeDrawerEvent();
         setDrawItemColor();
     }
 
-    @Override
-    protected void loadData() {
+    private void subscribeDrawerEvent() {
+        Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(ThemeEvent.class,
+                (themeEvent) -> setDrawItemColor());
+        RxBus.INSTANCE.addDisposable(this, disposable);
     }
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    /**
+     * 更换抽屉的主题色彩
+     */
+    private void setDrawItemColor() {
+        ColorStateList stateList = ThemeUtils.getThemeColorStateList(MainActivity.this, R.color.color_drawer_item);
+        mNavView.setItemTextColor(stateList);
+        mNavView.setItemIconTintList(stateList);
+    }
+
+    private void loadFragments(Bundle savedInstanceState) {
         if (null == savedInstanceState) {
             mLocalMusicFragment = LocalMusicFragment.newInstance();
             mNetMusicFragment = NetMusicFragment.newInstance();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.layout_main, mLocalMusicFragment, LOCAL_MUSIC_FRAGMENT)
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.add(R.id.layout_main, mLocalMusicFragment, LOCAL_MUSIC_FRAGMENT)
                     .add(R.id.layout_main, mNetMusicFragment, NET_MUSIC_FRAGMENT)
                     .hide(mNetMusicFragment)
                     .show(mLocalMusicFragment)
@@ -88,9 +102,12 @@ public class MainActivity extends BaseActivity<MainPresenter>
     }
 
     @Override
+    protected void loadData() {
+    }
+
+    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         switch (item.getItemId()) {
             case R.id.nav_music:
                 transaction.show(mLocalMusicFragment).hide(mNetMusicFragment);
@@ -124,16 +141,21 @@ public class MainActivity extends BaseActivity<MainPresenter>
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    mDrawerLayout.closeDrawer(GravityCompat.START);
-                } else {
+                if (isNavigatingMain()) {
                     mDrawerLayout.openDrawer(GravityCompat.START);
+                } else {
+                    super.onBackPressed();
                 }
-                break;
+                return true;
             case R.id.action_search:
-                break;
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean isNavigatingMain() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.layout_main);
+        return (fragment instanceof LocalMusicFragment || fragment instanceof NetMusicFragment);
     }
 
     @Override
@@ -145,9 +167,9 @@ public class MainActivity extends BaseActivity<MainPresenter>
         }
     }
 
-    private void setDrawItemColor() {
-        ColorStateList stateList = ThemeUtils.getThemeColorStateList(MainActivity.this, R.color.color_drawer_item);
-        mNavView.setItemTextColor(stateList);
-        mNavView.setItemIconTintList(stateList);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        RxBus.INSTANCE.dispose(this);
     }
 }

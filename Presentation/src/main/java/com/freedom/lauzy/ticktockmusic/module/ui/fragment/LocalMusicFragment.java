@@ -1,18 +1,30 @@
 package com.freedom.lauzy.ticktockmusic.module.ui.fragment;
 
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 
+import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.ticktockmusic.R;
-import com.freedom.lauzy.ticktockmusic.base.BaseLazyFragment;
+import com.freedom.lauzy.ticktockmusic.RxBus;
+import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
+import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.module.LocalMusicPresenter;
+import com.freedom.lauzy.ticktockmusic.module.ui.adapter.LocalMusicPagerAdapter;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 
-import butterknife.BindView;
+import java.util.ArrayList;
+import java.util.List;
 
-public class LocalMusicFragment extends BaseLazyFragment<LocalMusicPresenter> {
+import butterknife.BindArray;
+import butterknife.BindView;
+import io.reactivex.disposables.Disposable;
+
+public class LocalMusicFragment extends BaseFragment<LocalMusicPresenter> {
 
     @BindView(R.id.toolbar_common)
     TickToolbar mToolbarCommon;
@@ -20,12 +32,27 @@ public class LocalMusicFragment extends BaseLazyFragment<LocalMusicPresenter> {
     TabLayout mTabLocalMusic;
     @BindView(R.id.vp_local_music)
     ViewPager mVpLocalMusic;
+    @BindArray(R.array.LocalMusicTitleArr)
+    String[] mMusicTitle;
 
     public static LocalMusicFragment newInstance() {
         LocalMusicFragment musicFragment = new LocalMusicFragment();
         Bundle bundle = new Bundle();
         musicFragment.setArguments(bundle);
         return musicFragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(ThemeEvent.class,
+                themeEvent -> setTabBackground());
+        RxBus.INSTANCE.addDisposable(this, disposable);
+    }
+
+    private void setTabBackground() {
+        ColorStateList stateList = ThemeUtils.getThemeColorStateList(mActivity, R.color.color_tab);
+        mTabLocalMusic.setBackgroundColor(stateList.getDefaultColor());
     }
 
     @Override
@@ -40,11 +67,30 @@ public class LocalMusicFragment extends BaseLazyFragment<LocalMusicPresenter> {
 
     @Override
     protected void initViews() {
+        setTabBackground();
+        setToolbar(mToolbarCommon);
+        setToolbarPadding(mToolbarCommon);
+        setViewPager();
+    }
 
+    private void setViewPager() {
+        List<Fragment> fragments = new ArrayList<>();
+        fragments.add(SongFragment.newInstance());
+        fragments.add(SingerFragment.newInstance());
+        LocalMusicPagerAdapter adapter = new LocalMusicPagerAdapter(getChildFragmentManager(), fragments);
+        adapter.setTitles(mMusicTitle);
+        mVpLocalMusic.setAdapter(adapter);
+        mTabLocalMusic.setupWithViewPager(mVpLocalMusic);
     }
 
     @Override
     protected void loadData() {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RxBus.INSTANCE.dispose(this);
     }
 }

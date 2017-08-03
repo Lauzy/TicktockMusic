@@ -8,18 +8,20 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <include
             layout="@layout/layout_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways"/>
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"/>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_local_music"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="@color/theme_color_primary"
             app:tabBackground="?selectableItemBackgroundBorderless"
             app:tabGravity="center"
             app:tabIndicatorColor="@color/white"

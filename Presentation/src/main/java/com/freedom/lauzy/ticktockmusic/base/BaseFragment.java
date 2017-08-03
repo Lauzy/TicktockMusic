@@ -63,7 +63,6 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setToolbar(view);
         initViews();
         if (null != mPresenter) {
             mPresenter.attachView(this);
@@ -71,12 +70,17 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
         loadData();
     }
 
-    private void setToolbar(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_common);
+    protected void setToolbar(Toolbar toolbar) {
+        if (toolbar != null) {
+            ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
+            toolbar.setNavigationIcon(R.drawable.ic_menu_search);
+        }
+    }
+
+    protected void setToolbarPadding(Toolbar toolbar) {
         if (toolbar != null) {
             toolbar.getLayoutParams().height += ScreenUtils.getStatusHeight(mActivity.getApplicationContext());
             toolbar.setPadding(0, ScreenUtils.getStatusHeight(mActivity.getApplicationContext()), 0, 0);
-            ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
         }
     }
 

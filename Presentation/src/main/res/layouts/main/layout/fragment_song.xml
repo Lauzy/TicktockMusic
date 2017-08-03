@@ -1,0 +1,24 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.freedom.lauzy.ticktockmusic.module.ui.fragment.SongFragment">
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nsv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:text="11111\n111\n1\n1\n1\n1\n11111\n111\n1\n1\n
+            1\n1\n11111\n111\n1\n1\n1\n1\n11111\n111\n1\n1\n1\n1\n1
+            1111\n111\n1\n1\n1\n1\n11111\n111\n1\n1\n1\n1\n"
+            android:layout_width="match_parent"
+            android:lineSpacingMultiplier="1.5"
+            android:lineSpacingExtra="5dp"
+            android:layout_height="match_parent">
+        </TextView>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</FrameLayout>

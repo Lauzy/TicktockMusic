@@ -5,32 +5,32 @@ import android.os.Bundle;
 
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
-import com.freedom.lauzy.ticktockmusic.module.NetMusicPresenter;
 
-/**
- * Desc :
- * Author : Lauzy
- * Date : 2017/8/2
- * Blog : http://www.jianshu.com/u/e76853f863a9
- * Email : freedompaladin@gmail.com
- */
-public class NetMusicFragment extends BaseFragment<NetMusicPresenter> {
+public class SingerFragment extends BaseFragment {
 
-    public static NetMusicFragment newInstance() {
-        NetMusicFragment fragment = new NetMusicFragment();
+    public SingerFragment() {
+    }
+
+    public static SingerFragment newInstance() {
+        SingerFragment fragment = new SingerFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_net_music;
+        return R.layout.fragment_singer;
     }
 
     @Override
     protected void initInjector() {
-        getFragmentComponent().inject(this);
+
     }
 
     @Override
@@ -40,7 +40,7 @@ public class NetMusicFragment extends BaseFragment<NetMusicPresenter> {
 
     @Override
     protected void loadData() {
-        mPresenter.getData();
+
     }
 
 }

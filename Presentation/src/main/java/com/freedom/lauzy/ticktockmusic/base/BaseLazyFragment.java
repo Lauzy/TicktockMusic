@@ -111,7 +111,7 @@ public abstract class BaseLazyFragment<T extends IPresenter> extends Fragment im
     }
 
     private void onInvisible() {
-        isInit = false;
+//        isInit = false;
     }
 
     private void setToolbar(View view) {
