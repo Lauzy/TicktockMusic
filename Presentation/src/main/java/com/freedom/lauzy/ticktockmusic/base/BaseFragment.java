@@ -35,7 +35,6 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
     @Inject
     protected T mPresenter;
     protected Activity mActivity;
-    private View mRootView;
     private Unbinder mUnBinder;
 
     @Override
@@ -47,16 +46,10 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (null == mRootView) {
-            mRootView = inflater.inflate(getLayoutRes(), null);
-            mUnBinder = ButterKnife.bind(this, mRootView);
-            initInjector();
-        }
-        ViewGroup parent = (ViewGroup) mRootView.getParent();
-        if (parent != null) {
-            parent.removeView(mRootView);
-        }
-        return mRootView;
+        View rootView = inflater.inflate(getLayoutRes(), null);
+        mUnBinder = ButterKnife.bind(this, rootView);
+        initInjector();
+        return rootView;
     }
 
     @SuppressWarnings("unchecked")
@@ -72,6 +65,8 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
 
     protected void setToolbar(Toolbar toolbar) {
         if (toolbar != null) {
+//            toolbar.getLayoutParams().height += ScreenUtils.getStatusHeight(mActivity.getApplicationContext());
+//            toolbar.setPadding(0, ScreenUtils.getStatusHeight(mActivity.getApplicationContext()), 0, 0);
             ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
             toolbar.setNavigationIcon(R.drawable.ic_menu_search);
         }

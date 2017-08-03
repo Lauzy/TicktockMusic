@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.ticktockmusic.R;
@@ -28,6 +29,8 @@ public class LocalMusicFragment extends BaseFragment<LocalMusicPresenter> {
 
     @BindView(R.id.toolbar_common)
     TickToolbar mToolbarCommon;
+    @BindView(R.id.status_bar)
+    View mStatusBar;
     @BindView(R.id.tab_local_music)
     TabLayout mTabLocalMusic;
     @BindView(R.id.vp_local_music)
@@ -53,6 +56,7 @@ public class LocalMusicFragment extends BaseFragment<LocalMusicPresenter> {
     private void setTabBackground() {
         ColorStateList stateList = ThemeUtils.getThemeColorStateList(mActivity, R.color.color_tab);
         mTabLocalMusic.setBackgroundColor(stateList.getDefaultColor());
+        mStatusBar.setBackgroundColor(stateList.getDefaultColor());
     }
 
     @Override
@@ -68,8 +72,8 @@ public class LocalMusicFragment extends BaseFragment<LocalMusicPresenter> {
     @Override
     protected void initViews() {
         setTabBackground();
+        mToolbarCommon.setElevation(0f);
         setToolbar(mToolbarCommon);
-        setToolbarPadding(mToolbarCommon);
         setViewPager();
     }
 

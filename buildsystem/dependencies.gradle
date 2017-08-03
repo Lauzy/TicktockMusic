@@ -50,6 +50,7 @@ ext {
             glideCompiler : "com.github.bumptech.glide:compiler:${glideVersion}",
             skinChange    : "com.bilibili:magicasakura:${skinChangeVersion}",
             materialDialog: "com.afollestad.material-dialogs:commons:${materialDialog}",
+            design     : "com.android.support:design:${androidDesignVersion}",
     ]
 
     presentationDependencies = [
@@ -68,7 +69,7 @@ ext {
     ]
 
     dataDependencies = [
-            log           : "com.orhanobut:logger:${logVersion}",
+            log               : "com.orhanobut:logger:${logVersion}",
             daggerCompiler    : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger            : "com.google.dagger:dagger:${daggerVersion}",
             okHttp            : "com.squareup.okhttp3:okhttp:${okHttpVersion}",

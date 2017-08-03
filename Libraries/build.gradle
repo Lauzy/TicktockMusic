@@ -37,6 +37,7 @@ dependencies {
     compile libDependencies.glide
     compile libDependencies.skinChange
     compile libDependencies.materialDialog
+    compile libDependencies.design
     annotationProcessor libDependencies.glideCompiler
     testCompile testDependencies.junit
 
