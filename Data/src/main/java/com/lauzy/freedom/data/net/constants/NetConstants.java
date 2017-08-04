@@ -1,7 +1,7 @@
 package com.lauzy.freedom.data.net.constants;
 
 /**
- * Desc :
+ * Desc : 网络常量
  * 1、获取列表：method=baidu.ting.billboard.billList&type=1&size=10&offset=0
  * 2、搜索：method=baidu.ting.search.catalogSug&query=海阔天空
  * 3、播放：method=baidu.ting.song.play&songid=877578 或 method=baidu.ting.song.playAAC&songid=877578

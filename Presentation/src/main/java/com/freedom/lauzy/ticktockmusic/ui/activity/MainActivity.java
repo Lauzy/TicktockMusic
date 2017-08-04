@@ -1,4 +1,4 @@
-package com.freedom.lauzy.ticktockmusic.module.ui.activity;
+package com.freedom.lauzy.ticktockmusic.ui.activity;
 
 import android.content.res.ColorStateList;
 import android.os.Bundle;
@@ -17,9 +17,9 @@ import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
-import com.freedom.lauzy.ticktockmusic.module.MainPresenter;
-import com.freedom.lauzy.ticktockmusic.module.ui.fragment.LocalMusicFragment;
-import com.freedom.lauzy.ticktockmusic.module.ui.fragment.NetMusicFragment;
+import com.freedom.lauzy.ticktockmusic.presenter.MainPresenter;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.LocalMusicFragment;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.NetMusicCategoryFragment;
 
 import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
@@ -27,14 +27,14 @@ import io.reactivex.disposables.Disposable;
 public class MainActivity extends BaseActivity<MainPresenter>
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String NET_MUSIC_FRAGMENT = "NetMusicFragment";
+    private static final String NET_MUSIC_FRAGMENT = "NetMusicCategoryFragment";
     private static final String LOCAL_MUSIC_FRAGMENT = "LocalMusicFragment";
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view)
     NavigationView mNavView;
     private LocalMusicFragment mLocalMusicFragment;
-    private NetMusicFragment mNetMusicFragment;
+    private NetMusicCategoryFragment mNetMusicCategoryFragment;
 
     @Override
     protected int getLayoutRes() {
@@ -82,21 +82,21 @@ public class MainActivity extends BaseActivity<MainPresenter>
     private void loadFragments(Bundle savedInstanceState) {
         if (null == savedInstanceState) {
             mLocalMusicFragment = LocalMusicFragment.newInstance();
-            mNetMusicFragment = NetMusicFragment.newInstance();
+            mNetMusicCategoryFragment = NetMusicCategoryFragment.newInstance();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.add(R.id.layout_main, mLocalMusicFragment, LOCAL_MUSIC_FRAGMENT)
-                    .add(R.id.layout_main, mNetMusicFragment, NET_MUSIC_FRAGMENT)
-                    .hide(mNetMusicFragment)
+                    .add(R.id.layout_main, mNetMusicCategoryFragment, NET_MUSIC_FRAGMENT)
+                    .hide(mNetMusicCategoryFragment)
                     .show(mLocalMusicFragment)
                     .commit();
         } else {
             mLocalMusicFragment = (LocalMusicFragment) getSupportFragmentManager()
                     .findFragmentByTag(LOCAL_MUSIC_FRAGMENT);
-            mNetMusicFragment = (NetMusicFragment) getSupportFragmentManager()
+            mNetMusicCategoryFragment = (NetMusicCategoryFragment) getSupportFragmentManager()
                     .findFragmentByTag(NET_MUSIC_FRAGMENT);
             getSupportFragmentManager().beginTransaction()
                     .show(mLocalMusicFragment)
-                    .hide(mNetMusicFragment)
+                    .hide(mNetMusicCategoryFragment)
                     .commit();
         }
     }
@@ -110,10 +110,10 @@ public class MainActivity extends BaseActivity<MainPresenter>
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         switch (item.getItemId()) {
             case R.id.nav_music:
-                transaction.show(mLocalMusicFragment).hide(mNetMusicFragment);
+                transaction.show(mLocalMusicFragment).hide(mNetMusicCategoryFragment);
                 break;
             case R.id.nav_favorite:
-                transaction.show(mNetMusicFragment).hide(mLocalMusicFragment);
+                transaction.show(mNetMusicCategoryFragment).hide(mLocalMusicFragment);
                 break;
             case R.id.nav_recent:
                 break;
@@ -155,7 +155,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
 
     private boolean isNavigatingMain() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.layout_main);
-        return (fragment instanceof LocalMusicFragment || fragment instanceof NetMusicFragment);
+        return (fragment instanceof LocalMusicFragment || fragment instanceof NetMusicCategoryFragment);
     }
 
     @Override

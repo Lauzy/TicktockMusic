@@ -3,7 +3,7 @@ package com.freedom.lauzy.ticktockmusic.navigation;
 import android.content.Context;
 import android.content.Intent;
 
-import com.freedom.lauzy.ticktockmusic.module.ui.SettingActivity;
+import com.freedom.lauzy.ticktockmusic.ui.SettingActivity;
 
 import javax.inject.Inject;
 

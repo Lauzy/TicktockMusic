@@ -28,13 +28,18 @@ public class BaseRxPresenter<T extends IBaseView> implements IPresenter<T> {
         }
     }
 
+    public T getView() {
+        return mView;
+    }
+
     @Override
     public void attachView(T view) {
-
+        mView = view;
     }
 
     @Override
     public void detachView() {
-
+        mView = null;
+        dispose();
     }
 }

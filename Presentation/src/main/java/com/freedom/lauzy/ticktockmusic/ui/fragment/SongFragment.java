@@ -1,4 +1,4 @@
-package com.freedom.lauzy.ticktockmusic.module.ui.fragment;
+package com.freedom.lauzy.ticktockmusic.ui.fragment;
 
 
 import android.os.Bundle;

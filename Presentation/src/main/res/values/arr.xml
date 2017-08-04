@@ -16,4 +16,17 @@
         <item>@string/singer</item>
     </string-array>
 
+    <string-array name="CategoryArr">
+        <item>@string/new_song</item>
+        <item>@string/hot_song</item>
+        <item>@string/rock_song</item>
+        <item>@string/jazz_song</item>
+        <item>@string/pop_song</item>
+        <item>@string/foreign_song</item>
+        <item>@string/classic_song</item>
+        <item>@string/love_song</item>
+        <item>@string/movie_song</item>
+        <item>@string/net_song</item>
+    </string-array>
+
 </resources>

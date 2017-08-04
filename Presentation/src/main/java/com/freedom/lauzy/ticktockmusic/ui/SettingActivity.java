@@ -1,4 +1,4 @@
-package com.freedom.lauzy.ticktockmusic.module.ui;
+package com.freedom.lauzy.ticktockmusic.ui;
 
 import android.content.Context;
 import android.content.Intent;

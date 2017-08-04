@@ -5,14 +5,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.freedom.lauzy.ticktockmusic.module.ui.fragment.LocalMusicFragment">
+    tools:context=".ui.fragment.LocalMusicFragment">
 
-    <include layout="@layout/status_bar_view"/>
+    <include
+        android:id="@+id/status_bar"
+        layout="@layout/status_bar_view"/>
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/status_bar">
+        android:layout_below="@id/status_bar">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -23,23 +25,24 @@
                 layout="@layout/layout_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_scrollFlags="scroll|enterAlwaysCollapsed"/>
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tab_local_music"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="wrap_content"
                 android:background="@color/theme_color_primary"
+                android:paddingBottom="@dimen/dp_1"
                 app:tabBackground="?selectableItemBackgroundBorderless"
                 app:tabGravity="center"
                 app:tabIndicatorColor="@color/white"
-                app:tabMaxWidth="@dimen/dp_80"
+                app:tabMaxWidth="@dimen/dp_85"
                 app:tabMinWidth="@dimen/dp_80"
                 app:tabMode="fixed"
                 app:tabSelectedTextColor="@color/white"
                 app:tabTextColor="@color/white_trans">
             </android.support.design.widget.TabLayout>
-
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.view.ViewPager

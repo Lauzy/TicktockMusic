@@ -1,4 +1,4 @@
-package com.freedom.lauzy.ticktockmusic.module.ui.adapter;
+package com.freedom.lauzy.ticktockmusic.ui.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

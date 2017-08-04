@@ -29,6 +29,8 @@ ext {
     skinChangeVersion = '0.1.6@aar'
     materialDialog = '0.9.4.5'
     retrofitVersion = '2.3.0'
+    baseAdapterVersion = '2.9.26'
+    lBehaviorVersion = '1.0.2'
 
     //Development
     leakCanaryVersion = '1.3.1'
@@ -50,7 +52,10 @@ ext {
             glideCompiler : "com.github.bumptech.glide:compiler:${glideVersion}",
             skinChange    : "com.bilibili:magicasakura:${skinChangeVersion}",
             materialDialog: "com.afollestad.material-dialogs:commons:${materialDialog}",
-            design     : "com.android.support:design:${androidDesignVersion}",
+            design        : "com.android.support:design:${androidDesignVersion}",
+            baseAdapter   : "com.github.CymChad:BaseRecyclerViewAdapterHelper:${baseAdapterVersion}",
+            lBehavior     : "com.github.Lauzy:LBehavior:${lBehaviorVersion}",
+            cardView      : "com.android.support:cardview-v7:${androidDesignVersion}",
     ]
 
     presentationDependencies = [

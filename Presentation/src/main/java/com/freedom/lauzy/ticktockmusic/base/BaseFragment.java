@@ -36,6 +36,7 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
     protected T mPresenter;
     protected Activity mActivity;
     private Unbinder mUnBinder;
+//    private Toolbar mToolbar;
 
     @Override
     public void onAttach(Context context) {
@@ -46,7 +47,7 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(getLayoutRes(), null);
+        View rootView = inflater.inflate(getLayoutRes(), container, false);
         mUnBinder = ButterKnife.bind(this, rootView);
         initInjector();
         return rootView;
@@ -56,6 +57,7 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+//        mToolbar = (Toolbar) view.findViewById(R.id.toolbar_common);
         initViews();
         if (null != mPresenter) {
             mPresenter.attachView(this);
@@ -65,10 +67,8 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
 
     protected void setToolbar(Toolbar toolbar) {
         if (toolbar != null) {
-//            toolbar.getLayoutParams().height += ScreenUtils.getStatusHeight(mActivity.getApplicationContext());
-//            toolbar.setPadding(0, ScreenUtils.getStatusHeight(mActivity.getApplicationContext()), 0, 0);
             ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
-            toolbar.setNavigationIcon(R.drawable.ic_menu_search);
+            toolbar.setNavigationIcon(R.drawable.ic_draw_menu);
         }
     }
 

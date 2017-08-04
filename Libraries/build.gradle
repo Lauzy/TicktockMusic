@@ -38,6 +38,9 @@ dependencies {
     compile libDependencies.skinChange
     compile libDependencies.materialDialog
     compile libDependencies.design
+    compile libDependencies.baseAdapter
+    compile libDependencies.lBehavior
+    compile libDependencies.cardView
     annotationProcessor libDependencies.glideCompiler
     testCompile testDependencies.junit
 

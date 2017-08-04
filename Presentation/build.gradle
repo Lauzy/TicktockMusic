@@ -76,7 +76,6 @@ dependencies {
     }
     compile supportDependencies.appcompatV7
     compile supportDependencies.supportV4
-    compile supportDependencies.design
     compile supportDependencies.constraint
     compile presentationDependencies.rxAndroid
     compile presentationDependencies.dagger

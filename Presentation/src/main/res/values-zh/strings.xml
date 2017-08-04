@@ -24,6 +24,18 @@
     <string name="music">歌曲</string>
     <string name="singer">歌手</string>
 
+    <!--category-->
+    <string name="new_song">新歌</string>
+    <string name="hot_song">热歌</string>
+    <string name="rock_song">摇滚</string>
+    <string name="jazz_song">爵士</string>
+    <string name="pop_song">流行</string>
+    <string name="foreign_song">欧美</string>
+    <string name="classic_song">经典</string>
+    <string name="love_song">情歌</string>
+    <string name="movie_song">影视金曲</string>
+    <string name="net_song">网络</string>
+
     <!-- <string name="count_song"><xliff:g id="count">%d</xliff:g> 首歌</string>
      <string name="count_songs"><xliff:g id="count">%d</xliff:g> 首歌</string>
      <string name="count_album"><xliff:g id="count">%d</xliff:g> 张专辑</string>

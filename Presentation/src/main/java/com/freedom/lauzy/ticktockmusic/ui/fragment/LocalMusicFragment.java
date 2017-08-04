@@ -1,4 +1,4 @@
-package com.freedom.lauzy.ticktockmusic.module.ui.fragment;
+package com.freedom.lauzy.ticktockmusic.ui.fragment;
 
 
 import android.content.res.ColorStateList;
@@ -14,8 +14,8 @@ import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
-import com.freedom.lauzy.ticktockmusic.module.LocalMusicPresenter;
-import com.freedom.lauzy.ticktockmusic.module.ui.adapter.LocalMusicPagerAdapter;
+import com.freedom.lauzy.ticktockmusic.presenter.LocalMusicPresenter;
+import com.freedom.lauzy.ticktockmusic.ui.adapter.LocalMusicPagerAdapter;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 
 import java.util.ArrayList;

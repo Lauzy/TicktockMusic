@@ -9,13 +9,15 @@ package com.freedom.lauzy.ticktockmusic.base;
  */
 public class BasePresenter<T extends IBaseView> implements IPresenter<T> {
 
+    T mView;
+
     @Override
     public void attachView(T view) {
-
+        mView = view;
     }
 
     @Override
     public void detachView() {
-
+        mView = null;
     }
 }

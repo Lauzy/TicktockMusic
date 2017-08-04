@@ -1,4 +1,4 @@
-package com.freedom.lauzy.ticktockmusic.module;
+package com.freedom.lauzy.ticktockmusic.presenter;
 
 import com.freedom.lauzy.ticktockmusic.base.BasePresenter;
 

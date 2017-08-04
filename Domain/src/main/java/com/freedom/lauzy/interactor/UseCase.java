@@ -5,7 +5,6 @@ import com.freedom.lauzy.executor.ThreadExecutor;
 import com.freedom.lauzy.utils.Preconditions;
 
 import io.reactivex.Observable;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -22,25 +21,27 @@ public abstract class UseCase<T, Params> {
 
     private final ThreadExecutor mThreadExecutor;
     private final PostExecutionThread mPostExecutionThread;
-    private final CompositeDisposable mDisposable;
+    //RxPresenter 中控制注册及订阅，方便管理
+//    private final CompositeDisposable mDisposable;
 
     UseCase(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
         mThreadExecutor = threadExecutor;
         mPostExecutionThread = postExecutionThread;
-        mDisposable = new CompositeDisposable();
+//        mDisposable = new CompositeDisposable();
     }
 
-    public void execute(DisposableObserver<T> observer, Params params) {
+    public Disposable execute(DisposableObserver<T> observer, Params params) {
         Preconditions.checkNotNull(observer);
         Observable<T> observable = this.buildUseCaseObservable(params)
                 .subscribeOn(Schedulers.from(mThreadExecutor))
                 .observeOn(mPostExecutionThread.getScheduler());
-        addDisposable(observable.subscribeWith(observer));
+        return observable.subscribeWith(observer);
+//        addDisposable(observable.subscribeWith(observer));
     }
 
     abstract Observable<T> buildUseCaseObservable(Params params);
 
-    private void addDisposable(Disposable disposable) {
+    /*private void addDisposable(Disposable disposable) {
         Preconditions.checkNotNull(disposable);
         Preconditions.checkNotNull(mDisposable);
         mDisposable.add(disposable);
@@ -50,5 +51,5 @@ public abstract class UseCase<T, Params> {
         if (!mDisposable.isDisposed()) {
             mDisposable.dispose();
         }
-    }
+    }*/
 }
