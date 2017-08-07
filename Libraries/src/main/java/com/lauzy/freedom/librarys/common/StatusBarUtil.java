@@ -1,4 +1,4 @@
-package com.lauzy.freedom.librarys;
+package com.lauzy.freedom.librarys.common;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

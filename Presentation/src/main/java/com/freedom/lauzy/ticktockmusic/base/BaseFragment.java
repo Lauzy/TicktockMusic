@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -36,7 +37,8 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
     protected T mPresenter;
     protected Activity mActivity;
     private Unbinder mUnBinder;
-//    private Toolbar mToolbar;
+    private Toolbar mToolbar;
+    private static final String STATE_SAVE_IS_HIDDEN = "STATE_SAVE_IS_HIDDEN";
 
     @Override
     public void onAttach(Context context) {
@@ -44,6 +46,27 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
         mActivity = (Activity) context;
     }
 
+   /* @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            boolean isSupportHidden = savedInstanceState.getBoolean(STATE_SAVE_IS_HIDDEN);
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            if (isSupportHidden) {
+                ft.hide(this);
+            } else {
+                ft.show(this);
+            }
+            ft.commit();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(STATE_SAVE_IS_HIDDEN, isHidden());
+    }
+*/
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,7 +80,8 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        mToolbar = (Toolbar) view.findViewById(R.id.toolbar_common);
+        mToolbar = (Toolbar) view.findViewById(R.id.toolbar_common);
+        setToolbar();
         initViews();
         if (null != mPresenter) {
             mPresenter.attachView(this);
@@ -65,17 +89,17 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
         loadData();
     }
 
-    protected void setToolbar(Toolbar toolbar) {
-        if (toolbar != null) {
-            ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
-            toolbar.setNavigationIcon(R.drawable.ic_draw_menu);
+    protected void setToolbar() {
+        if (mToolbar != null) {
+            ((AppCompatActivity) mActivity).setSupportActionBar(mToolbar);
+            mToolbar.setNavigationIcon(R.drawable.ic_draw_menu);
         }
     }
 
-    protected void setToolbarPadding(Toolbar toolbar) {
-        if (toolbar != null) {
-            toolbar.getLayoutParams().height += ScreenUtils.getStatusHeight(mActivity.getApplicationContext());
-            toolbar.setPadding(0, ScreenUtils.getStatusHeight(mActivity.getApplicationContext()), 0, 0);
+    protected void setToolbarPadding() {
+        if (mToolbar != null) {
+            mToolbar.getLayoutParams().height += ScreenUtils.getStatusHeight(mActivity.getApplicationContext());
+            mToolbar.setPadding(0, ScreenUtils.getStatusHeight(mActivity.getApplicationContext()), 0, 0);
         }
     }
 

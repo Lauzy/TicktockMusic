@@ -8,7 +8,8 @@
 
     <string name="action_search">搜索</string>
     <string name="author">Lauzy</string>
-    <string name="drawer_music">曲库</string>
+    <string name="drawer_music">我的曲库</string>
+    <string name="drawer_net_song">网络曲库</string>
     <string name="drawer_favorite">喜欢</string>
     <string name="drawer_recent">最近播放</string>
     <string name="drawer_setting">设置</string>

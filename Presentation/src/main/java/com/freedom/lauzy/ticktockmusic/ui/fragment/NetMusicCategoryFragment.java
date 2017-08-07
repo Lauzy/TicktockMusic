@@ -9,6 +9,8 @@ import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
 import com.freedom.lauzy.ticktockmusic.presenter.NetMusicCategoryPresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.CategoryAdapter;
+import com.lauzy.freedom.lbehaviorlib.behavior.CommonBehavior;
+import com.lauzy.freedom.librarys.view.GridSpacingItemDecoration;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 
 import butterknife.BindView;
@@ -26,6 +28,7 @@ public class NetMusicCategoryFragment extends BaseFragment<NetMusicCategoryPrese
     RecyclerView mRvCategory;
     @BindView(R.id.toolbar_common)
     TickToolbar mToolbarCommon;
+    private CategoryAdapter mAdapter;
 
     public static NetMusicCategoryFragment newInstance() {
         NetMusicCategoryFragment fragment = new NetMusicCategoryFragment();
@@ -46,13 +49,18 @@ public class NetMusicCategoryFragment extends BaseFragment<NetMusicCategoryPrese
 
     @Override
     protected void initViews() {
-        setToolbar(mToolbarCommon);
-        setToolbarPadding(mToolbarCommon);
-
+        setToolbarPadding();
         mRvCategory.setLayoutManager(new GridLayoutManager(mActivity, 2));
-        CategoryAdapter adapter = new CategoryAdapter(R.layout.song_category_item,
+        mAdapter = new CategoryAdapter(R.layout.song_category_item,
                 mPresenter.getCategoryData(mActivity));
-        mRvCategory.setAdapter(adapter);
+        mRvCategory.setAdapter(mAdapter);
+        addHolderHead();
+    }
+
+    private void addHolderHead() {
+        mRvCategory.addItemDecoration(new GridSpacingItemDecoration.Builder(mActivity)
+                .setSpace(35).setSpanCount(2).build());
+        CommonBehavior.from(mToolbarCommon).setDuration(800).setMinScrollY(15).setScrollYDistance(60);
     }
 
     @Override

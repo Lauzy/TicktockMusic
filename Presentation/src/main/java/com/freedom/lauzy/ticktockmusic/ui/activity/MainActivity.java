@@ -2,6 +2,7 @@ package com.freedom.lauzy.ticktockmusic.ui.activity;
 
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -27,14 +28,11 @@ import io.reactivex.disposables.Disposable;
 public class MainActivity extends BaseActivity<MainPresenter>
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String NET_MUSIC_FRAGMENT = "NetMusicCategoryFragment";
-    private static final String LOCAL_MUSIC_FRAGMENT = "LocalMusicFragment";
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view)
     NavigationView mNavView;
-    private LocalMusicFragment mLocalMusicFragment;
-    private NetMusicCategoryFragment mNetMusicCategoryFragment;
+    private Handler mDrawerHandler = new Handler();
 
     @Override
     protected int getLayoutRes() {
@@ -64,6 +62,9 @@ public class MainActivity extends BaseActivity<MainPresenter>
         setDrawItemColor();
     }
 
+    /**
+     * 更换抽屉主题事件
+     */
     private void subscribeDrawerEvent() {
         Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(ThemeEvent.class,
                 (themeEvent) -> setDrawItemColor());
@@ -80,24 +81,8 @@ public class MainActivity extends BaseActivity<MainPresenter>
     }
 
     private void loadFragments(Bundle savedInstanceState) {
-        if (null == savedInstanceState) {
-            mLocalMusicFragment = LocalMusicFragment.newInstance();
-            mNetMusicCategoryFragment = NetMusicCategoryFragment.newInstance();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.layout_main, mLocalMusicFragment, LOCAL_MUSIC_FRAGMENT)
-                    .add(R.id.layout_main, mNetMusicCategoryFragment, NET_MUSIC_FRAGMENT)
-                    .hide(mNetMusicCategoryFragment)
-                    .show(mLocalMusicFragment)
-                    .commit();
-        } else {
-            mLocalMusicFragment = (LocalMusicFragment) getSupportFragmentManager()
-                    .findFragmentByTag(LOCAL_MUSIC_FRAGMENT);
-            mNetMusicCategoryFragment = (NetMusicCategoryFragment) getSupportFragmentManager()
-                    .findFragmentByTag(NET_MUSIC_FRAGMENT);
-            getSupportFragmentManager().beginTransaction()
-                    .show(mLocalMusicFragment)
-                    .hide(mNetMusicCategoryFragment)
-                    .commit();
+        if (savedInstanceState == null) {
+            mDrawerHandler.post(mLmRunnable);
         }
     }
 
@@ -105,15 +90,27 @@ public class MainActivity extends BaseActivity<MainPresenter>
     protected void loadData() {
     }
 
+    private Runnable mLmRunnable = () -> {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.layout_main, LocalMusicFragment.newInstance()).commit();
+    };
+
+    private Runnable mNcRunnable = () -> {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.layout_main, NetMusicCategoryFragment.newInstance()).commit();
+    };
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Runnable drawerRunnable = null;
         switch (item.getItemId()) {
             case R.id.nav_music:
-                transaction.show(mLocalMusicFragment).hide(mNetMusicCategoryFragment);
+                drawerRunnable = mLmRunnable;
+                break;
+            case R.id.nav_net_song:
+                drawerRunnable = mNcRunnable;
                 break;
             case R.id.nav_favorite:
-                transaction.show(mNetMusicCategoryFragment).hide(mLocalMusicFragment);
                 break;
             case R.id.nav_recent:
                 break;
@@ -126,7 +123,9 @@ public class MainActivity extends BaseActivity<MainPresenter>
                 break;
 
         }
-        transaction.commit();
+        if (drawerRunnable != null) {
+            mDrawerHandler.postDelayed(drawerRunnable, 200);
+        }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }

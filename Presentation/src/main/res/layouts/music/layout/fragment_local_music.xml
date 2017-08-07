@@ -25,8 +25,7 @@
                 layout="@layout/layout_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+                app:layout_scrollFlags="scroll|enterAlways"/>
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tab_local_music"
@@ -40,6 +39,7 @@
                 app:tabMaxWidth="@dimen/dp_85"
                 app:tabMinWidth="@dimen/dp_80"
                 app:tabMode="fixed"
+                app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
                 app:tabSelectedTextColor="@color/white"
                 app:tabTextColor="@color/white_trans">
             </android.support.design.widget.TabLayout>

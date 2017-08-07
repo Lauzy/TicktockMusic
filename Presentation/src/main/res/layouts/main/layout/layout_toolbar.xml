@@ -6,9 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="?android:attr/actionBarSize"
     android:background="@color/theme_color_primary"
+    android:elevation="@dimen/dp_3"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    android:elevation="@dimen/dp_3"
     app:titleTextColor="@android:color/white">
 
 </com.lauzy.freedom.librarys.widght.TickToolbar>

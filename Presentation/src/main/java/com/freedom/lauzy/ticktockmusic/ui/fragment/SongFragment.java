@@ -2,7 +2,8 @@ package com.freedom.lauzy.ticktockmusic.ui.fragment;
 
 
 import android.os.Bundle;
-import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
@@ -11,9 +12,8 @@ import butterknife.BindView;
 
 public class SongFragment extends BaseFragment {
 
-
-    @BindView(R.id.nsv)
-    NestedScrollView mRvSong;
+    @BindView(R.id.rv_local_song)
+    RecyclerView mRvLocalSong;
 
     public static SongFragment newInstance() {
         SongFragment fragment = new SongFragment();
@@ -34,15 +34,15 @@ public class SongFragment extends BaseFragment {
 
     @Override
     protected void initInjector() {
-
+        getFragmentComponent().inject(this);
     }
 
     @Override
     protected void initViews() {
+        mRvLocalSong.setLayoutManager(new LinearLayoutManager(mActivity));
     }
 
     @Override
     protected void loadData() {
-
     }
 }

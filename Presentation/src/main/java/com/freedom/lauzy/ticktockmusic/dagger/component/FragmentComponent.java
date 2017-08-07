@@ -6,6 +6,8 @@ import com.freedom.lauzy.ticktockmusic.dagger.module.FragmentModule;
 import com.freedom.lauzy.ticktockmusic.dagger.scope.PerFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.LocalMusicFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetMusicCategoryFragment;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.SingerFragment;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.SongFragment;
 
 import dagger.Component;
 
@@ -24,4 +26,8 @@ public interface FragmentComponent {
     void inject(LocalMusicFragment musicFragment);
 
     void inject(NetMusicCategoryFragment netMusicCategoryFragment);
+
+    void inject(SongFragment songFragment);
+
+    void inject(SingerFragment singerFragment);
 }

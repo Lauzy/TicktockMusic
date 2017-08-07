@@ -1,8 +1,9 @@
-package com.lauzy.freedom.librarys;
+package com.lauzy.freedom.librarys.common;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.lauzy.freedom.librarys.BuildConfig;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 

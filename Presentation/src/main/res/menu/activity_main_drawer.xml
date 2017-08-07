@@ -10,6 +10,10 @@
             android:title="@string/drawer_music"/>
         <!--android:icon="@drawable/ic_menu_camera"-->
         <item
+            android:id="@+id/nav_net_song"
+            android:icon="@drawable/ic_net_song"
+            android:title="@string/drawer_net_song"/>
+        <item
             android:id="@+id/nav_favorite"
             android:icon="@drawable/ic_favorite"
             android:title="@string/drawer_favorite"/>
