@@ -1,7 +1,6 @@
 package com.lauzy.freedom.librarys.imageload;
 
 import android.content.Context;
-import android.widget.ImageView;
 
 /**
  * Desc : image loader strategy interface
@@ -12,7 +11,7 @@ import android.widget.ImageView;
  */
 public interface IBaseImageStrategy {
 
-    void display(Context context, String imgPath, ImageView imageView);
+    void display(Context context, ImageConfig imageConfig);
 
-    void display(Context context, String imgPath, ImageView imageView, int defaultRes);
+    void clean(Context context , ImageConfig imageConfig);
 }

@@ -23,4 +23,8 @@
         <item name="color">@android:color/white</item>
     </style>
 
+    <style name="WhiteText" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>

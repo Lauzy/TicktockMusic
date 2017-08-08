@@ -30,7 +30,7 @@ public class SingerFragment extends BaseFragment {
 
     @Override
     protected void initInjector() {
-
+//        getFragmentComponent().inject(this);
     }
 
     @Override

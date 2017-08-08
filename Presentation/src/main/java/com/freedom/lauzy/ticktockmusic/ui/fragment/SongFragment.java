@@ -34,7 +34,7 @@ public class SongFragment extends BaseFragment {
 
     @Override
     protected void initInjector() {
-        getFragmentComponent().inject(this);
+//        getFragmentComponent().inject(this);
     }
 
     @Override

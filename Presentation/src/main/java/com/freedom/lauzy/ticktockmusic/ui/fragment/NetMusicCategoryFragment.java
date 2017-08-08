@@ -5,13 +5,17 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.freedom.lauzy.model.CategoryBean;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
+import com.freedom.lauzy.ticktockmusic.navigation.Navigator;
 import com.freedom.lauzy.ticktockmusic.presenter.NetMusicCategoryPresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.CategoryAdapter;
 import com.lauzy.freedom.lbehaviorlib.behavior.CommonBehavior;
 import com.lauzy.freedom.librarys.view.GridSpacingItemDecoration;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
+
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -28,7 +32,6 @@ public class NetMusicCategoryFragment extends BaseFragment<NetMusicCategoryPrese
     RecyclerView mRvCategory;
     @BindView(R.id.toolbar_common)
     TickToolbar mToolbarCommon;
-    private CategoryAdapter mAdapter;
 
     public static NetMusicCategoryFragment newInstance() {
         NetMusicCategoryFragment fragment = new NetMusicCategoryFragment();
@@ -50,21 +53,26 @@ public class NetMusicCategoryFragment extends BaseFragment<NetMusicCategoryPrese
     @Override
     protected void initViews() {
         setToolbarPadding();
+        setDrawerSync();
         mRvCategory.setLayoutManager(new GridLayoutManager(mActivity, 2));
-        mAdapter = new CategoryAdapter(R.layout.song_category_item,
-                mPresenter.getCategoryData(mActivity));
-        mRvCategory.setAdapter(mAdapter);
         addHolderHead();
     }
 
     private void addHolderHead() {
         mRvCategory.addItemDecoration(new GridSpacingItemDecoration.Builder(mActivity)
                 .setSpace(35).setSpanCount(2).build());
-        CommonBehavior.from(mToolbarCommon).setDuration(800).setMinScrollY(15).setScrollYDistance(60);
+        CommonBehavior.from(mToolbarCommon).setDuration(800).setMinScrollY(25).setScrollYDistance(60);
     }
 
     @Override
     protected void loadData() {
-
+        List<CategoryBean> categoryData = mPresenter.getCategoryData(mActivity);
+        CategoryAdapter adapter = new CategoryAdapter(R.layout.song_category_item, categoryData);
+        mRvCategory.setAdapter(adapter);
+        adapter.setOnItemClickListener((baseQuickAdapter, view, position) -> {
+                    CategoryBean categoryBean = categoryData.get(position);
+                    Navigator.navigateToSongList(mActivity, categoryBean.type, categoryBean.title);
+                }
+        );
     }
 }

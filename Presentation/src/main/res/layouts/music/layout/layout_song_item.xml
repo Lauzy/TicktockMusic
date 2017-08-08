@@ -1,8 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="@dimen/dp_72"
+    android:layout_marginLeft="@dimen/dp_5"
+    android:layout_marginRight="@dimen/dp_5"
+    android:layout_marginTop="@dimen/dp_003"
+    app:cardCornerRadius="@dimen/dp_3"
+    app:cardElevation="@dimen/dp_2">
 
-</LinearLayout>
+    <com.lauzy.freedom.librarys.widght.TickRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dp_10"
+        android:background="?selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:paddingLeft="@dimen/dp_15"
+        android:paddingRight="@dimen/dp_15"
+        android:paddingTop="@dimen/dp_10">
+
+        <ImageView
+            android:id="@+id/img_song_pic"
+            android:layout_width="@dimen/dp_48"
+            android:layout_height="@dimen/dp_48"
+            android:layout_centerVertical="true"
+            android:contentDescription="@null"
+            android:src="@mipmap/ic_launcher_round"/>
+
+        <com.lauzy.freedom.librarys.widght.TickTextView
+            android:id="@+id/txt_song_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_20"
+            android:layout_toRightOf="@id/img_song_pic"
+            tools:text="@string/app_name"/>
+
+        <com.lauzy.freedom.librarys.widght.TickTextView
+            android:id="@+id/txt_song_singer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/dp_20"
+            android:layout_toRightOf="@id/img_song_pic"
+            tools:text="@string/app_name"/>
+
+        <ImageView
+            style="@style/Widget.AppCompat.ActionButton.Overflow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:background="?actionBarItemBackground"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_menu_item"
+            android:tint="@color/background_floating_material_dark"
+            tools:ignore="PrivateResource"/>
+
+    </com.lauzy.freedom.librarys.widght.TickRelativeLayout>
+</android.support.v7.widget.CardView>

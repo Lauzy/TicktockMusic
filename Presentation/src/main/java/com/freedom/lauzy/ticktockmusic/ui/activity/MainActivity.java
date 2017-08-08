@@ -34,6 +34,10 @@ public class MainActivity extends BaseActivity<MainPresenter>
     NavigationView mNavView;
     private Handler mDrawerHandler = new Handler();
 
+    public DrawerLayout getDrawerLayout() {
+        return mDrawerLayout;
+    }
+
     @Override
     protected int getLayoutRes() {
         return R.layout.activity_main;

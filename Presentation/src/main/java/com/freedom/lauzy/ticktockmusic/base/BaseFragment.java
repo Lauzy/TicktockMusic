@@ -5,7 +5,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -46,27 +47,27 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
         mActivity = (Activity) context;
     }
 
-   /* @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            boolean isSupportHidden = savedInstanceState.getBoolean(STATE_SAVE_IS_HIDDEN);
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            if (isSupportHidden) {
-                ft.hide(this);
-            } else {
-                ft.show(this);
-            }
-            ft.commit();
-        }
-    }
+    /* @Override
+     public void onCreate(@Nullable Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         if (savedInstanceState != null) {
+             boolean isSupportHidden = savedInstanceState.getBoolean(STATE_SAVE_IS_HIDDEN);
+             FragmentTransaction ft = getFragmentManager().beginTransaction();
+             if (isSupportHidden) {
+                 ft.hide(this);
+             } else {
+                 ft.show(this);
+             }
+             ft.commit();
+         }
+     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(STATE_SAVE_IS_HIDDEN, isHidden());
-    }
-*/
+     @Override
+     public void onSaveInstanceState(Bundle outState) {
+         super.onSaveInstanceState(outState);
+         outState.putBoolean(STATE_SAVE_IS_HIDDEN, isHidden());
+     }
+ */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -92,7 +93,7 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
     protected void setToolbar() {
         if (mToolbar != null) {
             ((AppCompatActivity) mActivity).setSupportActionBar(mToolbar);
-            mToolbar.setNavigationIcon(R.drawable.ic_draw_menu);
+//            mToolbar.setNavigationIcon(R.drawable.ic_draw_menu);
         }
     }
 
@@ -100,6 +101,17 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
         if (mToolbar != null) {
             mToolbar.getLayoutParams().height += ScreenUtils.getStatusHeight(mActivity.getApplicationContext());
             mToolbar.setPadding(0, ScreenUtils.getStatusHeight(mActivity.getApplicationContext()), 0, 0);
+        }
+    }
+
+    protected void setDrawerSync() {
+        if (mToolbar != null) {
+            DrawerLayout drawerLayout = (DrawerLayout) mActivity.findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(mActivity,
+                    drawerLayout, mToolbar,
+                    R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawerToggle.syncState();
+            drawerLayout.addDrawerListener(drawerToggle);
         }
     }
 

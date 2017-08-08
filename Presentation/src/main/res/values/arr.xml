@@ -20,8 +20,6 @@
         <item>@string/new_song</item>
         <item>@string/hot_song</item>
         <item>@string/rock_song</item>
-        <item>@string/jazz_song</item>
-        <item>@string/pop_song</item>
         <item>@string/foreign_song</item>
         <item>@string/classic_song</item>
         <item>@string/love_song</item>
@@ -29,4 +27,14 @@
         <item>@string/net_song</item>
     </string-array>
 
+    <string-array name="CategorySongUrlArr">
+        <item>http://c.hiphotos.baidu.com/ting/pic/item/f7246b600c33874495c4d089530fd9f9d62aa0c6.jpg</item><!--新-->
+        <item>http://b.hiphotos.baidu.com/ting/pic/item/5d6034a85edf8db1194683910b23dd54574e74df.jpg</item><!--热-->
+        <item>http://c.hiphotos.baidu.com/ting/pic/item/b21c8701a18b87d66d9157ea050828381e30fd70.jpg</item><!--摇滚-->
+        <item>http://c.hiphotos.baidu.com/ting/pic/item/6a600c338744ebf89ac498cadbf9d72a6159a78a.jpg</item><!--欧美-->
+        <item>http://c.hiphotos.baidu.com/ting/pic/item/b2de9c82d158ccbfb2de49cf1bd8bc3eb03541e1.jpg</item><!--经典-->
+        <item>http://b.hiphotos.baidu.com/ting/pic/item/5bafa40f4bfbfbed8289cb8a7af0f736aec31f76.jpg</item><!--情歌-->
+        <item>http://c.hiphotos.baidu.com/ting/pic/item/faf2b2119313b07e5664adfd0ed7912396dd8c6e.jpg</item><!--影视-->
+        <item>http://d.hiphotos.baidu.com/ting/pic/item/37d12f2eb9389b50f01916a78735e5dde6116e65.jpg</item><!--网络-->
+    </string-array>
 </resources>

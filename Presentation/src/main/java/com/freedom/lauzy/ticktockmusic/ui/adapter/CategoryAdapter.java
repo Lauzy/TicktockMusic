@@ -7,6 +7,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.freedom.lauzy.model.CategoryBean;
 import com.freedom.lauzy.ticktockmusic.R;
+import com.lauzy.freedom.librarys.imageload.ImageConfig;
+import com.lauzy.freedom.librarys.imageload.ImageLoader;
 
 import java.util.List;
 
@@ -27,5 +29,11 @@ public class CategoryAdapter extends BaseQuickAdapter<CategoryBean, BaseViewHold
     protected void convert(BaseViewHolder helper, CategoryBean item) {
         helper.setText(R.id.txt_category, item.title)
                 .setImageResource(R.id.img_category, item.imgRes);
+        ImageLoader.INSTANCE.display(mContext,
+                new ImageConfig.Builder()
+                        .url(item.imgUrl)
+                        .placeholder(R.drawable.ic_music)
+                        .into(helper.getView(R.id.img_category))
+                        .build());
     }
 }

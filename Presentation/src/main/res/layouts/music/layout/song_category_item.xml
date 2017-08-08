@@ -14,8 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="@dimen/dp_10">
+        android:padding="@dimen/dp_15"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/img_category"

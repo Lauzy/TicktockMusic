@@ -72,6 +72,7 @@ public class LocalMusicFragment extends BaseFragment<LocalMusicPresenter> {
     @Override
     protected void initViews() {
         setTabBackground();
+        setDrawerSync();
         mToolbarCommon.setElevation(0f);
         setViewPager();
     }

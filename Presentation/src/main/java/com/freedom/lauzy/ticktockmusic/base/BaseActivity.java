@@ -110,8 +110,10 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
             mToolbar.getLayoutParams().height += ScreenUtils.getStatusHeight(getApplicationContext());
             mToolbar.setPadding(0, ScreenUtils.getStatusHeight(getApplicationContext()), 0, 0);
             setSupportActionBar(mToolbar);
-            if (getSupportActionBar() != null)
+            if (getSupportActionBar() != null){
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
+                getSupportActionBar().setHomeButtonEnabled(true);
+            }
         }
     }
 

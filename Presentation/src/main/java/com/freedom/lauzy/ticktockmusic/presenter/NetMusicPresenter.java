@@ -37,6 +37,10 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View> im
         mSongListUseCase = songListUseCase;
     }
 
+    public void setType(int type) {
+        mType = type;
+    }
+
     @Override
     public void loadNetMusicList() {
         mStatus = DConstants.Status.INIT_STATUS;
