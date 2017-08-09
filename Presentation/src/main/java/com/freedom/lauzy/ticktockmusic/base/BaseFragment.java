@@ -18,6 +18,7 @@ import com.freedom.lauzy.ticktockmusic.TicktockApplication;
 import com.freedom.lauzy.ticktockmusic.dagger.component.DaggerFragmentComponent;
 import com.freedom.lauzy.ticktockmusic.dagger.component.FragmentComponent;
 import com.freedom.lauzy.ticktockmusic.dagger.module.FragmentModule;
+import com.freedom.lauzy.ticktockmusic.navigation.Navigator;
 import com.freedom.lauzy.ticktockmusic.utils.ScreenUtils;
 
 import javax.inject.Inject;
@@ -35,11 +36,12 @@ import butterknife.Unbinder;
 public abstract class BaseFragment<T extends IPresenter> extends Fragment implements IBaseView {
 
     @Inject
+    protected Navigator mNavigator;
+    @Inject
     protected T mPresenter;
     protected Activity mActivity;
     private Unbinder mUnBinder;
     private Toolbar mToolbar;
-    private static final String STATE_SAVE_IS_HIDDEN = "STATE_SAVE_IS_HIDDEN";
 
     @Override
     public void onAttach(Context context) {
@@ -47,27 +49,6 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
         mActivity = (Activity) context;
     }
 
-    /* @Override
-     public void onCreate(@Nullable Bundle savedInstanceState) {
-         super.onCreate(savedInstanceState);
-         if (savedInstanceState != null) {
-             boolean isSupportHidden = savedInstanceState.getBoolean(STATE_SAVE_IS_HIDDEN);
-             FragmentTransaction ft = getFragmentManager().beginTransaction();
-             if (isSupportHidden) {
-                 ft.hide(this);
-             } else {
-                 ft.show(this);
-             }
-             ft.commit();
-         }
-     }
-
-     @Override
-     public void onSaveInstanceState(Bundle outState) {
-         super.onSaveInstanceState(outState);
-         outState.putBoolean(STATE_SAVE_IS_HIDDEN, isHidden());
-     }
- */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

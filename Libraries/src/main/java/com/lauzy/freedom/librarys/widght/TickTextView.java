@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 
 import com.bilibili.magicasakura.widgets.TintTextView;
 import com.lauzy.freedom.librarys.R;
+import com.lauzy.freedom.librarys.widght.fonts.FontsCache;
 
 /**
  * Desc : Custom the TextView for better use of the theme changing.
@@ -19,6 +20,7 @@ import com.lauzy.freedom.librarys.R;
 public class TickTextView extends TintTextView {
 
     private boolean rippleEnabled;
+    private boolean fontEnable;
 
     public TickTextView(Context context) {
         super(context);
@@ -38,6 +40,16 @@ public class TickTextView extends TintTextView {
     private void init(Context context, AttributeSet attrs) {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.RippleValue);
         rippleEnabled = ta.getBoolean(R.styleable.RippleValue_enable_ripple, false);
+
+        TypedArray fontTa = context.obtainStyledAttributes(attrs, R.styleable.CustomFont);
+        fontEnable = fontTa.getBoolean(R.styleable.CustomFont_enable_font_type, true);
+
+        if (fontEnable) {
+            setTypeface(FontsCache.getTypeface("fonts/fzltzxh.TTF", context));
+            setPadding(0, 0, 30, 0);
+        }
+        fontTa.recycle();
+
         if (rippleEnabled) setRippleForeground(context);
         ta.recycle();
     }

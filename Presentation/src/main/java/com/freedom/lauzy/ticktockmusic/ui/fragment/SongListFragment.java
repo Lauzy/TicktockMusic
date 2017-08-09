@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ImageView;
 
 import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.model.SongListBean;
@@ -18,6 +19,8 @@ import com.freedom.lauzy.ticktockmusic.contract.NetMusicContract;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.presenter.NetMusicPresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.NetSongAdapter;
+import com.lauzy.freedom.librarys.imageload.ImageConfig;
+import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.widght.TickSwipeRefreshLayout;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 
@@ -43,18 +46,23 @@ public class SongListFragment extends BaseFragment<NetMusicPresenter> implements
     CollapsingToolbarLayout mCtlTitle;
     @BindView(R.id.toolbar_common)
     TickToolbar mToolbarCommon;
+    @BindView(R.id.img_song_title)
+    ImageView mImgSongTitle;
     private List<SongListBean> mSongListBeen = new ArrayList<>();
     private NetSongAdapter mAdapter;
     private static final String TYPE = "type";
     private static final String TITLE = "title";
+    private static final String IMG_URL = "img_url";
     private int mType;
     private String mTitle;
+    private String mImgUrl;
 
-    public static SongListFragment newInstance(int type, String title) {
+    public static SongListFragment newInstance(int type, String title, String imgUrl) {
         SongListFragment songListFragment = new SongListFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(TYPE, type);
         bundle.putString(TITLE, title);
+        bundle.putString(IMG_URL, imgUrl);
         songListFragment.setArguments(bundle);
         return songListFragment;
     }
@@ -84,6 +92,7 @@ public class SongListFragment extends BaseFragment<NetMusicPresenter> implements
         if (getArguments() != null) {
             mType = getArguments().getInt(TYPE);
             mTitle = getArguments().getString(TITLE);
+            mImgUrl = getArguments().getString(IMG_URL);
         }
     }
 
@@ -96,6 +105,13 @@ public class SongListFragment extends BaseFragment<NetMusicPresenter> implements
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }
+        ImageLoader.INSTANCE.display(mActivity,
+                new ImageConfig.Builder()
+                        .url(mImgUrl)
+                        .placeholder(R.drawable.ic_default)
+                        .isRound(false)
+                        .into(mImgSongTitle)
+                        .build());
     }
 
     private void setThemeLayoutBg() {

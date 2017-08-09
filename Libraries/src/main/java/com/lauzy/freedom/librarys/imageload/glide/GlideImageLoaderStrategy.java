@@ -18,8 +18,19 @@ public class GlideImageLoaderStrategy implements IBaseImageStrategy {
 
     @Override
     public void display(Context context, ImageConfig imageConfig) {
+
+        RequestOptions options = new RequestOptions()
+                .placeholder(imageConfig.getDefaultRes())
+                .error(imageConfig.getErrorRes());
+        if (imageConfig.isRound()) {
+            if (imageConfig.getCornerSize() == 0) {
+                options.transform(new GlideCornerTransformation(context));
+            } else {
+                options.transform(new GlideCornerTransformation(context, imageConfig.getCornerSize()));
+            }
+        }
         Glide.with(context).load(imageConfig.getUrl())
-                .apply(new RequestOptions().placeholder(imageConfig.getDefaultRes()).error(imageConfig.getErrorRes()))
+                .apply(options)
                 .into(imageConfig.getImageView());
     }
 

@@ -22,8 +22,6 @@
         </activity>
         <activity android:name=".ui.SettingActivity">
         </activity>
-        <activity android:name=".ui.activity.SongListActivity">
-        </activity>
     </application>
 
 </manifest>

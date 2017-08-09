@@ -14,6 +14,5 @@ import io.reactivex.Observable;
  * Email : freedompaladin@gmail.com
  */
 public interface SongRepository {
-
     Observable<List<SongListBean>> getSongList(String method, int type, int offset, int size);
 }

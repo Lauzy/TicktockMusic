@@ -1,5 +1,6 @@
 package com.freedom.lauzy.ticktockmusic.ui.adapter;
 
+import android.app.Activity;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 
@@ -7,6 +8,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.freedom.lauzy.model.CategoryBean;
 import com.freedom.lauzy.ticktockmusic.R;
+import com.freedom.lauzy.ticktockmusic.navigation.Navigator;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 
@@ -27,13 +29,14 @@ public class CategoryAdapter extends BaseQuickAdapter<CategoryBean, BaseViewHold
 
     @Override
     protected void convert(BaseViewHolder helper, CategoryBean item) {
-        helper.setText(R.id.txt_category, item.title)
-                .setImageResource(R.id.img_category, item.imgRes);
+        helper.setText(R.id.txt_category, item.title);
         ImageLoader.INSTANCE.display(mContext,
                 new ImageConfig.Builder()
                         .url(item.imgUrl)
-                        .placeholder(R.drawable.ic_music)
+                        .placeholder(R.drawable.ic_default)
                         .into(helper.getView(R.id.img_category))
                         .build());
+        helper.getView(R.id.cv_category).setOnClickListener(v -> Navigator.navigateToSongList
+                ((Activity) mContext, helper.getView(R.id.img_category), item.type, item.title, item.imgUrl));
     }
 }

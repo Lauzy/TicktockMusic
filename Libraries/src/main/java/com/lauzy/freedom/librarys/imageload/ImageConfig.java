@@ -10,16 +10,28 @@ import android.widget.ImageView;
  * Email : freedompaladin@gmail.com
  */
 public class ImageConfig {
-    protected String url;
-    protected ImageView imageView;
-    protected int defaultRes;
-    protected int errorRes;
+    private String url;
+    private ImageView imageView;
+    private int defaultRes;
+    private int errorRes;
+    private boolean isRound = true;
+    private int cornerSize;
 
     public ImageConfig(Builder builder) {
         this.url = builder.url;
         this.imageView = builder.imageView;
         this.defaultRes = builder.defaultRes;
         this.errorRes = builder.errorRes;
+        this.isRound = builder.isRound;
+        this.cornerSize = builder.cornerSize;
+    }
+
+    public boolean isRound() {
+        return isRound;
+    }
+
+    public int getCornerSize() {
+        return cornerSize;
     }
 
     public String getUrl() {
@@ -43,6 +55,13 @@ public class ImageConfig {
         private ImageView imageView;
         private int defaultRes;
         private int errorRes;
+        private boolean isRound = true;
+        private int cornerSize;
+
+        public Builder corner(int cornerSize) {
+            this.cornerSize = cornerSize;
+            return this;
+        }
 
         public Builder url(String url) {
             this.url = url;
@@ -61,6 +80,11 @@ public class ImageConfig {
 
         public Builder error(int errorRes) {
             this.errorRes = errorRes;
+            return this;
+        }
+
+        public Builder isRound(boolean isRound) {
+            this.isRound = isRound;
             return this;
         }
 

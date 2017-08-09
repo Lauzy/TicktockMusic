@@ -89,7 +89,7 @@ public class LocalMusicFragment extends BaseFragment<LocalMusicPresenter> {
 
     @Override
     protected void loadData() {
-
+        mPresenter.getLocalData();
     }
 
     @Override

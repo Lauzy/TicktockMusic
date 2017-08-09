@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import com.freedom.lauzy.model.CategoryBean;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
-import com.freedom.lauzy.ticktockmusic.navigation.Navigator;
 import com.freedom.lauzy.ticktockmusic.presenter.NetMusicCategoryPresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.CategoryAdapter;
 import com.lauzy.freedom.lbehaviorlib.behavior.CommonBehavior;
@@ -69,10 +68,5 @@ public class NetMusicCategoryFragment extends BaseFragment<NetMusicCategoryPrese
         List<CategoryBean> categoryData = mPresenter.getCategoryData(mActivity);
         CategoryAdapter adapter = new CategoryAdapter(R.layout.song_category_item, categoryData);
         mRvCategory.setAdapter(adapter);
-        adapter.setOnItemClickListener((baseQuickAdapter, view, position) -> {
-                    CategoryBean categoryBean = categoryData.get(position);
-                    Navigator.navigateToSongList(mActivity, categoryBean.type, categoryBean.title);
-                }
-        );
     }
 }

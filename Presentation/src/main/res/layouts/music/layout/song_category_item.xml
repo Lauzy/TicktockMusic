@@ -2,11 +2,13 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cv_category"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:foreground="?attr/selectableItemBackgroundBorderless"
     android:clickable="true"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
+    android:orientation="vertical"
     app:cardCornerRadius="@dimen/dp_5"
     app:cardElevation="@dimen/dp_2">
 
@@ -14,8 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:padding="@dimen/dp_15"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/dp_15">
 
         <ImageView
             android:id="@+id/img_category"
@@ -23,17 +25,19 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:src="@mipmap/ic_launcher_round"/>
+            android:src="@drawable/ic_default"
+            android:transitionName="@string/img_transition"/>
 
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_20"/>
+            android:layout_height="@dimen/dp_10"/>
 
-        <TextView
+        <com.lauzy.freedom.librarys.widght.TickTextView
             android:id="@+id/txt_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"/>
+            android:textSize="@dimen/sp_15"
+            tools:text="@string/app_name"/>
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

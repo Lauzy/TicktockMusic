@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
 
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.ui.SettingActivity;
-import com.freedom.lauzy.ticktockmusic.ui.activity.SongListActivity;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.SongListFragment;
+import com.freedom.lauzy.ticktockmusic.utils.anim.FragmentAnimUtil;
 
 import javax.inject.Inject;
 
@@ -46,14 +48,17 @@ public class Navigator {
         }
     }*/
 
-    public static void navigateToSongList(Activity context, int type, String title) {
+    public static void navigateToSongList(Activity context, ImageView view, int type, String title,
+                                          String imgUrl) {
         FragmentTransaction transaction = ((AppCompatActivity) context)
                 .getSupportFragmentManager().beginTransaction();
-        Fragment fragment = SongListFragment.newInstance(type, title);
-        transaction.hide(((AppCompatActivity) context)
-                .getSupportFragmentManager()
+        Fragment fragment = SongListFragment.newInstance(type, title, imgUrl);
+        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager()
                 .findFragmentById(R.id.layout_main));
-        transaction.add(R.id.layout_main, fragment);
-        transaction.addToBackStack(null).commit();
+        FragmentAnimUtil.setEnterExitAnim(fragment);
+        transaction.addSharedElement(view, ViewCompat.getTransitionName(view))
+                .add(R.id.layout_main, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

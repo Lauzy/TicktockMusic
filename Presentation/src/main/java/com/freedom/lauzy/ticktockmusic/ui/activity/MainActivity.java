@@ -106,6 +106,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        getSupportFragmentManager().popBackStackImmediate();
         Runnable drawerRunnable = null;
         switch (item.getItemId()) {
             case R.id.nav_music:
