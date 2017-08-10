@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     def globalConfiguration = rootProject.extensions.getByName("ext")
@@ -14,9 +15,6 @@ android {
         versionName globalConfiguration["androidVersionName"]
         testInstrumentationRunner globalConfiguration["testInstrumentationRunner"]
         testApplicationId globalConfiguration["testApplicationId"]
-        jackOptions {
-            enabled true
-        }
     }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'

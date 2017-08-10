@@ -1,5 +1,6 @@
 package com.freedom.lauzy.repository;
 
+import com.freedom.lauzy.model.LocalAlbumBean;
 import com.freedom.lauzy.model.LocalSongBean;
 
 import java.util.List;
@@ -15,4 +16,6 @@ import io.reactivex.Observable;
  */
 public interface LocalSongRepository {
     Observable<List<LocalSongBean>> getLocalSongList();
+
+    Observable<List<LocalAlbumBean>> getLocalAlbumList();
 }

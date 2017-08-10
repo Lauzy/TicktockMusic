@@ -10,11 +10,13 @@ package com.freedom.lauzy.model;
 public class LocalSongBean {
     public long id; //音乐ID
     public String title; //音乐名
-    public int duration; //时长
+    public long duration; //时长
+    public String songLength;
     public String path; //路径
     public long albumId; //专辑ID
     public String albumName; //专辑名
+    public String albumCover;//专辑封面
     public long artistId; //歌手ID
     public String artistName; //歌手名
-    public boolean isMusic; //是否为音乐
+    public long size;//大小
 }

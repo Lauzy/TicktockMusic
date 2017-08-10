@@ -1,9 +1,9 @@
 package com.freedom.lauzy.ticktockmusic.presenter;
 
-import com.freedom.lauzy.interactor.GetLocalSongUseCase;
-import com.freedom.lauzy.model.LocalSongBean;
+import com.freedom.lauzy.interactor.GetLocalAlbumUseCase;
+import com.freedom.lauzy.model.LocalAlbumBean;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
-import com.freedom.lauzy.ticktockmusic.contract.LocalMusicContract;
+import com.freedom.lauzy.ticktockmusic.contract.LocalAlbumContract;
 import com.lauzy.freedom.librarys.common.LogUtil;
 
 import java.util.List;
@@ -14,29 +14,29 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.observers.DisposableObserver;
 
 /**
- * Desc : Local Music Presenter
+ * Desc : Local Album Presenter
  * Author : Lauzy
  * Date : 2017/8/2
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class LocalMusicPresenter extends BaseRxPresenter<LocalMusicContract.View>
-        implements LocalMusicContract.SongPresenter {
+public class LocalAlbumPresenter extends BaseRxPresenter<LocalAlbumContract.View>
+        implements LocalAlbumContract.Presenter {
 
-    private GetLocalSongUseCase mGetLocalSongUseCase;
+    private GetLocalAlbumUseCase mGetLocalAlbumUseCase;
 
     @Inject
-    LocalMusicPresenter(GetLocalSongUseCase getLocalSongUseCase) {
-        mGetLocalSongUseCase = getLocalSongUseCase;
+    LocalAlbumPresenter(GetLocalAlbumUseCase getLocalAlbumUseCase) {
+        mGetLocalAlbumUseCase = getLocalAlbumUseCase;
     }
 
     @Override
-    public void loadLocalSong() {
-        mGetLocalSongUseCase.execute(new DisposableObserver<List<LocalSongBean>>() {
+    public void loadLocalAlbum() {
+        mGetLocalAlbumUseCase.execute(new DisposableObserver<List<LocalAlbumBean>>() {
             @Override
-            public void onNext(@NonNull List<LocalSongBean> localSongBeen) {
-                if (localSongBeen != null && localSongBeen.size() != 0) {
-                    getView().loadLocalMusic(localSongBeen);
+            public void onNext(@NonNull List<LocalAlbumBean> localAlbumBeen) {
+                if (localAlbumBeen != null && localAlbumBeen.size() != 0) {
+                    getView().loadLocalAlbum(localAlbumBeen);
                 } else {
                     getView().setEmptyView();
                 }

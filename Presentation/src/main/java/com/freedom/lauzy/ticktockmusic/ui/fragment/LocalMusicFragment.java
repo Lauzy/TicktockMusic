@@ -14,7 +14,6 @@ import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
-import com.freedom.lauzy.ticktockmusic.presenter.LocalMusicPresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.LocalMusicPagerAdapter;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 
@@ -25,7 +24,7 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
 
-public class LocalMusicFragment extends BaseFragment<LocalMusicPresenter> {
+public class LocalMusicFragment extends BaseFragment {
 
     @BindView(R.id.toolbar_common)
     TickToolbar mToolbarCommon;
@@ -66,7 +65,7 @@ public class LocalMusicFragment extends BaseFragment<LocalMusicPresenter> {
 
     @Override
     protected void initInjector() {
-        getFragmentComponent().inject(this);
+//        getFragmentComponent().inject(this);
     }
 
     @Override
@@ -80,7 +79,7 @@ public class LocalMusicFragment extends BaseFragment<LocalMusicPresenter> {
     private void setViewPager() {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(SongFragment.newInstance());
-        fragments.add(SingerFragment.newInstance());
+        fragments.add(AlbumFragment.newInstance());
         LocalMusicPagerAdapter adapter = new LocalMusicPagerAdapter(getChildFragmentManager(), fragments);
         adapter.setTitles(mMusicTitle);
         mVpLocalMusic.setAdapter(adapter);
@@ -89,7 +88,6 @@ public class LocalMusicFragment extends BaseFragment<LocalMusicPresenter> {
 
     @Override
     protected void loadData() {
-        mPresenter.getLocalData();
     }
 
     @Override

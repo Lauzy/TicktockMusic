@@ -18,6 +18,8 @@ import com.lauzy.freedom.librarys.R;
  */
 public class TickLinearLayout extends TintLinearLayout {
 
+    private boolean rippleEnabled;
+
     public TickLinearLayout(Context context) {
         super(context);
     }
@@ -32,7 +34,22 @@ public class TickLinearLayout extends TintLinearLayout {
         init(context, attrs);
     }
 
+    public boolean isRippleEnabled() {
+        return rippleEnabled;
+    }
+
+    public void setRippleEnabled(boolean rippleEnabled) {
+        this.rippleEnabled = rippleEnabled;
+    }
+
     private void init(Context context, AttributeSet attrs) {
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.RippleValue);
+        rippleEnabled = ta.getBoolean(R.styleable.RippleValue_enable_ripple, false);
+        if (rippleEnabled) setRippleForeground(context);
+        ta.recycle();
+    }
+
+    private void setRippleForeground(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int[] ripple = new int[]{R.attr.selectableItemBackgroundBorderless};
             TypedArray typedArray = context.obtainStyledAttributes(ripple);

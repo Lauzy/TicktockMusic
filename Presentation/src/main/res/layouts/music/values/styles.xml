@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--SongItemTextViewStyle-->
+    <style name="MarqueeTxtStyle">
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:layout_marginLeft">@dimen/dp_20</item>
+        <item name="android:layout_marginRight">@dimen/dp_20</item>
+    </style>
+
+    <style name="MarqueeStyle">
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+    </style>
+
+</resources>

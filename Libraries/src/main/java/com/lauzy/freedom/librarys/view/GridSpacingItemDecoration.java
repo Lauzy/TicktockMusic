@@ -8,7 +8,7 @@ import android.view.View;
 import com.lauzy.freedom.librarys.common.ScreenUtils;
 
 /**
- * Desc :
+ * Desc : GridSpacingItemDecoration With Toolbar Height
  * Author : Lauzy
  * Date : 2017/8/7
  * Blog : http://www.jianshu.com/u/e76853f863a9

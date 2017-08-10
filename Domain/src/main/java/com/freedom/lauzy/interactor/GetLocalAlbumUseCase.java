@@ -2,7 +2,7 @@ package com.freedom.lauzy.interactor;
 
 import com.freedom.lauzy.executor.PostExecutionThread;
 import com.freedom.lauzy.executor.ThreadExecutor;
-import com.freedom.lauzy.model.LocalSongBean;
+import com.freedom.lauzy.model.LocalAlbumBean;
 import com.freedom.lauzy.repository.LocalSongRepository;
 
 import java.util.List;
@@ -18,19 +18,19 @@ import io.reactivex.Observable;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class GetLocalSongUseCase extends UseCase<List<LocalSongBean>, Void> {
+public class GetLocalAlbumUseCase extends UseCase<List<LocalAlbumBean>, Void> {
 
     private final LocalSongRepository mLocalSongRepository;
 
     @Inject
-    GetLocalSongUseCase(LocalSongRepository localSongRepository, ThreadExecutor threadExecutor,
-                        PostExecutionThread postExecutionThread) {
+    GetLocalAlbumUseCase(LocalSongRepository localSongRepository, ThreadExecutor threadExecutor,
+                         PostExecutionThread postExecutionThread) {
         super(threadExecutor, postExecutionThread);
         mLocalSongRepository = localSongRepository;
     }
 
     @Override
-    Observable<List<LocalSongBean>> buildUseCaseObservable(Void aVoid) {
-        return mLocalSongRepository.getLocalSongList();
+    Observable<List<LocalAlbumBean>> buildUseCaseObservable(Void aVoid) {
+        return mLocalSongRepository.getLocalAlbumList();
     }
 }

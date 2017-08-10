@@ -2,12 +2,12 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".ui.fragment.SingerFragment">
+             tools:context=".ui.fragment.AlbumFragment">
 
-    <TextView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_album"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/singer"/>
+        android:layout_height="match_parent">
+    </android.support.v7.widget.RecyclerView>
 
 </FrameLayout>

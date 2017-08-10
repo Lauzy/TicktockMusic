@@ -23,7 +23,7 @@ public class GetSongListUseCase extends UseCase<List<SongListBean>, GetSongListU
     private final SongRepository mSongRepository;
 
     @Inject
-    protected GetSongListUseCase(SongRepository songRepository, ThreadExecutor threadExecutor,
+    GetSongListUseCase(SongRepository songRepository, ThreadExecutor threadExecutor,
                                  PostExecutionThread postExecutionThread) {
         super(threadExecutor, postExecutionThread);
         mSongRepository = songRepository;

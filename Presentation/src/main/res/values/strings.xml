@@ -23,7 +23,7 @@
 
     <!--local -->
     <string name="music">Song</string>
-    <string name="singer">Singer</string>
+    <string name="singer">Album</string>
 
     <!--category-->
     <string name="new_song">New Song</string>

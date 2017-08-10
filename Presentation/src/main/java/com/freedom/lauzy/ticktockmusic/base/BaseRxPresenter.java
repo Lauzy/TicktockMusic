@@ -12,8 +12,8 @@ import io.reactivex.disposables.Disposable;
  */
 public class BaseRxPresenter<T extends IBaseView> implements IPresenter<T> {
 
-    protected T mView;
-    protected CompositeDisposable mCompositeDisposable;
+    private T mView;
+    private CompositeDisposable mCompositeDisposable;
 
     protected void addDisposable(Disposable disposable) {
         if (mCompositeDisposable == null) {
