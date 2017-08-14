@@ -2,9 +2,13 @@ package com.freedom.lauzy.ticktockmusic.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.View;
 
+import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.ticktockmusic.R;
 
 /**
@@ -145,5 +149,17 @@ public class ThemeHelper {
                 return context.getResources().getIdentifier(theme + "_trans", "color", context.getPackageName());
         }
         return colorId;
+    }
+
+    public static void setThemeColor(Context context, View... views) {
+        ColorStateList stateList = ThemeUtils.getThemeColorStateList(context, R.color.theme_color_primary);
+        for (View view : views) {
+            view.setBackgroundColor(stateList.getDefaultColor());
+        }
+    }
+
+    public static void setThemeColor(Context context, SwipeRefreshLayout refreshLayout) {
+        ColorStateList stateList = ThemeUtils.getThemeColorStateList(context, R.color.theme_color_primary);
+        refreshLayout.setColorSchemeColors(stateList.getDefaultColor());
     }
 }

@@ -19,7 +19,7 @@ import com.freedom.lauzy.ticktockmusic.dagger.component.DaggerActivityComponent;
 import com.freedom.lauzy.ticktockmusic.dagger.module.ActivityModule;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.navigation.Navigator;
-import com.freedom.lauzy.ticktockmusic.utils.ScreenUtils;
+import com.lauzy.freedom.librarys.common.ScreenUtils;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 
 import javax.inject.Inject;
@@ -110,7 +110,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
             mToolbar.getLayoutParams().height += ScreenUtils.getStatusHeight(getApplicationContext());
             mToolbar.setPadding(0, ScreenUtils.getStatusHeight(getApplicationContext()), 0, 0);
             setSupportActionBar(mToolbar);
-            if (getSupportActionBar() != null){
+            if (getSupportActionBar() != null) {
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
                 getSupportActionBar().setHomeButtonEnabled(true);
             }

@@ -11,7 +11,7 @@ import android.widget.ImageView;
 
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.ui.SettingActivity;
-import com.freedom.lauzy.ticktockmusic.ui.fragment.SongListFragment;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongListFragment;
 import com.freedom.lauzy.ticktockmusic.utils.anim.FragmentAnimUtil;
 
 import javax.inject.Inject;
@@ -48,11 +48,10 @@ public class Navigator {
         }
     }*/
 
-    public static void navigateToSongList(Activity context, ImageView view, int type, String title,
-                                          String imgUrl) {
+    public static void navigateToSongList(Activity context, ImageView view, int type) {
         FragmentTransaction transaction = ((AppCompatActivity) context)
                 .getSupportFragmentManager().beginTransaction();
-        Fragment fragment = SongListFragment.newInstance(type, title, imgUrl);
+        Fragment fragment = NetSongListFragment.newInstance(type);
         transaction.hide(((AppCompatActivity) context).getSupportFragmentManager()
                 .findFragmentById(R.id.layout_main));
         FragmentAnimUtil.setEnterExitAnim(fragment);

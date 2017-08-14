@@ -20,7 +20,7 @@ import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.presenter.MainPresenter;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.LocalMusicFragment;
-import com.freedom.lauzy.ticktockmusic.ui.fragment.NetMusicCategoryFragment;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongFragment;
 
 import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
@@ -33,10 +33,6 @@ public class MainActivity extends BaseActivity<MainPresenter>
     @BindView(R.id.nav_view)
     NavigationView mNavView;
     private Handler mDrawerHandler = new Handler();
-
-    public DrawerLayout getDrawerLayout() {
-        return mDrawerLayout;
-    }
 
     @Override
     protected int getLayoutRes() {
@@ -101,7 +97,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
 
     private Runnable mNcRunnable = () -> {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.layout_main, NetMusicCategoryFragment.newInstance()).commit();
+        transaction.replace(R.id.layout_main, NetSongFragment.newInstance()).commit();
     };
 
     @Override
@@ -159,7 +155,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
 
     private boolean isNavigatingMain() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.layout_main);
-        return (fragment instanceof LocalMusicFragment || fragment instanceof NetMusicCategoryFragment);
+        return (fragment instanceof LocalMusicFragment || fragment instanceof NetSongFragment);
     }
 
     @Override

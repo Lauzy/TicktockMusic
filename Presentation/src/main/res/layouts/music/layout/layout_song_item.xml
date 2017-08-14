@@ -21,7 +21,7 @@
         android:paddingRight="@dimen/dp_15"
         android:paddingTop="@dimen/dp_10">
 
-        <com.lauzy.freedom.librarys.widght.TickImageView
+        <ImageView
             android:id="@+id/img_song_pic"
             android:layout_width="@dimen/dp_48"
             android:layout_height="@dimen/dp_48"

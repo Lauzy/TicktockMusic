@@ -39,8 +39,8 @@
                 app:tabMaxWidth="@dimen/dp_85"
                 app:tabMinWidth="@dimen/dp_80"
                 app:tabMode="fixed"
-                app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
                 app:tabSelectedTextColor="@color/white"
+                app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
                 app:tabTextColor="@color/white_trans">
             </android.support.design.widget.TabLayout>
         </android.support.design.widget.AppBarLayout>

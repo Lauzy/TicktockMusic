@@ -19,7 +19,7 @@ import com.freedom.lauzy.ticktockmusic.dagger.component.DaggerFragmentComponent;
 import com.freedom.lauzy.ticktockmusic.dagger.component.FragmentComponent;
 import com.freedom.lauzy.ticktockmusic.dagger.module.FragmentModule;
 import com.freedom.lauzy.ticktockmusic.navigation.Navigator;
-import com.freedom.lauzy.ticktockmusic.utils.ScreenUtils;
+import com.lauzy.freedom.librarys.common.ScreenUtils;
 
 import javax.inject.Inject;
 

@@ -4,10 +4,17 @@
              android:layout_height="match_parent"
              tools:context=".ui.fragment.SongFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_local_song"
+    <com.lauzy.freedom.librarys.widght.TickSwipeRefreshLayout
+        android:id="@+id/srl_local_song"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </android.support.v7.widget.RecyclerView>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_local_song"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v7.widget.RecyclerView>
+
+    </com.lauzy.freedom.librarys.widght.TickSwipeRefreshLayout>
 
 </FrameLayout>

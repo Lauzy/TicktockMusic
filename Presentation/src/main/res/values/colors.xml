@@ -6,6 +6,7 @@
 
     <color name="colorHalfTransparent">#30000000</color>
     <color name="colorEdgeTransparent">#10000000</color>
+    <color name="colorTransparent">#00000000</color>
 
     <color name="theme_color_primary">#fb7299</color>
     <color name="theme_color_primary_dark">#b85671</color>
