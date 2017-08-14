@@ -1,4 +1,4 @@
-package com.lauzy.freedom.librarys.view;
+package com.lauzy.freedom.librarys.view.decoration;
 
 import android.content.Context;
 import android.content.res.TypedArray;

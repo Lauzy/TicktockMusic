@@ -11,7 +11,7 @@ import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
 import com.freedom.lauzy.ticktockmusic.presenter.NetMusicCategoryPresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.CategoryAdapter;
 import com.lauzy.freedom.lbehaviorlib.behavior.CommonBehavior;
-import com.lauzy.freedom.librarys.view.GridSpacingItemDecoration;
+import com.lauzy.freedom.librarys.view.decoration.GridSpacingItemDecoration;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 
 import java.util.List;
@@ -59,8 +59,8 @@ public class NetMusicCategoryFragment extends BaseFragment<NetMusicCategoryPrese
 
     private void addHolderHead() {
         mRvCategory.addItemDecoration(new GridSpacingItemDecoration.Builder(mActivity)
-                .setSpace(35).setSpanCount(2).build());
-        CommonBehavior.from(mToolbarCommon).setDuration(800).setMinScrollY(25).setScrollYDistance(60);
+                .setSpace(15).setSpanCount(2).build());
+        CommonBehavior.from(mToolbarCommon).setDuration(400).setMinScrollY(25).setScrollYDistance(60);
     }
 
     @Override

@@ -1,22 +1,24 @@
-package com.lauzy.freedom.librarys.view;
+package com.lauzy.freedom.librarys.view.decoration;
 
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.lauzy.freedom.librarys.common.ScreenUtils;
+
 /**
- * Desc : GridItemDecoration
+ * Desc : GridSpacingItemDecoration With Toolbar Height
  * Author : Lauzy
  * Date : 2017/8/7
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class GridItemDecoration extends RecyclerView.ItemDecoration {
+public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
     private Builder mBuilder;
 
-    public GridItemDecoration(Builder builder) {
+    public GridSpacingItemDecoration(Builder builder) {
         mBuilder = builder;
     }
 
@@ -45,8 +47,8 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
             return this;
         }
 
-        public GridItemDecoration build() {
-            return new GridItemDecoration(this);
+        public GridSpacingItemDecoration build(){
+            return new GridSpacingItemDecoration(this);
         }
 
     }
@@ -63,14 +65,18 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
             outRect.left = spacing - column * spacing / spanCount;
             outRect.right = (column + 1) * spacing / spanCount;
             if (position < spanCount) {
-                outRect.top = spacing;
+//                outRect.top = spacing;
+                outRect.top = spacing + ScreenUtils.getStatusHeight(context)
+                        + ScreenUtils.getActionBarHeight(context);
             }
             outRect.bottom = spacing;
         } else {
             outRect.left = column * spacing / spanCount;
             outRect.right = spacing - (column + 1) * spacing / spanCount;
             if (position >= spanCount) {
-                outRect.top = spacing;
+//                outRect.top = spacing;
+                outRect.top = spacing + ScreenUtils.getStatusHeight(context)
+                        + ScreenUtils.getActionBarHeight(context);
             }
         }
     }

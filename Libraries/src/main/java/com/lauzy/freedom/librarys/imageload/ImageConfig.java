@@ -1,6 +1,9 @@
 package com.lauzy.freedom.librarys.imageload;
 
+import android.graphics.Bitmap;
 import android.widget.ImageView;
+
+import com.bumptech.glide.request.target.Target;
 
 /**
  * Desc : 基本配置信息
@@ -16,6 +19,8 @@ public class ImageConfig {
     private int errorRes;
     private boolean isRound = true;
     private int cornerSize;
+    private Target<Bitmap> target;
+    private boolean isAsBitmap;
 
     public ImageConfig(Builder builder) {
         this.url = builder.url;
@@ -24,6 +29,16 @@ public class ImageConfig {
         this.errorRes = builder.errorRes;
         this.isRound = builder.isRound;
         this.cornerSize = builder.cornerSize;
+        this.target = builder.target;
+        this.isAsBitmap = builder.isAsBitmap;
+    }
+
+    public Target<Bitmap> getTarget() {
+        return target;
+    }
+
+    public boolean isAsBitmap() {
+        return isAsBitmap;
     }
 
     public boolean isRound() {
@@ -57,6 +72,18 @@ public class ImageConfig {
         private int errorRes;
         private boolean isRound = true;
         private int cornerSize;
+        private boolean isAsBitmap;
+        private Target<Bitmap> target;
+
+        public Builder asBitmap(boolean isAsBitmap) {
+            this.isAsBitmap = isAsBitmap;
+            return this;
+        }
+
+        public Builder intoTarget(Target<Bitmap> target) {
+            this.target = target;
+            return this;
+        }
 
         public Builder corner(int cornerSize) {
             this.cornerSize = cornerSize;

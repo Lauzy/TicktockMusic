@@ -41,6 +41,9 @@ dependencies {
     compile libDependencies.baseAdapter
     compile libDependencies.lBehavior
     compile libDependencies.cardView
+    compile libDependencies.palette
+    compile libDependencies.rxJava
+    compile libDependencies.rxAndroid
     annotationProcessor libDependencies.glideCompiler
     testCompile testDependencies.junit
 

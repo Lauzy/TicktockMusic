@@ -29,9 +29,19 @@ public class GlideImageLoaderStrategy implements IBaseImageStrategy {
                 options.transform(new GlideCornerTransformation(context, imageConfig.getCornerSize()));
             }
         }
-        Glide.with(context).load(imageConfig.getUrl())
-                .apply(options)
-                .into(imageConfig.getImageView());
+
+        if (!imageConfig.isAsBitmap()) {
+            Glide.with(context)
+                    .load(imageConfig.getUrl())
+                    .apply(options)
+                    .into(imageConfig.getImageView());
+        } else {
+            Glide.with(context)
+                    .asBitmap()
+                    .load(imageConfig.getUrl())
+                    .apply(options)
+                    .into(imageConfig.getTarget());
+        }
     }
 
     @Override

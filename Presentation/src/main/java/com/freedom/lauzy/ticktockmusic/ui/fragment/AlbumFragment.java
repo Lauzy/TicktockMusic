@@ -11,7 +11,7 @@ import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
 import com.freedom.lauzy.ticktockmusic.contract.LocalAlbumContract;
 import com.freedom.lauzy.ticktockmusic.presenter.LocalAlbumPresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.AlbumAdapter;
-import com.lauzy.freedom.librarys.view.GridItemDecoration;
+import com.lauzy.freedom.librarys.view.decoration.GridItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
