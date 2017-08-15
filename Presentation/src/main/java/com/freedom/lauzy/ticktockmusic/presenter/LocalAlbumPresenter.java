@@ -24,10 +24,15 @@ public class LocalAlbumPresenter extends BaseRxPresenter<LocalAlbumContract.View
         implements LocalAlbumContract.Presenter {
 
     private GetLocalAlbumUseCase mGetLocalAlbumUseCase;
+    private long mId;
 
     @Inject
     LocalAlbumPresenter(GetLocalAlbumUseCase getLocalAlbumUseCase) {
         mGetLocalAlbumUseCase = getLocalAlbumUseCase;
+    }
+
+    public void setId(long id) {
+        mId = id;
     }
 
     @Override
@@ -52,6 +57,6 @@ public class LocalAlbumPresenter extends BaseRxPresenter<LocalAlbumContract.View
             public void onComplete() {
 
             }
-        }, null);
+        }, mId);
     }
 }

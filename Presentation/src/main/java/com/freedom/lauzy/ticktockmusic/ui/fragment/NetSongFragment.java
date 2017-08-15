@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.widget.ImageView;
 
 import com.bilibili.magicasakura.utils.ThemeUtils;
+import com.freedom.lauzy.model.CategoryBean;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
@@ -21,6 +22,8 @@ import com.lauzy.freedom.librarys.common.ScreenUtils;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
+
+import java.util.List;
 
 import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
@@ -39,7 +42,6 @@ public class NetSongFragment extends BaseFragment<NetMusicCategoryPresenter> {
     View mStatusBar;*/
     @BindView(R.id.ctl_title)
     CollapsingToolbarLayout mCtlTitle;
-    private String mImgUrl;
 
     public NetSongFragment() {
     }
@@ -94,16 +96,19 @@ public class NetSongFragment extends BaseFragment<NetMusicCategoryPresenter> {
 
     @Override
     protected void loadData() {
-        NetSongPagerAdapter pagerAdapter = new NetSongPagerAdapter(getChildFragmentManager(),
-                mPresenter.getCategoryData(mActivity));
+        final List<CategoryBean> categoryData = mPresenter.getCategoryData(mActivity);
+        NetSongPagerAdapter pagerAdapter = new NetSongPagerAdapter(getChildFragmentManager(), categoryData);
         mVpNetSong.setAdapter(pagerAdapter);
         mTabNetMusic.setupWithViewPager(mVpNetSong);
-        mImgUrl = mPresenter.getCategoryData(mActivity).get(0).imgUrl;
-        setImage();
+        mVpNetSong.setOffscreenPageLimit(categoryData.size());
+        setImage(categoryData.get(0).imgUrl);
+        mCtlTitle.setTitle(categoryData.get(0).title);
         mTabNetMusic.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-
+                String imgUrl = categoryData.get(tab.getPosition()).imgUrl;
+                setImage(imgUrl);
+                mCtlTitle.setTitle(categoryData.get(tab.getPosition()).title);
             }
 
             @Override
@@ -118,11 +123,12 @@ public class NetSongFragment extends BaseFragment<NetMusicCategoryPresenter> {
         });
     }
 
-    private void setImage() {
+    private void setImage(String imgUrl) {
         ImageLoader.INSTANCE.display(mActivity,
                 new ImageConfig.Builder()
-                        .url(mImgUrl)
-                        .placeholder(R.drawable.ic_default)
+                        .url(imgUrl)
+                        .placeholder(R.drawable.ic_default_horizontal)
+                        .crossFade(500)
                         .isRound(false)
                         .into(mImgSong)
                         .build());

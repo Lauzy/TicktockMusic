@@ -19,7 +19,7 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.annotations.NonNull;
 
 /**
- * Desc :
+ * Desc : Local Data
  * Author : Lauzy
  * Date : 2017/8/9
  * Blog : http://www.jianshu.com/u/e76853f863a9
@@ -42,16 +42,29 @@ public class LocalSongRepositoryImpl implements LocalSongRepository {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<LocalSongBean>> e) throws Exception {
                 e.onNext(LocalSongLoader.getLocalSongList(mContext));
+                e.onComplete();
             }
         });
     }
 
-    @Override
+    /*@Override
     public Observable<List<LocalAlbumBean>> getLocalAlbumList() {
         return Observable.create(new ObservableOnSubscribe<List<LocalAlbumBean>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<LocalAlbumBean>> e) throws Exception {
                 e.onNext(LocalAlbumLoader.getLocalAlbums(mContext));
+                e.onComplete();
+            }
+        });
+    }*/
+
+    @Override
+    public Observable<List<LocalAlbumBean>> getLocalAlbumList(final long id) {
+        return Observable.create(new ObservableOnSubscribe<List<LocalAlbumBean>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<LocalAlbumBean>> e) throws Exception {
+                e.onNext(LocalAlbumLoader.getLocalAlbums(mContext, id));
+                e.onComplete();
             }
         });
     }

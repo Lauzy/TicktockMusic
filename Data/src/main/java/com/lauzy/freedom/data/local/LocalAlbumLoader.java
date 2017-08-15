@@ -18,13 +18,23 @@ import java.util.List;
  */
 public class LocalAlbumLoader {
     public static List<LocalAlbumBean> getLocalAlbums(Context context) {
-        String[] projections = new String[]{MediaStore.Audio.Media._ID, MediaStore.Audio.Media.ALBUM,
-                MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ARTIST_ID,
-                MediaStore.Audio.AlbumColumns.NUMBER_OF_SONGS};
-        Cursor cursor = context.getContentResolver()
-                .query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, projections, null, null,
-                        MediaStore.Audio.Albums.DEFAULT_SORT_ORDER);
-        //MediaStore.Audio.Media.DEFAULT_SORT_ORDER
+        Cursor cursor = getAlbumCursor(context, null, null);
+        return queryResult(context, cursor);
+    }
+
+    /**
+     * 根据ID，获取本地专辑
+     * @param context context
+     * @param id 专辑ID，若ID为0，则获取全部数据；不为0，则查找指定ID的数据
+     * @return 专辑
+     */
+    public static List<LocalAlbumBean> getLocalAlbums(Context context, long id) {
+        Cursor cursor = getAlbumCursor(context, id != 0 ? "_id= " : null,
+                id != 0 ? new String[]{String.valueOf(id)} : null);
+        return queryResult(context, cursor);
+    }
+
+    private static List<LocalAlbumBean> queryResult(Context context, Cursor cursor) {
         List<LocalAlbumBean> albumBeen = new ArrayList<>();
         if (cursor == null) {
             return null;
@@ -32,11 +42,9 @@ public class LocalAlbumLoader {
         while (cursor.moveToNext()) {
             String artistName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
             String albumName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
-//            long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
             long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             int songsNum = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.AlbumColumns.NUMBER_OF_SONGS));
             LocalAlbumBean albumBean = new LocalAlbumBean();
-//            albumBean.albumId = albumId;
             albumBean.id = id;
             albumBean.artistName = artistName;
             albumBean.albumName = albumName;
@@ -46,5 +54,13 @@ public class LocalAlbumLoader {
         }
         cursor.close();
         return albumBeen;
+    }
+
+    private static Cursor getAlbumCursor(Context context, String selection, String[] paramArr) {
+        String[] projections = new String[]{MediaStore.Audio.Media._ID, MediaStore.Audio.Media.ALBUM,
+                MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ARTIST_ID,
+                MediaStore.Audio.AlbumColumns.NUMBER_OF_SONGS};
+        return context.getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                projections, selection, paramArr, MediaStore.Audio.Albums.DEFAULT_SORT_ORDER);
     }
 }

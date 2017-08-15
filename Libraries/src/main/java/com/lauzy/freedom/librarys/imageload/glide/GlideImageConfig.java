@@ -7,7 +7,7 @@ import com.bumptech.glide.request.target.Target;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 
 /**
- * Desc :
+ * Desc : Glide配置，暂不使用，因为改动后变动太大，直接使用ImageConfig即可，可自行斟酌。
  * Author : Lauzy
  * Date : 2017/8/14
  * Blog : http://www.jianshu.com/u/e76853f863a9

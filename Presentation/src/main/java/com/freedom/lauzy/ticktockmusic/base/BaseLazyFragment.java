@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -33,13 +32,14 @@ import butterknife.Unbinder;
  */
 public abstract class BaseLazyFragment<T extends IPresenter> extends Fragment implements IBaseView {
 
-    private static final String STATE_SAVE_IS_HIDDEN = "STATE_SAVE_IS_HIDDEN";
     @Inject
     protected T mPresenter;
-    protected Activity mActivity;
     private Unbinder mUnBinder;
-    private boolean isInit;
-    private boolean isSupportHidden;
+    private boolean isVisible = false;
+    private boolean isInitView = false;
+    private boolean isFirstLoad = true;
+    protected Activity mActivity;
+    private Toolbar mToolbar;
 
     @Override
     public void onAttach(Context context) {
@@ -48,79 +48,58 @@ public abstract class BaseLazyFragment<T extends IPresenter> extends Fragment im
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            isSupportHidden = savedInstanceState.getBoolean(STATE_SAVE_IS_HIDDEN);
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            if (isSupportHidden) {
-                ft.hide(this);
-            } else {
-                ft.show(this);
-            }
-            ft.commit();
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            isVisible = true;
+            lazyLoad();
+        } else {
+            isVisible = false;
         }
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(getLayoutRes(), container, false);
-        mUnBinder = ButterKnife.bind(this, rootView);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View convertView = inflater.inflate(getLayoutRes(), container, false);
+        mUnBinder = ButterKnife.bind(this, convertView);
         initInjector();
-        return rootView;
+        return convertView;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setToolbar(view);
+        mToolbar = (Toolbar) view.findViewById(R.id.toolbar_common);
+        setToolbar();
         initViews();
+        isInitView = true;
         if (null != mPresenter) {
             mPresenter.attachView(this);
         }
-        if (savedInstanceState == null) {
-            if (!isHidden()) {
-                isInit = true;
-                loadData();
-            }
-        } else {
-            if (!isSupportHidden) {
-                isInit = true;
-                loadData();
-            }
+        lazyLoad();
+    }
+
+    protected void setToolbar() {
+        if (mToolbar != null) {
+            ((AppCompatActivity) mActivity).setSupportActionBar(mToolbar);
+//            mToolbar.setNavigationIcon(R.drawable.ic_draw_menu);
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(STATE_SAVE_IS_HIDDEN, isHidden());
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (!isInit && !hidden) {
-            isInit = true;
-            loadData();
-        } else {
-            onInvisible();
+    protected void setToolbarPadding() {
+        if (mToolbar != null) {
+            mToolbar.getLayoutParams().height += ScreenUtils.getStatusHeight(mActivity.getApplicationContext());
+            mToolbar.setPadding(0, ScreenUtils.getStatusHeight(mActivity.getApplicationContext()), 0, 0);
         }
     }
 
-    private void onInvisible() {
-//        isInit = false;
-    }
-
-    private void setToolbar(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_common);
-        if (toolbar != null) {
-            toolbar.getLayoutParams().height += ScreenUtils.getStatusHeight(mActivity.getApplicationContext());
-            toolbar.setPadding(0, ScreenUtils.getStatusHeight(mActivity.getApplicationContext()), 0, 0);
-            ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
+    private void lazyLoad() {
+        if (!isFirstLoad || !isVisible || !isInitView) {
+            return;
         }
+        loadData();
+        isFirstLoad = false;
     }
 
     @Override

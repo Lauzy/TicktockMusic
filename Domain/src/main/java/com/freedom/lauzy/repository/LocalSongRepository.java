@@ -17,5 +17,5 @@ import io.reactivex.Observable;
 public interface LocalSongRepository {
     Observable<List<LocalSongBean>> getLocalSongList();
 
-    Observable<List<LocalAlbumBean>> getLocalAlbumList();
+    Observable<List<LocalAlbumBean>> getLocalAlbumList(long id);
 }

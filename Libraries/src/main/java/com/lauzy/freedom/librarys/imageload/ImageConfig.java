@@ -21,6 +21,7 @@ public class ImageConfig {
     private int cornerSize;
     private Target<Bitmap> target;
     private boolean isAsBitmap;
+    private int duration;//Glide的crossFade时长
 
     public ImageConfig(Builder builder) {
         this.url = builder.url;
@@ -31,6 +32,11 @@ public class ImageConfig {
         this.cornerSize = builder.cornerSize;
         this.target = builder.target;
         this.isAsBitmap = builder.isAsBitmap;
+        this.duration = builder.duration;
+    }
+
+    public int getDuration() {
+        return duration;
     }
 
     public Target<Bitmap> getTarget() {
@@ -74,6 +80,12 @@ public class ImageConfig {
         private int cornerSize;
         private boolean isAsBitmap;
         private Target<Bitmap> target;
+        private int duration;
+
+        public Builder crossFade(int duration) {
+            this.duration = duration;
+            return this;
+        }
 
         public Builder asBitmap(boolean isAsBitmap) {
             this.isAsBitmap = isAsBitmap;

@@ -70,6 +70,7 @@ public class PaletteColor {
                         Palette.Swatch swatch = palette.getSwatches().get(0);
                         int rgb = swatch.getRgb();
                         e.onNext(rgb);
+                        e.onComplete();
                     }
                 });
             }

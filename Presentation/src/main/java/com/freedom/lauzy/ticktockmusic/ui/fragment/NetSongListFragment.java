@@ -11,6 +11,7 @@ import com.freedom.lauzy.model.SongListBean;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
+import com.freedom.lauzy.ticktockmusic.base.BaseLazyFragment;
 import com.freedom.lauzy.ticktockmusic.contract.NetMusicContract;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.presenter.NetMusicPresenter;
@@ -30,7 +31,7 @@ import io.reactivex.disposables.Disposable;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class NetSongListFragment extends BaseFragment<NetMusicPresenter> implements NetMusicContract.View {
+public class NetSongListFragment extends BaseLazyFragment<NetMusicPresenter> implements NetMusicContract.View {
     @BindView(R.id.rv_net_song)
     RecyclerView mRvNetSong;
     @BindView(R.id.srl_net_song)
