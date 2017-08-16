@@ -86,4 +86,5 @@ dependencies {
     releaseCompile project(path: ':Data', configuration: 'release')
     debugCompile project(path: ':Data', configuration: 'debug')
     compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }

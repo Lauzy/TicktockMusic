@@ -18,7 +18,7 @@ import io.reactivex.Observable;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class GetLocalSongUseCase extends UseCase<List<LocalSongBean>, Void> {
+public class GetLocalSongUseCase extends UseCase<List<LocalSongBean>, Long> {
 
     private final LocalSongRepository mLocalSongRepository;
 
@@ -30,7 +30,7 @@ public class GetLocalSongUseCase extends UseCase<List<LocalSongBean>, Void> {
     }
 
     @Override
-    Observable<List<LocalSongBean>> buildUseCaseObservable(Void aVoid) {
-        return mLocalSongRepository.getLocalSongList();
+    Observable<List<LocalSongBean>> buildUseCaseObservable(Long id) {
+        return mLocalSongRepository.getLocalSongList(id);
     }
 }

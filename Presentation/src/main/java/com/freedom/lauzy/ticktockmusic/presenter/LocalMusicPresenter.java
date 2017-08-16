@@ -24,10 +24,15 @@ public class LocalMusicPresenter extends BaseRxPresenter<LocalMusicContract.View
         implements LocalMusicContract.SongPresenter {
 
     private GetLocalSongUseCase mGetLocalSongUseCase;
+    private long mId;//专辑ID
 
     @Inject
     LocalMusicPresenter(GetLocalSongUseCase getLocalSongUseCase) {
         mGetLocalSongUseCase = getLocalSongUseCase;
+    }
+
+    public void setId(long id) {
+        mId = id;
     }
 
     @Override
@@ -52,6 +57,6 @@ public class LocalMusicPresenter extends BaseRxPresenter<LocalMusicContract.View
             public void onComplete() {
 
             }
-        }, null);
+        }, mId);
     }
 }

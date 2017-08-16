@@ -17,6 +17,12 @@ import java.util.List;
  * Email : freedompaladin@gmail.com
  */
 public class LocalAlbumLoader {
+
+    /**
+     * 获取全部专辑
+     * @param context context
+     * @return 专辑列表
+     */
     public static List<LocalAlbumBean> getLocalAlbums(Context context) {
         Cursor cursor = getAlbumCursor(context, null, null);
         return queryResult(context, cursor);
@@ -24,12 +30,13 @@ public class LocalAlbumLoader {
 
     /**
      * 根据ID，获取本地专辑
+     *
      * @param context context
-     * @param id 专辑ID，若ID为0，则获取全部数据；不为0，则查找指定ID的数据
-     * @return 专辑
+     * @param id      专辑ID，若ID为0，则获取全部数据；不为0，则查找指定ID的数据
+     * @return 专辑列表
      */
     public static List<LocalAlbumBean> getLocalAlbums(Context context, long id) {
-        Cursor cursor = getAlbumCursor(context, id != 0 ? "_id= " : null,
+        Cursor cursor = getAlbumCursor(context, id != 0 ? "_id = ?" : null,
                 id != 0 ? new String[]{String.valueOf(id)} : null);
         return queryResult(context, cursor);
     }
@@ -56,6 +63,14 @@ public class LocalAlbumLoader {
         return albumBeen;
     }
 
+    /**
+     * 专辑Cursor
+     *
+     * @param context   context
+     * @param selection 筛选
+     * @param paramArr  条件
+     * @return cursor
+     */
     private static Cursor getAlbumCursor(Context context, String selection, String[] paramArr) {
         String[] projections = new String[]{MediaStore.Audio.Media._ID, MediaStore.Audio.Media.ALBUM,
                 MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ARTIST_ID,

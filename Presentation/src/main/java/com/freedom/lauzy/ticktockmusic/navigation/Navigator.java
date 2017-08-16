@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.ui.SettingActivity;
+import com.freedom.lauzy.ticktockmusic.ui.activity.AlbumDetailActivity;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongListFragment;
 import com.freedom.lauzy.ticktockmusic.utils.anim.FragmentAnimUtil;
 
@@ -23,6 +24,7 @@ import javax.inject.Inject;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
+@SuppressWarnings("unused")
 public class Navigator {
 
     @Inject
@@ -41,12 +43,12 @@ public class Navigator {
         }
     }
 
-   /* public static void navigateToSongList(Context context, int type, String title) {
+    public void navigateToAlbumDetail(Context context, long id) {
         if (context != null) {
-            Intent intent = SongListActivity.newInstance(context, type, title);
+            Intent intent = AlbumDetailActivity.newInstance(context, id);
             context.startActivity(intent);
         }
-    }*/
+    }
 
     public static void navigateToSongList(Activity context, ImageView view, int type) {
         FragmentTransaction transaction = ((AppCompatActivity) context)

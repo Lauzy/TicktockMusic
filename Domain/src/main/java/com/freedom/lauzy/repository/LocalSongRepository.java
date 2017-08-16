@@ -15,7 +15,8 @@ import io.reactivex.Observable;
  * Email : freedompaladin@gmail.com
  */
 public interface LocalSongRepository {
-    Observable<List<LocalSongBean>> getLocalSongList();
+    Observable<List<LocalSongBean>> getLocalSongList(long id);
 
     Observable<List<LocalAlbumBean>> getLocalAlbumList(long id);
+
 }

@@ -61,6 +61,8 @@ public class AlbumFragment extends BaseFragment<LocalAlbumPresenter> implements 
                 .setSpace(10)
                 .build());
         mPresenter.loadLocalAlbum();
+        mAdapter.setOnItemClickListener((adapter, view, position) ->
+                mNavigator.navigateToAlbumDetail(mActivity, mLocalAlbumBeen.get(position).id));
     }
 
     @Override

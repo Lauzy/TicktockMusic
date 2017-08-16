@@ -1,32 +1,30 @@
 package com.freedom.lauzy.ticktockmusic.ui.fragment;
 
 
-import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.widget.ImageView;
 
-import com.bilibili.magicasakura.utils.ThemeUtils;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.freedom.lauzy.model.CategoryBean;
 import com.freedom.lauzy.ticktockmusic.R;
-import com.freedom.lauzy.ticktockmusic.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
-import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.presenter.NetMusicCategoryPresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.NetSongPagerAdapter;
 import com.lauzy.freedom.librarys.common.DensityUtils;
 import com.lauzy.freedom.librarys.common.ScreenUtils;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
+import com.lauzy.freedom.librarys.view.util.PaletteColor;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 
 import java.util.List;
 
 import butterknife.BindView;
-import io.reactivex.disposables.Disposable;
 
 public class NetSongFragment extends BaseFragment<NetMusicCategoryPresenter> {
 
@@ -64,24 +62,9 @@ public class NetSongFragment extends BaseFragment<NetMusicCategoryPresenter> {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(ThemeEvent.class,
-                themeEvent -> setTabBackground());
-        RxBus.INSTANCE.addDisposable(this, disposable);
-    }
-
-    private void setTabBackground() {
-        ColorStateList stateList = ThemeUtils.getThemeColorStateList(mActivity, R.color.color_tab);
-//        mTabNetMusic.setBackgroundColor(stateList.getDefaultColor());
-        mCtlTitle.setContentScrimColor(stateList.getDefaultColor());
-    }
-
-    @Override
     protected void initViews() {
         setToolbar();
         setTitlePadding();
-        setTabBackground();
         setDrawerSync();
         mToolbarCommon.setElevation(0f);
     }
@@ -126,17 +109,19 @@ public class NetSongFragment extends BaseFragment<NetMusicCategoryPresenter> {
     private void setImage(String imgUrl) {
         ImageLoader.INSTANCE.display(mActivity,
                 new ImageConfig.Builder()
+                        .asBitmap(true)
                         .url(imgUrl)
                         .placeholder(R.drawable.ic_default_horizontal)
                         .crossFade(500)
                         .isRound(false)
-                        .into(mImgSong)
+                        .intoTarget(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                                mImgSong.setImageBitmap(resource);
+                                PaletteColor.mainColorObservable(resource).subscribe(integer ->
+                                        mCtlTitle.setContentScrimColor(integer));
+                            }
+                        })
                         .build());
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        RxBus.INSTANCE.dispose(this);
     }
 }

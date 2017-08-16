@@ -7,9 +7,9 @@ import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 
 import com.bilibili.magicasakura.utils.ThemeUtils;
-import com.freedom.lauzy.ticktockmusic.dagger.component.ApplicationComponent;
-import com.freedom.lauzy.ticktockmusic.dagger.component.DaggerApplicationComponent;
-import com.freedom.lauzy.ticktockmusic.dagger.module.ApplicationModule;
+import com.freedom.lauzy.ticktockmusic.injection.component.ApplicationComponent;
+import com.freedom.lauzy.ticktockmusic.injection.component.DaggerApplicationComponent;
+import com.freedom.lauzy.ticktockmusic.injection.module.ApplicationModule;
 import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;
 
 /**

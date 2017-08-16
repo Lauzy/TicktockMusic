@@ -1,10 +1,7 @@
 package com.lauzy.freedom.data.local;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
-import android.os.LocaleList;
 import android.provider.MediaStore;
 
 import com.freedom.lauzy.model.LocalSongBean;
@@ -21,9 +18,17 @@ import java.util.List;
  */
 public class LocalSongLoader {
     public static List<LocalSongBean> getLocalSongList(Context context) {
-        ContentResolver contentResolver = context.getContentResolver();
-        Cursor cursor = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
-                null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        Cursor cursor = getSongCursor(context, null, null);
+        return queryLocalSongs(context, cursor);
+    }
+
+    public static List<LocalSongBean> getLocalSongList(Context context, long id) {
+        Cursor cursor = getSongCursor(context, id != 0 ? "album_id = ? " : null,
+                id != 0 ? new String[]{String.valueOf(id)} : null);
+        return queryLocalSongs(context, cursor);
+    }
+
+    private static List<LocalSongBean> queryLocalSongs(Context context, Cursor cursor) {
         List<LocalSongBean> songBeen = new ArrayList<>();
         if (cursor == null) {
             return null;
@@ -59,5 +64,8 @@ public class LocalSongLoader {
         return songBeen;
     }
 
-
+    private static Cursor getSongCursor(Context context, String selection, String[] paramArr) {
+        return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
+                selection, paramArr, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+    }
 }
