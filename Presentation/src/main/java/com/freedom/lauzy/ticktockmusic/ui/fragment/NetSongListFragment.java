@@ -10,7 +10,6 @@ import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.model.SongListBean;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.RxBus;
-import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
 import com.freedom.lauzy.ticktockmusic.base.BaseLazyFragment;
 import com.freedom.lauzy.ticktockmusic.contract.NetMusicContract;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
@@ -100,9 +99,7 @@ public class NetSongListFragment extends BaseLazyFragment<NetMusicPresenter>
 
     @Override
     public void loadSuccess(List<SongListBean> songListBeen) {
-        mSongListBeen.clear();
-        mSongListBeen.addAll(songListBeen);
-        mAdapter.notifyDataSetChanged();
+        mAdapter.setNewData(songListBeen);
         mSrlNetSong.setRefreshing(false);
     }
 

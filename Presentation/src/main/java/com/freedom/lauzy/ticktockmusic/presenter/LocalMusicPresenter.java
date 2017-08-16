@@ -4,7 +4,6 @@ import com.freedom.lauzy.interactor.GetLocalSongUseCase;
 import com.freedom.lauzy.model.LocalSongBean;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
 import com.freedom.lauzy.ticktockmusic.contract.LocalMusicContract;
-import com.lauzy.freedom.librarys.common.LogUtil;
 
 import java.util.List;
 
@@ -49,8 +48,8 @@ public class LocalMusicPresenter extends BaseRxPresenter<LocalMusicContract.View
 
             @Override
             public void onError(@NonNull Throwable e) {
+                e.printStackTrace();
                 getView().loadFailed(e);
-                LogUtil.e("LocalMusicPresenter", e.getMessage() + "");
             }
 
             @Override

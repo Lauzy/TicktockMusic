@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Ticktock</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -37,5 +37,6 @@
     <string name="movie_song">Movie</string>
     <string name="net_song">Network</string>
 
+    <string name="song_num"><xliff:g id="count">%d</xliff:g> songs</string>
 
 </resources>

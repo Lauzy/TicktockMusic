@@ -108,9 +108,9 @@ public class NetSongFragment extends BaseFragment<NetMusicCategoryPresenter> {
 
     private void setImage(String imgUrl) {
         ImageLoader.INSTANCE.display(mActivity,
-                new ImageConfig.Builder()
-                        .asBitmap(true)
+                new ImageConfig.Builder<String>()
                         .url(imgUrl)
+                        .asBitmap(true)
                         .placeholder(R.drawable.ic_default_horizontal)
                         .crossFade(500)
                         .isRound(false)

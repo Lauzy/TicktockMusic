@@ -1,5 +1,6 @@
 package com.freedom.lauzy.ticktockmusic.ui.adapter;
 
+import android.net.Uri;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 
@@ -31,8 +32,8 @@ public class LocalSongAdapter extends BaseQuickAdapter<LocalSongBean, BaseViewHo
         helper.setText(R.id.txt_song_title, item.title)
                 .setText(R.id.txt_song_singer, singerAlbum);
         ImageLoader.INSTANCE.display(mContext,
-                new ImageConfig.Builder()
-                        .url(item.albumCover)
+                new ImageConfig.Builder<Uri>()
+                        .url(Uri.parse(item.albumCover))
                         .placeholder(R.drawable.ic_default)
                         .into(helper.getView(R.id.img_song_pic))
                         .build());

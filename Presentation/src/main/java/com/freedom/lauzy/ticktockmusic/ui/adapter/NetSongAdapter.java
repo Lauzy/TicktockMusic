@@ -30,7 +30,7 @@ public class NetSongAdapter extends BaseQuickAdapter<SongListBean, BaseViewHolde
         helper.setText(R.id.txt_song_title, item.title)
                 .setText(R.id.txt_song_singer, item.artistName);
         ImageLoader.INSTANCE.display(mContext,
-                new ImageConfig.Builder()
+                new ImageConfig.Builder<String>()
                         .url(item.imgUrl)
                         .placeholder(R.drawable.ic_default)
                         .into(helper.getView(R.id.img_song_pic))

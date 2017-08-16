@@ -44,6 +44,7 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View> im
     @Override
     public void loadNetMusicList() {
         mStatus = DConstants.Status.INIT_STATUS;
+        mPage = 20;
         GetSongListUseCase.Params params = GetSongListUseCase.Params.forSongList(METHOD, mType, 0, SIZE);
         Disposable disposable = mSongListUseCase.execute(new NetSongObserver(), params);
         addDisposable(disposable);
@@ -81,6 +82,7 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View> im
         @Override
         public void onError(@NonNull Throwable e) {
             super.onError(e);
+            e.printStackTrace();
             if (mStatus == DConstants.Status.INIT_STATUS) {
                 getView().loadFail(e);
             } else if (mStatus == DConstants.Status.LOAD_MORE_STATUS) {
