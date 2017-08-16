@@ -43,6 +43,9 @@ public class GlideCornerTransformation extends BitmapTransformation {
     private static Bitmap cornerTransform(BitmapPool pool, Bitmap source) {
         if (source == null) return null;
         Bitmap result = pool.get(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
+        /*if (null == result) {
+            result = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.RGB_565);
+        }*/
         Canvas canvas = new Canvas(result);
         Paint paint = new Paint();
         paint.setShader(new BitmapShader(source, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));

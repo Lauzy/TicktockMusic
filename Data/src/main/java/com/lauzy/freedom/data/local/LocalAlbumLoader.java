@@ -20,9 +20,11 @@ public class LocalAlbumLoader {
 
     /**
      * 获取全部专辑
+     *
      * @param context context
      * @return 专辑列表
      */
+    @SuppressWarnings("unused")
     public static List<LocalAlbumBean> getLocalAlbums(Context context) {
         Cursor cursor = getAlbumCursor(context, null, null);
         return queryResult(context, cursor);
@@ -36,7 +38,7 @@ public class LocalAlbumLoader {
      * @return 专辑列表
      */
     public static List<LocalAlbumBean> getLocalAlbums(Context context, long id) {
-        Cursor cursor = getAlbumCursor(context, id != 0 ? "_id = ?" : null,
+        Cursor cursor = getAlbumCursor(context, id != 0 ? "_id = ？" : null,
                 id != 0 ? new String[]{String.valueOf(id)} : null);
         return queryResult(context, cursor);
     }

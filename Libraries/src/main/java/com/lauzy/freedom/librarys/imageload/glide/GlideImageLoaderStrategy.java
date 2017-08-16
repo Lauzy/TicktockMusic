@@ -22,6 +22,7 @@ import com.lauzy.freedom.librarys.imageload.ImageConfig;
 public class GlideImageLoaderStrategy implements IBaseImageStrategy {
 
     @Override
+    @SuppressWarnings("unchecked")
     public void display(Context context, ImageConfig imageConfig) {
 
         RequestOptions options = new RequestOptions()

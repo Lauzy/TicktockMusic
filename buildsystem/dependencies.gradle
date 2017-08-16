@@ -25,7 +25,7 @@ ext {
     supportVersion = '25.3.1'
     constraintLayoutVersion = '1.0.2'
     logVersion = '2.1.1'
-    glideVersion = '4.0.0-RC1'
+    glideVersion = '4.0.0'
     skinChangeVersion = '0.1.6@aar'
     materialDialog = '0.9.4.5'
     retrofitVersion = '2.3.0'

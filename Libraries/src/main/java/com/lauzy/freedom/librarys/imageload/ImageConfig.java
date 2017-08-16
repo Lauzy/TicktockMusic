@@ -1,6 +1,7 @@
 package com.lauzy.freedom.librarys.imageload;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.Target;
@@ -12,8 +13,8 @@ import com.bumptech.glide.request.target.Target;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class ImageConfig {
-    private String url;
+public class ImageConfig<T> {
+    private T url;
     private ImageView imageView;
     private int defaultRes;
     private int errorRes;
@@ -23,7 +24,7 @@ public class ImageConfig {
     private boolean isAsBitmap;
     private int duration;//Glide的crossFade时长
 
-    public ImageConfig(Builder builder) {
+    public ImageConfig(Builder<T> builder) {
         this.url = builder.url;
         this.imageView = builder.imageView;
         this.defaultRes = builder.defaultRes;
@@ -55,7 +56,7 @@ public class ImageConfig {
         return cornerSize;
     }
 
-    public String getUrl() {
+    public T getUrl() {
         return url;
     }
 
@@ -71,8 +72,8 @@ public class ImageConfig {
         return errorRes;
     }
 
-    public static class Builder {
-        private String url;
+    public static class Builder<T> {
+        private T url;
         private ImageView imageView;
         private int defaultRes;
         private int errorRes;
@@ -102,7 +103,7 @@ public class ImageConfig {
             return this;
         }
 
-        public Builder url(String url) {
+        public Builder url(T url) {
             this.url = url;
             return this;
         }

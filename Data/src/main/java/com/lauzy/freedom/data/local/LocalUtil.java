@@ -1,9 +1,6 @@
 package com.lauzy.freedom.data.local;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
 
 /**
  * Desc : 音乐工具类
@@ -15,19 +12,20 @@ import android.provider.MediaStore;
 class LocalUtil {
 
     static String getCoverUri(Context context, long albumId) {
-        String albumCoverUri = null;
-        String mUriAlbums = "content://media/external/audio/albums";
+        /*String albumCoverUri = null;
+        String uriAlbums = "content://media/external/audio/albums";
 //        String[] projection = new String[]{"album_art"};
         String[] projection = new String[]{MediaStore.Audio.AlbumColumns.ALBUM_ART};
         Cursor cursor = context.getContentResolver().query(
-                Uri.parse(mUriAlbums + "/" + albumId),
+                Uri.parse(uriAlbums + "/" + albumId),
                 projection, null, null, null);
         if (cursor != null && cursor.getCount() > 0 && cursor.getColumnCount() > 0) {
             cursor.moveToNext();
             albumCoverUri = cursor.getString(0);
             cursor.close();
-        }
-        return albumCoverUri;
+        }*/
+        String uriAlbums = "content://media/external/audio/albumart";
+        return uriAlbums + "/" + albumId;
     }
 
     static String formatTime(long time) {

@@ -57,6 +57,9 @@ public class SongListMapper {
      */
     public List<SongListBean> transform(List<SongListEntity> entities) {
         List<SongListBean> songListBeen = new ArrayList<>();
+        if (null == entities) {
+            return songListBeen;
+        }
         for (SongListEntity entity : entities) {
             SongListBean bean = transform(entity);
             if (bean != null) {
