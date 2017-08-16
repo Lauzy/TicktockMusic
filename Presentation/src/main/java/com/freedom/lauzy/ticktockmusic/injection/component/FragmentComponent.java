@@ -1,9 +1,9 @@
-package com.freedom.lauzy.ticktockmusic.dagger.component;
+package com.freedom.lauzy.ticktockmusic.injection.component;
 
 import android.app.Activity;
 
-import com.freedom.lauzy.ticktockmusic.dagger.module.FragmentModule;
-import com.freedom.lauzy.ticktockmusic.dagger.scope.PerFragment;
+import com.freedom.lauzy.ticktockmusic.injection.module.FragmentModule;
+import com.freedom.lauzy.ticktockmusic.injection.scope.PerFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.AlbumFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongListFragment;

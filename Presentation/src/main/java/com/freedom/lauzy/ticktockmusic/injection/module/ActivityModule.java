@@ -1,10 +1,9 @@
-package com.freedom.lauzy.ticktockmusic.dagger.module;
+package com.freedom.lauzy.ticktockmusic.injection.module;
 
 import android.app.Activity;
 import android.content.Context;
 
-import com.freedom.lauzy.ticktockmusic.dagger.scope.ContextLife;
-import com.freedom.lauzy.ticktockmusic.dagger.scope.PerActivity;
+import com.freedom.lauzy.ticktockmusic.injection.scope.PerActivity;
 
 import dagger.Module;
 import dagger.Provides;

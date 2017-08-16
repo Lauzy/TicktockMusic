@@ -1,9 +1,9 @@
-package com.freedom.lauzy.ticktockmusic.dagger.module;
+package com.freedom.lauzy.ticktockmusic.injection.module;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 
-import com.freedom.lauzy.ticktockmusic.dagger.scope.PerFragment;
+import com.freedom.lauzy.ticktockmusic.injection.scope.PerFragment;
 
 import dagger.Module;
 import dagger.Provides;

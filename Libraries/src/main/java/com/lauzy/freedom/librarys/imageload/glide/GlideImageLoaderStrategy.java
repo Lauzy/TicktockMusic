@@ -1,8 +1,11 @@
 package com.lauzy.freedom.librarys.imageload.glide;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
@@ -24,6 +27,7 @@ public class GlideImageLoaderStrategy implements IBaseImageStrategy {
         RequestOptions options = new RequestOptions()
                 .placeholder(imageConfig.getDefaultRes())
                 .error(imageConfig.getErrorRes());
+
         if (imageConfig.isRound()) {
             if (imageConfig.getCornerSize() == 0) {
                 options.transform(new GlideCornerTransformation(context));
@@ -32,18 +36,30 @@ public class GlideImageLoaderStrategy implements IBaseImageStrategy {
             }
         }
         if (!imageConfig.isAsBitmap()) {
-            Glide.with(context)
+            RequestBuilder<Drawable> requestBuilder = Glide.with(context)
                     .load(imageConfig.getUrl())
-                    .apply(options)
-                    .transition(new DrawableTransitionOptions().crossFade(imageConfig.getDuration()))
-                    .into(imageConfig.getImageView());
+                    .apply(options);
+
+            if (imageConfig.isRound()) {
+                requestBuilder.into(imageConfig.getImageView());
+            } else {
+                requestBuilder
+                        .transition(new DrawableTransitionOptions().crossFade(imageConfig.getDuration()))
+                        .into(imageConfig.getImageView());
+            }
         } else {
-            Glide.with(context)
+            RequestBuilder<Bitmap> requestBuilder = Glide.with(context)
                     .asBitmap()
                     .load(imageConfig.getUrl())
-                    .apply(options)
-                    .transition(new BitmapTransitionOptions().crossFade(imageConfig.getDuration()))
-                    .into(imageConfig.getTarget());
+                    .apply(options);
+
+            if (imageConfig.isRound()) {
+                requestBuilder.into(imageConfig.getImageView());
+            } else {
+                requestBuilder
+                        .transition(new BitmapTransitionOptions().crossFade(imageConfig.getDuration()))
+                        .into(imageConfig.getTarget());
+            }
         }
     }
 

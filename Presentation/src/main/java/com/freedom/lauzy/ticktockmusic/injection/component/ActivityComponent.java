@@ -1,9 +1,10 @@
-package com.freedom.lauzy.ticktockmusic.dagger.component;
+package com.freedom.lauzy.ticktockmusic.injection.component;
 
 import android.app.Activity;
 
-import com.freedom.lauzy.ticktockmusic.dagger.module.ActivityModule;
-import com.freedom.lauzy.ticktockmusic.dagger.scope.PerActivity;
+import com.freedom.lauzy.ticktockmusic.injection.module.ActivityModule;
+import com.freedom.lauzy.ticktockmusic.injection.scope.PerActivity;
+import com.freedom.lauzy.ticktockmusic.ui.activity.AlbumDetailActivity;
 import com.freedom.lauzy.ticktockmusic.ui.activity.MainActivity;
 
 import dagger.Component;
@@ -22,5 +23,7 @@ public interface ActivityComponent {
     Activity getActivity();
 
     void inject(MainActivity mainActivity);
+
+    void inject(AlbumDetailActivity albumDetailActivity);
 
 }

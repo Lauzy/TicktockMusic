@@ -1,4 +1,4 @@
-package com.freedom.lauzy.ticktockmusic.dagger.component;
+package com.freedom.lauzy.ticktockmusic.injection.component;
 
 import android.content.Context;
 
@@ -6,9 +6,8 @@ import com.freedom.lauzy.executor.PostExecutionThread;
 import com.freedom.lauzy.executor.ThreadExecutor;
 import com.freedom.lauzy.repository.LocalSongRepository;
 import com.freedom.lauzy.repository.SongRepository;
-import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
-import com.freedom.lauzy.ticktockmusic.dagger.module.ApplicationModule;
-import com.freedom.lauzy.ticktockmusic.dagger.scope.ContextLife;
+import com.freedom.lauzy.ticktockmusic.injection.module.ApplicationModule;
+import com.freedom.lauzy.ticktockmusic.injection.scope.ContextLife;
 
 import javax.inject.Singleton;
 

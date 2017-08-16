@@ -13,9 +13,9 @@ import android.view.ViewGroup;
 
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.TicktockApplication;
-import com.freedom.lauzy.ticktockmusic.dagger.component.DaggerFragmentComponent;
-import com.freedom.lauzy.ticktockmusic.dagger.component.FragmentComponent;
-import com.freedom.lauzy.ticktockmusic.dagger.module.FragmentModule;
+import com.freedom.lauzy.ticktockmusic.injection.component.DaggerFragmentComponent;
+import com.freedom.lauzy.ticktockmusic.injection.component.FragmentComponent;
+import com.freedom.lauzy.ticktockmusic.injection.module.FragmentModule;
 import com.lauzy.freedom.librarys.common.ScreenUtils;
 
 import javax.inject.Inject;

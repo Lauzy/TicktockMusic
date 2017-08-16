@@ -1,4 +1,4 @@
-package com.freedom.lauzy.ticktockmusic.dagger.scope;
+package com.freedom.lauzy.ticktockmusic.injection.scope;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

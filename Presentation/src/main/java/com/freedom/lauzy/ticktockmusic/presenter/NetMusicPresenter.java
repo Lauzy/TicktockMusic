@@ -29,7 +29,7 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View> im
     private static final String METHOD = NetConstants.Value.METHOD_SONG_LIST;
     private static final int SIZE = 20;
     private int mType = 1;
-    private int mPage = 1;
+    private int mPage = 20;
     private int mStatus;
 
     @Inject
@@ -71,7 +71,7 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View> im
             } else if (mStatus == DConstants.Status.LOAD_MORE_STATUS) {
                 if (null != songListBeen && songListBeen.size() != 0) {
                     getView().loadMoreSuccess(songListBeen);
-                    mPage++;
+                    mPage += SIZE;
                 } else {
                     getView().loadMoreEnd();
                 }
