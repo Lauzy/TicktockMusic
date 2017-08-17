@@ -30,7 +30,7 @@ public class AlbumDetailAdapter extends BaseQuickAdapter<LocalSongBean, BaseView
         helper.setText(R.id.txt_song_title, item.title)
                 .setText(R.id.txt_song_singer, singerAlbum);
         ImageLoader.INSTANCE.display(mContext,
-                new ImageConfig.Builder<String>()
+                new ImageConfig.Builder()
                         .url(item.albumCover)
                         .placeholder(R.drawable.ic_default)
                         .into(helper.getView(R.id.img_song_pic))

@@ -18,4 +18,16 @@
         <attr name="enable_font_type" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="PlayPauseView">
+        <attr name="bg_color" format="color"/>
+        <attr name="btn_color" format="color"/>
+        <attr name="gap_width" format="float"/>
+        <attr name="space_padding" format="float"/>
+        <attr name="anim_duration" format="integer"/>
+        <attr name="anim_direction">
+            <enum name="positive" value="1"/>
+            <enum name="negative" value="2"/>
+        </attr>
+    </declare-styleable>
+
 </resources>

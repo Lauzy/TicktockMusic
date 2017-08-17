@@ -32,6 +32,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
     DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view)
     NavigationView mNavView;
+    private static final int FRAGMENT_CHANGE_DELAY = 400;
     private Handler mDrawerHandler = new Handler();
 
     @Override
@@ -56,6 +57,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         loadFragments(savedInstanceState);
         subscribeDrawerEvent();
@@ -63,7 +65,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
     }
 
     /**
-     * 更换抽屉主题事件
+     * Subscribe the event of the drawer theme.
      */
     private void subscribeDrawerEvent() {
         Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(ThemeEvent.class,
@@ -72,7 +74,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
     }
 
     /**
-     * 更换抽屉的主题色彩
+     * Change the theme of the drawer.
      */
     private void setDrawItemColor() {
         ColorStateList stateList = ThemeUtils.getThemeColorStateList(MainActivity.this, R.color.color_drawer_item);
@@ -125,7 +127,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
 
         }
         if (drawerRunnable != null) {
-            mDrawerHandler.postDelayed(drawerRunnable, 200);
+            mDrawerHandler.postDelayed(drawerRunnable, FRAGMENT_CHANGE_DELAY);
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;

@@ -1,18 +1,16 @@
 package com.freedom.lauzy.ticktockmusic.ui.fragment;
 
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.model.SongListBean;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseLazyFragment;
 import com.freedom.lauzy.ticktockmusic.contract.NetMusicContract;
-import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
+import com.freedom.lauzy.ticktockmusic.event.PaletteEvent;
 import com.freedom.lauzy.ticktockmusic.presenter.NetMusicPresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.NetSongAdapter;
 import com.lauzy.freedom.librarys.widght.TickSwipeRefreshLayout;
@@ -63,8 +61,8 @@ public class NetSongListFragment extends BaseLazyFragment<NetMusicPresenter>
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(ThemeEvent.class,
-                themeEvent -> setThemeLayoutBg());
+        Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(PaletteEvent.class,
+                paletteEvent -> mSrlNetSong.setColorSchemeColors(paletteEvent.getColor()));
         RxBus.INSTANCE.addDisposable(this, disposable);
         if (getArguments() != null) {
             mType = getArguments().getInt(TYPE);
@@ -73,13 +71,7 @@ public class NetSongListFragment extends BaseLazyFragment<NetMusicPresenter>
 
     @Override
     protected void initViews() {
-        setThemeLayoutBg();
         initRecyclerView();
-    }
-
-    private void setThemeLayoutBg() {
-        ColorStateList stateList = ThemeUtils.getThemeColorStateList(mActivity, R.color.theme_color_primary);
-        mSrlNetSong.setColorSchemeColors(stateList.getDefaultColor());
     }
 
     private void initRecyclerView() {

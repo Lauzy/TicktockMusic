@@ -37,6 +37,9 @@
     <string name="movie_song">影视金曲</string>
     <string name="net_song">网络</string>
 
+    <string name="open_permission">打开</string>
+    <string name="permission_denied">访问音乐的权限被拒绝了哦，点击设置打开享受音乐。</string>
+
     <string name="song_num"><xliff:g id="count">%d</xliff:g>首</string>
 
 </resources>

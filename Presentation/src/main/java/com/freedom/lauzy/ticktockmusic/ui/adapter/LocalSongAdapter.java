@@ -10,6 +10,7 @@ import com.freedom.lauzy.model.LocalSongBean;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
+import com.lauzy.freedom.librarys.imageload.Param;
 
 import java.util.List;
 
@@ -32,8 +33,9 @@ public class LocalSongAdapter extends BaseQuickAdapter<LocalSongBean, BaseViewHo
         helper.setText(R.id.txt_song_title, item.title)
                 .setText(R.id.txt_song_singer, singerAlbum);
         ImageLoader.INSTANCE.display(mContext,
-                new ImageConfig.Builder<Uri>()
-                        .url(Uri.parse(item.albumCover))
+                new ImageConfig.Builder()
+//                        .urlType(Param.UrlType.URI)
+                        .url(item.albumCover)
                         .placeholder(R.drawable.ic_default)
                         .into(helper.getView(R.id.img_song_pic))
                         .build());

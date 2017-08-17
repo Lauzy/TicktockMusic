@@ -37,6 +37,9 @@
     <string name="movie_song">Movie</string>
     <string name="net_song">Network</string>
 
+    <string name="open_permission">open</string>
+    <string name="permission_denied">Permission to access the music was denied.Please open the permission to enjoy the music.</string>
+
     <string name="song_num"><xliff:g id="count">%d</xliff:g> songs</string>
 
 </resources>

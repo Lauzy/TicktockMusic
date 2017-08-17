@@ -39,7 +39,6 @@ dependencies {
     compile libDependencies.materialDialog
     compile libDependencies.design
     compile libDependencies.baseAdapter
-    compile libDependencies.lBehavior
     compile libDependencies.cardView
     compile libDependencies.palette
     compile libDependencies.rxJava

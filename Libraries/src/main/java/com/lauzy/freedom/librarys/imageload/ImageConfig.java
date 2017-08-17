@@ -13,8 +13,10 @@ import com.bumptech.glide.request.target.Target;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class ImageConfig<T> {
-    private T url;
+public class ImageConfig {
+   /* private Param.UrlType urlType = Param.UrlType.URL;
+    private Uri uri;*/
+    private Object url;
     private ImageView imageView;
     private int defaultRes;
     private int errorRes;
@@ -24,8 +26,10 @@ public class ImageConfig<T> {
     private boolean isAsBitmap;
     private int duration;//Glide的crossFade时长
 
-    public ImageConfig(Builder<T> builder) {
+    public ImageConfig(Builder builder) {
         this.url = builder.url;
+        /*this.uri = builder.uri;
+        this.urlType = builder.urlType;*/
         this.imageView = builder.imageView;
         this.defaultRes = builder.defaultRes;
         this.errorRes = builder.errorRes;
@@ -35,6 +39,14 @@ public class ImageConfig<T> {
         this.isAsBitmap = builder.isAsBitmap;
         this.duration = builder.duration;
     }
+
+   /* public Param.UrlType getUrlType() {
+        return urlType;
+    }
+
+    public Uri getUri() {
+        return uri;
+    }*/
 
     public int getDuration() {
         return duration;
@@ -56,7 +68,7 @@ public class ImageConfig<T> {
         return cornerSize;
     }
 
-    public T getUrl() {
+    public Object getUrl() {
         return url;
     }
 
@@ -72,8 +84,10 @@ public class ImageConfig<T> {
         return errorRes;
     }
 
-    public static class Builder<T> {
-        private T url;
+    public static class Builder {
+        /*private Param.UrlType urlType = Param.UrlType.URL;
+        private Uri uri;*/
+        private Object url;
         private ImageView imageView;
         private int defaultRes;
         private int errorRes;
@@ -82,6 +96,11 @@ public class ImageConfig<T> {
         private boolean isAsBitmap;
         private Target<Bitmap> target;
         private int duration;
+/*
+        public Builder urlType(Param.UrlType urlType) {
+            this.urlType = urlType;
+            return this;
+        }*/
 
         public Builder crossFade(int duration) {
             this.duration = duration;
@@ -103,10 +122,15 @@ public class ImageConfig<T> {
             return this;
         }
 
-        public Builder url(T url) {
+        public Builder url(Object url) {
             this.url = url;
             return this;
         }
+
+       /* public Builder url(Uri uri) {
+            this.uri = uri;
+            return this;
+        }*/
 
         public Builder into(ImageView imageView) {
             this.imageView = imageView;

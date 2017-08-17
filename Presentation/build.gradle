@@ -79,6 +79,7 @@ dependencies {
     compile presentationDependencies.dagger
     annotationProcessor presentationDependencies.daggerCompiler
     compile presentationDependencies.butterKnife
+    compile presentationDependencies.rxPermission
     annotationProcessor presentationDependencies.butterKnifeCompiler
     testCompile testDependencies.junit
     releaseCompile project(path: ':Libraries', configuration: 'release')

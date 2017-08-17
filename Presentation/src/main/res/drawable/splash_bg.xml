@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+            android:opacity="opaque">
+    <item
+        android:drawable="@color/white"/>
+    <item android:bottom="@dimen/dp_120">
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/splash_music"/>
+    </item>
+
+    <item  android:bottom="@dimen/dp_60">
+        <bitmap android:src="@drawable/splash_txt" android:gravity="bottom"/>
+    </item>
+</layer-list>
