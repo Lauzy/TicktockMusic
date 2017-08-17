@@ -55,7 +55,7 @@ public class LocalSongLoader {
                 localSongBean.artistName = artistName;
                 localSongBean.albumId = albumId;
                 localSongBean.albumName = albumName;
-                localSongBean.albumCover = LocalUtil.getCoverUri(context, albumId);
+                localSongBean.albumCover = LocalUtil.getCoverUri(albumId);
                 localSongBean.songLength = LocalUtil.formatTime(duration);
                 songBeen.add(localSongBean);
             }

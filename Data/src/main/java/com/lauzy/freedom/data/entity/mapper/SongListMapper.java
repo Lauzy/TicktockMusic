@@ -25,6 +25,7 @@ public class SongListMapper {
 
     /**
      * 转换 entity
+     *
      * @param entity 实体对象
      * @return 转换后的实体对象
      */
@@ -52,14 +53,12 @@ public class SongListMapper {
 
     /**
      * 转换entity集合
+     *
      * @param entities 集合
      * @return 转换后的集合
      */
     public List<SongListBean> transform(List<SongListEntity> entities) {
         List<SongListBean> songListBeen = new ArrayList<>();
-        if (null == entities) {
-            return songListBeen;
-        }
         for (SongListEntity entity : entities) {
             SongListBean bean = transform(entity);
             if (bean != null) {

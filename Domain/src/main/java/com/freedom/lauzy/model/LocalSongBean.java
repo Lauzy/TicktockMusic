@@ -15,7 +15,7 @@ public class LocalSongBean {
     public String path; //路径
     public long albumId; //专辑ID
     public String albumName; //专辑名
-    public String albumCover;//专辑封面
+    public Object albumCover;//专辑封面
     public long artistId; //歌手ID
     public String artistName; //歌手名
     public long size;//大小

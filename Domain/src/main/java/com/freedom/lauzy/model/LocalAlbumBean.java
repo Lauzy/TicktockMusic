@@ -13,5 +13,5 @@ public class LocalAlbumBean {
     public long id;
     public int songsNum;
     public String albumName;
-    public String albumCover;
+    public Object albumCover;
 }

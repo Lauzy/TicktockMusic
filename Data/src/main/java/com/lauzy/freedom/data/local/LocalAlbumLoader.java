@@ -58,7 +58,7 @@ public class LocalAlbumLoader {
             albumBean.artistName = artistName;
             albumBean.albumName = albumName;
             albumBean.songsNum = songsNum;
-            albumBean.albumCover = LocalUtil.getCoverUri(context, id);
+            albumBean.albumCover = LocalUtil.getCoverUri(id);
             albumBeen.add(albumBean);
         }
         cursor.close();
