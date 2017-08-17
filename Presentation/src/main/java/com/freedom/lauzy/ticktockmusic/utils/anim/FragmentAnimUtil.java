@@ -6,7 +6,7 @@ import android.transition.Slide;
 import android.view.Gravity;
 
 /**
- * Desc :
+ * Desc : Fragment切换动画
  * Author : Lauzy
  * Date : 2017/8/9
  * Blog : http://www.jianshu.com/u/e76853f863a9

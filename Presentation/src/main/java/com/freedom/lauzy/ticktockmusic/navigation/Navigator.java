@@ -3,6 +3,8 @@ package com.freedom.lauzy.ticktockmusic.navigation;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
@@ -31,11 +33,6 @@ public class Navigator {
     public Navigator() {
     }
 
-    /**
-     * Goes to SettingActivity.
-     *
-     * @param context A Context needed to open the destiny activity.
-     */
     public void navigateToSetting(Context context) {
         if (context != null) {
             Intent intent = SettingActivity.newInstance(context);
@@ -61,5 +58,11 @@ public class Navigator {
                 .add(R.id.layout_main, fragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    public void navigateToMusicService(@NonNull Context context, ServiceConnection conn) {
+        Intent intent = new Intent("com.freedom.lauzy.ticktockmusic.service.MusicService");
+        intent.setPackage(context.getPackageName());
+        context.bindService(intent, conn, Context.BIND_AUTO_CREATE);
     }
 }

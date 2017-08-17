@@ -22,23 +22,23 @@ public class ThemeHelper {
     private static final String CURRENT_THEME = "theme_current";
     private static final String THEME_CONFIG = "theme_config";
 
-    public static final int CARD_SAKURA = 0x1;
-    public static final int CARD_HOPE = 0x2;
-    public static final int CARD_STORM = 0x3;
-    public static final int CARD_WOOD = 0x4;
-    public static final int CARD_LIGHT = 0x5;
-    public static final int CARD_THUNDER = 0x6;
-    public static final int CARD_SAND = 0x7;
-    public static final int CARD_FIREY = 0x8;
+    private static final int CARD_SAKURA = 0x1;
+    private static final int CARD_HOPE = 0x2;
+    private static final int CARD_STORM = 0x3;
+    private static final int CARD_WOOD = 0x4;
+    private static final int CARD_LIGHT = 0x5;
+    private static final int CARD_THUNDER = 0x6;
+    private static final int CARD_SAND = 0x7;
+    private static final int CARD_FIREY = 0x8;
 
-    public static final String THEME_PINK = "pink";
-    public static final String THEME_BLUE = "blue";
-    public static final String THEME_PURPLE = "purple";
-    public static final String THEME_GREEN = "green";
-    public static final String THEME_GREEN_LIGHT = "green_light";
-    public static final String THEME_YELLOW = "yellow";
-    public static final String THEME_ORANGE = "orange";
-    public static final String THEME_RED = "red";
+    private static final String THEME_PINK = "pink";
+    private static final String THEME_BLUE = "blue";
+    private static final String THEME_PURPLE = "purple";
+    private static final String THEME_GREEN = "green";
+    private static final String THEME_GREEN_LIGHT = "green_light";
+    private static final String THEME_YELLOW = "yellow";
+    private static final String THEME_ORANGE = "orange";
+    private static final String THEME_RED = "red";
 
     public static SharedPreferences getSharePreference(Context context) {
         return context.getSharedPreferences(THEME_CONFIG, Context.MODE_PRIVATE);

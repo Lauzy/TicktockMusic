@@ -1,8 +1,12 @@
 package com.freedom.lauzy.ticktockmusic.ui.activity;
 
+import android.content.ComponentName;
+import android.content.ServiceConnection;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -14,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.bilibili.magicasakura.utils.ThemeUtils;
+import com.freedom.lauzy.ticktockmusic.IMusicInterface;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
@@ -25,6 +30,13 @@ import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongFragment;
 import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
 
+/**
+ * Desc : Main
+ * Author : Lauzy
+ * Date : 2017/6/30
+ * Blog : http://www.jianshu.com/u/e76853f863a9
+ * Email : freedompaladin@gmail.com
+ */
 public class MainActivity extends BaseActivity<MainPresenter>
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -34,6 +46,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
     NavigationView mNavView;
     private static final int FRAGMENT_CHANGE_DELAY = 400;
     private Handler mDrawerHandler = new Handler();
+    private IMusicInterface mMusicService;
 
     @Override
     protected int getLayoutRes() {
@@ -90,6 +103,17 @@ public class MainActivity extends BaseActivity<MainPresenter>
 
     @Override
     protected void loadData() {
+        mNavigator.navigateToMusicService(this, new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                mMusicService = IMusicInterface.Stub.asInterface(service);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                mMusicService = null;
+            }
+        });
     }
 
     private Runnable mLmRunnable = () -> {
@@ -150,6 +174,11 @@ public class MainActivity extends BaseActivity<MainPresenter>
                 }
                 return true;
             case R.id.action_search:
+                try {
+                    mMusicService.play();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);

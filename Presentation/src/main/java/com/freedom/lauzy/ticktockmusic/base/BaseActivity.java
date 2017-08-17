@@ -14,10 +14,10 @@ import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.RxBus;
 import com.freedom.lauzy.ticktockmusic.TicktockApplication;
+import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.injection.component.ActivityComponent;
 import com.freedom.lauzy.ticktockmusic.injection.component.DaggerActivityComponent;
 import com.freedom.lauzy.ticktockmusic.injection.module.ActivityModule;
-import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.navigation.Navigator;
 import com.lauzy.freedom.librarys.common.ScreenUtils;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
@@ -25,7 +25,6 @@ import com.lauzy.freedom.librarys.widght.TickToolbar;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -39,11 +38,8 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
 
     @Inject
     protected Navigator mNavigator;
-
     @Inject
     protected T mPresenter;
-
-    private Unbinder mBind;
     private Toolbar mToolbar;
 
     @SuppressWarnings("unchecked")
@@ -64,7 +60,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
     private void setViews() {
         setStatusBar();
         setContentView(getLayoutRes());
-        mBind = ButterKnife.bind(this);
+        ButterKnife.bind(this);
         setToolbar();
         initViews();
     }
@@ -156,7 +152,6 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mBind.unbind();
         if (null != mPresenter) {
             mPresenter.detachView();
         }

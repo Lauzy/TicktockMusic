@@ -15,6 +15,13 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
+/**
+ * Desc : Launch Activity
+ * Author : Lauzy
+ * Date : 2017/8/17
+ * Blog : http://www.jianshu.com/u/e76853f863a9
+ * Email : freedompaladin@gmail.com
+ */
 public class SplashActivity extends BaseActivity {
 
     private static final int LAUNCH_TIME = 200;
@@ -57,7 +64,8 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void showSnackBar() {
-        Snackbar.make(findViewById(android.R.id.content), R.string.permission_denied, Snackbar.LENGTH_INDEFINITE)
+        Snackbar.make(findViewById(android.R.id.content), R.string.permission_denied,
+                Snackbar.LENGTH_INDEFINITE)
                 .setDuration(SNACK_BAR_DURATION)
                 .setAction(R.string.open_permission, v -> startActivity(IntentUtil.openSetting(SplashActivity.this))
                 ).setActionTextColor(ContextCompat.getColor(SplashActivity.this

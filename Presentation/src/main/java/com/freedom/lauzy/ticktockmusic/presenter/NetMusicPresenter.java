@@ -44,7 +44,7 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View> im
     @Override
     public void loadNetMusicList() {
         mStatus = DConstants.Status.INIT_STATUS;
-        mPage = 20;
+        mPage = SIZE;
         GetSongListUseCase.Params params = GetSongListUseCase.Params.forSongList(METHOD, mType, 0, SIZE);
         Disposable disposable = mSongListUseCase.execute(new NetSongObserver(), params);
         addDisposable(disposable);
