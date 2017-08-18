@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.lauzy.freedom.librarys.widght.TickFrameLayout
+<com.lauzy.freedom.librarys.widght.TickLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-</com.lauzy.freedom.librarys.widght.TickFrameLayout>
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.lauzy.freedom.librarys.widght.TickFrameLayout
+        android:id="@+id/layout_main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+    </com.lauzy.freedom.librarys.widght.TickFrameLayout>
+
+    <include layout="@layout/layout_music_bar"/>
+
+</com.lauzy.freedom.librarys.widght.TickLinearLayout>

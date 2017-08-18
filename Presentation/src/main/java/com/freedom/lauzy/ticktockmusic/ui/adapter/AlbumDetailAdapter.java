@@ -5,8 +5,8 @@ import android.support.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.freedom.lauzy.model.LocalSongBean;
 import com.freedom.lauzy.ticktockmusic.R;
+import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 
@@ -19,13 +19,13 @@ import java.util.List;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class AlbumDetailAdapter extends BaseQuickAdapter<LocalSongBean, BaseViewHolder> {
-    public AlbumDetailAdapter(@LayoutRes int layoutResId, @Nullable List<LocalSongBean> data) {
+public class AlbumDetailAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolder> {
+    public AlbumDetailAdapter(@LayoutRes int layoutResId, @Nullable List<SongEntity> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, LocalSongBean item) {
+    protected void convert(BaseViewHolder helper, SongEntity item) {
         String singerAlbum = item.artistName + " 丨 " + item.albumName;
         helper.setText(R.id.txt_song_title, item.title)
                 .setText(R.id.txt_song_singer, singerAlbum);

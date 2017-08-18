@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.freedom.lauzy.model.LocalSongBean;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
 import com.freedom.lauzy.ticktockmusic.contract.LocalMusicContract;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
+import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.LocalMusicPresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.LocalSongAdapter;
 import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;
@@ -28,7 +28,7 @@ public class SongFragment extends BaseFragment<LocalMusicPresenter> implements L
     RecyclerView mRvLocalSong;
     @BindView(R.id.srl_local_song)
     TickSwipeRefreshLayout mSrlLocalSong;
-    private List<LocalSongBean> mLocalSongBeen = new ArrayList<>();
+    private List<SongEntity> mLocalSongBeen = new ArrayList<>();
     private LocalSongAdapter mAdapter;
 
     public static SongFragment newInstance() {
@@ -77,7 +77,7 @@ public class SongFragment extends BaseFragment<LocalMusicPresenter> implements L
     }
 
     @Override
-    public void loadLocalMusic(List<LocalSongBean> localSongBeen) {
+    public void loadLocalMusic(List<SongEntity> localSongBeen) {
         mLocalSongBeen.clear();
         mLocalSongBeen.addAll(localSongBeen);
         mAdapter.notifyDataSetChanged();

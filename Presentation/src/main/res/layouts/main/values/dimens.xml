@@ -24,6 +24,7 @@
     <dimen name="dp_30">30dp</dimen>
     <dimen name="dp_45">45dp</dimen>
     <dimen name="dp_48">48dp</dimen>
+    <dimen name="dp_55">55dp</dimen>
     <dimen name="dp_60">60dp</dimen>
     <dimen name="dp_80">80dp</dimen>
     <dimen name="dp_85">85dp</dimen>

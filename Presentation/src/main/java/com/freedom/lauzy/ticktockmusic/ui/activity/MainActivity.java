@@ -1,12 +1,14 @@
 package com.freedom.lauzy.ticktockmusic.ui.activity;
 
 import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.ColorStateList;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -22,13 +24,21 @@ import com.freedom.lauzy.ticktockmusic.IMusicInterface;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
+import com.freedom.lauzy.ticktockmusic.event.SongEvent;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.presenter.MainPresenter;
+import com.freedom.lauzy.ticktockmusic.service.MusicPlayer;
+import com.freedom.lauzy.ticktockmusic.service.MusicService;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.LocalMusicFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongFragment;
+import com.lauzy.freedom.librarys.widght.TickProgressBar;
+import com.lauzy.freedom.librarys.widght.music.PlayPauseView;
 
 import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+
+import static com.freedom.lauzy.ticktockmusic.service.MusicPlayer.sMusicService;
 
 /**
  * Desc : Main
@@ -44,9 +54,24 @@ public class MainActivity extends BaseActivity<MainPresenter>
     DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view)
     NavigationView mNavView;
+    @BindView(R.id.pb_cur_song)
+    TickProgressBar mPbCurSong;
+    @BindView(R.id.play_pause)
+    PlayPauseView mPlayPauseView;
     private static final int FRAGMENT_CHANGE_DELAY = 400;
+    private static final String SERVICE_ACTION = "com.freedom.lauzy.ticktockmusic.IMusicInterface";
     private Handler mDrawerHandler = new Handler();
-    private IMusicInterface mMusicService;
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            sMusicService = IMusicInterface.Stub.asInterface(service);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            sMusicService = null;
+        }
+    };
 
     @Override
     protected int getLayoutRes() {
@@ -74,6 +99,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
         super.onCreate(savedInstanceState);
         loadFragments(savedInstanceState);
         subscribeDrawerEvent();
+        subscribeSongEvent();
         setDrawItemColor();
     }
 
@@ -103,15 +129,28 @@ public class MainActivity extends BaseActivity<MainPresenter>
 
     @Override
     protected void loadData() {
-        mNavigator.navigateToMusicService(this, new ServiceConnection() {
+        Intent intent = new Intent(SERVICE_ACTION);
+        intent.setPackage(getPackageName());
+        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        mPlayPauseView.setPlayPauseListener(new PlayPauseView.PlayPauseListener() {
             @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mMusicService = IMusicInterface.Stub.asInterface(service);
+            public void play() {
             }
 
             @Override
-            public void onServiceDisconnected(ComponentName name) {
-                mMusicService = null;
+            public void pause() {
+
+            }
+        });
+    }
+
+    private void subscribeSongEvent() {
+        MusicService musicService = new MusicService();
+        Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(SongEvent.class, new Consumer<SongEvent>() {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull SongEvent songEvent) throws Exception {
+                mPbCurSong.setMax((int) songEvent.getSongEntity().duration);
+                mPbCurSong.setProgress((int) musicService.getProgress());
             }
         });
     }
@@ -128,7 +167,6 @@ public class MainActivity extends BaseActivity<MainPresenter>
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        getSupportFragmentManager().popBackStackImmediate();
         Runnable drawerRunnable = null;
         switch (item.getItemId()) {
             case R.id.nav_music:
@@ -149,6 +187,9 @@ public class MainActivity extends BaseActivity<MainPresenter>
             case R.id.nav_exit:
                 break;
 
+        }
+        if (item.getItemId() != R.id.nav_setting) {
+            getSupportFragmentManager().popBackStackImmediate();
         }
         if (drawerRunnable != null) {
             mDrawerHandler.postDelayed(drawerRunnable, FRAGMENT_CHANGE_DELAY);
@@ -174,11 +215,6 @@ public class MainActivity extends BaseActivity<MainPresenter>
                 }
                 return true;
             case R.id.action_search:
-                try {
-                    mMusicService.play();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -202,5 +238,8 @@ public class MainActivity extends BaseActivity<MainPresenter>
     protected void onDestroy() {
         super.onDestroy();
         RxBus.INSTANCE.dispose(this);
+        if (mServiceConnection != null) {
+            unbindService(mServiceConnection);
+        }
     }
 }

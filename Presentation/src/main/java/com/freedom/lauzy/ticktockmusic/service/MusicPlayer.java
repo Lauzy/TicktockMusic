@@ -1,9 +1,9 @@
 package com.freedom.lauzy.ticktockmusic.service;
 
-import android.content.Context;
 import android.os.RemoteException;
 
 import com.freedom.lauzy.ticktockmusic.IMusicInterface;
+import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 
 /**
  * Desc : 播放工具类
@@ -12,24 +12,66 @@ import com.freedom.lauzy.ticktockmusic.IMusicInterface;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class MusicPlayer {
-    private static IMusicInterface mMusicService;
+public class MusicPlayer implements IMusicPlayerInterface {
+    public static IMusicInterface sMusicService;
 
-    public static void bindService(Context context){
-
+    private static class Singleton {
+        private static MusicPlayer INSTANCE = new MusicPlayer();
     }
 
-    public static void play(){
+    public static MusicPlayer getInstance() {
+        return Singleton.INSTANCE;
+    }
+
+    @Override
+    public void play(SongEntity songEntity) {
         try {
-            mMusicService.play();
+            sMusicService.play(songEntity);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
-    public static void pause(){
+    @Override
+    public void pause() {
         try {
-            mMusicService.pause();
+            sMusicService.pause();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void playLast() {
+        try {
+            sMusicService.playLast();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void playNext() {
+        try {
+            sMusicService.playNext();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void stop() {
+        try {
+            sMusicService.stop();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void seekTo(int progress) {
+        try {
+            sMusicService.seekTo(progress);
         } catch (RemoteException e) {
             e.printStackTrace();
         }

@@ -30,7 +30,7 @@ import static com.lauzy.freedom.data.net.constants.NetConstants.Value.TYPE_WESTE
 public class NetMusicCategoryPresenter extends BasePresenter {
 
     @Inject
-    public NetMusicCategoryPresenter() {
+    NetMusicCategoryPresenter() {
     }
 
     public List<CategoryBean> getCategoryData(Context context) {

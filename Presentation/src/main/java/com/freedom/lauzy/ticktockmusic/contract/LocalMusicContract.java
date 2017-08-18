@@ -1,7 +1,7 @@
 package com.freedom.lauzy.ticktockmusic.contract;
 
-import com.freedom.lauzy.model.LocalSongBean;
 import com.freedom.lauzy.ticktockmusic.base.IBaseView;
+import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public interface LocalMusicContract {
     }
 
     interface View extends IBaseView {
-        void loadLocalMusic(List<LocalSongBean> localSongBeen);
+        void loadLocalMusic(List<SongEntity> localSongBeen);
 
         void setEmptyView();
 

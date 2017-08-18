@@ -57,7 +57,7 @@ public class AlbumFragment extends BaseFragment<LocalAlbumPresenter> implements 
         mAdapter = new AlbumAdapter(R.layout.layout_album_item, mLocalAlbumBeen);
         mRvAlbum.setAdapter(mAdapter);
         mRvAlbum.addItemDecoration(new GridItemDecoration.Builder(mActivity)
-                .setIncludeEdge(false)
+                .setIncludeEdge(true)
                 .setSpace(10)
                 .build());
         mPresenter.loadLocalAlbum();

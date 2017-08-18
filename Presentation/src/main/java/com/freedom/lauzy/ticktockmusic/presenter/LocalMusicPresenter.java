@@ -4,6 +4,8 @@ import com.freedom.lauzy.interactor.GetLocalSongUseCase;
 import com.freedom.lauzy.model.LocalSongBean;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
 import com.freedom.lauzy.ticktockmusic.contract.LocalMusicContract;
+import com.freedom.lauzy.ticktockmusic.model.SongEntity;
+import com.freedom.lauzy.ticktockmusic.model.mapper.LocalSongMapper;
 
 import java.util.List;
 
@@ -23,11 +25,13 @@ public class LocalMusicPresenter extends BaseRxPresenter<LocalMusicContract.View
         implements LocalMusicContract.SongPresenter {
 
     private GetLocalSongUseCase mGetLocalSongUseCase;
+    private LocalSongMapper mLocalSongMapper;
     private long mId;//专辑ID
 
     @Inject
-    LocalMusicPresenter(GetLocalSongUseCase getLocalSongUseCase) {
+    LocalMusicPresenter(GetLocalSongUseCase getLocalSongUseCase, LocalSongMapper localSongMapper) {
         mGetLocalSongUseCase = getLocalSongUseCase;
+        mLocalSongMapper = localSongMapper;
     }
 
     public void setId(long id) {
@@ -40,7 +44,8 @@ public class LocalMusicPresenter extends BaseRxPresenter<LocalMusicContract.View
             @Override
             public void onNext(@NonNull List<LocalSongBean> localSongBeen) {
                 if (localSongBeen != null && localSongBeen.size() != 0) {
-                    getView().loadLocalMusic(localSongBeen);
+                    List<SongEntity> songEntities = mLocalSongMapper.transform(localSongBeen);
+                    getView().loadLocalMusic(songEntities);
                 } else {
                     getView().setEmptyView();
                 }

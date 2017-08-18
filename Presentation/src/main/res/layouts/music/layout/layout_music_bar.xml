@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.lauzy.freedom.librarys.widght.TickRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_song_item"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_55"
+    android:background="?selectableItemBackgroundBorderless"
+    android:clickable="true">
+
+    <ImageView
+        android:id="@+id/img_cur_song"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:adjustViewBounds="true"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_default"/>
+
+    <com.lauzy.freedom.librarys.widght.TickTextView
+        android:id="@+id/txt_cur_song"
+        style="@style/MarqueeTxtStyle"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_toRightOf="@id/img_cur_song"
+        tools:text="@string/app_name"/>
+
+    <com.lauzy.freedom.librarys.widght.TickTextView
+        android:id="@+id/txt_cur_singer"
+        style="@style/MarqueeTxtStyle"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:layout_toRightOf="@id/img_cur_song"
+        android:textColor="@color/gray_dark"
+        android:textSize="@dimen/sp_1205"
+        tools:text="@string/app_name"/>
+
+    <ImageView
+        android:id="@+id/img_play_next"
+        android:layout_width="@dimen/dp_30"
+        android:layout_height="@dimen/dp_30"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dp_8"
+        android:layout_marginRight="@dimen/dp_15"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_skip_next"/>
+
+    <com.lauzy.freedom.librarys.widght.music.PlayPauseView
+        android:id="@+id/play_pause"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:layout_toLeftOf="@id/img_play_next"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:contentDescription="@null"
+        android:scaleType="center"/>
+
+    <ImageView
+        android:id="@+id/img_play_last"
+        android:layout_width="@dimen/dp_30"
+        android:layout_height="@dimen/dp_30"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/dp_8"
+        android:layout_toLeftOf="@id/play_pause"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_skip_previous"/>
+
+    <com.lauzy.freedom.librarys.widght.TickProgressBar
+        android:id="@+id/pb_cur_song"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_2"
+        android:elevation="@dimen/dp_5"
+        app:elevation="@dimen/dp_5"
+        app:progressTint="@color/theme_color_primary"/>
+
+</com.lauzy.freedom.librarys.widght.TickRelativeLayout>

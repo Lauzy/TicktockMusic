@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.freedom.lauzy.model.LocalSongBean;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
 import com.freedom.lauzy.ticktockmusic.contract.LocalMusicContract;
+import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.LocalMusicPresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.AlbumDetailAdapter;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
@@ -25,7 +25,7 @@ public class AlbumDetailActivity extends BaseActivity<LocalMusicPresenter> imple
     @BindView(R.id.rv_album_detail)
     RecyclerView mRvAlbumDetail;
     private static final String ALBUM_ID = "_id";
-    private List<LocalSongBean> mLocalSongBeen = new ArrayList<>();
+    private List<SongEntity> mLocalSongBeen = new ArrayList<>();
     private AlbumDetailAdapter mAdapter;
 
     public static Intent newInstance(Context context, long id) {
@@ -58,7 +58,7 @@ public class AlbumDetailActivity extends BaseActivity<LocalMusicPresenter> imple
     }
 
     @Override
-    public void loadLocalMusic(List<LocalSongBean> localSongBeen) {
+    public void loadLocalMusic(List<SongEntity> localSongBeen) {
         mLocalSongBeen.clear();
         mLocalSongBeen.addAll(localSongBeen);
         mAdapter.notifyDataSetChanged();

@@ -3,8 +3,6 @@ package com.freedom.lauzy.ticktockmusic.navigation;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
@@ -12,7 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.freedom.lauzy.ticktockmusic.R;
-import com.freedom.lauzy.ticktockmusic.ui.SettingActivity;
+import com.freedom.lauzy.ticktockmusic.ui.activity.SettingActivity;
 import com.freedom.lauzy.ticktockmusic.ui.activity.AlbumDetailActivity;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongListFragment;
 import com.freedom.lauzy.ticktockmusic.utils.anim.FragmentAnimUtil;
@@ -58,11 +56,5 @@ public class Navigator {
                 .add(R.id.layout_main, fragment)
                 .addToBackStack(null)
                 .commit();
-    }
-
-    public void navigateToMusicService(@NonNull Context context, ServiceConnection conn) {
-        Intent intent = new Intent("com.freedom.lauzy.ticktockmusic.service.MusicService");
-        intent.setPackage(context.getPackageName());
-        context.bindService(intent, conn, Context.BIND_AUTO_CREATE);
     }
 }
