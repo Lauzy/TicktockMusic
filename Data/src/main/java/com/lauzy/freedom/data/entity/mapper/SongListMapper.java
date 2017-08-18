@@ -4,6 +4,7 @@ import com.freedom.lauzy.model.SongListBean;
 import com.lauzy.freedom.data.entity.SongListEntity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -58,12 +59,17 @@ public class SongListMapper {
      * @return 转换后的集合
      */
     public List<SongListBean> transform(List<SongListEntity> entities) {
-        List<SongListBean> songListBeen = new ArrayList<>();
-        for (SongListEntity entity : entities) {
-            SongListBean bean = transform(entity);
-            if (bean != null) {
-                songListBeen.add(bean);
+        List<SongListBean> songListBeen;
+        if (entities != null && !entities.isEmpty()) {
+            songListBeen = new ArrayList<>();
+            for (SongListEntity entity : entities) {
+                SongListBean bean = transform(entity);
+                if (bean != null) {
+                    songListBeen.add(bean);
+                }
             }
+        } else {
+            songListBeen = Collections.emptyList();
         }
         return songListBeen;
     }

@@ -7,7 +7,6 @@ import com.lauzy.freedom.data.entity.mapper.SongListMapper;
 import com.lauzy.freedom.data.net.RetrofitHelper;
 import com.lauzy.freedom.data.net.api.SongService;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -38,11 +37,8 @@ public class SongRepositoryImpl implements SongRepository {
                 .map(new Function<MusicEntity, List<SongListBean>>() {
                     @Override
                     public List<SongListBean> apply(@NonNull MusicEntity musicEntity) throws Exception {
-                        if (musicEntity.song_list !=null) {
-                            SongListMapper mapper = new SongListMapper();
-                            return mapper.transform(musicEntity.song_list);
-                        }
-                        return Collections.emptyList();
+                        SongListMapper mapper = new SongListMapper();
+                        return mapper.transform(musicEntity.song_list);
                     }
                 });
     }
