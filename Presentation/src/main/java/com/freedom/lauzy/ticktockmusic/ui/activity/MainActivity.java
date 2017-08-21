@@ -1,14 +1,8 @@
 package com.freedom.lauzy.ticktockmusic.ui.activity;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.res.ColorStateList;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -20,15 +14,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.bilibili.magicasakura.utils.ThemeUtils;
-import com.freedom.lauzy.ticktockmusic.IMusicInterface;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
-import com.freedom.lauzy.ticktockmusic.event.SongEvent;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.presenter.MainPresenter;
-import com.freedom.lauzy.ticktockmusic.service.MusicPlayer;
-import com.freedom.lauzy.ticktockmusic.service.MusicService;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.LocalMusicFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongFragment;
 import com.lauzy.freedom.librarys.widght.TickProgressBar;
@@ -36,9 +26,6 @@ import com.lauzy.freedom.librarys.widght.music.PlayPauseView;
 
 import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-
-import static com.freedom.lauzy.ticktockmusic.service.MusicPlayer.sMusicService;
 
 /**
  * Desc : Main
@@ -61,17 +48,6 @@ public class MainActivity extends BaseActivity<MainPresenter>
     private static final int FRAGMENT_CHANGE_DELAY = 400;
     private static final String SERVICE_ACTION = "com.freedom.lauzy.ticktockmusic.IMusicInterface";
     private Handler mDrawerHandler = new Handler();
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            sMusicService = IMusicInterface.Stub.asInterface(service);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            sMusicService = null;
-        }
-    };
 
     @Override
     protected int getLayoutRes() {
@@ -129,9 +105,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
 
     @Override
     protected void loadData() {
-        Intent intent = new Intent(SERVICE_ACTION);
-        intent.setPackage(getPackageName());
-        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
         mPlayPauseView.setPlayPauseListener(new PlayPauseView.PlayPauseListener() {
             @Override
             public void play() {
@@ -145,14 +119,13 @@ public class MainActivity extends BaseActivity<MainPresenter>
     }
 
     private void subscribeSongEvent() {
-        MusicService musicService = new MusicService();
-        Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(SongEvent.class, new Consumer<SongEvent>() {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull SongEvent songEvent) throws Exception {
-                mPbCurSong.setMax((int) songEvent.getSongEntity().duration);
-                mPbCurSong.setProgress((int) musicService.getProgress());
-            }
-        });
+//        Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(SongEvent.class, new Consumer<SongEvent>() {
+//            @Override
+//            public void accept(@io.reactivex.annotations.NonNull SongEvent songEvent) throws Exception {
+//                mPbCurSong.setMax((int) songEvent.getSongEntity().duration);
+//                mPbCurSong.setProgress(sMusicService.getPosition());
+//            }
+//        });
     }
 
     private Runnable mLmRunnable = () -> {
@@ -238,8 +211,5 @@ public class MainActivity extends BaseActivity<MainPresenter>
     protected void onDestroy() {
         super.onDestroy();
         RxBus.INSTANCE.dispose(this);
-        if (mServiceConnection != null) {
-            unbindService(mServiceConnection);
-        }
     }
 }

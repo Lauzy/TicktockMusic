@@ -11,6 +11,10 @@ public class BasePresenter<T extends IBaseView> implements IPresenter<T> {
 
     T mView;
 
+    public T getView() {
+        return mView;
+    }
+
     @Override
     public void attachView(T view) {
         mView = view;

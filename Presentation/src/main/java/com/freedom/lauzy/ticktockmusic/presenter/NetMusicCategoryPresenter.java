@@ -1,10 +1,18 @@
 package com.freedom.lauzy.ticktockmusic.presenter;
 
-import android.content.Context;
+import android.graphics.Bitmap;
 
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.freedom.lauzy.model.CategoryBean;
 import com.freedom.lauzy.ticktockmusic.R;
-import com.freedom.lauzy.ticktockmusic.base.BasePresenter;
+import com.freedom.lauzy.ticktockmusic.RxBus;
+import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
+import com.freedom.lauzy.ticktockmusic.contract.NetMusicCategoryContract;
+import com.freedom.lauzy.ticktockmusic.event.PaletteEvent;
+import com.lauzy.freedom.librarys.imageload.ImageConfig;
+import com.lauzy.freedom.librarys.imageload.ImageLoader;
+import com.lauzy.freedom.librarys.view.util.PaletteColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,17 +35,19 @@ import static com.lauzy.freedom.data.net.constants.NetConstants.Value.TYPE_WESTE
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class NetMusicCategoryPresenter extends BasePresenter {
+public class NetMusicCategoryPresenter extends BaseRxPresenter<NetMusicCategoryContract.View>
+        implements NetMusicCategoryContract.Presenter {
 
     @Inject
     NetMusicCategoryPresenter() {
     }
 
-    public List<CategoryBean> getCategoryData(Context context) {
+    @Override
+    public void loadData() {
         int[] types = {TYPE_NEW, TYPE_HOT, TYPE_ROCK, TYPE_WESTERN,
                 TYPE_CLASSIC, TYPE_LOVE, TYPE_MOVIE, TYPE_NETWORK};
-        String[] titles = context.getResources().getStringArray(R.array.CategoryArr);
-        String[] urls = context.getResources().getStringArray(R.array.CategorySongUrlArr);
+        String[] titles = getView().context().getResources().getStringArray(R.array.CategoryArr);
+        String[] urls = getView().context().getResources().getStringArray(R.array.CategorySongUrlArr);
         List<CategoryBean> categoryBeen = new ArrayList<>();
         for (int i = 0; i < types.length; i++) {
             CategoryBean categoryBean = new CategoryBean();
@@ -46,6 +56,29 @@ public class NetMusicCategoryPresenter extends BasePresenter {
             categoryBean.imgUrl = urls[i];
             categoryBeen.add(categoryBean);
         }
-        return categoryBeen;
+        getView().loadCategoryData(categoryBeen);
+    }
+
+    @Override
+    public void setCategoryColor(String imgUrl) {
+        ImageLoader.INSTANCE.display(getView().context(),
+                new ImageConfig.Builder()
+                        .url(imgUrl)
+                        .asBitmap(true)
+                        .placeholder(R.drawable.ic_default_horizontal)
+                        .crossFade(500)
+                        .isRound(false)
+                        .intoTarget(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                                getView().setCategoryBitmap(resource);
+                                PaletteColor.mainColorObservable(resource).subscribe(integer -> {
+                                            getView().setCategoryColor(integer);
+                                            RxBus.INSTANCE.post(new PaletteEvent(integer));
+                                        }
+                                );
+                            }
+                        })
+                        .build());
     }
 }

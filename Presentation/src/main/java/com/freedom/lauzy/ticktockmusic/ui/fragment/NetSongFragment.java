@@ -1,6 +1,7 @@
 package com.freedom.lauzy.ticktockmusic.ui.fragment;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,27 +10,23 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.widget.ImageView;
 
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.freedom.lauzy.model.CategoryBean;
 import com.freedom.lauzy.ticktockmusic.R;
-import com.freedom.lauzy.ticktockmusic.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
-import com.freedom.lauzy.ticktockmusic.event.PaletteEvent;
+import com.freedom.lauzy.ticktockmusic.contract.NetMusicCategoryContract;
 import com.freedom.lauzy.ticktockmusic.presenter.NetMusicCategoryPresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.NetSongPagerAdapter;
 import com.lauzy.freedom.librarys.common.DensityUtils;
 import com.lauzy.freedom.librarys.common.ScreenUtils;
-import com.lauzy.freedom.librarys.imageload.ImageConfig;
-import com.lauzy.freedom.librarys.imageload.ImageLoader;
-import com.lauzy.freedom.librarys.view.util.PaletteColor;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 
-public class NetSongFragment extends BaseFragment<NetMusicCategoryPresenter> {
+public class NetSongFragment extends BaseFragment<NetMusicCategoryPresenter>
+        implements NetMusicCategoryContract.View {
 
     @BindView(R.id.toolbar_common)
     TickToolbar mToolbarCommon;
@@ -41,7 +38,7 @@ public class NetSongFragment extends BaseFragment<NetMusicCategoryPresenter> {
     ImageView mImgSong;
     @BindView(R.id.ctl_title)
     CollapsingToolbarLayout mCtlTitle;
-    private List<CategoryBean> mCategoryData;
+    private List<CategoryBean> mCategoryData = new ArrayList<>();
     private static final String IMG_URL = "img_url";
     private static final int TAB_HEIGHT = 45;//45dp
 
@@ -83,7 +80,7 @@ public class NetSongFragment extends BaseFragment<NetMusicCategoryPresenter> {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
-            setImage(savedInstanceState.getString(IMG_URL));
+            mPresenter.setCategoryColor(savedInstanceState.getString(IMG_URL));
         }
     }
 
@@ -97,19 +94,29 @@ public class NetSongFragment extends BaseFragment<NetMusicCategoryPresenter> {
 
     @Override
     protected void loadData() {
-        mCategoryData = mPresenter.getCategoryData(mActivity);
-        NetSongPagerAdapter pagerAdapter = new NetSongPagerAdapter(getChildFragmentManager(), mCategoryData);
+        mPresenter.loadData();
+    }
+
+    @Override
+    public Context context() {
+        return mActivity;
+    }
+
+    @Override
+    public void loadCategoryData(List<CategoryBean> categoryBeen) {
+        mCategoryData.addAll(categoryBeen);
+        NetSongPagerAdapter pagerAdapter = new NetSongPagerAdapter(getChildFragmentManager(), categoryBeen);
         mVpNetSong.setAdapter(pagerAdapter);
         mTabNetMusic.setupWithViewPager(mVpNetSong);
-        mVpNetSong.setOffscreenPageLimit(mCategoryData.size());
-        setImage(mCategoryData.get(0).imgUrl);
-        mCtlTitle.setTitle(mCategoryData.get(0).title);
+        mVpNetSong.setOffscreenPageLimit(categoryBeen.size());
+        mPresenter.setCategoryColor(categoryBeen.get(0).imgUrl);
+        mCtlTitle.setTitle(categoryBeen.get(0).title);
         mTabNetMusic.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                String imgUrl = mCategoryData.get(tab.getPosition()).imgUrl;
-                setImage(imgUrl);
-                mCtlTitle.setTitle(mCategoryData.get(tab.getPosition()).title);
+                String imgUrl = categoryBeen.get(tab.getPosition()).imgUrl;
+                mPresenter.setCategoryColor(imgUrl);
+                mCtlTitle.setTitle(categoryBeen.get(tab.getPosition()).title);
             }
 
             @Override
@@ -124,25 +131,13 @@ public class NetSongFragment extends BaseFragment<NetMusicCategoryPresenter> {
         });
     }
 
-    private void setImage(String imgUrl) {
-        ImageLoader.INSTANCE.display(mActivity,
-                new ImageConfig.Builder()
-                        .url(imgUrl)
-                        .asBitmap(true)
-                        .placeholder(R.drawable.ic_default_horizontal)
-                        .crossFade(500)
-                        .isRound(false)
-                        .intoTarget(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                                mImgSong.setImageBitmap(resource);
-                                PaletteColor.mainColorObservable(resource).subscribe(integer -> {
-                                            mCtlTitle.setContentScrimColor(integer);
-                                            RxBus.INSTANCE.post(new PaletteEvent(integer));
-                                        }
-                                );
-                            }
-                        })
-                        .build());
+    @Override
+    public void setCategoryBitmap(Bitmap bitmap) {
+        mImgSong.setImageBitmap(bitmap);
+    }
+
+    @Override
+    public void setCategoryColor(int color) {
+        mCtlTitle.setContentScrimColor(color);
     }
 }
