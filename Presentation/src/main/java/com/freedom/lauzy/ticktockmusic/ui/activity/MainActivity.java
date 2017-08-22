@@ -46,7 +46,6 @@ public class MainActivity extends BaseActivity<MainPresenter>
     @BindView(R.id.play_pause)
     PlayPauseView mPlayPauseView;
     private static final int FRAGMENT_CHANGE_DELAY = 400;
-    private static final String SERVICE_ACTION = "com.freedom.lauzy.ticktockmusic.IMusicInterface";
     private Handler mDrawerHandler = new Handler();
 
     @Override
@@ -106,6 +105,11 @@ public class MainActivity extends BaseActivity<MainPresenter>
     @Override
     protected void loadData() {
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         mPlayPauseView.setPlayPauseListener(new PlayPauseView.PlayPauseListener() {
             @Override
             public void play() {
@@ -119,13 +123,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
     }
 
     private void subscribeSongEvent() {
-//        Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(SongEvent.class, new Consumer<SongEvent>() {
-//            @Override
-//            public void accept(@io.reactivex.annotations.NonNull SongEvent songEvent) throws Exception {
-//                mPbCurSong.setMax((int) songEvent.getSongEntity().duration);
-//                mPbCurSong.setProgress(sMusicService.getPosition());
-//            }
-//        });
+
     }
 
     private Runnable mLmRunnable = () -> {

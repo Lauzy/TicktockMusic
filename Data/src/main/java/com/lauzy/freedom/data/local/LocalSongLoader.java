@@ -19,16 +19,16 @@ import java.util.List;
 public class LocalSongLoader {
     public static List<LocalSongBean> getLocalSongList(Context context) {
         Cursor cursor = getSongCursor(context, null, null);
-        return queryLocalSongs(context, cursor);
+        return queryLocalSongs(cursor);
     }
 
     public static List<LocalSongBean> getLocalSongList(Context context, long id) {
         Cursor cursor = getSongCursor(context, id != 0 ? "album_id = ? " : null,
                 id != 0 ? new String[]{String.valueOf(id)} : null);
-        return queryLocalSongs(context, cursor);
+        return queryLocalSongs(cursor);
     }
 
-    private static List<LocalSongBean> queryLocalSongs(Context context, Cursor cursor) {
+    private static List<LocalSongBean> queryLocalSongs(Cursor cursor) {
         List<LocalSongBean> songBeen = new ArrayList<>();
         if (cursor == null) {
             return null;

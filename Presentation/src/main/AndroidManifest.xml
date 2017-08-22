@@ -34,11 +34,8 @@
 
         <service
             android:name=".service.MusicService"
-            android:exported="false"
-            android:process=":remote">
-            <intent-filter>
-                <action android:name="com.freedom.lauzy.ticktockmusic.IMusicInterface"/>
-            </intent-filter>
+            android:enabled="true"
+            android:exported="true">
         </service>
     </application>
 

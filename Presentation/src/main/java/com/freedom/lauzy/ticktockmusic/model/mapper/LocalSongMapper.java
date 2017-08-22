@@ -19,7 +19,7 @@ import javax.inject.Inject;
 @SuppressWarnings("unused")
 public class LocalSongMapper {
     @Inject
-    LocalSongMapper() {
+    public LocalSongMapper() {
     }
 
     public SongEntity transform(LocalSongBean localSongBean) {

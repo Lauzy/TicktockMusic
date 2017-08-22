@@ -27,7 +27,7 @@ public class LocalAlbumLoader {
     @SuppressWarnings("unused")
     public static List<LocalAlbumBean> getLocalAlbums(Context context) {
         Cursor cursor = getAlbumCursor(context, null, null);
-        return queryResult(context, cursor);
+        return queryResult(cursor);
     }
 
     /**
@@ -40,10 +40,10 @@ public class LocalAlbumLoader {
     public static List<LocalAlbumBean> getLocalAlbums(Context context, long id) {
         Cursor cursor = getAlbumCursor(context, id != 0 ? "_id = ？" : null,
                 id != 0 ? new String[]{String.valueOf(id)} : null);
-        return queryResult(context, cursor);
+        return queryResult(cursor);
     }
 
-    private static List<LocalAlbumBean> queryResult(Context context, Cursor cursor) {
+    private static List<LocalAlbumBean> queryResult(Cursor cursor) {
         List<LocalAlbumBean> albumBeen = new ArrayList<>();
         if (cursor == null) {
             return null;
