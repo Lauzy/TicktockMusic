@@ -1,6 +1,7 @@
 package com.freedom.lauzy.ticktockmusic.ui.activity;
 
 import android.content.res.ColorStateList;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -12,19 +13,28 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
+import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.MainPresenter;
+import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.LocalMusicFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongFragment;
+import com.lauzy.freedom.librarys.common.LogUtil;
+import com.lauzy.freedom.librarys.imageload.ImageConfig;
+import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.widght.TickProgressBar;
+import com.lauzy.freedom.librarys.widght.TickTextView;
 import com.lauzy.freedom.librarys.widght.music.PlayPauseView;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -45,6 +55,12 @@ public class MainActivity extends BaseActivity<MainPresenter>
     TickProgressBar mPbCurSong;
     @BindView(R.id.play_pause)
     PlayPauseView mPlayPauseView;
+    @BindView(R.id.img_cur_song)
+    ImageView mImgCurSong;
+    @BindView(R.id.txt_cur_song)
+    TickTextView mTxtCurSong;
+    @BindView(R.id.txt_cur_singer)
+    TickTextView mTxtCurSinger;
     private static final int FRAGMENT_CHANGE_DELAY = 400;
     private Handler mDrawerHandler = new Handler();
 
@@ -78,6 +94,11 @@ public class MainActivity extends BaseActivity<MainPresenter>
         setDrawItemColor();
     }
 
+    private void subscribeSongEvent() {
+        /*Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(SongEvent.class, songEvent -> mPlayPauseView.play());
+        RxBus.INSTANCE.addDisposable(this,disposable);*/
+    }
+
     /**
      * Subscribe the event of the drawer theme.
      */
@@ -104,26 +125,62 @@ public class MainActivity extends BaseActivity<MainPresenter>
 
     @Override
     protected void loadData() {
-
+        MusicManager.getInstance().bindPlayService();
+        MusicManager.getInstance().startService();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
+        mPlayPauseView.setPlaying(false);
         mPlayPauseView.setPlayPauseListener(new PlayPauseView.PlayPauseListener() {
             @Override
             public void play() {
+                MusicManager.getInstance().start();
             }
 
             @Override
             public void pause() {
+                MusicManager.getInstance().pause();
+            }
+        });
+        MusicManager.getInstance().setManageListener(new MusicManager.MusicManageListener() {
+            @Override
+            public void onBufferingUpdate(MediaPlayer mediaPlayer, int percent) {
+                LogUtil.e("Main", "percent is " + percent);
+                mPbCurSong.setSecondaryProgress(percent);
+            }
+
+            @Override
+            public void onProgress(int progress, int duration) {
+                mPbCurSong.setMax(duration);
+                mPbCurSong.setProgress(progress);
+            }
+
+            @Override
+            public void currentPlay(SongEntity songEntity) {
+                mPbCurSong.setProgress(0);
+                mPbCurSong.setMax((int) songEntity.duration);
+                if (!mPlayPauseView.isPlaying()) {
+                    mPlayPauseView.play();
+                }
+                mTxtCurSong.setText(songEntity.title);
+                mTxtCurSinger.setText(songEntity.artistName);
+                ImageLoader.INSTANCE.display(MainActivity.this,
+                        new ImageConfig.Builder().url(songEntity.albumCover)
+                                .into(mImgCurSong).build());
+            }
+
+            @Override
+            public void onPause() {
+
+            }
+
+            @Override
+            public void onResume() {
 
             }
         });
-    }
-
-    private void subscribeSongEvent() {
-
     }
 
     private Runnable mLmRunnable = () -> {
@@ -209,5 +266,17 @@ public class MainActivity extends BaseActivity<MainPresenter>
     protected void onDestroy() {
         super.onDestroy();
         RxBus.INSTANCE.dispose(this);
+    }
+
+    @OnClick({R.id.img_play_next, R.id.img_play_last})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.img_play_next:
+                MusicManager.getInstance().skipToNext();
+                break;
+            case R.id.img_play_last:
+                MusicManager.getInstance().skipToPrevious();
+                break;
+        }
     }
 }

@@ -94,7 +94,12 @@ public class PlayPauseView extends View {
             case MeasureSpec.UNSPECIFIED:
                 break;
         }
+    }
 
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        mWidth = mHeight = w;
         initValue();
     }
 
@@ -128,8 +133,8 @@ public class PlayPauseView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        mLeftPath.rewind();
-        mRightPath.rewind();
+        mLeftPath.reset();
+        mRightPath.reset();
 
 //        mPaint.setStrokeWidth(1);
 //        mPaint.setStyle(Paint.Style.STROKE);
@@ -189,7 +194,7 @@ public class PlayPauseView extends View {
         canvas.restore();
     }
 
-    public ValueAnimator getPlayPauseAnim() {
+    private ValueAnimator getPlayPauseAnim() {
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(isPlaying ? 1 : 0, isPlaying ? 0 : 1);
         valueAnimator.setDuration(mAnimDuration);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
