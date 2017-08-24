@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.freedom.lauzy.ticktockmusic.R;
-import com.freedom.lauzy.ticktockmusic.RxBus;
+import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
 import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;

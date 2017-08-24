@@ -3,7 +3,7 @@ package com.freedom.lauzy.ticktockmusic.presenter;
 import com.freedom.lauzy.DConstants;
 import com.freedom.lauzy.interactor.GetSongListUseCase;
 import com.freedom.lauzy.model.SongListBean;
-import com.freedom.lauzy.ticktockmusic.DefaultDisposableObserver;
+import com.freedom.lauzy.ticktockmusic.base.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
 import com.freedom.lauzy.ticktockmusic.contract.NetMusicContract;
 import com.lauzy.freedom.data.net.constants.NetConstants;

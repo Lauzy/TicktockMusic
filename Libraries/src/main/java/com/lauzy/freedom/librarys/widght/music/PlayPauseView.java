@@ -33,8 +33,8 @@ public class PlayPauseView extends View {
     private float mProgress; //动画Progress
     private Rect mRect;
     private boolean isPlaying;
-    private int mRectWidth;  //圆内矩形宽度
-    private int mRectHeight; //圆内矩形高度
+    private float mRectWidth;  //圆内矩形宽度
+    private float mRectHeight; //圆内矩形高度
     private int mRectLT;  //矩形左侧上侧坐标
     private int mRadius;  //圆的半径
     private int mBgColor = Color.WHITE;
@@ -122,8 +122,11 @@ public class PlayPauseView extends View {
         mRect.bottom = rectRB;
         mRect.left = mRectLT;
         mRect.right = rectRB;
-        mRectWidth = mRect.width();
-        mRectHeight = mRect.height();
+//        mRectWidth = mRect.width();
+//        mRectHeight = mRect.height();
+        //不再使用int类型，改用float类型，并在原有值的基础上+1像素，确保合并成三角形时中间无缝隙
+        mRectWidth = space * 2 + 1f;
+        mRectHeight = space * 2 + 1f;
         mGapWidth = getGapWidth() != 0 ? getGapWidth() : mRectWidth / 3;
         mProgress = isPlaying ? 0 : 1;
         mAnimDuration = getAnimDuration() < 0 ? 200 : getAnimDuration();
@@ -132,15 +135,8 @@ public class PlayPauseView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        mLeftPath.reset();
-        mRightPath.reset();
-
-//        mPaint.setStrokeWidth(1);
-//        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setColor(mBgColor);
-        canvas.drawCircle(mWidth / 2, mHeight / 2, mRadius, mPaint);
-//        canvas.drawRect(mRect, mPaint);
+        mLeftPath.rewind();
+        mRightPath.rewind();
 
         float distance = mGapWidth * (1 - mProgress);  //暂停时左右两边矩形距离
         float barWidth = mRectWidth / 2 - distance / 2;     //一个矩形的宽度
@@ -149,9 +145,6 @@ public class PlayPauseView extends View {
         float rightLeftTop = barWidth + distance;       //右边矩形左上角
         float rightRightTop = 2 * barWidth + distance;  //右边矩形右上角
         float rightRightBottom = rightRightTop - barWidth * mProgress; //右边矩形右下角
-
-        mPaint.setColor(mBtnColor);
-        mPaint.setStyle(Paint.Style.FILL);
 
         if (mDirection == Direction.NEGATIVE.value) {
             mLeftPath.moveTo(mRectLT, mRectLT);
@@ -178,19 +171,23 @@ public class PlayPauseView extends View {
             mRightPath.lineTo(rightRightBottom + mRectLT, mRectLT);
             mRightPath.close();
         }
-
         canvas.save();
+//        mPaint.setStrokeWidth(1);
+//        mPaint.setStyle(Paint.Style.STROKE);
+//        canvas.drawRect(mRect, mPaint);
+        mPaint.setColor(mBgColor);
+        canvas.drawCircle(mWidth / 2, mHeight / 2, mRadius, mPaint);
 
         canvas.translate(mRectHeight / 8f * mProgress, 0);
-
         float progress = isPlaying ? (1 - mProgress) : mProgress;
         int corner = mDirection == Direction.NEGATIVE.value ? -90 : 90;
         float rotation = isPlaying ? corner * (1 + progress) : corner * progress;
         canvas.rotate(rotation, mWidth / 2f, mHeight / 2f);
 
+        mPaint.setColor(mBtnColor);
+        mPaint.setStyle(Paint.Style.FILL);
         canvas.drawPath(mLeftPath, mPaint);
         canvas.drawPath(mRightPath, mPaint);
-
         canvas.restore();
     }
 

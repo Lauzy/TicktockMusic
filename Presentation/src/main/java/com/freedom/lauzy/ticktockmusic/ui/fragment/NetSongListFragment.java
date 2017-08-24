@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.freedom.lauzy.model.SongListBean;
 import com.freedom.lauzy.ticktockmusic.R;
-import com.freedom.lauzy.ticktockmusic.RxBus;
+import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseLazyFragment;
 import com.freedom.lauzy.ticktockmusic.contract.NetMusicContract;
 import com.freedom.lauzy.ticktockmusic.event.PaletteEvent;

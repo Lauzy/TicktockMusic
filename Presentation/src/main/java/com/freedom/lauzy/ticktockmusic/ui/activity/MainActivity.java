@@ -18,15 +18,14 @@ import android.widget.ImageView;
 
 import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.ticktockmusic.R;
-import com.freedom.lauzy.ticktockmusic.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
+import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.MainPresenter;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.LocalMusicFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongFragment;
-import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.widght.TickProgressBar;
@@ -45,7 +44,7 @@ import io.reactivex.disposables.Disposable;
  * Email : freedompaladin@gmail.com
  */
 public class MainActivity extends BaseActivity<MainPresenter>
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, PlayPauseView.PlayPauseListener, MusicManager.MusicManageListener {
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -127,60 +126,12 @@ public class MainActivity extends BaseActivity<MainPresenter>
     protected void loadData() {
         MusicManager.getInstance().bindPlayService();
         MusicManager.getInstance().startService();
+        playMusic();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mPlayPauseView.setPlaying(false);
-        mPlayPauseView.setPlayPauseListener(new PlayPauseView.PlayPauseListener() {
-            @Override
-            public void play() {
-                MusicManager.getInstance().start();
-            }
-
-            @Override
-            public void pause() {
-                MusicManager.getInstance().pause();
-            }
-        });
-        MusicManager.getInstance().setManageListener(new MusicManager.MusicManageListener() {
-            @Override
-            public void onBufferingUpdate(MediaPlayer mediaPlayer, int percent) {
-                LogUtil.e("Main", "percent is " + percent);
-                mPbCurSong.setSecondaryProgress(percent);
-            }
-
-            @Override
-            public void onProgress(int progress, int duration) {
-                mPbCurSong.setMax(duration);
-                mPbCurSong.setProgress(progress);
-            }
-
-            @Override
-            public void currentPlay(SongEntity songEntity) {
-                mPbCurSong.setProgress(0);
-                mPbCurSong.setMax((int) songEntity.duration);
-                if (!mPlayPauseView.isPlaying()) {
-                    mPlayPauseView.play();
-                }
-                mTxtCurSong.setText(songEntity.title);
-                mTxtCurSinger.setText(songEntity.artistName);
-                ImageLoader.INSTANCE.display(MainActivity.this,
-                        new ImageConfig.Builder().url(songEntity.albumCover)
-                                .into(mImgCurSong).build());
-            }
-
-            @Override
-            public void onPause() {
-
-            }
-
-            @Override
-            public void onResume() {
-
-            }
-        });
+    private void playMusic() {
+        mPlayPauseView.setPlayPauseListener(this);
+        MusicManager.getInstance().setManageListener(this);
     }
 
     private Runnable mLmRunnable = () -> {
@@ -277,6 +228,55 @@ public class MainActivity extends BaseActivity<MainPresenter>
             case R.id.img_play_last:
                 MusicManager.getInstance().skipToPrevious();
                 break;
+        }
+    }
+
+    @Override
+    public void play() {
+        MusicManager.getInstance().start();
+    }
+
+    @Override
+    public void pause() {
+        MusicManager.getInstance().pause();
+    }
+
+    @Override
+    public void onBufferingUpdate(MediaPlayer mediaPlayer, int percent) {
+        mPbCurSong.setSecondaryProgress(percent);
+    }
+
+    @Override
+    public void onProgress(int progress, int duration) {
+        mPbCurSong.setMax(duration);
+        mPbCurSong.setProgress(progress);
+    }
+
+    @Override
+    public void currentPlay(SongEntity songEntity) {
+        if (!mPlayPauseView.isPlaying()) {
+            mPlayPauseView.play();
+        }
+        mTxtCurSong.setText(songEntity.title);
+        mTxtCurSinger.setText(songEntity.artistName);
+        ImageLoader.INSTANCE.display(MainActivity.this,
+                new ImageConfig.Builder()
+                        .url(songEntity.albumCover)
+                        .placeholder(R.drawable.ic_default)
+                        .into(mImgCurSong).build());
+    }
+
+    @Override
+    public void onPlayerPause() {
+        if (mPlayPauseView.isPlaying()) {
+            mPlayPauseView.pause();
+        }
+    }
+
+    @Override
+    public void onPlayerResume() {
+        if (!mPlayPauseView.isPlaying()) {
+            mPlayPauseView.play();
         }
     }
 }

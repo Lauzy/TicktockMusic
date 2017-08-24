@@ -1,4 +1,4 @@
-package com.freedom.lauzy.ticktockmusic;
+package com.freedom.lauzy.ticktockmusic.function;
 
 import java.util.HashMap;
 

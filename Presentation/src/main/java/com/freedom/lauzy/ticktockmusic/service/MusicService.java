@@ -2,6 +2,10 @@ package com.freedom.lauzy.ticktockmusic.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaMetadata;
 import android.media.MediaPlayer;
@@ -11,12 +15,18 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 
+import com.freedom.lauzy.ticktockmusic.R;
+import com.freedom.lauzy.ticktockmusic.TicktockApplication;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
+import com.lauzy.freedom.data.local.LocalUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import static android.media.session.PlaybackState.STATE_PAUSED;
 import static android.media.session.PlaybackState.STATE_PLAYING;
 
 /**
@@ -28,13 +38,11 @@ import static android.media.session.PlaybackState.STATE_PLAYING;
  */
 public class MusicService extends Service {
 
-    public static final String SESSION_TAG = "ticktock";
+    public static final String SESSION_TAG = "com.freedom.lauzy.ticktockmusic";
     public static final String ACTION_PLAY = "play";
     public static final String ACTION_PAUSE = "pause";
     public static final String ACTION_NEXT = "next";
     public static final String ACTION_LAST = "last";
-    public static final String PARAM_TRACK_URI = "uri";
-    public static final String PLAY_DATA = "data";
 
     private PlaybackState mPlaybackState;
     private MediaSession mMediaSession;
@@ -71,6 +79,10 @@ public class MusicService extends Service {
 
     public MediaPlayer getMediaPlayer() {
         return mMediaPlayer;
+    }
+
+    public MediaSession getMediaSession() {
+        return mMediaSession;
     }
 
     @Nullable
@@ -113,12 +125,18 @@ public class MusicService extends Service {
         if (intent != null && intent.getAction() != null) {
             switch (intent.getAction()) {
                 case ACTION_PLAY:
+                    start();
+                    setState(STATE_PLAYING);
                     break;
                 case ACTION_NEXT:
+                    skipToNext();
                     break;
                 case ACTION_LAST:
+                    skipToPrevious();
                     break;
                 case ACTION_PAUSE:
+                    pause();
+                    setState(STATE_PAUSED);
                     break;
             }
         }
@@ -150,15 +168,14 @@ public class MusicService extends Service {
     public void start() {
         mMediaPlayer.start();
         setState(PlaybackState.STATE_PLAYING);
-        if (mUpdateListener != null) {
-            mUpdateListener.onResume();
-        }
+        TickNotification.buildNotification(TicktockApplication.getInstance(), this);
     }
 
     private void pause() {
         if (mPlaybackState.getState() == STATE_PLAYING) {
             mMediaPlayer.pause();
             setState(PlaybackState.STATE_PAUSED);
+            TickNotification.buildNotification(TicktockApplication.getInstance(), this);
         }
     }
 
@@ -209,6 +226,15 @@ public class MusicService extends Service {
                 .putString(MediaMetadata.METADATA_KEY_ALBUM, entity.albumName)
                 .putLong(MediaMetadata.METADATA_KEY_DURATION, entity.duration)
                 .putString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI, String.valueOf(entity.albumCover));
+        String coverUri = LocalUtil.getCoverUri(this, entity.albumId);
+        if (coverUri != null && new File(coverUri).exists()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(coverUri);
+            builder.putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, bitmap);
+        } else {
+            Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_default);
+            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+            builder.putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, bitmap);
+        }
         return builder.build();
     }
 
@@ -278,7 +304,5 @@ public class MusicService extends Service {
         void onProgress(int progress, int duration);
 
         void currentPlay(SongEntity songEntity);
-
-        void onResume();//继续播放
     }
 }

@@ -8,7 +8,7 @@ import com.freedom.lauzy.executor.ThreadExecutor;
 import com.freedom.lauzy.repository.LocalSongRepository;
 import com.freedom.lauzy.repository.SongRepository;
 import com.freedom.lauzy.ticktockmusic.TicktockApplication;
-import com.freedom.lauzy.ticktockmusic.UIThread;
+import com.freedom.lauzy.ticktockmusic.function.UIThread;
 import com.freedom.lauzy.ticktockmusic.injection.scope.ContextLife;
 import com.lauzy.freedom.data.executor.JobExecutor;
 import com.lauzy.freedom.data.repository.LocalSongRepositoryImpl;

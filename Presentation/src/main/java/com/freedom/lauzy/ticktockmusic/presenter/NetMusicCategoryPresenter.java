@@ -6,7 +6,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.freedom.lauzy.model.CategoryBean;
 import com.freedom.lauzy.ticktockmusic.R;
-import com.freedom.lauzy.ticktockmusic.RxBus;
+import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
 import com.freedom.lauzy.ticktockmusic.contract.NetMusicCategoryContract;
 import com.freedom.lauzy.ticktockmusic.event.PaletteEvent;
@@ -15,6 +15,7 @@ import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.view.util.PaletteColor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -37,6 +38,8 @@ import static com.lauzy.freedom.data.net.constants.NetConstants.Value.TYPE_WESTE
  */
 public class NetMusicCategoryPresenter extends BaseRxPresenter<NetMusicCategoryContract.View>
         implements NetMusicCategoryContract.Presenter {
+
+    private HashMap<String, Integer> mColorMap = new HashMap<>();
 
     @Inject
     NetMusicCategoryPresenter() {
@@ -72,13 +75,22 @@ public class NetMusicCategoryPresenter extends BaseRxPresenter<NetMusicCategoryC
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                                 getView().setCategoryBitmap(resource);
-                                PaletteColor.mainColorObservable(resource).subscribe(integer -> {
-                                            getView().setCategoryColor(integer);
-                                            RxBus.INSTANCE.post(new PaletteEvent(integer));
-                                        }
-                                );
+                                if (mColorMap.get(imgUrl) == null) {
+                                    PaletteColor.mainColorObservable(resource).subscribe(integer -> {
+                                                mColorMap.put(imgUrl, integer);
+                                                setCategoryBgColor(integer);
+                                            }
+                                    );
+                                } else {
+                                    setCategoryBgColor(mColorMap.get(imgUrl));
+                                }
                             }
                         })
                         .build());
+    }
+
+    private void setCategoryBgColor(Integer color) {
+        getView().setCategoryColor(color);
+        RxBus.INSTANCE.post(new PaletteEvent(color));
     }
 }

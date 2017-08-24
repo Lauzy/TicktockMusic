@@ -1,4 +1,4 @@
-package com.freedom.lauzy.ticktockmusic;
+package com.freedom.lauzy.ticktockmusic.base;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.observers.DisposableObserver;

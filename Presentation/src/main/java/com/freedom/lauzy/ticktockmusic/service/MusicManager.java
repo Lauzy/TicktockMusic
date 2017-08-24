@@ -26,6 +26,7 @@ import java.util.List;
  */
 public class MusicManager {
 
+    private static final String TAG = "MusicManager";
     private MusicService mMusicService;
     private MediaController mMediaController;
     private final Handler mProgressHandler = new Handler();
@@ -74,30 +75,27 @@ public class MusicManager {
                 mMusicManageListener.currentPlay(songEntity);
             }
         }
-
-        @Override
-        public void onResume() {
-            if (mMusicManageListener != null) {
-                mMusicManageListener.onResume();
-            }
-        }
     };
 
+    // MediaController 的回调接口，可根据状态处理逻辑
+    // （本应用由于在 Service 和 UI 中添加了管理类，所以主要用于开发中 Log 打印及 UI 的接口回调）
     private MediaController.Callback mMediaControllerCallback = new MediaController.Callback() {
         @Override
         public void onPlaybackStateChanged(@NonNull PlaybackState state) {
             super.onPlaybackStateChanged(state);
             switch (state.getState()) {
                 case PlaybackState.STATE_NONE:
-                    LogUtil.i("MusicManager", "NONE_STATE");
                     break;
                 case PlaybackState.STATE_PLAYING:
-                    LogUtil.i("MusicManager", "STATE_PLAYING");
+                    LogUtil.i(TAG, "STATE_PLAYING");
+                    if (mMusicManageListener != null) {
+                        mMusicManageListener.onPlayerResume();
+                    }
                     break;
                 case PlaybackState.STATE_PAUSED:
-                    LogUtil.i("MusicManager", "STATE_PAUSED");
+                    LogUtil.i(TAG, "STATE_PAUSED");
                     if (mMusicManageListener != null) {
-                        mMusicManageListener.onPause();
+                        mMusicManageListener.onPlayerPause();
                     }
                     break;
                 case PlaybackState.STATE_BUFFERING:
@@ -111,12 +109,15 @@ public class MusicManager {
                 case PlaybackState.STATE_REWINDING:
                     break;
                 case PlaybackState.STATE_SKIPPING_TO_NEXT:
+                    LogUtil.i(TAG, "SKIP_TO_NEXT");
                     break;
                 case PlaybackState.STATE_SKIPPING_TO_PREVIOUS:
+                    LogUtil.i(TAG, "SKIP_TO_PREVIOUS");
                     break;
                 case PlaybackState.STATE_SKIPPING_TO_QUEUE_ITEM:
                     break;
                 case PlaybackState.STATE_STOPPED:
+                    LogUtil.i(TAG, "STATE_STOP");
                     break;
             }
         }
@@ -126,9 +127,12 @@ public class MusicManager {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMusicService = ((MusicService.ServiceBinder) service).getService();
+            //实例化 MediaController
             mMediaController = new MediaController(TicktockApplication.getInstance(),
                     mMusicService.getMediaSessionToken());
+            //设置 Service 接口，便于管理 Progress、onCompletion 等
             mMusicService.setUpdateListener(mUpdateListener);
+            //注册 MediaController 回调接口
             mMediaController.registerCallback(mMediaControllerCallback);
         }
 
@@ -159,6 +163,15 @@ public class MusicManager {
         context.stopService(new Intent(context, MusicService.class));
     }
 
+    public MusicService getMusicService() {
+        return mMusicService;
+    }
+
+    /**
+     * 获取当前正在播放的音乐
+     *
+     * @return 当前正在播放的音乐
+     */
     public SongEntity getCurrentSong() {
         if (mMusicService != null && mMusicService.getCurrentSong() != null) {
             return mMusicService.getCurrentSong();
@@ -166,11 +179,17 @@ public class MusicManager {
         return null;
     }
 
-    public void play() {
+    /**
+     * 播放音乐
+     */
+    private void play() {
         mMediaController.getTransportControls().play();
         mProgressHandler.post(mProgressRunnable);
     }
 
+    /**
+     * 开始播放（多用于暂停后开始）
+     */
     public void start() {
         if (mMusicService != null) {
             mMusicService.start();
@@ -178,30 +197,67 @@ public class MusicManager {
         }
     }
 
+    /**
+     * 暂停播放
+     */
     public void pause() {
         mMediaController.getTransportControls().pause();
         mProgressHandler.removeCallbacks(mProgressRunnable);
     }
 
+    /**
+     * 打开指定列表位置的音乐
+     *
+     * @param position 当前位置
+     */
     public void open(int position) {
-        if (mMusicService != null && mMusicService.getCurrentPosition() != position) {
-            mMusicService.setCurrentPosition(position);
-            play();
+        if (mMusicService != null) {
+            if (mMusicService.getCurrentPosition() != position) {
+                mMusicService.setCurrentPosition(position);
+                play();
+            } else if (getMusicState() == PlaybackState.STATE_PAUSED) {
+                //当前为同一首歌曲，并且为暂停状态时继续播放
+                resume();
+            }
         }
     }
 
+    /**
+     * 继续播放
+     */
+    private void resume() {
+        if (mMusicManageListener != null) {
+            mMusicManageListener.onPlayerResume();
+            mMusicService.start();
+            mProgressHandler.post(mProgressRunnable);
+        }
+    }
+
+    /**
+     * 播放下一首，进度条重置
+     */
     public void skipToNext() {
         if (mMediaController != null) {
             mMediaController.getTransportControls().skipToNext();
+            mProgressHandler.post(mProgressRunnable);
         }
     }
 
+    /**
+     * 播放上一首，进度条重置
+     */
     public void skipToPrevious() {
         if (mMediaController != null) {
             mMediaController.getTransportControls().skipToPrevious();
+            mProgressHandler.post(mProgressRunnable);
         }
     }
 
+    /**
+     * 获取当前音乐的播放状态
+     *
+     * @return 播放状态
+     */
     private int getMusicState() {
         return mMusicService.getPlaybackState().getState();
     }
@@ -209,7 +265,10 @@ public class MusicManager {
     private Runnable mProgressRunnable = new Runnable() {
         @Override
         public void run() {
-            if (getMusicState() == PlaybackState.STATE_PLAYING && mUpdateListener != null && getCurrentSong() != null) {
+            boolean isUpdate = getMusicState() == PlaybackState.STATE_PLAYING ||
+                    getMusicState() == PlaybackState.STATE_SKIPPING_TO_NEXT ||
+                    getMusicState() == PlaybackState.STATE_SKIPPING_TO_PREVIOUS;
+            if (isUpdate && mUpdateListener != null && getCurrentSong() != null) {
                 mUpdateListener.onProgress((int) mMusicService.getCurrentProgress(), (int) getCurrentSong().duration);
             }
             mProgressHandler.postDelayed(this, 100);
@@ -222,6 +281,9 @@ public class MusicManager {
         mMusicManageListener = updateListener;
     }
 
+    /**
+     * 音乐管理回调接口，便于 Activity 等控制 UI 变化
+     */
     public interface MusicManageListener {
 
         void onBufferingUpdate(MediaPlayer mediaPlayer, int percent);
@@ -230,8 +292,8 @@ public class MusicManager {
 
         void currentPlay(SongEntity songEntity);
 
-        void onPause();
+        void onPlayerPause();
 
-        void onResume();//继续播放
+        void onPlayerResume();//继续播放
     }
 }
