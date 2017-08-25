@@ -18,7 +18,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
 import com.freedom.lauzy.ticktockmusic.R;
-import com.freedom.lauzy.ticktockmusic.TicktockApplication;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.lauzy.freedom.data.local.LocalUtil;
 
@@ -26,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static android.media.session.PlaybackState.STATE_PAUSED;
 import static android.media.session.PlaybackState.STATE_PLAYING;
 
 /**
@@ -49,41 +47,7 @@ public class MusicService extends Service {
     private MediaPlayer mMediaPlayer;
     private int mCurrentPosition;
     private List<SongEntity> mSongData;
-
-    public PlaybackState getPlaybackState() {
-        return mPlaybackState;
-    }
-
-    public int getCurrentPosition() {
-        return mCurrentPosition;
-    }
-
-    public void setCurrentPosition(int currentPosition) {
-        mCurrentPosition = currentPosition;
-    }
-
-    public void setSongData(List<SongEntity> songData) {
-        mSongData = songData;
-    }
-
-    public SongEntity getCurrentSong() {
-        if (mSongData != null) {
-            return mSongData.get(mCurrentPosition);
-        }
-        return null;
-    }
-
-    public long getCurrentProgress() {
-        return mMediaPlayer != null ? mMediaPlayer.getCurrentPosition() : 0;
-    }
-
-    public MediaPlayer getMediaPlayer() {
-        return mMediaPlayer;
-    }
-
-    public MediaSession getMediaSession() {
-        return mMediaSession;
-    }
+    private TickNotification mTickNotification;
 
     @Nullable
     @Override
@@ -95,6 +59,7 @@ public class MusicService extends Service {
     public void onCreate() {
         super.onCreate();
         setUpMedia();
+        mTickNotification = new TickNotification(this);
     }
 
     private void setUpMedia() {
@@ -126,7 +91,6 @@ public class MusicService extends Service {
             switch (intent.getAction()) {
                 case ACTION_PLAY:
                     start();
-                    setState(STATE_PLAYING);
                     break;
                 case ACTION_NEXT:
                     skipToNext();
@@ -136,16 +100,17 @@ public class MusicService extends Service {
                     break;
                 case ACTION_PAUSE:
                     pause();
-                    setState(STATE_PAUSED);
                     break;
             }
         }
-        return super.onStartCommand(intent, flags, startId);
+//        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mTickNotification.stopNotify(this);
     }
 
     private void play() {
@@ -168,14 +133,14 @@ public class MusicService extends Service {
     public void start() {
         mMediaPlayer.start();
         setState(PlaybackState.STATE_PLAYING);
-        TickNotification.buildNotification(TicktockApplication.getInstance(), this);
+        mTickNotification.notifyPlay(this);
     }
 
     private void pause() {
         if (mPlaybackState.getState() == STATE_PLAYING) {
             mMediaPlayer.pause();
             setState(PlaybackState.STATE_PAUSED);
-            TickNotification.buildNotification(TicktockApplication.getInstance(), this);
+            mTickNotification.notifyPause(this);
         }
     }
 
@@ -227,14 +192,14 @@ public class MusicService extends Service {
                 .putLong(MediaMetadata.METADATA_KEY_DURATION, entity.duration)
                 .putString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI, String.valueOf(entity.albumCover));
         String coverUri = LocalUtil.getCoverUri(this, entity.albumId);
+        Bitmap bitmap;
         if (coverUri != null && new File(coverUri).exists()) {
-            Bitmap bitmap = BitmapFactory.decodeFile(coverUri);
-            builder.putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, bitmap);
+            bitmap = BitmapFactory.decodeFile(coverUri);
         } else {
             Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_default);
-            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-            builder.putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, bitmap);
+            bitmap = ((BitmapDrawable) drawable).getBitmap();
         }
+        builder.putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, bitmap);
         return builder.build();
     }
 
@@ -279,6 +244,39 @@ public class MusicService extends Service {
             return super.onMediaButtonEvent(mediaButtonEvent);
         }
     };
+
+    /*------------- getter, setter and so on -------------*/
+
+    public PlaybackState getPlaybackState() {
+        return mPlaybackState;
+    }
+
+    public int getCurrentPosition() {
+        return mCurrentPosition;
+    }
+
+    public void setCurrentPosition(int currentPosition) {
+        mCurrentPosition = currentPosition;
+    }
+
+    public void setSongData(List<SongEntity> songData) {
+        mSongData = songData;
+    }
+
+    public SongEntity getCurrentSong() {
+        if (mSongData != null) {
+            return mSongData.get(mCurrentPosition);
+        }
+        return null;
+    }
+
+    public long getCurrentProgress() {
+        return mMediaPlayer != null ? mMediaPlayer.getCurrentPosition() : 0;
+    }
+
+    public MediaSession getMediaSession() {
+        return mMediaSession;
+    }
 
     public MediaSession.Token getMediaSessionToken() {
         return mMediaSession.getSessionToken();

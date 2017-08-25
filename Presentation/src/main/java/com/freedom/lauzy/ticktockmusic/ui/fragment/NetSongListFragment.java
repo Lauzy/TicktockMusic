@@ -90,6 +90,11 @@ public class NetSongListFragment extends BaseLazyFragment<NetMusicPresenter>
     }
 
     @Override
+    public void loadCacheData(List<SongListBean> songListBeen) {
+        mAdapter.setNewData(songListBeen);
+    }
+
+    @Override
     public void loadSuccess(List<SongListBean> songListBeen) {
         mAdapter.setNewData(songListBeen);
         mSrlNetSong.setRefreshing(false);

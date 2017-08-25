@@ -26,6 +26,7 @@ import com.freedom.lauzy.ticktockmusic.presenter.MainPresenter;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.LocalMusicFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongFragment;
+import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.widght.TickProgressBar;
@@ -46,6 +47,7 @@ import io.reactivex.disposables.Disposable;
 public class MainActivity extends BaseActivity<MainPresenter>
         implements NavigationView.OnNavigationItemSelectedListener, PlayPauseView.PlayPauseListener, MusicManager.MusicManageListener {
 
+    private static final String LYTAG = "MainActivity";
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view)
@@ -244,6 +246,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
     @Override
     public void onBufferingUpdate(MediaPlayer mediaPlayer, int percent) {
         mPbCurSong.setSecondaryProgress(percent);
+        LogUtil.i(LYTAG, "mPreferences");
     }
 
     @Override
@@ -257,13 +260,8 @@ public class MainActivity extends BaseActivity<MainPresenter>
         if (!mPlayPauseView.isPlaying()) {
             mPlayPauseView.play();
         }
-        mTxtCurSong.setText(songEntity.title);
-        mTxtCurSinger.setText(songEntity.artistName);
-        ImageLoader.INSTANCE.display(MainActivity.this,
-                new ImageConfig.Builder()
-                        .url(songEntity.albumCover)
-                        .placeholder(R.drawable.ic_default)
-                        .into(mImgCurSong).build());
+        setMusicBarView(songEntity);
+        LogUtil.i(LYTAG, "currentPlay");
     }
 
     @Override
@@ -271,6 +269,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
         if (mPlayPauseView.isPlaying()) {
             mPlayPauseView.pause();
         }
+        LogUtil.i(LYTAG, "onPlayerPause");
     }
 
     @Override
@@ -278,5 +277,16 @@ public class MainActivity extends BaseActivity<MainPresenter>
         if (!mPlayPauseView.isPlaying()) {
             mPlayPauseView.play();
         }
+        LogUtil.i(LYTAG, "onPlayerResume");
+    }
+
+    private void setMusicBarView(SongEntity songEntity) {
+        mTxtCurSong.setText(songEntity.title);
+        mTxtCurSinger.setText(songEntity.artistName);
+        ImageLoader.INSTANCE.display(MainActivity.this,
+                new ImageConfig.Builder()
+                        .url(songEntity.albumCover)
+                        .placeholder(R.drawable.ic_default)
+                        .into(mImgCurSong).build());
     }
 }

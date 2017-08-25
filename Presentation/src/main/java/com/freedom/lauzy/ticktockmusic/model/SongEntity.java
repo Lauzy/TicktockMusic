@@ -10,7 +10,7 @@ import android.os.Parcelable;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class SongEntity implements Parcelable{
+public class SongEntity implements Parcelable {
     public long id; //音乐ID
     public String title; //音乐名
     public long duration; //时长

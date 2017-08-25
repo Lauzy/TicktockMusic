@@ -39,6 +39,10 @@ public abstract class UseCase<T, Params> {
 //        addDisposable(observable.subscribeWith(observer));
     }
 
+    public Observable<T> buildObservable(Params params) {
+        return this.buildUseCaseObservable(params);
+    }
+
     abstract Observable<T> buildUseCaseObservable(Params params);
 
     /*private void addDisposable(Disposable disposable) {

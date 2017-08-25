@@ -1,7 +1,7 @@
 package com.lauzy.freedom.data.entity;
 
 /**
- * Desc : music list 音乐列表
+ * Desc : music list 音乐列表,接口参数
  * Author : Lauzy
  * Date : 2017/7/6
  * Blog : http://www.jianshu.com/u/e76853f863a9

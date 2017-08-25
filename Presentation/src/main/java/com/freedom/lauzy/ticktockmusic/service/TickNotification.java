@@ -25,12 +25,32 @@ import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;
 public class TickNotification {
 
     private static final int NOTIFY_ID = 0x0277;
+    private static NotificationManager mNotificationManager;
 
-    public static void buildNotification(Context context, MusicService musicService) {
-        PendingIntent playIntent = createAction(context, MusicService.ACTION_PLAY);
-        PendingIntent pauseIntent = createAction(context, MusicService.ACTION_PAUSE);
-        PendingIntent previousIntent = createAction(context, MusicService.ACTION_LAST);
-        PendingIntent nextIntent = createAction(context, MusicService.ACTION_NEXT);
+    public TickNotification(MusicService context) {
+        mNotificationManager = ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE));
+    }
+
+    public void notifyPlay(MusicService context) {
+//        sNotificationManager.notify(NOTIFY_ID, buildNotification(context));
+        context.startForeground(NOTIFY_ID, buildNotification(context));
+    }
+
+    public void notifyPause(MusicService context) {
+        context.stopForeground(false);
+        mNotificationManager.notify(NOTIFY_ID, buildNotification(context));
+    }
+
+    public void stopNotify(MusicService context) {
+        context.stopForeground(true);
+        mNotificationManager.cancelAll();
+    }
+
+    private Notification buildNotification(MusicService musicService) {
+        PendingIntent playIntent = createAction(musicService, MusicService.ACTION_PLAY);
+        PendingIntent pauseIntent = createAction(musicService, MusicService.ACTION_PAUSE);
+        PendingIntent previousIntent = createAction(musicService, MusicService.ACTION_LAST);
+        PendingIntent nextIntent = createAction(musicService, MusicService.ACTION_NEXT);
 //        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, new Intent(context, PlayDetailActivity.class), 0);
 
         boolean isPlaying = musicService.getPlaybackState().getState() == PlaybackState.STATE_PLAYING;
@@ -38,35 +58,33 @@ public class TickNotification {
         MediaController controller = session.getController();
         if (controller.getMetadata() != null) {
             MediaDescription description = controller.getMetadata().getDescription();
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(musicService);
             builder.setContentTitle(description.getTitle())
-                    .setShowWhen(false)
                     .setSmallIcon(R.drawable.ic_notification)
-                    .addAction(R.drawable.ic_skip_previous, "previous", previousIntent)
-                    .addAction(isPlaying ? R.drawable.ic_pause : R.drawable.ic_play, "play pause",
-                            isPlaying ? pauseIntent : playIntent)
-                    .addAction(R.drawable.ic_skip_next, "next", nextIntent)
-                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                    .setOngoing(isPlaying)
-                    .setAutoCancel(false)
                     .setLargeIcon(description.getIconBitmap())
+                    .setShowWhen(false)
+                    .setOngoing(isPlaying)
                     .setContentText(description.getSubtitle())
+                    .addAction(R.drawable.ic_skip_previous_notify, "", previousIntent)
+                    .addAction(isPlaying ? R.drawable.ic_pause : R.drawable.ic_play, "",
+                            isPlaying ? pauseIntent : playIntent)
+                    .addAction(R.drawable.ic_skip_next_notify, "", nextIntent)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setStyle(new NotificationCompat.MediaStyle()
                             .setShowActionsInCompactView(0, 1, 2));
-            if (description.getIconBitmap() != null) {
-                int color = Palette.from(description.getIconBitmap()).generate()
-                        .getMutedColor(ThemeHelper.getThemeColorResId(context.getApplicationContext()));
+           /* if (description.getIconBitmap() != null) {
+                Palette palette = Palette.from(description.getIconBitmap()).generate();
+                int color = palette.getMutedColor(ThemeHelper.getThemeColorResId(musicService.getApplicationContext()));
                 builder.setColor(color);
-            }
-            Notification notification = builder.build();
-            ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE))
-                    .notify(NOTIFY_ID, notification);
+            }*/
+            return builder.build();
         }
+        return null;
     }
 
-    private static PendingIntent createAction(Context context, String action) {
+    private PendingIntent createAction(Context context, String action) {
         Intent intent = new Intent(context, MusicService.class);
         intent.setAction(action);
-        return PendingIntent.getService(context, 1, intent, 0);
+        return PendingIntent.getService(context, 0, intent, 0);
     }
 }

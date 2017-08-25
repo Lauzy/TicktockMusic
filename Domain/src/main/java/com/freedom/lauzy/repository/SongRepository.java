@@ -15,4 +15,6 @@ import io.reactivex.Observable;
  */
 public interface SongRepository {
     Observable<List<SongListBean>> getSongList(String method, int type, int offset, int size);
+
+    Observable<List<SongListBean>> getCacheSongList();
 }

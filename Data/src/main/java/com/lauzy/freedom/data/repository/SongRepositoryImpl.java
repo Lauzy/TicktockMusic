@@ -7,12 +7,15 @@ import com.lauzy.freedom.data.entity.mapper.SongListMapper;
 import com.lauzy.freedom.data.net.RetrofitHelper;
 import com.lauzy.freedom.data.net.api.SongService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
@@ -27,11 +30,13 @@ import io.reactivex.functions.Function;
 public class SongRepositoryImpl implements SongRepository {
 
     @Inject
-    public SongRepositoryImpl() {
+    SongRepositoryImpl() {
     }
 
     @Override
-    public Observable<List<SongListBean>> getSongList(String method, int type, int offset, int size) {
+    public Observable<List<SongListBean>> getSongList(final String method, final int type,
+                                                      final int offset, final int size) {
+
         return RetrofitHelper.INSTANCE.createApi(SongService.class)
                 .getMusicData(method, type, offset, size)
                 .map(new Function<MusicEntity, List<SongListBean>>() {
@@ -41,5 +46,23 @@ public class SongRepositoryImpl implements SongRepository {
                         return mapper.transform(musicEntity.song_list);
                     }
                 });
+    }
+
+    @Override
+    public Observable<List<SongListBean>> getCacheSongList() {
+        return Observable.create(new ObservableOnSubscribe<List<SongListBean>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<SongListBean>> e) throws Exception {
+                List<SongListBean> listBeen = new ArrayList<>();
+                for (int i = 0; i < 10; i++) {
+                    SongListBean bean = new SongListBean();
+                    bean.title = "loading";
+                    bean.artistName = "loading";
+                    listBeen.add(bean);
+                }
+                e.onNext(listBeen);
+                e.onComplete();
+            }
+        });
     }
 }

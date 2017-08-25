@@ -21,6 +21,8 @@ public interface NetMusicContract {
 
     interface View extends IBaseView {
 
+        void loadCacheData(List<SongListBean> songListBeen);
+
         void loadSuccess(List<SongListBean> songListBeen);
 
         void setEmptyView();

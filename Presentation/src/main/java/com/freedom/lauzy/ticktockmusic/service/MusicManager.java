@@ -138,7 +138,10 @@ public class MusicManager {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-
+            mMusicService.setUpdateListener(null);
+            mMusicService = null;
+            /*bindPlayService();
+            startService();*/
         }
     };
 
@@ -212,7 +215,7 @@ public class MusicManager {
      */
     public void open(int position) {
         if (mMusicService != null) {
-            if (mMusicService.getCurrentPosition() != position) {
+            if (position == 0 || mMusicService.getCurrentPosition() != position) {
                 mMusicService.setCurrentPosition(position);
                 play();
             } else if (getMusicState() == PlaybackState.STATE_PAUSED) {

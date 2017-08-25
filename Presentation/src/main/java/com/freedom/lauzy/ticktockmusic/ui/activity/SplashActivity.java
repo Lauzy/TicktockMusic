@@ -24,7 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  */
 public class SplashActivity extends BaseActivity {
 
-    private static final int LAUNCH_TIME = 200;
+    private static final int LAUNCH_TIME = 100;
     private static final int SNACK_BAR_DURATION = 5000;
 
     @Override
@@ -44,6 +44,12 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void loadData() {
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         new RxPermissions(this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .subscribe(granted -> {
                     if (granted) {
