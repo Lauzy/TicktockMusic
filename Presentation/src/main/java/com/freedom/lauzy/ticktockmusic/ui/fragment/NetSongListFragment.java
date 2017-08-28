@@ -7,10 +7,10 @@ import android.support.v7.widget.RecyclerView;
 
 import com.freedom.lauzy.model.SongListBean;
 import com.freedom.lauzy.ticktockmusic.R;
-import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseLazyFragment;
 import com.freedom.lauzy.ticktockmusic.contract.NetMusicContract;
 import com.freedom.lauzy.ticktockmusic.event.PaletteEvent;
+import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.presenter.NetMusicPresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.NetSongAdapter;
 import com.lauzy.freedom.librarys.widght.TickSwipeRefreshLayout;
@@ -96,6 +96,15 @@ public class NetSongListFragment extends BaseLazyFragment<NetMusicPresenter>
 
     @Override
     public void loadSuccess(List<SongListBean> songListBeen) {
+        /*List<SongListBean> cacheData = mAdapter.getData();
+        Observable.create((ObservableOnSubscribe<List<SongListBean>>) e -> {
+            e.onNext(songListBeen);
+            e.onComplete();
+        }).compose(RxHelper.ioMain()).subscribe(data -> {
+
+        });
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(null);
+        diffResult.dispatchUpdatesTo(mAdapter);*/
         mAdapter.setNewData(songListBeen);
         mSrlNetSong.setRefreshing(false);
     }

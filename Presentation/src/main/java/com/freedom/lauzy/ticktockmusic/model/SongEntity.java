@@ -3,6 +3,8 @@ package com.freedom.lauzy.ticktockmusic.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.freedom.lauzy.model.LocalSongBean;
+
 /**
  * Desc : 实现序列化（Domain为Java Library,无法实现Parcelable接口）
  * Author : Lauzy
@@ -10,7 +12,7 @@ import android.os.Parcelable;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class SongEntity implements Parcelable {
+public class SongEntity extends LocalSongBean implements Parcelable {
     public long id; //音乐ID
     public String title; //音乐名
     public long duration; //时长

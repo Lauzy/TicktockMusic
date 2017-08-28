@@ -25,6 +25,12 @@ android {
     }
 }
 
+//greendao {
+//    schemaVersion 1
+//    targetGenDir 'src/main/java'
+//    daoPackage 'com.lauzy.freedom.data.dao'
+//}
+
 dependencies {
     def testDependencies = rootProject.ext.testDependencies
     def dataDependencies = rootProject.ext.dataDependencies

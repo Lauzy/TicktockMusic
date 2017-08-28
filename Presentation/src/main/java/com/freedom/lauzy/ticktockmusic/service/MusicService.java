@@ -104,7 +104,7 @@ public class MusicService extends Service {
             }
         }
 //        return super.onStartCommand(intent, flags, startId);
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     @Override
