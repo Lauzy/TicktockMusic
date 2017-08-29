@@ -18,9 +18,12 @@ public class SongListBean {
     public String info; //额外信息
     public String songId; //歌曲ID
     public String title; //名称
-    public String tingUid; //歌手ID
+    public String tingUid; //歌手信息ID
     public String author; //作者
     public String albumId; //专辑ID
     public String albumTitle; //专辑标题
     public String artistName; //歌手名字
+    public long duration;//时长
+    public String songLength;//时长(格式化)
+    public int rank;//排序
 }

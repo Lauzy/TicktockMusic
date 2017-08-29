@@ -60,10 +60,11 @@ public class ApplicationModule {
         return uiThread;
     }
 
+//    SongRepository provideSongRepository(SongRepositoryImpl userDataRepository) {
     @Provides
     @Singleton
-    SongRepository provideSongRepository(SongRepositoryImpl userDataRepository) {
-        return userDataRepository;
+    SongRepository provideSongRepository() {
+        return new SongRepositoryImpl(mApplication);
     }
 
     @Provides

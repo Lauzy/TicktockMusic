@@ -34,7 +34,7 @@ public class LocalUtil {
         return albumCoverUri;
     }
 
-    static String formatTime(long time) {
+    public static String formatTime(long time) {
         String min = time / (1000 * 60) + "";
         String sec = time % (1000 * 60) + "";
         if (min.length() < 2) {

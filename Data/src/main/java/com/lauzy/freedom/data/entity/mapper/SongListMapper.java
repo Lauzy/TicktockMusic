@@ -2,6 +2,7 @@ package com.lauzy.freedom.data.entity.mapper;
 
 import com.freedom.lauzy.model.SongListBean;
 import com.lauzy.freedom.data.entity.SongListEntity;
+import com.lauzy.freedom.data.local.LocalUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +31,7 @@ public class SongListMapper {
      * @param entity 实体对象
      * @return 转换后的实体对象
      */
+    @SuppressWarnings("all")
     public SongListBean transform(SongListEntity entity) {
         SongListBean songListBean = null;
         if (entity != null) {
@@ -48,6 +50,9 @@ public class SongListMapper {
             songListBean.albumTitle = entity.album_title;
             songListBean.artistId = entity.artist_id;
             songListBean.artistName = entity.artist_name;
+            songListBean.rank = entity.rank;
+            songListBean.duration = entity.file_duration;
+            songListBean.songLength = LocalUtil.formatTime(entity.file_duration);
         }
         return songListBean;
     }

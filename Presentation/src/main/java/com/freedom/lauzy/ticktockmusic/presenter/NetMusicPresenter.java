@@ -34,7 +34,6 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View> im
     private static final int SIZE = 20;
     private int mType = 1;
     private int mPage = 20;
-    private boolean isFirstLoad = true;
 
 
     @Inject
@@ -52,11 +51,8 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View> im
       /*  Disposable disposable = mSongListUseCase.execute(new NetSongObserver(DConstants.Status.INIT_STATUS), params);
         addDisposable(disposable);*/
 
-        Observable<List<SongListBean>> observable = mSongListUseCase.buildCacheObservable();
-        if (isFirstLoad) {
-            observable.subscribe(songListBeen -> getView().loadCacheData(songListBeen));
-            isFirstLoad = false;
-        }
+        Observable<List<SongListBean>> observable = mSongListUseCase.buildCacheObservable(mType);
+        observable.subscribe(songListBeen -> getView().loadCacheData(songListBeen));
         observable.flatMap(new Function<List<SongListBean>, ObservableSource<List<SongListBean>>>() {
             @Override
             public ObservableSource<List<SongListBean>> apply(@NonNull List<SongListBean> songListBeen) throws Exception {

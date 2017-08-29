@@ -2,7 +2,7 @@ package com.lauzy.freedom.data.net.retrofit;
 
 import android.support.annotation.NonNull;
 
-import com.freedom.lauzy.model.StatusBean;
+import com.lauzy.freedom.data.entity.StatusEntity;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
@@ -42,7 +42,7 @@ public class TickResponseBodyConverter<T> implements Converter<ResponseBody, T> 
     public T convert(@NonNull ResponseBody value) throws IOException {
         String response = value.string();
         try {
-            StatusBean status = mGson.fromJson(response, StatusBean.class);
+            StatusEntity status = mGson.fromJson(response, StatusEntity.class);
             if (status.isInvalidCode()) {//这里可具体判断多种状态
                 value.close();
                 throw new ErrorMsgException(status.error_code, status.error_msg);

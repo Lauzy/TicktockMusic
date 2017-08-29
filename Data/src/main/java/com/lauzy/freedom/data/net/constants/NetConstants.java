@@ -55,4 +55,8 @@ public class NetConstants {
         public static final int TYPE_MOVIE = 24;
         public static final int TYPE_NETWORK = 25;
     }
+
+    public static class ErrorCode {
+        public static final int CODE_SUCCESS = 22000;
+    }
 }

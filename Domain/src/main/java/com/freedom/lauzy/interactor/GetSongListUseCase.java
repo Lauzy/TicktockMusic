@@ -35,8 +35,8 @@ public class GetSongListUseCase extends UseCase<List<SongListBean>, GetSongListU
         return mSongRepository.getSongList(params.method, params.type, params.offset, params.size);
     }
 
-    public Observable<List<SongListBean>> buildCacheObservable(){
-        return mSongRepository.getCacheSongList();
+    public Observable<List<SongListBean>> buildCacheObservable(int param){
+        return mSongRepository.getCacheSongList(param);
     }
 
     public static final class Params {
