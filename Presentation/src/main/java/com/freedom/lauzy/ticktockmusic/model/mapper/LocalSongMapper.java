@@ -10,7 +10,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
- * Desc : LocalSong转换，LocalSongBean转换为LocalSongEntity，以实现序列化接口
+ * Desc : LocalSong转换，LocalSongBean转换为SongEntity，以实现序列化接口
  * Author : Lauzy
  * Date : 2017/8/18
  * Blog : http://www.jianshu.com/u/e76853f863a9

@@ -27,7 +27,8 @@ import io.reactivex.functions.Function;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View> implements NetMusicContract.Presenter {
+public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View>
+        implements NetMusicContract.Presenter {
 
     private GetSongListUseCase mSongListUseCase;
     private static final String METHOD = NetConstants.Value.METHOD_SONG_LIST;
@@ -46,14 +47,18 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View> im
     }
 
     @Override
-    public void loadNetMusicList() {
-        GetSongListUseCase.Params params = GetSongListUseCase.Params.forSongList(METHOD, mType, 0, SIZE);
-      /*  Disposable disposable = mSongListUseCase.execute(new NetSongObserver(DConstants.Status.INIT_STATUS), params);
-        addDisposable(disposable);*/
-
+    public void loadCacheMusicList() {
         Observable<List<SongListBean>> observable = mSongListUseCase.buildCacheObservable(mType);
         observable.subscribe(songListBeen -> getView().loadCacheData(songListBeen));
-        observable.flatMap(new Function<List<SongListBean>, ObservableSource<List<SongListBean>>>() {
+    }
+
+    @Override
+    public void loadNetMusicList() {
+        GetSongListUseCase.Params params = GetSongListUseCase.Params.forSongList(METHOD, mType, 0, SIZE);
+//        Observable<List<SongListBean>> observable = mSongListUseCase.buildCacheObservable(mType);
+//        observable.subscribe(songListBeen -> getView().loadCacheData(songListBeen));
+        mSongListUseCase.buildCacheObservable(mType).flatMap(new Function<List<SongListBean>,
+                ObservableSource<List<SongListBean>>>() {
             @Override
             public ObservableSource<List<SongListBean>> apply(@NonNull List<SongListBean> songListBeen) throws Exception {
                 return mSongListUseCase.buildObservable(params);

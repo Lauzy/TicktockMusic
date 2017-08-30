@@ -26,4 +26,5 @@ public class SongListBean {
     public long duration;//时长
     public String songLength;//时长(格式化)
     public int rank;//排序
+
 }

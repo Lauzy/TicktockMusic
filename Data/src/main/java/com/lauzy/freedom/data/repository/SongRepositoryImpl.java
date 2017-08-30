@@ -7,10 +7,8 @@ import com.freedom.lauzy.repository.SongRepository;
 import com.lauzy.freedom.data.database.NetMusicDao;
 import com.lauzy.freedom.data.entity.MusicEntity;
 import com.lauzy.freedom.data.entity.mapper.SongListMapper;
-import com.lauzy.freedom.data.exception.ErrorMsgException;
 import com.lauzy.freedom.data.net.RetrofitHelper;
 import com.lauzy.freedom.data.net.api.SongService;
-import com.lauzy.freedom.data.net.constants.NetConstants;
 
 import java.util.Collections;
 import java.util.List;

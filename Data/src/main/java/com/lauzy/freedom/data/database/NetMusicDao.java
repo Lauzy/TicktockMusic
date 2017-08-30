@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.freedom.lauzy.model.SongListBean;
 
@@ -21,6 +22,7 @@ import static com.lauzy.freedom.data.database.TickDaoHelper.NET_MUSIC_TABLE;
  */
 public class NetMusicDao implements BaseDao {
 
+    private static final String LTAG = "NetMusicDao";
     private static NetMusicDao sInstance;
     private TickDaoHelper mTickDaoHelper;
 
@@ -52,7 +54,8 @@ public class NetMusicDao implements BaseDao {
                 + NetParam.ALBUM_ID + " VARCHAR(255),"
                 + NetParam.ALBUM_NAME + " VARCHAR(255),"
                 + NetParam.RANK + " INTEGER,"
-                + "UNIQUE(" + NetParam.SONG_ID + ") );");
+                + "CONSTRAINT UC_NetMusic UNIQUE ("
+                + NetParam.TYPE + "," + NetParam.SONG_ID + " ));");
     }
 
     @Override
@@ -67,9 +70,9 @@ public class NetMusicDao implements BaseDao {
             cursor = db.query(TickDaoHelper.NET_MUSIC_TABLE, null,
                     NetParam.TYPE + " = ?",
                     new String[]{String.valueOf(type)},
-                    null, null, NetParam.RANK + " ASC");
+                    null, null, NetParam.RANK + " ASC", null);
             if (cursor.getCount() > 0) {
-                List<SongListBean> listBeen = new ArrayList<>(cursor.getCount());
+                List<SongListBean> listBeen = new ArrayList<>();
                 while (cursor.moveToNext()) {
                     SongListBean listBean = new SongListBean();
                     listBean.songId = cursor.getString(cursor.getColumnIndex(NetParam.SONG_ID));
@@ -98,7 +101,7 @@ public class NetMusicDao implements BaseDao {
     }
 
     public void addNetSongData(int type, List<SongListBean> songListBeen) {
-        SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
+        SQLiteDatabase db = mTickDaoHelper.getWritableDatabase();
         db.beginTransaction();
         try {
             for (SongListBean songListBean : songListBeen) {
@@ -113,19 +116,32 @@ public class NetMusicDao implements BaseDao {
                 values.put(NetParam.ALBUM_ID, songListBean.albumId);
                 values.put(NetParam.ALBUM_NAME, songListBean.albumTitle);
                 values.put(NetParam.RANK, songListBean.rank);
-                db.insertWithOnConflict(TickDaoHelper.NET_MUSIC_TABLE, null, values,
-                        SQLiteDatabase.CONFLICT_REPLACE);
+                Log.i(LTAG, "type is " + type + ";\n"
+                        + "id is " + songListBean.songId + ";\n"
+                        + "name is " + songListBean.title + ";\n"
+                        + "singerID is " + songListBean.artistId + ";\n"
+                        + "singerName is " + songListBean.artistName + ";\n"
+                        + "PIC is " + songListBean.imgUrl + ";\n"
+                        + "LRC is " + songListBean.lrcLink + ";\n"
+                        + "albumId is " + songListBean.albumId + ";\n"
+                        + "albumName is " + songListBean.albumTitle + ";\n"
+                        + "rank is " + songListBean.rank + ";\n");
+                long conflict = db.insertWithOnConflict(TickDaoHelper.NET_MUSIC_TABLE, null, values,
+                        SQLiteDatabase.CONFLICT_IGNORE);
+                Log.i(LTAG, "DbConflict --- " + conflict);
             }
         } finally {
             db.setTransactionSuccessful();
             db.endTransaction();
+            db.close();
         }
     }
 
     public void removeData() {
-        SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
+        SQLiteDatabase db = mTickDaoHelper.getWritableDatabase();
         db.beginTransaction();
         db.delete(TickDaoHelper.NET_MUSIC_TABLE, null, null);
         db.setTransactionSuccessful();
+        db.close();
     }
 }

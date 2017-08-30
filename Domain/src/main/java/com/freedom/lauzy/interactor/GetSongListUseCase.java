@@ -24,7 +24,7 @@ public class GetSongListUseCase extends UseCase<List<SongListBean>, GetSongListU
 
     @Inject
     GetSongListUseCase(SongRepository songRepository, ThreadExecutor threadExecutor,
-                                 PostExecutionThread postExecutionThread) {
+                       PostExecutionThread postExecutionThread) {
         super(threadExecutor, postExecutionThread);
         mSongRepository = songRepository;
     }
@@ -35,7 +35,7 @@ public class GetSongListUseCase extends UseCase<List<SongListBean>, GetSongListU
         return mSongRepository.getSongList(params.method, params.type, params.offset, params.size);
     }
 
-    public Observable<List<SongListBean>> buildCacheObservable(int param){
+    public Observable<List<SongListBean>> buildCacheObservable(int param) {
         return mSongRepository.getCacheSongList(param);
     }
 

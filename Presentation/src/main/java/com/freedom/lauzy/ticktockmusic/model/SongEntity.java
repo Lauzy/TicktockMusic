@@ -3,7 +3,6 @@ package com.freedom.lauzy.ticktockmusic.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.freedom.lauzy.model.LocalSongBean;
 import com.freedom.lauzy.model.Song;
 
 /**
@@ -14,18 +13,6 @@ import com.freedom.lauzy.model.Song;
  * Email : freedompaladin@gmail.com
  */
 public class SongEntity extends Song implements Parcelable {
-
-   /* public long id; //音乐ID
-    public String title; //音乐名
-    public long duration; //时长
-    public String songLength;
-    public String path; //路径
-    public long albumId; //专辑ID
-    public String albumName; //专辑名
-    public Object albumCover;//专辑封面
-    public long artistId; //歌手ID
-    public String artistName; //歌手名
-    public long size;//大小*/
 
     public SongEntity() {
     }

@@ -85,6 +85,7 @@ public class NetSongListFragment extends BaseLazyFragment<NetMusicPresenter>
     @Override
     protected void loadData() {
         mPresenter.setType(mType);
+        mPresenter.loadCacheMusicList();
         mPresenter.loadNetMusicList();
         mAdapter.setOnLoadMoreListener(() -> mPresenter.loadMoreNetMusicList(), mRvNetSong);
     }
@@ -96,15 +97,6 @@ public class NetSongListFragment extends BaseLazyFragment<NetMusicPresenter>
 
     @Override
     public void loadSuccess(List<SongListBean> songListBeen) {
-        /*List<SongListBean> cacheData = mAdapter.getData();
-        Observable.create((ObservableOnSubscribe<List<SongListBean>>) e -> {
-            e.onNext(songListBeen);
-            e.onComplete();
-        }).compose(RxHelper.ioMain()).subscribe(data -> {
-
-        });
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(null);
-        diffResult.dispatchUpdatesTo(mAdapter);*/
         mAdapter.setNewData(songListBeen);
         mSrlNetSong.setRefreshing(false);
     }

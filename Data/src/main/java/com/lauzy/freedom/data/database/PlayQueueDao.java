@@ -30,7 +30,7 @@ public class PlayQueueDao implements BaseDao {
 
     public static PlayQueueDao getInstance(final Context context) {
         if (sInstance == null) {
-            synchronized (NetMusicDao.class) {
+            synchronized (PlayQueueDao.class) {
                 if (sInstance == null) {
                     sInstance = new PlayQueueDao(context.getApplicationContext());
                 }
@@ -42,7 +42,7 @@ public class PlayQueueDao implements BaseDao {
     @Override
     public void createTable(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TickDaoHelper.PLAY_QUEUE + " ("
-                + QueueParam.SONG_ID + " VARCHAR(255),"
+                + QueueParam.SONG_ID + " VARCHAR(255) UNIQUE,"
                 + QueueParam.SOURCE + " VARCHAR(255),"
                 + QueueParam.SONG_NAME + " VARCHAR(255),"
                 + QueueParam.SINGER_NAME + " VARCHAR(255),"
@@ -50,8 +50,7 @@ public class PlayQueueDao implements BaseDao {
                 + QueueParam.PLAY_PATH + " VARCHAR(255),"
                 + QueueParam.DURATION + " LONG,"
                 + QueueParam.LENGTH + " VARCHAR(255),"
-                + QueueParam.ALBUM_COVER + " VARCHAR(255),"
-                + "UNIQUE(" + QueueParam.SONG_ID + ") );");
+                + QueueParam.ALBUM_COVER + " VARCHAR(255));");
     }
 
     @Override
@@ -64,7 +63,7 @@ public class PlayQueueDao implements BaseDao {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         Cursor cursor = null;
         try {
-            cursor = db.query(TickDaoHelper.NET_MUSIC_TABLE, null, null, null, null, null, null);
+            cursor = db.query(TickDaoHelper.PLAY_QUEUE, null, null, null, null, null, null);
             if (cursor.getCount() > 0) {
                 List<Song> listBeen = new ArrayList<>(cursor.getCount());
                 while (cursor.moveToNext()) {
@@ -105,7 +104,7 @@ public class PlayQueueDao implements BaseDao {
                         localSongBean.songLength);
                 values.put(QueueParam.PLAY_PATH, localSongBean.path);
                 db.insertWithOnConflict(TickDaoHelper.PLAY_QUEUE, null, values,
-                        SQLiteDatabase.CONFLICT_REPLACE);
+                        SQLiteDatabase.CONFLICT_IGNORE);
             }
         } finally {
             db.setTransactionSuccessful();
@@ -122,7 +121,7 @@ public class PlayQueueDao implements BaseDao {
                         localSongBean.title, localSongBean.albumTitle, localSongBean.artistName,
                         localSongBean.imgUrl, localSongBean.duration, localSongBean.songLength);
                 db.insertWithOnConflict(TickDaoHelper.PLAY_QUEUE, null, values,
-                        SQLiteDatabase.CONFLICT_REPLACE);
+                        SQLiteDatabase.CONFLICT_IGNORE);
             }
         } finally {
             db.setTransactionSuccessful();

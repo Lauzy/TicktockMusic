@@ -14,6 +14,9 @@ import java.util.List;
  */
 public interface NetMusicContract {
     interface Presenter {
+
+        void loadCacheMusicList();
+
         void loadNetMusicList();
 
         void loadMoreNetMusicList();
