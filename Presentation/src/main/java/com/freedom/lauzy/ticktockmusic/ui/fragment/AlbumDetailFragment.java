@@ -63,9 +63,9 @@ public class AlbumDetailFragment extends BaseFragment<LocalMusicPresenter>
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        setSharedElementEnterTransition(TransitionInflater.from(getContext())
-                .inflateTransition(android.R.transition.move));
         super.onCreate(savedInstanceState);
+//        setSharedElementEnterTransition(TransitionInflater.from(getContext())
+//                .inflateTransition(android.R.transition.move));
         if (getArguments() != null) {
             mAlbumId = getArguments().getLong(ALBUM_ID);
             mAlbumCover = getArguments().getParcelable(ALBUM_COVER);

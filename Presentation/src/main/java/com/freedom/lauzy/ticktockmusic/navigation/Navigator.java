@@ -6,11 +6,13 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Fade;
 import android.widget.ImageView;
 
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.ui.activity.SettingActivity;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.AlbumDetailFragment;
+import com.freedom.lauzy.ticktockmusic.utils.anim.FragmentTransition;
 
 import javax.inject.Inject;
 
@@ -41,6 +43,9 @@ public class Navigator {
         FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
 //        fragment.setSharedElementEnterTransition(changeImage);
 //        fragment.setSharedElementReturnTransition(changeImage);
+        fragment.setEnterTransition(new Fade());
+        fragment.setSharedElementReturnTransition(new FragmentTransition());
+        fragment.setSharedElementEnterTransition(new FragmentTransition());
         transaction.addSharedElement(view, transName)
                 .hide(((AppCompatActivity) context).getSupportFragmentManager()
                         .findFragmentById(R.id.layout_main))

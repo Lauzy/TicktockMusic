@@ -2,14 +2,13 @@
 apply from: 'buildsystem/dependencies.gradle'
 
 buildscript {
-    ext.gradleVersion = '2.3.3'
     ext.lambdaVersion = '3.7.0'
     repositories {
         jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:$gradleVersion"
+        classpath 'com.android.tools.build:gradle:2.3.3'
         classpath "me.tatarka:gradle-retrolambda:$lambdaVersion"
     }
 }

@@ -33,15 +33,15 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
     compile supportDependencies.appcompatV7
+    compile libDependencies.design
+    compile libDependencies.cardView
+    compile libDependencies.rxJava
     compile libDependencies.log
     compile libDependencies.glide
     compile libDependencies.skinChange
     compile libDependencies.materialDialog
-    compile libDependencies.design
     compile libDependencies.baseAdapter
-    compile libDependencies.cardView
     compile libDependencies.palette
-    compile libDependencies.rxJava
     compile libDependencies.rxAndroid
     annotationProcessor libDependencies.glideCompiler
     testCompile testDependencies.junit
