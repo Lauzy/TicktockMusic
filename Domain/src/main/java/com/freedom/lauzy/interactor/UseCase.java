@@ -10,8 +10,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Desc : 不同用例的执行单元,
- * 使用 DisposableObserver 在后台执行，并将结果传到UI线程。
+ * Desc : 不同用例的抽象类，可指定业务逻辑
  * Author : Lauzy
  * Date : 2017/7/6
  * Blog : http://www.jianshu.com/u/e76853f863a9

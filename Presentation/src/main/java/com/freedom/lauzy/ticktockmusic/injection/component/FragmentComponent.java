@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.freedom.lauzy.ticktockmusic.injection.module.FragmentModule;
 import com.freedom.lauzy.ticktockmusic.injection.scope.PerFragment;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.AlbumDetailFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.AlbumFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongListFragment;
@@ -30,4 +31,6 @@ public interface FragmentComponent {
     void inject(SongFragment songFragment);
 
     void inject(AlbumFragment albumFragment);
+
+    void inject(AlbumDetailFragment detailFragment);
 }

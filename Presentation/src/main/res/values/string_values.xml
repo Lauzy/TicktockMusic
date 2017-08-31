@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="img_transition">CategoryImage</string>
+    <string name="img_transition">TransitionImage</string>
 </resources>

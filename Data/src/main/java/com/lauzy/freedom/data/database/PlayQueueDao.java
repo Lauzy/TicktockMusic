@@ -42,7 +42,7 @@ public class PlayQueueDao implements BaseDao {
     @Override
     public void createTable(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TickDaoHelper.PLAY_QUEUE + " ("
-                + QueueParam.SONG_ID + " VARCHAR(255) UNIQUE,"
+                + QueueParam.SONG_ID + " VARCHAR(255),"
                 + QueueParam.SOURCE + " VARCHAR(255),"
                 + QueueParam.SONG_NAME + " VARCHAR(255),"
                 + QueueParam.SINGER_NAME + " VARCHAR(255),"
@@ -50,7 +50,9 @@ public class PlayQueueDao implements BaseDao {
                 + QueueParam.PLAY_PATH + " VARCHAR(255),"
                 + QueueParam.DURATION + " LONG,"
                 + QueueParam.LENGTH + " VARCHAR(255),"
-                + QueueParam.ALBUM_COVER + " VARCHAR(255));");
+                + QueueParam.ALBUM_COVER + " VARCHAR(255),"
+                + "CONSTRAINT UC_PlayQueue UNIQUE ("
+                + QueueParam.SOURCE + "," + QueueParam.SONG_ID + " ));");
     }
 
     @Override
@@ -58,12 +60,13 @@ public class PlayQueueDao implements BaseDao {
 
     }
 
-    public List<Song> queryQueue() {
+    public List<Song> queryQueue(String[] songIds) {
 
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         Cursor cursor = null;
         try {
-            cursor = db.query(TickDaoHelper.PLAY_QUEUE, null, null, null, null, null, null);
+            cursor = db.query(TickDaoHelper.PLAY_QUEUE, null,
+                    QueueParam.SONG_ID + " = ? ", songIds, null, null, null);
             if (cursor.getCount() > 0) {
                 List<Song> listBeen = new ArrayList<>(cursor.getCount());
                 while (cursor.moveToNext()) {

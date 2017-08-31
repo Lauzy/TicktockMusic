@@ -1,19 +1,16 @@
 package com.freedom.lauzy.ticktockmusic.navigation;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.ui.activity.SettingActivity;
-import com.freedom.lauzy.ticktockmusic.ui.activity.AlbumDetailActivity;
-import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongListFragment;
-import com.freedom.lauzy.ticktockmusic.utils.anim.FragmentAnimUtil;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.AlbumDetailFragment;
 
 import javax.inject.Inject;
 
@@ -24,7 +21,6 @@ import javax.inject.Inject;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-@SuppressWarnings("unused")
 public class Navigator {
 
     @Inject
@@ -38,21 +34,16 @@ public class Navigator {
         }
     }
 
-    public void navigateToAlbumDetail(Context context, long id) {
-        if (context != null) {
-            Intent intent = AlbumDetailActivity.newInstance(context, id);
-            context.startActivity(intent);
-        }
-    }
-
-    public static void navigateToSongList(Activity context, ImageView view, int type) {
-        FragmentTransaction transaction = ((AppCompatActivity) context)
-                .getSupportFragmentManager().beginTransaction();
-        Fragment fragment = NetSongListFragment.newInstance(type);
-        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager()
-                .findFragmentById(R.id.layout_main));
-        FragmentAnimUtil.setEnterExitAnim(fragment);
-        transaction.addSharedElement(view, ViewCompat.getTransitionName(view))
+    public static void navigateToAlbumDetail(Context context, ImageView view, String transName,
+                                             Uri url, long id) {
+        Fragment fragment = AlbumDetailFragment.newInstance(url, transName, id);
+//        Transition changeImage = TransitionInflater.from(context).inflateTransition(R.transition.image_transform);
+        FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+//        fragment.setSharedElementEnterTransition(changeImage);
+//        fragment.setSharedElementReturnTransition(changeImage);
+        transaction.addSharedElement(view, transName)
+                .hide(((AppCompatActivity) context).getSupportFragmentManager()
+                        .findFragmentById(R.id.layout_main))
                 .add(R.id.layout_main, fragment)
                 .addToBackStack(null)
                 .commit();

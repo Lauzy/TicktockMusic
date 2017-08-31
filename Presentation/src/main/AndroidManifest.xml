@@ -21,8 +21,6 @@
         </activity>
         <activity android:name=".ui.activity.SettingActivity">
         </activity>
-        <activity android:name=".ui.activity.AlbumDetailActivity">
-        </activity>
         <activity
             android:name=".ui.activity.SplashActivity"
             android:theme="@style/SplashTheme">

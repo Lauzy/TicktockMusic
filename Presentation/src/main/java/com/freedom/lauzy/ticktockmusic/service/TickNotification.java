@@ -10,10 +10,8 @@ import android.media.session.MediaController;
 import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
 import android.support.v7.app.NotificationCompat;
-import android.support.v7.graphics.Palette;
 
 import com.freedom.lauzy.ticktockmusic.R;
-import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;
 
 /**
  * Desc :
@@ -32,13 +30,16 @@ public class TickNotification {
     }
 
     public void notifyPlay(MusicService context) {
-//        sNotificationManager.notify(NOTIFY_ID, buildNotification(context));
-        context.startForeground(NOTIFY_ID, buildNotification(context));
+        if (buildNotification(context) != null) {
+            context.startForeground(NOTIFY_ID, buildNotification(context));
+        }
     }
 
     public void notifyPause(MusicService context) {
         context.stopForeground(false);
-        mNotificationManager.notify(NOTIFY_ID, buildNotification(context));
+        if (buildNotification(context) != null) {
+            mNotificationManager.notify(NOTIFY_ID, buildNotification(context));
+        }
     }
 
     public void stopNotify(MusicService context) {

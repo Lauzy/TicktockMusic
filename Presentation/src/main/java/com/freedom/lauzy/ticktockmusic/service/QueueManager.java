@@ -18,8 +18,8 @@ import java.util.List;
  */
 public class QueueManager {
 
-    public List<SongEntity> getPlayQueue(Context context) {
-        List<Song> songs = PlayQueueDao.getInstance(context).queryQueue();
+    public List<SongEntity> getPlayQueue(Context context, String[] songIds) {
+        List<Song> songs = PlayQueueDao.getInstance(context).queryQueue(songIds);
         return SongMapper.transform(songs);
     }
 }

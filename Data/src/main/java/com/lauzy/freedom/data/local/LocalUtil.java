@@ -15,7 +15,7 @@ import android.provider.MediaStore;
  */
 public class LocalUtil {
 
-    static Uri getCoverUri(long albumId) {
+    public static Uri getCoverUri(long albumId) {
         return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
     }
 

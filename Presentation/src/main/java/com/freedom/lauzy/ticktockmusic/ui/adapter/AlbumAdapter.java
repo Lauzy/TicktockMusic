@@ -7,6 +7,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.freedom.lauzy.model.LocalAlbumBean;
 import com.freedom.lauzy.ticktockmusic.R;
+import com.freedom.lauzy.ticktockmusic.navigation.Navigator;
+import com.lauzy.freedom.data.local.LocalUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 
@@ -32,9 +34,16 @@ public class AlbumAdapter extends BaseQuickAdapter<LocalAlbumBean, BaseViewHolde
                 .setText(R.id.txt_song_num, songsNum);
 
         ImageLoader.INSTANCE.display(mContext, new ImageConfig.Builder()
-                .url(item.albumCover)
+                .url(LocalUtil.getCoverUri(item.id))
                 .placeholder(R.drawable.ic_default)
                 .into(helper.getView(R.id.img_album))
                 .build());
+
+        String transName = mContext.getString(R.string.img_transition) + helper.getAdapterPosition();
+        helper.getView(R.id.img_album).setTransitionName(transName);
+        helper.getView(R.id.album_item).setOnClickListener(v ->
+                Navigator.navigateToAlbumDetail(mContext, helper.getView(R.id.img_album),
+                        transName, LocalUtil.getCoverUri(item.id), item.id)
+        );
     }
 }

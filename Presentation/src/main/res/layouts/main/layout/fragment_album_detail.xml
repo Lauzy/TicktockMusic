@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.lauzy.freedom.librarys.widght.TickAppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_300"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/ctl_album"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_300"
+            app:collapsedTitleGravity="left"
+            app:collapsedTitleTextAppearance="@style/WhiteText"
+            app:contentScrim="@color/theme_color_primary"
+            app:expandedTitleGravity="left|bottom"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <ImageView
+                android:id="@+id/img_album"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/app_name"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_default"
+                app:layout_collapseMode="parallax"
+                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"/>
+
+            <com.lauzy.freedom.librarys.widght.TickToolbar
+                android:id="@+id/toolbar_common"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:titleTextColor="@android:color/white"/>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </com.lauzy.freedom.librarys.widght.TickAppBarLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_album_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dp_7"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    </android.support.v7.widget.RecyclerView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:clickable="true"
+        android:src="@drawable/ic_fab_play"
+        app:backgroundTint="@color/theme_color_primary"
+        app:layout_anchor="@id/app_bar"
+        app:layout_anchorGravity="bottom|end"
+        app:rippleColor="@color/colorHalfTransparent"/>
+</android.support.design.widget.CoordinatorLayout>
+
+
