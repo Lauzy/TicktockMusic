@@ -38,9 +38,18 @@ public class LocalSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
                         .into(helper.getView(R.id.img_song_pic))
                         .build());
         helper.getView(R.id.layout_song_item).setOnClickListener(v -> {
-//            RxBus.INSTANCE.post(new SongEvent(item));
-            MusicManager.getInstance().setSongEntities(mData);
-            MusicManager.getInstance().open(helper.getAdapterPosition());
+            /*MusicManager.getInstance().setSongEntities(mData);
+            MusicManager.getInstance().open(helper.getAdapterPosition());*/
+            MusicManager.getInstance().playLocalQueue(mData, getSongIds(), helper.getAdapterPosition());
         });
+    }
+
+    private String[] getSongIds() {
+        int size = mData.size();
+        String[] ids = new String[size];
+        for (int i = 0; i < size; i++) {
+            ids[i] = String.valueOf(mData.get(i).id);
+        }
+        return ids;
     }
 }

@@ -5,6 +5,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +23,6 @@ import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.LocalMusicPresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.AlbumDetailAdapter;
 import com.lauzy.freedom.data.local.LocalUtil;
-import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
@@ -52,6 +52,8 @@ public class AlbumDetailFragment extends BaseFragment<LocalMusicPresenter>
     RecyclerView mRvAlbumDetail;
     @BindView(R.id.img_album)
     ImageView mImgAlbum;
+    @BindView(R.id.fab_play)
+    FloatingActionButton mFabPlay;
     private static final String ALBUM_ID = "_id";
     private static final String ALBUM_NAME = "_name";
     private static final String ALBUM_TRANS_NAME = "trans_name";
@@ -74,7 +76,7 @@ public class AlbumDetailFragment extends BaseFragment<LocalMusicPresenter>
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(ThemeEvent.class,
+        Disposable disposable = RxBus.INSTANCE.doStickySubscribe(ThemeEvent.class,
                 themeEvent -> setThemeLayoutBg());
         RxBus.INSTANCE.addDisposable(this, disposable);
         if (getArguments() != null) {
@@ -84,10 +86,14 @@ public class AlbumDetailFragment extends BaseFragment<LocalMusicPresenter>
         }
     }
 
+    /**
+     * 换肤时更换特定控件颜色
+     */
     private void setThemeLayoutBg() {
         ColorStateList stateList = ThemeUtils.getThemeColorStateList(mActivity, R.color.color_tab);
-        LogUtil.e("KKK",stateList.getDefaultColor() + "---");
+        mCtlAlbum.setBackgroundColor(stateList.getDefaultColor());
         mCtlAlbum.setContentScrimColor(stateList.getDefaultColor());
+        mFabPlay.setBackgroundTintList(stateList);
     }
 
     @Override

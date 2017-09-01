@@ -2,7 +2,7 @@ package com.freedom.lauzy.ticktockmusic.presenter;
 
 import com.freedom.lauzy.DConstants;
 import com.freedom.lauzy.interactor.GetSongListUseCase;
-import com.freedom.lauzy.model.SongListBean;
+import com.freedom.lauzy.model.NetSongBean;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
 import com.freedom.lauzy.ticktockmusic.base.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.contract.NetMusicContract;
@@ -48,19 +48,19 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View>
 
     @Override
     public void loadCacheMusicList() {
-        Observable<List<SongListBean>> observable = mSongListUseCase.buildCacheObservable(mType);
+        Observable<List<NetSongBean>> observable = mSongListUseCase.buildCacheObservable(mType);
         observable.subscribe(songListBeen -> getView().loadCacheData(songListBeen));
     }
 
     @Override
     public void loadNetMusicList() {
         GetSongListUseCase.Params params = GetSongListUseCase.Params.forSongList(METHOD, mType, 0, SIZE);
-//        Observable<List<SongListBean>> observable = mSongListUseCase.buildCacheObservable(mType);
+//        Observable<List<NetSongBean>> observable = mSongListUseCase.buildCacheObservable(mType);
 //        observable.subscribe(songListBeen -> getView().loadCacheData(songListBeen));
-        mSongListUseCase.buildCacheObservable(mType).flatMap(new Function<List<SongListBean>,
-                ObservableSource<List<SongListBean>>>() {
+        mSongListUseCase.buildCacheObservable(mType).flatMap(new Function<List<NetSongBean>,
+                ObservableSource<List<NetSongBean>>>() {
             @Override
-            public ObservableSource<List<SongListBean>> apply(@NonNull List<SongListBean> songListBeen) throws Exception {
+            public ObservableSource<List<NetSongBean>> apply(@NonNull List<NetSongBean> songListBeen) throws Exception {
                 return mSongListUseCase.buildObservable(params);
             }
         }).compose(RxHelper.ioMain())
@@ -74,7 +74,7 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View>
         addDisposable(disposable);
     }
 
-    private class NetSongObserver extends DefaultDisposableObserver<List<SongListBean>> {
+    private class NetSongObserver extends DefaultDisposableObserver<List<NetSongBean>> {
 
         private int mStatus;
 
@@ -83,7 +83,7 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View>
         }
 
         @Override
-        public void onNext(@NonNull List<SongListBean> songListBeen) {
+        public void onNext(@NonNull List<NetSongBean> songListBeen) {
             super.onNext(songListBeen);
             if (mStatus == DConstants.Status.INIT_STATUS) {
                 mPage = SIZE;

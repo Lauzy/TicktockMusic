@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -24,6 +23,7 @@ import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.MainPresenter;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.AlbumDetailFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.LocalMusicFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongFragment;
 import com.lauzy.freedom.librarys.common.LogUtil;
@@ -136,25 +136,29 @@ public class MainActivity extends BaseActivity<MainPresenter>
         MusicManager.getInstance().setManageListener(this);
     }
 
-    private Runnable mLmRunnable = () -> {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.layout_main, LocalMusicFragment.newInstance()).commit();
-    };
+    private Runnable mLmRunnable = () ->
+            getSupportFragmentManager().beginTransaction().replace(R.id.layout_main,
+                    LocalMusicFragment.newInstance()).commit();
 
-    private Runnable mNcRunnable = () -> {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.layout_main, NetSongFragment.newInstance()).commit();
-    };
+    private Runnable mNcRunnable = () ->
+            getSupportFragmentManager().beginTransaction().replace(R.id.layout_main,
+                    NetSongFragment.newInstance()).commit();
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Runnable drawerRunnable = null;
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.layout_main);
         switch (item.getItemId()) {
             case R.id.nav_music:
-                drawerRunnable = mLmRunnable;
+                if (!(fragment instanceof LocalMusicFragment) && !(fragment instanceof
+                        AlbumDetailFragment)) {
+                    drawerRunnable = mLmRunnable;
+                }
                 break;
             case R.id.nav_net_song:
-                drawerRunnable = mNcRunnable;
+                if (!(fragment instanceof NetSongFragment)) {
+                    drawerRunnable = mNcRunnable;
+                }
                 break;
             case R.id.nav_favorite:
                 break;

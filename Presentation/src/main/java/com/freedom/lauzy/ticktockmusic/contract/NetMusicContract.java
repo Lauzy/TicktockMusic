@@ -1,6 +1,6 @@
 package com.freedom.lauzy.ticktockmusic.contract;
 
-import com.freedom.lauzy.model.SongListBean;
+import com.freedom.lauzy.model.NetSongBean;
 import com.freedom.lauzy.ticktockmusic.base.IBaseView;
 
 import java.util.List;
@@ -24,15 +24,15 @@ public interface NetMusicContract {
 
     interface View extends IBaseView {
 
-        void loadCacheData(List<SongListBean> songListBeen);
+        void loadCacheData(List<NetSongBean> songListBeen);
 
-        void loadSuccess(List<SongListBean> songListBeen);
+        void loadSuccess(List<NetSongBean> songListBeen);
 
         void setEmptyView();
 
         void loadFail(Throwable throwable);
 
-        void loadMoreSuccess(List<SongListBean> songListBeen);
+        void loadMoreSuccess(List<NetSongBean> songListBeen);
 
         void loadMoreEnd();
 

@@ -2,7 +2,7 @@ package com.freedom.lauzy.interactor;
 
 import com.freedom.lauzy.executor.PostExecutionThread;
 import com.freedom.lauzy.executor.ThreadExecutor;
-import com.freedom.lauzy.model.SongListBean;
+import com.freedom.lauzy.model.NetSongBean;
 import com.freedom.lauzy.repository.SongRepository;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import io.reactivex.Observable;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class GetSongListUseCase extends UseCase<List<SongListBean>, GetSongListUseCase.Params> {
+public class GetSongListUseCase extends UseCase<List<NetSongBean>, GetSongListUseCase.Params> {
 
     private final SongRepository mSongRepository;
 
@@ -31,11 +31,11 @@ public class GetSongListUseCase extends UseCase<List<SongListBean>, GetSongListU
 
 
     @Override
-    Observable<List<SongListBean>> buildUseCaseObservable(GetSongListUseCase.Params params) {
+    Observable<List<NetSongBean>> buildUseCaseObservable(GetSongListUseCase.Params params) {
         return mSongRepository.getSongList(params.method, params.type, params.offset, params.size);
     }
 
-    public Observable<List<SongListBean>> buildCacheObservable(int param) {
+    public Observable<List<NetSongBean>> buildCacheObservable(int param) {
         return mSongRepository.getCacheSongList(param);
     }
 

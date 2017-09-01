@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.freedom.lauzy.model.SongListBean;
+import com.freedom.lauzy.model.NetSongBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class NetMusicDao implements BaseDao {
 
     }
 
-    public List<SongListBean> querySongData(int type) {
+    public List<NetSongBean> querySongData(int type) {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         Cursor cursor = null;
         try {
@@ -72,9 +72,9 @@ public class NetMusicDao implements BaseDao {
                     new String[]{String.valueOf(type)},
                     null, null, NetParam.RANK + " ASC", null);
             if (cursor.getCount() > 0) {
-                List<SongListBean> listBeen = new ArrayList<>();
+                List<NetSongBean> listBeen = new ArrayList<>();
                 while (cursor.moveToNext()) {
-                    SongListBean listBean = new SongListBean();
+                    NetSongBean listBean = new NetSongBean();
                     listBean.songId = cursor.getString(cursor.getColumnIndex(NetParam.SONG_ID));
                     listBean.title = cursor.getString(cursor.getColumnIndex(NetParam.SONG_NAME));
                     listBean.artistId = cursor.getString(cursor.getColumnIndex(NetParam.SINGER_ID));
@@ -100,32 +100,32 @@ public class NetMusicDao implements BaseDao {
         return null;
     }
 
-    public void addNetSongData(int type, List<SongListBean> songListBeen) {
+    public void addNetSongData(int type, List<NetSongBean> songListBeen) {
         SQLiteDatabase db = mTickDaoHelper.getWritableDatabase();
         db.beginTransaction();
         try {
-            for (SongListBean songListBean : songListBeen) {
+            for (NetSongBean netSongBean : songListBeen) {
                 ContentValues values = new ContentValues();
                 values.put(NetParam.TYPE, type);
-                values.put(NetParam.SONG_ID, songListBean.songId);
-                values.put(NetParam.SONG_NAME, songListBean.title);
-                values.put(NetParam.SINGER_ID, songListBean.artistId);
-                values.put(NetParam.SINGER_NAME, songListBean.artistName);
-                values.put(NetParam.PIC_URL, songListBean.imgUrl);
-                values.put(NetParam.LRC_LINK, songListBean.lrcLink);
-                values.put(NetParam.ALBUM_ID, songListBean.albumId);
-                values.put(NetParam.ALBUM_NAME, songListBean.albumTitle);
-                values.put(NetParam.RANK, songListBean.rank);
+                values.put(NetParam.SONG_ID, netSongBean.songId);
+                values.put(NetParam.SONG_NAME, netSongBean.title);
+                values.put(NetParam.SINGER_ID, netSongBean.artistId);
+                values.put(NetParam.SINGER_NAME, netSongBean.artistName);
+                values.put(NetParam.PIC_URL, netSongBean.imgUrl);
+                values.put(NetParam.LRC_LINK, netSongBean.lrcLink);
+                values.put(NetParam.ALBUM_ID, netSongBean.albumId);
+                values.put(NetParam.ALBUM_NAME, netSongBean.albumTitle);
+                values.put(NetParam.RANK, netSongBean.rank);
                 Log.i(LTAG, "type is " + type + ";\n"
-                        + "id is " + songListBean.songId + ";\n"
-                        + "name is " + songListBean.title + ";\n"
-                        + "singerID is " + songListBean.artistId + ";\n"
-                        + "singerName is " + songListBean.artistName + ";\n"
-                        + "PIC is " + songListBean.imgUrl + ";\n"
-                        + "LRC is " + songListBean.lrcLink + ";\n"
-                        + "albumId is " + songListBean.albumId + ";\n"
-                        + "albumName is " + songListBean.albumTitle + ";\n"
-                        + "rank is " + songListBean.rank + ";\n");
+                        + "id is " + netSongBean.songId + ";\n"
+                        + "name is " + netSongBean.title + ";\n"
+                        + "singerID is " + netSongBean.artistId + ";\n"
+                        + "singerName is " + netSongBean.artistName + ";\n"
+                        + "PIC is " + netSongBean.imgUrl + ";\n"
+                        + "LRC is " + netSongBean.lrcLink + ";\n"
+                        + "albumId is " + netSongBean.albumId + ";\n"
+                        + "albumName is " + netSongBean.albumTitle + ";\n"
+                        + "rank is " + netSongBean.rank + ";\n");
                 long conflict = db.insertWithOnConflict(TickDaoHelper.NET_MUSIC_TABLE, null, values,
                         SQLiteDatabase.CONFLICT_IGNORE);
                 Log.i(LTAG, "DbConflict --- " + conflict);

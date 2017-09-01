@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.freedom.lauzy.model.SongListBean;
+import com.freedom.lauzy.model.NetSongBean;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseLazyFragment;
 import com.freedom.lauzy.ticktockmusic.contract.NetMusicContract;
@@ -22,7 +22,7 @@ import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
 
 /**
- * Desc : Net Song
+ * Desc : Net QueueSongBean
  * Author : Lauzy
  * Date : 2017/8/8
  * Blog : http://www.jianshu.com/u/e76853f863a9
@@ -34,7 +34,7 @@ public class NetSongListFragment extends BaseLazyFragment<NetMusicPresenter>
     RecyclerView mRvNetSong;
     @BindView(R.id.srl_net_song)
     TickSwipeRefreshLayout mSrlNetSong;
-    private List<SongListBean> mSongListBeen = new ArrayList<>();
+    private List<NetSongBean> mSongListBeen = new ArrayList<>();
     private NetSongAdapter mAdapter;
     private static final String TYPE = "type";
     private int mType;
@@ -91,12 +91,12 @@ public class NetSongListFragment extends BaseLazyFragment<NetMusicPresenter>
     }
 
     @Override
-    public void loadCacheData(List<SongListBean> songListBeen) {
+    public void loadCacheData(List<NetSongBean> songListBeen) {
         mAdapter.setNewData(songListBeen);
     }
 
     @Override
-    public void loadSuccess(List<SongListBean> songListBeen) {
+    public void loadSuccess(List<NetSongBean> songListBeen) {
         mAdapter.setNewData(songListBeen);
         mSrlNetSong.setRefreshing(false);
     }
@@ -112,7 +112,7 @@ public class NetSongListFragment extends BaseLazyFragment<NetMusicPresenter>
     }
 
     @Override
-    public void loadMoreSuccess(List<SongListBean> songListBeen) {
+    public void loadMoreSuccess(List<NetSongBean> songListBeen) {
         mAdapter.addData(songListBeen);
         mAdapter.loadMoreComplete();
     }

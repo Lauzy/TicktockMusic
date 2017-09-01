@@ -32,6 +32,7 @@ public interface BaseDao {
         static final String SOURCE = "source";
         static final String SONG_ID = "songId";
         static final String SONG_NAME = "songName";
+        static final String ALBUM_ID = "albumId";
         static final String ALBUM_NAME = "albumName";
         static final String SINGER_NAME = "singerName";
         static final String PLAY_PATH = "playPath";

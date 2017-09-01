@@ -2,7 +2,8 @@ package com.freedom.lauzy.ticktockmusic.service;
 
 import android.content.Context;
 
-import com.freedom.lauzy.model.Song;
+import com.freedom.lauzy.model.NetSongBean;
+import com.freedom.lauzy.model.QueueSongBean;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.model.mapper.SongMapper;
 import com.lauzy.freedom.data.database.PlayQueueDao;
@@ -18,8 +19,16 @@ import java.util.List;
  */
 public class QueueManager {
 
-    public List<SongEntity> getPlayQueue(Context context, String[] songIds) {
-        List<Song> songs = PlayQueueDao.getInstance(context).queryQueue(songIds);
-        return SongMapper.transform(songs);
+    public static List<SongEntity> getPlayQueue(Context context, String[] songIds) {
+        List<QueueSongBean> queueSongBeen = PlayQueueDao.getInstance(context).queryQueue(songIds);
+        return SongMapper.transform(queueSongBeen);
+    }
+
+    public static void addLocalQueue(Context context, List<SongEntity> songEntities) {
+        PlayQueueDao.getInstance(context).addLocalQueue(SongMapper.transformToQueue(songEntities));
+    }
+
+    public static void addNetQueue(Context context, List<NetSongBean> netSongBeen) {
+        PlayQueueDao.getInstance(context).addNetQueue(netSongBeen);
     }
 }

@@ -278,6 +278,10 @@ public class MusicService extends Service {
         return mMediaSession;
     }
 
+    public MediaPlayer getMediaPlayer() {
+        return mMediaPlayer;
+    }
+
     public MediaSession.Token getMediaSessionToken() {
         return mMediaSession.getSessionToken();
     }

@@ -2,7 +2,7 @@ package com.lauzy.freedom.data.repository;
 
 import android.content.Context;
 
-import com.freedom.lauzy.model.SongListBean;
+import com.freedom.lauzy.model.NetSongBean;
 import com.freedom.lauzy.repository.SongRepository;
 import com.lauzy.freedom.data.database.NetMusicDao;
 import com.lauzy.freedom.data.entity.MusicEntity;
@@ -42,23 +42,23 @@ public class SongRepositoryImpl implements SongRepository {
     }
 
     @Override
-    public Observable<List<SongListBean>> getSongList(final String method, final int type,
-                                                      final int offset, final int size) {
+    public Observable<List<NetSongBean>> getSongList(final String method, final int type,
+                                                     final int offset, final int size) {
 
         return RetrofitHelper.INSTANCE.createApi(SongService.class)
                 .getMusicData(method, type, offset, size)
-                .map(new Function<MusicEntity, List<SongListBean>>() {
+                .map(new Function<MusicEntity, List<NetSongBean>>() {
                     @Override
-                    public List<SongListBean> apply(@NonNull MusicEntity musicEntity) throws Exception {
+                    public List<NetSongBean> apply(@NonNull MusicEntity musicEntity) throws Exception {
 //                        if (musicEntity.error_code != NetConstants.ErrorCode.CODE_SUCCESS) {
 //                            throw new ErrorMsgException(musicEntity.error_code, musicEntity.error_msg);
 //                        }
                         SongListMapper mapper = new SongListMapper();
                         return mapper.transform(musicEntity.song_list);
                     }
-                }).doOnNext(new Consumer<List<SongListBean>>() {
+                }).doOnNext(new Consumer<List<NetSongBean>>() {
                     @Override
-                    public void accept(@NonNull List<SongListBean> songListBeen) throws Exception {
+                    public void accept(@NonNull List<NetSongBean> songListBeen) throws Exception {
                         if (!songListBeen.isEmpty()) {
                             NetMusicDao.getInstance(mContext).addNetSongData(type, songListBeen);
                         }
@@ -67,12 +67,12 @@ public class SongRepositoryImpl implements SongRepository {
     }
 
     @Override
-    public Observable<List<SongListBean>> getCacheSongList(final int type) {
-        return Observable.create(new ObservableOnSubscribe<List<SongListBean>>() {
+    public Observable<List<NetSongBean>> getCacheSongList(final int type) {
+        return Observable.create(new ObservableOnSubscribe<List<NetSongBean>>() {
             @Override
-            public void subscribe(@NonNull ObservableEmitter<List<SongListBean>> e) throws Exception {
-                List<SongListBean> listBeen = NetMusicDao.getInstance(mContext).querySongData(type);
-                e.onNext(listBeen != null ? listBeen : Collections.<SongListBean>emptyList());
+            public void subscribe(@NonNull ObservableEmitter<List<NetSongBean>> e) throws Exception {
+                List<NetSongBean> listBeen = NetMusicDao.getInstance(mContext).querySongData(type);
+                e.onNext(listBeen != null ? listBeen : Collections.<NetSongBean>emptyList());
                 e.onComplete();
             }
         });

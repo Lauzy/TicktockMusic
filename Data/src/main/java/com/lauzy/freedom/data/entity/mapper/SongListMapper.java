@@ -1,6 +1,6 @@
 package com.lauzy.freedom.data.entity.mapper;
 
-import com.freedom.lauzy.model.SongListBean;
+import com.freedom.lauzy.model.NetSongBean;
 import com.lauzy.freedom.data.entity.SongListEntity;
 import com.lauzy.freedom.data.local.LocalUtil;
 
@@ -32,29 +32,29 @@ public class SongListMapper {
      * @return 转换后的实体对象
      */
     @SuppressWarnings("all")
-    public SongListBean transform(SongListEntity entity) {
-        SongListBean songListBean = null;
+    public NetSongBean transform(SongListEntity entity) {
+        NetSongBean netSongBean = null;
         if (entity != null) {
-            songListBean = new SongListBean();
-            songListBean.language = entity.language;
-            songListBean.imgUrl = entity.pic_big;
-            songListBean.publishTime = entity.publishtime;
-            songListBean.lrcLink = entity.lrclink;
-            songListBean.versions = entity.versions;
-            songListBean.info = entity.info;
-            songListBean.songId = entity.song_id;
-            songListBean.title = entity.title;
-            songListBean.tingUid = entity.ting_uid;
-            songListBean.author = entity.author;
-            songListBean.albumId = entity.album_id;
-            songListBean.albumTitle = entity.album_title;
-            songListBean.artistId = entity.artist_id;
-            songListBean.artistName = entity.artist_name;
-            songListBean.rank = entity.rank;
-            songListBean.duration = entity.file_duration;
-            songListBean.songLength = LocalUtil.formatTime(entity.file_duration);
+            netSongBean = new NetSongBean();
+            netSongBean.language = entity.language;
+            netSongBean.imgUrl = entity.pic_big;
+            netSongBean.publishTime = entity.publishtime;
+            netSongBean.lrcLink = entity.lrclink;
+            netSongBean.versions = entity.versions;
+            netSongBean.info = entity.info;
+            netSongBean.songId = entity.song_id;
+            netSongBean.title = entity.title;
+            netSongBean.tingUid = entity.ting_uid;
+            netSongBean.author = entity.author;
+            netSongBean.albumId = entity.album_id;
+            netSongBean.albumTitle = entity.album_title;
+            netSongBean.artistId = entity.artist_id;
+            netSongBean.artistName = entity.artist_name;
+            netSongBean.rank = entity.rank;
+            netSongBean.duration = entity.file_duration;
+            netSongBean.songLength = LocalUtil.formatTime(entity.file_duration);
         }
-        return songListBean;
+        return netSongBean;
     }
 
     /**
@@ -63,12 +63,12 @@ public class SongListMapper {
      * @param entities 集合
      * @return 转换后的集合
      */
-    public List<SongListBean> transform(List<SongListEntity> entities) {
-        List<SongListBean> songListBeen;
+    public List<NetSongBean> transform(List<SongListEntity> entities) {
+        List<NetSongBean> songListBeen;
         if (entities != null && !entities.isEmpty()) {
             songListBeen = new ArrayList<>();
             for (SongListEntity entity : entities) {
-                SongListBean bean = transform(entity);
+                NetSongBean bean = transform(entity);
                 if (bean != null) {
                     songListBeen.add(bean);
                 }

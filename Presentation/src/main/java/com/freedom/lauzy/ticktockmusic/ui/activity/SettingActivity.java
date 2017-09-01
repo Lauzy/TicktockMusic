@@ -68,6 +68,7 @@ public class SettingActivity extends BaseActivity implements ColorChooserDialog.
     public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
         ThemeHelper.setSelectedTheme(SettingActivity.this, selectedColor);
         RxBus.INSTANCE.post(new ThemeEvent());
+        RxBus.INSTANCE.postSticky(new ThemeEvent());
     }
 
     @Override

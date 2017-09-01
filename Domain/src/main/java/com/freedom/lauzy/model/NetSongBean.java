@@ -7,7 +7,7 @@ package com.freedom.lauzy.model;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class SongListBean {
+public class NetSongBean {
 
     public String artistId; //歌手ID
     public String language; //语言

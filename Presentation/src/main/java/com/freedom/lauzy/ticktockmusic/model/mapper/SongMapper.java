@@ -1,6 +1,7 @@
 package com.freedom.lauzy.ticktockmusic.model.mapper;
 
-import com.freedom.lauzy.model.Song;
+import com.freedom.lauzy.model.LocalSongBean;
+import com.freedom.lauzy.model.QueueSongBean;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 
 import java.util.ArrayList;
@@ -16,11 +17,43 @@ import java.util.List;
  */
 public class SongMapper {
 
-    public static SongEntity transform(Song song) {
-        if (song == null) {
+    public static SongEntity transform(QueueSongBean queueSongBean) {
+        if (queueSongBean == null) {
             throw new IllegalArgumentException("Cannot transform a null value");
         }
         SongEntity songEntity = new SongEntity();
+        songEntity.id = queueSongBean.id;
+        songEntity.albumCover = queueSongBean.albumCover;
+        songEntity.albumId = queueSongBean.albumId;
+        songEntity.albumName = queueSongBean.albumName;
+        songEntity.artistId = queueSongBean.artistId;
+        songEntity.artistName = queueSongBean.artistName;
+        songEntity.duration = queueSongBean.duration;
+        songEntity.path = queueSongBean.path;
+        songEntity.size = queueSongBean.size;
+        songEntity.title = queueSongBean.title;
+        songEntity.songLength = queueSongBean.songLength;
+        return songEntity;
+    }
+
+    public static List<SongEntity> transform(List<QueueSongBean> queueSongBeen) {
+        List<SongEntity> localSongEntities;
+        if (queueSongBeen != null && !queueSongBeen.isEmpty()) {
+            localSongEntities = new ArrayList<>();
+            for (QueueSongBean queueSongBean : queueSongBeen) {
+                localSongEntities.add(transform(queueSongBean));
+            }
+        } else {
+            localSongEntities = Collections.emptyList();
+        }
+        return localSongEntities;
+    }
+
+    public static LocalSongBean transformToQueue(SongEntity song) {
+        if (song == null) {
+            throw new IllegalArgumentException("Cannot transform a null value");
+        }
+        LocalSongBean songEntity = new LocalSongBean();
         songEntity.id = song.id;
         songEntity.albumCover = song.albumCover;
         songEntity.albumId = song.albumId;
@@ -35,12 +68,12 @@ public class SongMapper {
         return songEntity;
     }
 
-    public static List<SongEntity> transform(List<Song> songs) {
-        List<SongEntity> localSongEntities;
+    public static List<LocalSongBean> transformToQueue(List<SongEntity> songs) {
+        List<LocalSongBean> localSongEntities;
         if (songs != null && !songs.isEmpty()) {
             localSongEntities = new ArrayList<>();
-            for (Song song : songs) {
-                localSongEntities.add(transform(song));
+            for (SongEntity song : songs) {
+                localSongEntities.add(transformToQueue(song));
             }
         } else {
             localSongEntities = Collections.emptyList();

@@ -7,7 +7,7 @@ package com.freedom.lauzy.model;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class Song {
+public class QueueSongBean {
     public long id; //音乐ID
     public String title; //音乐名
     public String path; //路径

@@ -25,9 +25,9 @@ public class FragmentAnimUtil {
         explode.setMode(Visibility.MODE_IN);
         Slide slide = new Slide();
         slide.setSlideEdge(Gravity.LEFT);
-        slide.setDuration(300);
+        slide.setDuration(200);
         Fade fade = new Fade();
-        fade.setDuration(300);
+        fade.setDuration(200);
         fragment.setReturnTransition(fade);
         fragment.setEnterTransition(explode);
         fragment.setSharedElementEnterTransition(new FragmentTransition());

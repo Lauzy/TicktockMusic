@@ -49,6 +49,32 @@ public class MusicManager {
         //TODO  播放列表数据库
     }
 
+    /**
+     * 播放当前音乐，并将当前列表添加至播放队列
+     *
+     * @param songEntities 列表
+     * @param ids          id
+     * @param position     当前位置
+     */
+    public void playLocalQueue(List<SongEntity> songEntities, String[] ids, int position) {
+        List<SongEntity> playQueue = QueueManager.getPlayQueue(mMusicService, ids);
+        if (songEntities.containsAll(playQueue) && playQueue.containsAll(songEntities)) {
+            mMusicService.setSongData(playQueue);
+            //TODO  // FIXME: 2017/9/1
+        } else {
+            QueueManager.addLocalQueue(mMusicService, songEntities);
+            mMusicService.setSongData(QueueManager.getPlayQueue(mMusicService, ids));
+            QueueManager.addLocalQueue(mMusicService.getApplicationContext(), songEntities);
+           /* Observable.create((ObservableOnSubscribe<List<SongEntity>>) e -> {
+
+                e.onNext(QueueManager.getPlayQueue(mMusicService.getApplicationContext(), ids));
+                e.onComplete();
+            }).compose(RxHelper.ioMain())
+                    .subscribe(songEntities1 -> open(position));*/
+        }
+        open(position);
+    }
+
     private MusicService.MediaPlayerUpdateListener mUpdateListener = new MusicService.MediaPlayerUpdateListener() {
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
@@ -272,7 +298,9 @@ public class MusicManager {
                     getMusicState() == PlaybackState.STATE_SKIPPING_TO_NEXT ||
                     getMusicState() == PlaybackState.STATE_SKIPPING_TO_PREVIOUS;
             if (isUpdate && mUpdateListener != null && getCurrentSong() != null) {
-                mUpdateListener.onProgress((int) mMusicService.getCurrentProgress(), (int) getCurrentSong().duration);
+//                mUpdateListener.onProgress((int) mMusicService.getCurrentProgress(), (int) getCurrentSong().duration);
+                mUpdateListener.onProgress((int) mMusicService.getCurrentProgress(),
+                        mMusicService.getMediaPlayer().getDuration());
             }
             mProgressHandler.postDelayed(this, 100);
         }

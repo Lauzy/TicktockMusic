@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.freedom.lauzy.model.SongListBean;
+import com.freedom.lauzy.model.NetSongBean;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
@@ -19,14 +19,14 @@ import java.util.List;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class NetSongAdapter extends BaseQuickAdapter<SongListBean, BaseViewHolder> {
+public class NetSongAdapter extends BaseQuickAdapter<NetSongBean, BaseViewHolder> {
 
-    public NetSongAdapter(@LayoutRes int layoutResId, @Nullable List<SongListBean> data) {
+    public NetSongAdapter(@LayoutRes int layoutResId, @Nullable List<NetSongBean> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, SongListBean item) {
+    protected void convert(BaseViewHolder helper, NetSongBean item) {
         helper.setText(R.id.txt_song_title, item.title)
                 .setText(R.id.txt_song_singer, item.artistName);
         ImageLoader.INSTANCE.display(mContext,

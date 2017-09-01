@@ -3,7 +3,7 @@ package com.freedom.lauzy.ticktockmusic.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.freedom.lauzy.model.Song;
+import com.freedom.lauzy.model.QueueSongBean;
 
 /**
  * Desc : 实现序列化（Domain为Java Library,无法实现Parcelable接口）
@@ -12,7 +12,7 @@ import com.freedom.lauzy.model.Song;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class SongEntity extends Song implements Parcelable {
+public class SongEntity extends QueueSongBean implements Parcelable {
 
     public SongEntity() {
     }

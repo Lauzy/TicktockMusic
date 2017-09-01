@@ -1,6 +1,6 @@
 package com.freedom.lauzy.repository;
 
-import com.freedom.lauzy.model.SongListBean;
+import com.freedom.lauzy.model.NetSongBean;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import io.reactivex.Observable;
  * Email : freedompaladin@gmail.com
  */
 public interface SongRepository {
-    Observable<List<SongListBean>> getSongList(String method, int type, int offset, int size);
+    Observable<List<NetSongBean>> getSongList(String method, int type, int offset, int size);
 
-    Observable<List<SongListBean>> getCacheSongList(int type);
+    Observable<List<NetSongBean>> getCacheSongList(int type);
 }

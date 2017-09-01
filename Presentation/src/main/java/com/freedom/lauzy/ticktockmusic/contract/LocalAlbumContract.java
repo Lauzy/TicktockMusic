@@ -1,7 +1,6 @@
 package com.freedom.lauzy.ticktockmusic.contract;
 
 import com.freedom.lauzy.model.LocalAlbumBean;
-import com.freedom.lauzy.model.LocalSongBean;
 import com.freedom.lauzy.ticktockmusic.base.IBaseView;
 
 import java.util.List;

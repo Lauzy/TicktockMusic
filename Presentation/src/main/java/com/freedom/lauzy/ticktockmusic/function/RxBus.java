@@ -1,10 +1,11 @@
 package com.freedom.lauzy.ticktockmusic.function;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -25,9 +26,12 @@ public enum RxBus {
 
     private FlowableProcessor<Object> mFlowableProcessor;
     private HashMap<String, CompositeDisposable> mDisposableHashMap;
+    private Map<Class<?>, Object> mStickyEventMap;
+
 
     RxBus() {
         mFlowableProcessor = PublishProcessor.create().toSerialized();
+        mStickyEventMap = new ConcurrentHashMap<>();
     }
 
     public void post(Object event) {
@@ -38,13 +42,71 @@ public enum RxBus {
         }
     }
 
+    public void postSticky(Object event) {
+        synchronized (RxBus.class) {
+            mStickyEventMap.put(event.getClass(), event);
+        }
+        post(event);
+    }
+
+    /**
+     * 粘性事件
+     *
+     * @param type 类型
+     * @return Flowable
+     */
+    private <T> Flowable<T> toStickyFlowable(final Class<T> type) {
+        synchronized (RxBus.class) {
+            Flowable<T> flowable = toFlowable(type);
+            final Object event = mStickyEventMap.get(type);
+            if (event != null) {
+                return flowable.mergeWith(Flowable.just(type.cast(event)));
+            } else {
+                return flowable;
+            }
+        }
+    }
+
+    /**
+     * 根据eventType获取Sticky事件
+     *
+     * @param eventType 类型
+     * @return event
+     */
+    public <T> T getStickyEvent(Class<T> eventType) {
+        synchronized (RxBus.class) {
+            return eventType.cast(mStickyEventMap.get(eventType));
+        }
+    }
+
+    /**
+     * 移除指定eventType的Sticky事件
+     *
+     * @param eventType 类型
+     * @return event
+     */
+    public <T> T removeStickyEvent(Class<T> eventType) {
+        synchronized (RxBus.class) {
+            return eventType.cast(mStickyEventMap.remove(eventType));
+        }
+    }
+
+    /**
+     * 移除所有的Sticky事件
+     */
+    public void removeAllStickyEvents() {
+        synchronized (RxBus.class) {
+            mStickyEventMap.clear();
+        }
+    }
+
     /**
      * 不指定类型，返回Object类型的Flowable对象
      *
      * @return Flowable对象
      */
-    public Flowable<Object> toSubscriber() {
-        return toSubscriber(Object.class);
+    private Flowable<Object> toFlowable() {
+        return toFlowable(Object.class);
     }
 
     /**
@@ -54,7 +116,7 @@ public enum RxBus {
      * @param type 传入类型
      * @return Flowable对象
      */
-    public <T> Flowable<T> toSubscriber(Class<T> type) {
+    private <T> Flowable<T> toFlowable(Class<T> type) {
         return mFlowableProcessor.ofType(type).onBackpressureBuffer();
     }
 
@@ -64,29 +126,32 @@ public enum RxBus {
 
     /**
      * 默认Disposable
-     * @param type clazz
-     * @param next Consumer
+     *
+     * @param type  clazz
+     * @param next  Consumer
      * @param error Consumer
-     * @param <T> 泛型
-     * @return  Disposable
+     * @param <T>   泛型
+     * @return Disposable
      */
     public <T> Disposable doSubscribe(Class<T> type, Consumer<T> next, Consumer<Throwable> error) {
-        return toSubscriber(type)
+        return toFlowable(type)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(next, error);
     }
 
     public <T> Disposable doDefaultSubscribe(Class<T> type, Consumer<T> next) {
-        return toSubscriber(type)
+        return toFlowable(type)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(next, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
-                    }
-                });
+                .subscribe(next, Throwable::printStackTrace);
+    }
+
+    public <T> Disposable doStickySubscribe(Class<T> type, Consumer<T> next) {
+        return toStickyFlowable(type)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(next, Throwable::printStackTrace);
     }
 
     /**
@@ -115,6 +180,7 @@ public enum RxBus {
      * @param o obj
      */
     public void dispose(Object o) {
+        removeAllStickyEvents();
         if (mDisposableHashMap == null) {
             return;
         }

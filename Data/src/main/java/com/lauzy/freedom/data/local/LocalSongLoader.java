@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Desc : Load Local Song
+ * Desc : Load Local QueueSongBean
  * Author : Lauzy
  * Date : 2017/8/10
  * Blog : http://www.jianshu.com/u/e76853f863a9
