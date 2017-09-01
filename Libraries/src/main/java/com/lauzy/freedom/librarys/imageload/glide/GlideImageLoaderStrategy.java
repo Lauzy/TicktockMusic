@@ -29,7 +29,7 @@ public class GlideImageLoaderStrategy implements IBaseImageStrategy {
             RequestBuilder<Drawable> requestBuilder = Glide.with(context)
                     .load(url)
                     .apply(options);
-            if (!imageConfig.isRound()) {
+            if (!imageConfig.isRound() && imageConfig.getDuration() != 0) {
                 requestBuilder = requestBuilder.transition(new DrawableTransitionOptions()
                         .crossFade(imageConfig.getDuration()));
             }
@@ -39,7 +39,7 @@ public class GlideImageLoaderStrategy implements IBaseImageStrategy {
                     .asBitmap()
                     .load(url)
                     .apply(options);
-            if (!imageConfig.isRound()) {
+            if (!imageConfig.isRound() && imageConfig.getDuration() != 0) {
                 requestBuilder = requestBuilder.transition(new BitmapTransitionOptions()
                         .crossFade(imageConfig.getDuration()));
             }

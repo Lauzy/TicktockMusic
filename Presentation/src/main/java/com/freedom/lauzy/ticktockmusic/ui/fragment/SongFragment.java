@@ -6,10 +6,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.freedom.lauzy.ticktockmusic.R;
-import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
 import com.freedom.lauzy.ticktockmusic.contract.LocalMusicContract;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
+import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.LocalMusicPresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.LocalSongAdapter;

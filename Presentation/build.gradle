@@ -88,6 +88,9 @@ dependencies {
 }
 
 configurations.all {
-    resolutionStrategy.force 'com.android.support:support-v4:25.1.0'
-    resolutionStrategy.force 'com.android.support:appcompat-v7:25.1.0'
+    def supportDependencies = rootProject.ext.supportDependencies
+//    resolutionStrategy.force 'com.android.support:support-v4:25.1.0'
+//    resolutionStrategy.force 'com.android.support:appcompat-v7:25.1.0'
+    resolutionStrategy.force supportDependencies.appcompatV7
+    resolutionStrategy.force supportDependencies.supportV4
 }

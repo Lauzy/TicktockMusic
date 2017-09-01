@@ -18,6 +18,7 @@ public interface LocalMusicContract {
     }
 
     interface View extends IBaseView {
+
         void loadLocalMusic(List<SongEntity> localSongBeen);
 
         void setEmptyView();

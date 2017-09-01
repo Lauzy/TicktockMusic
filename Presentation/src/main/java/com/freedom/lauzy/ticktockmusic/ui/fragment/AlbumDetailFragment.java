@@ -1,21 +1,28 @@
 package com.freedom.lauzy.ticktockmusic.ui.fragment;
 
-import android.net.Uri;
+import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.TransitionInflater;
 import android.widget.ImageView;
 
+import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
 import com.freedom.lauzy.ticktockmusic.contract.LocalMusicContract;
+import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
+import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.LocalMusicPresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.AlbumDetailAdapter;
+import com.lauzy.freedom.data.local.LocalUtil;
+import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
@@ -24,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Desc : 专辑详情
@@ -36,6 +44,8 @@ public class AlbumDetailFragment extends BaseFragment<LocalMusicPresenter>
         implements LocalMusicContract.View {
 
     private static final String LTAG = "AlbumDetailFragment";
+    @BindView(R.id.ctl_album)
+    CollapsingToolbarLayout mCtlAlbum;
     @BindView(R.id.toolbar_common)
     TickToolbar mToolbarCommon;
     @BindView(R.id.rv_album_detail)
@@ -43,19 +53,19 @@ public class AlbumDetailFragment extends BaseFragment<LocalMusicPresenter>
     @BindView(R.id.img_album)
     ImageView mImgAlbum;
     private static final String ALBUM_ID = "_id";
-    private static final String ALBUM_COVER = "album_cover";
+    private static final String ALBUM_NAME = "_name";
     private static final String ALBUM_TRANS_NAME = "trans_name";
     private List<SongEntity> mLocalSongBeen = new ArrayList<>();
     private AlbumDetailAdapter mAdapter;
     private long mAlbumId;
-    private Uri mAlbumCover;
     private String mTransName;
+    private String mAlbumName;
 
-    public static AlbumDetailFragment newInstance(Uri url, String transName, long id) {
+    public static AlbumDetailFragment newInstance(String transName, String albumName, long id) {
         AlbumDetailFragment albumDetailFragment = new AlbumDetailFragment();
         Bundle bundle = new Bundle();
+        bundle.putString(ALBUM_NAME, albumName);
         bundle.putLong(ALBUM_ID, id);
-        bundle.putParcelable(ALBUM_COVER, url);
         bundle.putString(ALBUM_TRANS_NAME, transName);
         albumDetailFragment.setArguments(bundle);
         return albumDetailFragment;
@@ -64,13 +74,20 @@ public class AlbumDetailFragment extends BaseFragment<LocalMusicPresenter>
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setSharedElementEnterTransition(TransitionInflater.from(getContext())
-//                .inflateTransition(android.R.transition.move));
+        Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(ThemeEvent.class,
+                themeEvent -> setThemeLayoutBg());
+        RxBus.INSTANCE.addDisposable(this, disposable);
         if (getArguments() != null) {
             mAlbumId = getArguments().getLong(ALBUM_ID);
-            mAlbumCover = getArguments().getParcelable(ALBUM_COVER);
             mTransName = getArguments().getString(ALBUM_TRANS_NAME);
+            mAlbumName = getArguments().getString(ALBUM_NAME);
         }
+    }
+
+    private void setThemeLayoutBg() {
+        ColorStateList stateList = ThemeUtils.getThemeColorStateList(mActivity, R.color.color_tab);
+        LogUtil.e("KKK",stateList.getDefaultColor() + "---");
+        mCtlAlbum.setContentScrimColor(stateList.getDefaultColor());
     }
 
     @Override
@@ -85,26 +102,36 @@ public class AlbumDetailFragment extends BaseFragment<LocalMusicPresenter>
 
     @Override
     protected void initViews() {
+        setThemeLayoutBg();
+        setTitleView();
+        mRvAlbumDetail.setLayoutManager(new LinearLayoutManager(mActivity));
+        mAdapter = new AlbumDetailAdapter(R.layout.layout_song_item, mLocalSongBeen);
+        mRvAlbumDetail.setAdapter(mAdapter);
+    }
+
+    private void setTitleView() {
         ActionBar actionBar = ((AppCompatActivity) mActivity).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         setToolbarPadding();
         mImgAlbum.setTransitionName(mTransName);
-        mRvAlbumDetail.setLayoutManager(new LinearLayoutManager(mActivity));
-        mAdapter = new AlbumDetailAdapter(R.layout.layout_song_item, mLocalSongBeen);
-        mRvAlbumDetail.setAdapter(mAdapter);
+        mCtlAlbum.setTitle(mAlbumName);
     }
 
     @Override
     protected void loadData() {
-        ImageLoader.INSTANCE.display(mActivity, new ImageConfig.Builder()
-                .url(mAlbumCover).isRound(false)
-                .placeholder(R.drawable.ic_default)
-                .into(mImgAlbum).build());
+        ImageLoader.INSTANCE.display(mActivity,
+                new ImageConfig.Builder()
+                        .url(LocalUtil.getCoverUri(mAlbumId)).isRound(false)
+                        .into(mImgAlbum)
+                        .build());
+        mImgAlbum.setColorFilter(ContextCompat.getColor(mActivity, R.color.colorDarkerTransparent),
+                PorterDuff.Mode.SRC_OVER);
         mPresenter.setId(mAlbumId);
         mPresenter.loadLocalSong();
     }
+
 
     @Override
     public void loadLocalMusic(List<SongEntity> localSongBeen) {
@@ -121,5 +148,11 @@ public class AlbumDetailFragment extends BaseFragment<LocalMusicPresenter>
     @Override
     public void loadFailed(Throwable throwable) {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RxBus.INSTANCE.dispose(this);
     }
 }

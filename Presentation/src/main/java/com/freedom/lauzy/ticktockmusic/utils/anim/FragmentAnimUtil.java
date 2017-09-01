@@ -1,6 +1,14 @@
 package com.freedom.lauzy.ticktockmusic.utils.anim;
 
 import android.support.v4.app.Fragment;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Scene;
+import android.transition.Slide;
+import android.transition.Visibility;
+import android.view.Gravity;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 /**
  * Desc : Fragment切换动画
@@ -11,15 +19,18 @@ import android.support.v4.app.Fragment;
  */
 public class FragmentAnimUtil {
     public static void setEnterExitAnim(Fragment fragment) {
-        fragment.setSharedElementEnterTransition(new FragmentTransition());
-        /*Explode explode = new Explode();
-        explode.setMode(Visibility.MODE_OUT);
+        Explode explode = new Explode();
         explode.setDuration(350);
-        fragment.setEnterTransition(explode);*/
-       /* Slide slide = new Slide();
+        explode.setInterpolator(new DecelerateInterpolator());
+        explode.setMode(Visibility.MODE_IN);
+        Slide slide = new Slide();
         slide.setSlideEdge(Gravity.LEFT);
         slide.setDuration(300);
-        fragment.setEnterTransition(slide);*/
+        Fade fade = new Fade();
+        fade.setDuration(300);
+        fragment.setReturnTransition(fade);
+        fragment.setEnterTransition(explode);
+        fragment.setSharedElementEnterTransition(new FragmentTransition());
         fragment.setSharedElementReturnTransition(new FragmentTransition());
     }
 }

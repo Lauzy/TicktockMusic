@@ -67,9 +67,11 @@ public class PaletteColor {
                 builder.generate(new Palette.PaletteAsyncListener() {
                     @Override
                     public void onGenerated(Palette palette) {
-                        Palette.Swatch swatch = palette.getSwatches().get(0);
-                        int rgb = swatch.getRgb();
-                        e.onNext(rgb);
+                        if (palette.getSwatches() != null && palette.getSwatches().size() != 0) {
+                            Palette.Swatch swatch = palette.getSwatches().get(0);
+                            int rgb = swatch.getRgb();
+                            e.onNext(rgb);
+                        }
                         e.onComplete();
                     }
                 });

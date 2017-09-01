@@ -16,8 +16,10 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_300"
             app:collapsedTitleGravity="left"
+            app:scrimVisibleHeightTrigger="@dimen/dp_95"
             app:collapsedTitleTextAppearance="@style/WhiteText"
             app:contentScrim="@color/theme_color_primary"
+            app:expandedTitleTextAppearance="@style/CollapsingToolbarTitleStyle"
             app:expandedTitleGravity="left|bottom"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 

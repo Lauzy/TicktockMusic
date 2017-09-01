@@ -45,4 +45,5 @@
     <dimen name="sp_1205">12.5sp</dimen>
     <dimen name="sp_13">13sp</dimen>
     <dimen name="sp_15">15sp</dimen>
+    <dimen name="sp_18">18sp</dimen>
 </resources>

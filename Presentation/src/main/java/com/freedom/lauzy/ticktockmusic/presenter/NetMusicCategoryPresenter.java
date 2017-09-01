@@ -75,7 +75,7 @@ public class NetMusicCategoryPresenter extends BaseRxPresenter<NetMusicCategoryC
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                                 getView().setCategoryBitmap(resource);
-                                if (mColorMap.get(imgUrl) == null) {
+                                if (mColorMap.get(imgUrl) == null) {//map 缓存 color
                                     PaletteColor.mainColorObservable(resource).subscribe(integer -> {
                                                 mColorMap.put(imgUrl, integer);
                                                 setCategoryBgColor(integer);

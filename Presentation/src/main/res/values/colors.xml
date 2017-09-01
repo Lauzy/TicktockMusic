@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorHalfTransparent">#30000000</color>
+    <color name="colorDarkerTransparent">#50000000</color>
     <color name="colorEdgeTransparent">#10000000</color>
     <color name="colorTransparent">#00000000</color>
 

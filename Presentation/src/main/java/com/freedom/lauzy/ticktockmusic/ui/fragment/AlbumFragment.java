@@ -4,7 +4,6 @@ package com.freedom.lauzy.ticktockmusic.ui.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Fade;
 
 import com.freedom.lauzy.model.LocalAlbumBean;
 import com.freedom.lauzy.ticktockmusic.R;
@@ -62,7 +61,6 @@ public class AlbumFragment extends BaseFragment<LocalAlbumPresenter> implements 
                 .setSpace(10)
                 .build());
         mPresenter.loadLocalAlbum();
-        setExitTransition(new Fade());
     }
 
     @Override
