@@ -62,7 +62,6 @@ public class PlayQueueDao implements BaseDao {
     }
 
     public List<QueueSongBean> queryQueue(String[] songIds) {
-
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         Cursor cursor = null;
         try {
@@ -87,7 +86,7 @@ public class PlayQueueDao implements BaseDao {
                     listBean.albumId = Long.parseLong(cursor.getString(cursor.getColumnIndex(QueueParam.ALBUM_ID)));
                     listBean.path = cursor.getString(cursor.getColumnIndex(QueueParam.PLAY_PATH));
                     listBean.type = cursor.getString(cursor.getColumnIndex(QueueParam.SOURCE));
-                    listBean.duration = cursor.getShort(cursor.getColumnIndex(QueueParam.DURATION));
+                    listBean.duration = cursor.getLong(cursor.getColumnIndex(QueueParam.DURATION));
                     listBeen.add(listBean);
                 }
                 return listBeen;

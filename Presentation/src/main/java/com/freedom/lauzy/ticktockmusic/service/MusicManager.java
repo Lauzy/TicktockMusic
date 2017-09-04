@@ -12,10 +12,14 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 
 import com.freedom.lauzy.ticktockmusic.TicktockApplication;
+import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.lauzy.freedom.librarys.common.LogUtil;
 
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
 
 /**
  * Desc : Manager
@@ -58,21 +62,22 @@ public class MusicManager {
      */
     public void playLocalQueue(List<SongEntity> songEntities, String[] ids, int position) {
         List<SongEntity> playQueue = QueueManager.getPlayQueue(mMusicService, ids);
-        if (songEntities.containsAll(playQueue) && playQueue.containsAll(songEntities)) {
+        if (songEntities.equals(playQueue)) {
             mMusicService.setSongData(playQueue);
+            LogUtil.i(TAG, "data exists.");
+            open(position);
             //TODO  // FIXME: 2017/9/1
         } else {
-            QueueManager.addLocalQueue(mMusicService, songEntities);
-            mMusicService.setSongData(QueueManager.getPlayQueue(mMusicService, ids));
-            QueueManager.addLocalQueue(mMusicService.getApplicationContext(), songEntities);
-           /* Observable.create((ObservableOnSubscribe<List<SongEntity>>) e -> {
-
+            Observable.create((ObservableOnSubscribe<List<SongEntity>>) e -> {
+                QueueManager.addLocalQueue(mMusicService.getApplicationContext(), songEntities);
                 e.onNext(QueueManager.getPlayQueue(mMusicService.getApplicationContext(), ids));
                 e.onComplete();
             }).compose(RxHelper.ioMain())
-                    .subscribe(songEntities1 -> open(position));*/
+                    .subscribe(songData -> {
+                        mMusicService.setSongData(songData);
+                        open(position);
+                    });
         }
-        open(position);
     }
 
     private MusicService.MediaPlayerUpdateListener mUpdateListener = new MusicService.MediaPlayerUpdateListener() {
@@ -172,6 +177,7 @@ public class MusicManager {
     };
 
     public void bindPlayService() {
+        LogUtil.i(TAG, "bindService");
         TicktockApplication context = TicktockApplication.getInstance();
         context.bindService(new Intent(context, MusicService.class), mConnection, Context.BIND_AUTO_CREATE);
     }
@@ -183,8 +189,11 @@ public class MusicManager {
     }
 
     public void startService() {
+        LogUtil.i(TAG, "startService");
         TicktockApplication context = TicktockApplication.getInstance();
-        context.startService(new Intent(context, MusicService.class));
+        Intent intent = new Intent(context, MusicService.class);
+        intent.setAction(MusicService.ACTION_START);
+        context.startService(intent);
     }
 
     public void stopService() {

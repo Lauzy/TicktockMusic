@@ -1,7 +1,6 @@
 package com.freedom.lauzy.ticktockmusic.injection.module;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import com.freedom.lauzy.executor.PostExecutionThread;
 import com.freedom.lauzy.executor.ThreadExecutor;
@@ -29,7 +28,6 @@ import dagger.Provides;
 @Module
 public class ApplicationModule {
     private TicktockApplication mApplication;
-    private static final String CONFIG_NAME = "config_shared_prefs";
 
     public ApplicationModule(TicktockApplication application) {
         mApplication = application;
@@ -44,12 +42,6 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    SharedPreferences provideSharedPrefs() {
-        return mApplication.getSharedPreferences(CONFIG_NAME, Context.MODE_PRIVATE);
-    }
-
-    @Provides
-    @Singleton
     ThreadExecutor provideThreadExecutor(JobExecutor jobExecutor) {
         return jobExecutor;
     }
@@ -60,7 +52,7 @@ public class ApplicationModule {
         return uiThread;
     }
 
-//    SongRepository provideSongRepository(SongRepositoryImpl userDataRepository) {
+    //    SongRepository provideSongRepository(SongRepositoryImpl userDataRepository) {
     @Provides
     @Singleton
     SongRepository provideSongRepository() {

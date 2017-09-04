@@ -20,6 +20,7 @@ import android.support.v4.content.ContextCompat;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.lauzy.freedom.data.local.LocalUtil;
+import com.lauzy.freedom.librarys.common.LogUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,11 +37,16 @@ import static android.media.session.PlaybackState.STATE_PLAYING;
  */
 public class MusicService extends Service {
 
+    private static final String TAG = "MusicService";
     public static final String SESSION_TAG = "com.freedom.lauzy.ticktockmusic";
+    public static final String ACTION_START = "start";
     public static final String ACTION_PLAY = "play";
     public static final String ACTION_PAUSE = "pause";
     public static final String ACTION_NEXT = "next";
     public static final String ACTION_LAST = "last";
+    public static final int REPEAT_ALL_MODE = 0;
+    public static final int REPEAT_SINGLE_MODE = 1;
+    public static final int REPEAT_RANDOM_MODE = 2;
 
     private PlaybackState mPlaybackState;
     private MediaSession mMediaSession;
@@ -59,6 +65,7 @@ public class MusicService extends Service {
     public void onCreate() {
         super.onCreate();
         setUpMedia();
+        LogUtil.i(TAG, "onCreate");
         mTickNotification = new TickNotification(this);
     }
 
@@ -88,7 +95,16 @@ public class MusicService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null && intent.getAction() != null) {
+            LogUtil.i(TAG, "onStartCommand : " + intent.getAction());
             switch (intent.getAction()) {
+                case ACTION_START:
+                    if (mPlaybackState.getState() == STATE_PLAYING) {
+                        start();
+                        if (mUpdateListener != null) {
+                            mUpdateListener.currentPlay(mSongData.get(mCurrentPosition));
+                        }
+                    }
+                    break;
                 case ACTION_PLAY:
                     start();
                     break;

@@ -60,4 +60,20 @@ public class SongEntity extends QueueSongBean implements Parcelable {
         dest.writeString(artistName);
         dest.writeLong(size);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof SongEntity)) {
+            return false;
+        }
+        SongEntity obj1 = (SongEntity) obj;
+        return this.id == obj1.id
+                && this.title.equals(obj1.title)
+                && this.artistName.equals(obj1.artistName)
+                && String.valueOf(this.albumCover).equals(String.valueOf(obj1.albumCover))
+                && this.albumName.equals(obj1.albumName)
+                && this.albumId == obj1.albumId
+                && this.duration == obj1.duration
+                || super.equals(obj);
+    }
 }

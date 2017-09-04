@@ -265,7 +265,6 @@ public class MainActivity extends BaseActivity<MainPresenter>
             mPlayPauseView.play();
         }
         setMusicBarView(songEntity);
-        LogUtil.i(LYTAG, "currentPlay");
     }
 
     @Override
@@ -273,7 +272,6 @@ public class MainActivity extends BaseActivity<MainPresenter>
         if (mPlayPauseView.isPlaying()) {
             mPlayPauseView.pause();
         }
-        LogUtil.i(LYTAG, "onPlayerPause");
     }
 
     @Override
@@ -281,16 +279,17 @@ public class MainActivity extends BaseActivity<MainPresenter>
         if (!mPlayPauseView.isPlaying()) {
             mPlayPauseView.play();
         }
-        LogUtil.i(LYTAG, "onPlayerResume");
     }
 
     private void setMusicBarView(SongEntity songEntity) {
-        mTxtCurSong.setText(songEntity.title);
-        mTxtCurSinger.setText(songEntity.artistName);
-        ImageLoader.INSTANCE.display(MainActivity.this,
-                new ImageConfig.Builder()
-                        .url(songEntity.albumCover)
-                        .placeholder(R.drawable.ic_default)
-                        .into(mImgCurSong).build());
+        if (!this.isDestroyed()) {
+            mTxtCurSong.setText(songEntity.title);
+            mTxtCurSinger.setText(songEntity.artistName);
+            ImageLoader.INSTANCE.display(MainActivity.this,
+                    new ImageConfig.Builder()
+                            .url(songEntity.albumCover)
+                            .placeholder(R.drawable.ic_default)
+                            .into(mImgCurSong).build());
+        }
     }
 }
