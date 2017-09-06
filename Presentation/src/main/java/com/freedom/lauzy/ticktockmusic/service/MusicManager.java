@@ -34,6 +34,7 @@ public class MusicManager {
     private MusicService mMusicService;
     private MediaController mMediaController;
     private final Handler mProgressHandler = new Handler();
+    private String[] mCurIds;
 
     private static class SingleTon {
         private static final MusicManager INSTANCE = new MusicManager();
@@ -41,16 +42,6 @@ public class MusicManager {
 
     public static MusicManager getInstance() {
         return SingleTon.INSTANCE;
-    }
-
-    public void setSongEntities(List<SongEntity> songEntities) {
-//        mSongEntities = songEntities;
-        if (mMusicService != null) {
-            mMusicService.setSongData(songEntities);
-        } else {
-            LogUtil.e("Manager", "NULL");
-        }
-        //TODO  播放列表数据库
     }
 
     /**
@@ -61,12 +52,12 @@ public class MusicManager {
      * @param position     当前位置
      */
     public void playLocalQueue(List<SongEntity> songEntities, String[] ids, int position) {
+        mCurIds = ids;//id赋值给当前ID，以供队列列表使用
         List<SongEntity> playQueue = QueueManager.getPlayQueue(mMusicService, ids);
         if (songEntities.equals(playQueue)) {
             mMusicService.setSongData(playQueue);
             LogUtil.i(TAG, "data exists.");
             open(position);
-            //TODO  // FIXME: 2017/9/1
         } else {
             Observable.create((ObservableOnSubscribe<List<SongEntity>>) e -> {
                 QueueManager.addLocalQueue(mMusicService.getApplicationContext(), songEntities);
@@ -201,22 +192,6 @@ public class MusicManager {
         context.stopService(new Intent(context, MusicService.class));
     }
 
-    public MusicService getMusicService() {
-        return mMusicService;
-    }
-
-    /**
-     * 获取当前正在播放的音乐
-     *
-     * @return 当前正在播放的音乐
-     */
-    public SongEntity getCurrentSong() {
-        if (mMusicService != null && mMusicService.getCurrentSong() != null) {
-            return mMusicService.getCurrentSong();
-        }
-        return null;
-    }
-
     /**
      * 播放音乐
      */
@@ -291,6 +266,12 @@ public class MusicManager {
         }
     }
 
+    public void seekTo(long position){
+        if (mMediaController != null) {
+            mMediaController.getTransportControls().seekTo(position);
+        }
+    }
+
     /**
      * 获取当前音乐的播放状态
      *
@@ -307,18 +288,67 @@ public class MusicManager {
                     getMusicState() == PlaybackState.STATE_SKIPPING_TO_NEXT ||
                     getMusicState() == PlaybackState.STATE_SKIPPING_TO_PREVIOUS;
             if (isUpdate && mUpdateListener != null && getCurrentSong() != null) {
-//                mUpdateListener.onProgress((int) mMusicService.getCurrentProgress(), (int) getCurrentSong().duration);
                 mUpdateListener.onProgress((int) mMusicService.getCurrentProgress(),
+                        mMusicService.getMediaPlayer().getDuration());
+            }
+            if (isUpdate && mSeekBarProgressListener != null && getCurrentSong() != null) {
+                mSeekBarProgressListener.onProgress((int) mMusicService.getCurrentProgress(),
                         mMusicService.getMediaPlayer().getDuration());
             }
             mProgressHandler.postDelayed(this, 100);
         }
     };
 
+    /* ------- getter , setter and so on-------- */
+
+    public MusicService getMusicService() {
+        return mMusicService;
+    }
+
+    public long getCurrentProgress() {
+        return mMusicService != null ? mMusicService.getCurrentProgress() : 0;
+    }
+
+    public int getDuration() {
+        return mMusicService != null ? mMusicService.getMediaPlayer() != null
+                ? mMusicService.getMediaPlayer().getDuration() : 0 : 0;
+    }
+
+    /**
+     * 获取当前正在播放的音乐
+     *
+     * @return 当前正在播放的音乐
+     */
+    public SongEntity getCurrentSong() {
+        if (mMusicService != null && mMusicService.getCurrentSong() != null) {
+            return mMusicService.getCurrentSong();
+        }
+        return null;
+    }
+
+    public boolean isPlaying() {
+        return mMusicService != null
+                && mMusicService.getPlaybackState().getState() == PlaybackState.STATE_PLAYING;
+    }
+
+    /**
+     * 获取当前队列ID
+     *
+     * @return 当前列表的ID
+     */
+    public String[] getCurIds() {
+        return mCurIds;
+    }
+
     private MusicManageListener mMusicManageListener;
+    private SeekBarProgressListener mSeekBarProgressListener;
 
     public void setManageListener(MusicManageListener updateListener) {
         mMusicManageListener = updateListener;
+    }
+
+    public void setSeekBarProgressListener(SeekBarProgressListener seekBarProgressListener) {
+        mSeekBarProgressListener = seekBarProgressListener;
     }
 
     /**
@@ -335,5 +365,9 @@ public class MusicManager {
         void onPlayerPause();
 
         void onPlayerResume();//继续播放
+    }
+
+    public interface SeekBarProgressListener {
+        void onProgress(int progress, int duration);
     }
 }

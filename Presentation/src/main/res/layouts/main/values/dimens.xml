@@ -41,6 +41,7 @@
     <dimen name="dp_600">600dp</dimen>
 
 
+    <dimen name="sp_11">11sp</dimen>
     <dimen name="sp_12">12sp</dimen>
     <dimen name="sp_1205">12.5sp</dimen>
     <dimen name="sp_13">13sp</dimen>

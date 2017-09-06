@@ -16,12 +16,12 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_300"
             app:collapsedTitleGravity="left"
-            app:scrimVisibleHeightTrigger="@dimen/dp_95"
             app:collapsedTitleTextAppearance="@style/WhiteText"
             app:contentScrim="@color/theme_color_primary"
-            app:expandedTitleTextAppearance="@style/CollapsingToolbarTitleStyle"
             app:expandedTitleGravity="left|bottom"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:expandedTitleTextAppearance="@style/CollapsingToolbarTitleStyle"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:scrimVisibleHeightTrigger="@dimen/dp_95">
 
             <ImageView
                 android:id="@+id/img_album"
@@ -38,9 +38,9 @@
                 android:id="@+id/toolbar_common"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:titleTextColor="@android:color/white"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>

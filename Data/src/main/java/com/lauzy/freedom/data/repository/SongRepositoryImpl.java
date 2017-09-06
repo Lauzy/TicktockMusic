@@ -60,6 +60,7 @@ public class SongRepositoryImpl implements SongRepository {
                     @Override
                     public void accept(@NonNull List<NetSongBean> songListBeen) throws Exception {
                         if (!songListBeen.isEmpty()) {
+                            NetMusicDao.getInstance(mContext).removeData(type);
                             NetMusicDao.getInstance(mContext).addNetSongData(type, songListBeen);
                         }
                     }

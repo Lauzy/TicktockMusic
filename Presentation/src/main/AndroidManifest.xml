@@ -30,10 +30,13 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.activity.PlayActivity">
+        </activity>
+
         <service
             android:name=".service.MusicService"
             android:enabled="true"
-            android:exported="true">
+            android:exported="false">
         </service>
     </application>
 

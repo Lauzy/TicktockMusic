@@ -116,7 +116,9 @@ public class NetMusicDao implements BaseDao {
                 values.put(NetParam.ALBUM_ID, netSongBean.albumId);
                 values.put(NetParam.ALBUM_NAME, netSongBean.albumTitle);
                 values.put(NetParam.RANK, netSongBean.rank);
-                Log.i(LTAG, "type is " + type + ";\n"
+                long conflict = db.insertWithOnConflict(TickDaoHelper.NET_MUSIC_TABLE, null, values,
+                        SQLiteDatabase.CONFLICT_IGNORE);
+                /*Log.i(LTAG, "type is " + type + ";\n"
                         + "id is " + netSongBean.songId + ";\n"
                         + "name is " + netSongBean.title + ";\n"
                         + "singerID is " + netSongBean.artistId + ";\n"
@@ -125,23 +127,23 @@ public class NetMusicDao implements BaseDao {
                         + "LRC is " + netSongBean.lrcLink + ";\n"
                         + "albumId is " + netSongBean.albumId + ";\n"
                         + "albumName is " + netSongBean.albumTitle + ";\n"
-                        + "rank is " + netSongBean.rank + ";\n");
-                long conflict = db.insertWithOnConflict(TickDaoHelper.NET_MUSIC_TABLE, null, values,
-                        SQLiteDatabase.CONFLICT_IGNORE);
+                        + "rank is " + netSongBean.rank + ";\n");*/
                 Log.i(LTAG, "DbConflict --- " + conflict);
             }
-        } finally {
             db.setTransactionSuccessful();
+        } finally {
             db.endTransaction();
             db.close();
         }
     }
 
-    public void removeData() {
+    public void removeData(int type) {
         SQLiteDatabase db = mTickDaoHelper.getWritableDatabase();
         db.beginTransaction();
-        db.delete(TickDaoHelper.NET_MUSIC_TABLE, null, null);
+        db.delete(TickDaoHelper.NET_MUSIC_TABLE, NetParam.TYPE + " = ?",
+                new String[]{String.valueOf(type)});
         db.setTransactionSuccessful();
+        db.endTransaction();
         db.close();
     }
 }

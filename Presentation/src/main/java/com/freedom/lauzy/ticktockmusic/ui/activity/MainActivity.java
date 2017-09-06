@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.ticktockmusic.R;
@@ -30,7 +31,7 @@ import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.widght.TickProgressBar;
-import com.lauzy.freedom.librarys.widght.TickTextView;
+import com.lauzy.freedom.librarys.widght.fonts.SubTextUtil;
 import com.lauzy.freedom.librarys.widght.music.PlayPauseView;
 
 import butterknife.BindView;
@@ -45,7 +46,8 @@ import io.reactivex.disposables.Disposable;
  * Email : freedompaladin@gmail.com
  */
 public class MainActivity extends BaseActivity<MainPresenter>
-        implements NavigationView.OnNavigationItemSelectedListener, PlayPauseView.PlayPauseListener, MusicManager.MusicManageListener {
+        implements NavigationView.OnNavigationItemSelectedListener, PlayPauseView.PlayPauseListener,
+        MusicManager.MusicManageListener {
 
     private static final String LYTAG = "MainActivity";
     @BindView(R.id.drawer_layout)
@@ -59,9 +61,9 @@ public class MainActivity extends BaseActivity<MainPresenter>
     @BindView(R.id.img_cur_song)
     ImageView mImgCurSong;
     @BindView(R.id.txt_cur_song)
-    TickTextView mTxtCurSong;
+    TextView mTxtCurSong;
     @BindView(R.id.txt_cur_singer)
-    TickTextView mTxtCurSinger;
+    TextView mTxtCurSinger;
     private static final int FRAGMENT_CHANGE_DELAY = 400;
     private Handler mDrawerHandler = new Handler();
 
@@ -91,13 +93,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
         super.onCreate(savedInstanceState);
         loadFragments(savedInstanceState);
         subscribeDrawerEvent();
-        subscribeSongEvent();
         setDrawItemColor();
-    }
-
-    private void subscribeSongEvent() {
-        /*Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(SongEvent.class, songEvent -> mPlayPauseView.play());
-        RxBus.INSTANCE.addDisposable(this,disposable);*/
     }
 
     /**
@@ -173,7 +169,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
                 break;
 
         }
-        if (item.getItemId() != R.id.nav_setting) {
+        if (item.getItemId() != R.id.nav_setting && !(fragment instanceof AlbumDetailFragment)) {
             getSupportFragmentManager().popBackStackImmediate();
         }
         if (drawerRunnable != null) {
@@ -225,7 +221,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
         RxBus.INSTANCE.dispose(this);
     }
 
-    @OnClick({R.id.img_play_next, R.id.img_play_last})
+    @OnClick({R.id.img_play_next, R.id.img_play_last, R.id.layout_music_bar})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.img_play_next:
@@ -233,6 +229,9 @@ public class MainActivity extends BaseActivity<MainPresenter>
                 break;
             case R.id.img_play_last:
                 MusicManager.getInstance().skipToPrevious();
+                break;
+            case R.id.layout_music_bar:
+                mNavigator.navigateToPlayFragment(this);
                 break;
         }
     }
@@ -259,11 +258,13 @@ public class MainActivity extends BaseActivity<MainPresenter>
         mPbCurSong.setProgress(progress);
     }
 
+
     @Override
     public void currentPlay(SongEntity songEntity) {
         if (!mPlayPauseView.isPlaying()) {
             mPlayPauseView.play();
         }
+        RxBus.INSTANCE.postSticky(songEntity);
         setMusicBarView(songEntity);
     }
 
@@ -283,8 +284,8 @@ public class MainActivity extends BaseActivity<MainPresenter>
 
     private void setMusicBarView(SongEntity songEntity) {
         if (!this.isDestroyed()) {
-            mTxtCurSong.setText(songEntity.title);
-            mTxtCurSinger.setText(songEntity.artistName);
+            mTxtCurSong.setText(SubTextUtil.addEllipsis(songEntity.title, 15));
+            mTxtCurSinger.setText(SubTextUtil.addEllipsis(songEntity.artistName, 15));
             ImageLoader.INSTANCE.display(MainActivity.this,
                     new ImageConfig.Builder()
                             .url(songEntity.albumCover)

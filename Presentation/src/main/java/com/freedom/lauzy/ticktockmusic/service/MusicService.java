@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import static android.media.session.PlaybackState.STATE_PAUSED;
 import static android.media.session.PlaybackState.STATE_PLAYING;
 
 /**
@@ -155,7 +156,7 @@ public class MusicService extends Service {
     private void pause() {
         if (mPlaybackState.getState() == STATE_PLAYING) {
             mMediaPlayer.pause();
-            setState(PlaybackState.STATE_PAUSED);
+            setState(STATE_PAUSED);
             mTickNotification.notifyPause(this);
         }
     }
@@ -181,6 +182,17 @@ public class MusicService extends Service {
             }
             setState(PlaybackState.STATE_SKIPPING_TO_PREVIOUS);
             play();
+        }
+    }
+
+    private void seekTo(long pos) {
+        if (mPlaybackState.getState() == STATE_PLAYING || mPlaybackState.getState() == STATE_PAUSED) {
+            if (pos < 0) {
+                pos = 0;
+            } else if (pos > mMediaPlayer.getDuration()) {
+                pos = mMediaPlayer.getDuration();
+            }
+            mMediaPlayer.seekTo((int) pos);
         }
     }
 
@@ -253,6 +265,7 @@ public class MusicService extends Service {
         @Override
         public void onSeekTo(long pos) {
             super.onSeekTo(pos);
+            seekTo(pos);
         }
 
         @Override

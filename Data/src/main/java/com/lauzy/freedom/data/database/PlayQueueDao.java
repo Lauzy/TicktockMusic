@@ -87,6 +87,7 @@ public class PlayQueueDao implements BaseDao {
                     listBean.path = cursor.getString(cursor.getColumnIndex(QueueParam.PLAY_PATH));
                     listBean.type = cursor.getString(cursor.getColumnIndex(QueueParam.SOURCE));
                     listBean.duration = cursor.getLong(cursor.getColumnIndex(QueueParam.DURATION));
+                    listBean.songLength = cursor.getString(cursor.getColumnIndex(QueueParam.LENGTH));
                     listBeen.add(listBean);
                 }
                 return listBeen;
