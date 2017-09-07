@@ -9,15 +9,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
 import com.freedom.lauzy.ticktockmusic.contract.PlayContract;
-import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.PlayPresenter;
@@ -47,18 +46,13 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     SeekBar mSeekPlay;
     @BindView(R.id.txt_total_length)
     TextView mTxtTotalLength;
-    /* @BindView(R.id.img_play_mode)
-     ImageView mImgPlayMode;
-     @BindView(R.id.img_play_previous)
-     ImageView mImgPlayPrevious;
-     @BindView(R.id.img_play_next)
-     ImageView mImgPlayNext;
-     @BindView(R.id.img_play_queue)
-     ImageView mImgPlayQueue;*/
+    @BindView(R.id.img_play_mode)
+    ImageView mImgPlayMode;
     @BindView(R.id.play_pause)
     PlayPauseView mPlayPause;
     @BindView(R.id.layout_play)
     LinearLayout mLayoutPlay;
+    private static final String TAG = "PlayActivity";
 
     public static Intent newInstance(Context context) {
         return new Intent(context, PlayActivity.class);
@@ -78,23 +72,12 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Disposable disposable = RxBus.INSTANCE.doStickySubscribe(SongEntity.class, this::setCurData);
-        Disposable themeDisposable = RxBus.INSTANCE.doStickySubscribe(ThemeEvent.class,
-                themeEvent -> setSeekBarColor());
-        RxBus.INSTANCE.addDisposable(this, themeDisposable);
         RxBus.INSTANCE.addDisposable(this, disposable);
-    }
-
-    private void setSeekBarColor() {
-        ColorStateList stateList = ThemeUtils.getThemeColorStateList(PlayActivity.this, R.color.color_tab);
-//        mSeekPlay.setProgressBackgroundTintList(stateList);
-        mSeekPlay.setThumbTintList(stateList);
-        mSeekPlay.setProgressTintList(stateList);
     }
 
     @Override
     protected void initViews() {
         showBackIcon();
-        setSeekBarColor();
         mToolbarCommon.setBackgroundColor(Color.TRANSPARENT);
     }
 
@@ -114,12 +97,17 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
             mToolbarCommon.setSubtitle(songEntity.artistName);
             mTxtTotalLength.setText(songEntity.songLength);
             if (MusicManager.getInstance().isPlaying() && !mPlayPause.isPlaying()) {
-                mPlayPause.play();
+                mPlayPause.playWithoutAnim();
+                mAlbumCoverView.pause();
             }
-//            mPlayPause.setPlaying(MusicManager.getInstance().isPlaying());
             MusicManager.getInstance().setSeekBarProgressListener(this);
             mPresenter.setCoverImgUrl(songEntity.albumCover);
         }
+    }
+
+    @Override
+    public void onProgress(int progress, int duration) {
+        setCurProgress(progress, duration);
     }
 
     private void setCurProgress(int progress, int duration) {
@@ -174,6 +162,9 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     @Override
     public void setCoverBackground(int color) {
         mLayoutPlay.setBackgroundColor(color);
+//        ColorStateList stateList = new ColorStateList(new int[][]{new int[]{}}, new int[]{color});
+//        mSeekPlay.setThumbTintList(stateList);
+//        mSeekPlay.setProgressTintList(stateList);
     }
 
     @Override
@@ -196,10 +187,5 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
             case R.id.img_play_queue:
                 break;
         }
-    }
-
-    @Override
-    public void onProgress(int progress, int duration) {
-        setCurProgress(progress, duration);
     }
 }

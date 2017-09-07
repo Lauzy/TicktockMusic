@@ -41,5 +41,6 @@
     <string name="permission_denied">Permission to access the music was denied.Please open the permission to enjoy the music.</string>
 
     <string name="song_num"><xliff:g id="count">%d</xliff:g> queueSongBeen</string>
+    <string name="_00_00">00:00</string>
 
 </resources>

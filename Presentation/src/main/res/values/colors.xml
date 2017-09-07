@@ -22,6 +22,8 @@
     <color name="txt_black">#1a1b1b</color>
     <color name="txt_gray">#424343</color>
 
+    <color name="black">#000000</color>
+
     <color name="white">#ffffff</color>
     <color name="white_trans">#99ffffff</color>
 

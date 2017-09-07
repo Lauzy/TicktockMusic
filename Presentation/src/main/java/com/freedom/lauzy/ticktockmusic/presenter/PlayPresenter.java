@@ -35,6 +35,7 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
         ImageLoader.INSTANCE.display(getView().getContext(), new ImageConfig.Builder()
                 .asBitmap(true)
                 .url(url)
+                .isRound(false)
                 .intoTarget(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
@@ -48,8 +49,6 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                         } else {
                             getView().setCoverBackground(mColorMap.get(String.valueOf(url)));
                         }
-//                        PaletteColor.mainColorObservable(resource)
-//                                .subscribe(color -> getView().setCoverBackground(color));
                     }
                 }).build());
     }

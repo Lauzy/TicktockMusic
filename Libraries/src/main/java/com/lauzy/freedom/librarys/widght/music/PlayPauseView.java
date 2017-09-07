@@ -212,6 +212,23 @@ public class PlayPauseView extends View {
         getPlayPauseAnim().start();
     }
 
+    public void playWithoutAnim() {
+        if (getPlayPauseAnim() != null) {
+            getPlayPauseAnim().cancel();
+        }
+        setPlaying(true);
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(isPlaying ? 1 : 0, isPlaying ? 0 : 1);
+        valueAnimator.setDuration(0);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mProgress = (float) animation.getAnimatedValue();
+                invalidate();
+            }
+        });
+        valueAnimator.start();
+    }
+
     public void pause() {
         if (getPlayPauseAnim() != null) {
             getPlayPauseAnim().cancel();

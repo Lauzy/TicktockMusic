@@ -32,8 +32,20 @@
             app:civ_border_color="@color/colorDarkerTransparent"
             app:civ_border_width="@dimen/dp_4"
             android:layout_margin="@dimen/dp_20"/>
-
     </FrameLayout>
+
+    <ImageView
+        android:layout_width="@dimen/dp_30"
+        android:layout_height="@dimen/dp_30"
+        android:padding="@dimen/dp_4"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:layout_gravity="end"
+        android:backgroundTint="@color/black"
+        android:contentDescription="@null"
+        android:layout_marginRight="@dimen/dp_50"
+        android:layout_marginBottom="@dimen/dp_20"
+        android:src="@drawable/ic_favorite_border_black"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,12 +59,14 @@
             android:id="@+id/txt_current_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="00:00"
+            android:text="@string/_00_00"
             android:textSize="@dimen/sp_11"/>
 
         <SeekBar
             android:id="@+id/seek_play"
             android:layout_width="0dp"
+            android:thumbTint="@color/black"
+            android:progressTint="@color/black"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
 
@@ -60,8 +74,9 @@
             android:id="@+id/txt_total_length"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="00:00"
+            android:text="@string/_00_00"
             android:textSize="@dimen/sp_11"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -77,6 +92,7 @@
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
             android:layout_marginRight="@dimen/dp_30"
+            android:padding="@dimen/dp_3"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:contentDescription="@null"
