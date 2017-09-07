@@ -35,7 +35,7 @@ public class AlbumAdapter extends BaseQuickAdapter<LocalAlbumBean, BaseViewHolde
 
         ImageLoader.INSTANCE.display(mContext, new ImageConfig.Builder()
                 .url(LocalUtil.getCoverUri(item.id))
-                .placeholder(R.drawable.ic_default)
+                .placeholder(R.drawable.ic_album_default)
                 .into(helper.getView(R.id.img_album))
                 .build());
 

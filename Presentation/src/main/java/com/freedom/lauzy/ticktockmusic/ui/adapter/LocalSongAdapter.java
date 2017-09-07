@@ -34,7 +34,7 @@ public class LocalSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
         ImageLoader.INSTANCE.display(mContext,
                 new ImageConfig.Builder()
                         .url(item.albumCover)
-                        .placeholder(R.drawable.ic_default)
+                        .placeholder(R.drawable.ic_album_default)
                         .into(helper.getView(R.id.img_song_pic))
                         .build());
         helper.getView(R.id.layout_song_item).setOnClickListener(v -> {

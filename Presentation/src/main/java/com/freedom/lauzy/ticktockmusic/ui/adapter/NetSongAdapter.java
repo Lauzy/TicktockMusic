@@ -32,7 +32,7 @@ public class NetSongAdapter extends BaseQuickAdapter<NetSongBean, BaseViewHolder
         ImageLoader.INSTANCE.display(mContext,
                 new ImageConfig.Builder()
                         .url(item.imgUrl)
-                        .placeholder(R.drawable.ic_default)
+                        .placeholder(R.drawable.ic_album_default)
                         .into(helper.getView(R.id.img_song_pic))
                         .build());
     }

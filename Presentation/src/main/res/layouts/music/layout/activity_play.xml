@@ -23,11 +23,14 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <com.lauzy.freedom.librarys.widght.music.AlbumCoverView
+        <com.lauzy.freedom.librarys.widght.CircleImageView
             android:id="@+id/acv_music"
-            android:layout_width="@dimen/dp_280"
-            android:layout_height="@dimen/dp_280"
+            android:layout_width="@dimen/dp_240"
+            android:layout_height="@dimen/dp_240"
             android:layout_gravity="center"
+            android:src="@drawable/ic_default"
+            app:civ_border_color="@color/colorDarkerTransparent"
+            app:civ_border_width="@dimen/dp_4"
             android:layout_margin="@dimen/dp_20"/>
 
     </FrameLayout>
@@ -44,7 +47,7 @@
             android:id="@+id/txt_current_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="01:00"
+            android:text="00:00"
             android:textSize="@dimen/sp_11"/>
 
         <SeekBar
@@ -57,7 +60,7 @@
             android:id="@+id/txt_total_length"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="05:45"
+            android:text="00:00"
             android:textSize="@dimen/sp_11"/>
     </LinearLayout>
 

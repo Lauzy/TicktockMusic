@@ -289,7 +289,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
             ImageLoader.INSTANCE.display(MainActivity.this,
                     new ImageConfig.Builder()
                             .url(songEntity.albumCover)
-                            .placeholder(R.drawable.ic_default)
+                            .placeholder(R.drawable.ic_album_default)
                             .into(mImgCurSong).build());
         }
     }

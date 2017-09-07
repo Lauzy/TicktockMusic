@@ -30,6 +30,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -39,8 +40,9 @@ import com.bilibili.magicasakura.widgets.TintImageView;
 import com.lauzy.freedom.librarys.R;
 
 /**
- * Desc : CircleImageView is from https://github.com/hdodenhof/CircleImageView.
- *       I change the father to TintImageView for theme changing.
+ * Desc : CircleImageView : https://github.com/hdodenhof/CircleImageView.
+ * 1、继承TintImageView
+ * 2、添加旋转
  * Author : Lauzy
  * Date : 2017/7/5
  * Blog : http://www.jianshu.com/u/e76853f863a9
@@ -70,10 +72,10 @@ public class CircleImageView extends TintImageView {
     private int mBorderWidth = DEFAULT_BORDER_WIDTH;
     private int mFillColor = DEFAULT_FILL_COLOR;
 
-    private Bitmap mBitmap;
+    protected Bitmap mBitmap;
     private BitmapShader mBitmapShader;
-    private int mBitmapWidth;
-    private int mBitmapHeight;
+    protected int mBitmapWidth;
+    protected int mBitmapHeight;
 
     private float mDrawableRadius;
     private float mBorderRadius;
@@ -438,8 +440,42 @@ public class CircleImageView extends TintImageView {
 
         mShaderMatrix.setScale(scale, scale);
         mShaderMatrix.postTranslate((int) (dx + 0.5f) + mDrawableRect.left, (int) (dy + 0.5f) + mDrawableRect.top);
-
+        mShaderMatrix.preRotate(mRotation, mBitmapWidth / 2, mBitmapHeight / 2);
         mBitmapShader.setLocalMatrix(mShaderMatrix);
     }
 
+    private Runnable mRotationRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mRotation += 0.2;
+            mRotation = mRotation % 360;
+            setup();
+            mHandler.postDelayed(this, 10);
+        }
+    };
+
+    private float mRotation;
+    private Handler mHandler = new Handler();
+    private boolean isPlaying;
+
+    public void start(){
+        if (isPlaying) {
+            return;
+        }
+        isPlaying = true;
+        mHandler.removeCallbacksAndMessages(null);
+        mHandler.post(mRotationRunnable);
+    }
+
+    public void pause(){
+        if (!isPlaying) {
+            return;
+        }
+        isPlaying = false;
+        mHandler.removeCallbacks(mRotationRunnable);
+    }
+
+    public boolean isPlaying() {
+        return isPlaying;
+    }
 }

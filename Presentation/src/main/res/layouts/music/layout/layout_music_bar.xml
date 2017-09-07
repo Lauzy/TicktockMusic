@@ -17,7 +17,7 @@
         android:layout_marginLeft="@dimen/dp_15"
         android:adjustViewBounds="true"
         android:contentDescription="@null"
-        android:src="@drawable/ic_default"/>
+        android:src="@drawable/ic_album_default"/>
 
     <!--style="@style/MarqueeTxtStyle"-->
     <com.lauzy.freedom.librarys.widght.TickTextView

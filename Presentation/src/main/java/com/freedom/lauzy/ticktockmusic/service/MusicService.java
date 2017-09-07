@@ -224,7 +224,7 @@ public class MusicService extends Service {
         if (coverUri != null && new File(coverUri).exists()) {
             bitmap = BitmapFactory.decodeFile(coverUri);
         } else {
-            Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_default);
+            Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_album_default);
             bitmap = ((BitmapDrawable) drawable).getBitmap();
         }
         builder.putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, bitmap);

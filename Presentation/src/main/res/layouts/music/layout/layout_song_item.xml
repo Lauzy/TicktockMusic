@@ -29,7 +29,7 @@
             android:layout_centerVertical="true"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:src="@drawable/ic_default"/>
+            android:src="@drawable/ic_album_default"/>
 
         <com.lauzy.freedom.librarys.widght.TickTextView
             android:id="@+id/txt_song_title"

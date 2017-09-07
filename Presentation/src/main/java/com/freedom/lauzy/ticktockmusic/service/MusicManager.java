@@ -218,6 +218,14 @@ public class MusicManager {
         mProgressHandler.removeCallbacks(mProgressRunnable);
     }
 
+    public void pauseProgress(){
+        mProgressHandler.removeCallbacks(mProgressRunnable);
+    }
+
+    public void resumeProgress(){
+        mProgressHandler.post(mProgressRunnable);
+    }
+
     /**
      * 打开指定列表位置的音乐
      *
@@ -369,5 +377,7 @@ public class MusicManager {
 
     public interface SeekBarProgressListener {
         void onProgress(int progress, int duration);
+//        void onPlayerPause();
+//        void onPlayerResume();
     }
 }

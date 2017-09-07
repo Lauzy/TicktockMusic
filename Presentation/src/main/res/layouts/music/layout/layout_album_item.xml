@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:src="@drawable/ic_default"/>
+            android:src="@drawable/ic_album_default"/>
 
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
