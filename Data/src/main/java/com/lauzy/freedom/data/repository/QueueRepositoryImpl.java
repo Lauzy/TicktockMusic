@@ -7,6 +7,7 @@ import com.freedom.lauzy.model.QueueSongBean;
 import com.freedom.lauzy.repository.QueueRepository;
 import com.lauzy.freedom.data.database.PlayQueueDao;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -38,7 +39,7 @@ public class QueueRepositoryImpl implements QueueRepository {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<QueueSongBean>> e) throws Exception {
                 List<QueueSongBean> songBeen = PlayQueueDao.getInstance(mContext).queryQueue(songIds);
-                e.onNext(songBeen);
+                e.onNext(songBeen != null ? songBeen : Collections.<QueueSongBean>emptyList());
                 e.onComplete();
             }
         });
