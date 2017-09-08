@@ -5,6 +5,7 @@ import android.content.Context;
 import com.freedom.lauzy.executor.PostExecutionThread;
 import com.freedom.lauzy.executor.ThreadExecutor;
 import com.freedom.lauzy.repository.LocalSongRepository;
+import com.freedom.lauzy.repository.QueueRepository;
 import com.freedom.lauzy.repository.SongRepository;
 import com.freedom.lauzy.ticktockmusic.injection.module.ApplicationModule;
 import com.freedom.lauzy.ticktockmusic.injection.scope.ContextLife;
@@ -35,4 +36,7 @@ public interface ApplicationComponent {
     SongRepository songRepository();
 
     LocalSongRepository localSongRepository();
+
+    QueueRepository queueRepository();
+
 }

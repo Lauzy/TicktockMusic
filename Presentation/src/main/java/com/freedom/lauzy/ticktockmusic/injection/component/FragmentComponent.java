@@ -8,6 +8,7 @@ import com.freedom.lauzy.ticktockmusic.ui.fragment.AlbumDetailFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.AlbumFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongListFragment;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayQueueBottomSheetFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.SongFragment;
 
 import dagger.Component;
@@ -33,4 +34,7 @@ public interface FragmentComponent {
     void inject(AlbumFragment albumFragment);
 
     void inject(AlbumDetailFragment detailFragment);
+
+    void inject(PlayQueueBottomSheetFragment sheetFragment);
+
 }

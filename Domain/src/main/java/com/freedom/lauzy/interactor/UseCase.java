@@ -16,7 +16,7 @@ import io.reactivex.schedulers.Schedulers;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public abstract class UseCase<T, Params> {
+public abstract class UseCase<T, Params>{
 
     private final ThreadExecutor mThreadExecutor;
     private final PostExecutionThread mPostExecutionThread;

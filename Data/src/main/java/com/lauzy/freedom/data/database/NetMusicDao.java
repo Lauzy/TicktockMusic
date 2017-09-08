@@ -116,8 +116,9 @@ public class NetMusicDao implements BaseDao {
                 values.put(NetParam.ALBUM_ID, netSongBean.albumId);
                 values.put(NetParam.ALBUM_NAME, netSongBean.albumTitle);
                 values.put(NetParam.RANK, netSongBean.rank);
-                long conflict = db.insertWithOnConflict(TickDaoHelper.NET_MUSIC_TABLE, null, values,
-                        SQLiteDatabase.CONFLICT_IGNORE);
+//                long conflict = db.insertWithOnConflict(TickDaoHelper.NET_MUSIC_TABLE, null, values,
+//                        SQLiteDatabase.CONFLICT_IGNORE);
+                long conflict = db.replace(TickDaoHelper.NET_MUSIC_TABLE, null, values);
                 /*Log.i(LTAG, "type is " + type + ";\n"
                         + "id is " + netSongBean.songId + ";\n"
                         + "name is " + netSongBean.title + ";\n"

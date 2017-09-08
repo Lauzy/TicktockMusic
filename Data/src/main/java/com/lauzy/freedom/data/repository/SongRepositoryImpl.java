@@ -24,7 +24,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 /**
- * Desc :  百度Api原因，无法简介封装
+ * Desc :  百度Api原因，无法简洁封装
  * http://www.jianshu.com/p/f3f0eccbcd6f
  * Author : Lauzy
  * Date : 2017/7/10
@@ -60,7 +60,7 @@ public class SongRepositoryImpl implements SongRepository {
                     @Override
                     public void accept(@NonNull List<NetSongBean> songListBeen) throws Exception {
                         if (!songListBeen.isEmpty()) {
-                            NetMusicDao.getInstance(mContext).removeData(type);
+//                            NetMusicDao.getInstance(mContext).removeData(type);
                             NetMusicDao.getInstance(mContext).addNetSongData(type, songListBeen);
                         }
                     }

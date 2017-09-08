@@ -34,4 +34,5 @@ public class FragmentModule {
     public Fragment provideFragment() {
         return mFragment;
     }
+
 }

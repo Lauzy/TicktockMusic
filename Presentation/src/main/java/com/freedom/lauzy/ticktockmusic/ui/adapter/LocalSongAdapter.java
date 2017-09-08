@@ -8,6 +8,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
+import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 
@@ -37,19 +38,8 @@ public class LocalSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
                         .placeholder(R.drawable.ic_album_default)
                         .into(helper.getView(R.id.img_song_pic))
                         .build());
-        helper.getView(R.id.layout_song_item).setOnClickListener(v -> {
-            /*MusicManager.getInstance().setSongEntities(mData);
-            MusicManager.getInstance().open(helper.getAdapterPosition());*/
-            MusicManager.getInstance().playLocalQueue(mData, getSongIds(), helper.getAdapterPosition());
-        });
-    }
-
-    private String[] getSongIds() {
-        int size = mData.size();
-        String[] ids = new String[size];
-        for (int i = 0; i < size; i++) {
-            ids[i] = String.valueOf(mData.get(i).id);
-        }
-        return ids;
+        helper.getView(R.id.layout_song_item).setOnClickListener(v ->
+                MusicManager.getInstance().playLocalQueue(mData,
+                        MusicUtil.getSongIds(mData), helper.getAdapterPosition()));
     }
 }

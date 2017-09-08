@@ -23,7 +23,7 @@ public class JobExecutor implements ThreadExecutor {
     private static final TimeUnit KEEP_ALIVE_TIME_UNIT = TimeUnit.SECONDS;
 
     @Inject
-    JobExecutor() {
+    public JobExecutor() {
         mThreadPoolExecutor = new ThreadPoolExecutor(INITIAL_POOL_SIZE,
                 MAX_POOL_SIZE,
                 KEEP_ALIVE_TIME,

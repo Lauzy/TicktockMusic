@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bilibili.magicasakura.utils.ThemeUtils;
@@ -21,6 +22,8 @@ import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.LocalMusicPresenter;
+import com.freedom.lauzy.ticktockmusic.service.MusicManager;
+import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.AlbumDetailAdapter;
 import com.lauzy.freedom.data.local.LocalUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
@@ -31,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -138,6 +142,15 @@ public class AlbumDetailFragment extends BaseFragment<LocalMusicPresenter>
         mPresenter.loadLocalSong();
     }
 
+    @OnClick({R.id.fab_play})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.fab_play:
+                MusicManager.getInstance().playLocalQueue(mLocalSongBeen,
+                        MusicUtil.getSongIds(mLocalSongBeen));
+                break;
+        }
+    }
 
     @Override
     public void loadLocalMusic(List<SongEntity> localSongBeen) {

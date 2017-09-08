@@ -19,12 +19,14 @@ import android.support.v4.content.ContextCompat;
 
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
+import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.lauzy.freedom.data.local.LocalUtil;
 import com.lauzy.freedom.librarys.common.LogUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 import static android.media.session.PlaybackState.STATE_PAUSED;
 import static android.media.session.PlaybackState.STATE_PLAYING;
@@ -163,24 +165,44 @@ public class MusicService extends Service {
 
     private void skipToNext() {
         if (mSongData != null && !mSongData.isEmpty()) {
-            if (mCurrentPosition < mSongData.size() - 1) {
-                mCurrentPosition++;
-            } else {
-                mCurrentPosition = 0;
-            }
             setState(PlaybackState.STATE_SKIPPING_TO_NEXT);
+            switch (SharePrefHelper.getRepeatMode(this.getApplicationContext())) {
+                case REPEAT_ALL_MODE:
+                    if (mCurrentPosition < mSongData.size() - 1) {
+                        mCurrentPosition++;
+                    } else {
+                        mCurrentPosition = 0;
+                    }
+                    break;
+                case REPEAT_SINGLE_MODE:
+                    break;
+                case REPEAT_RANDOM_MODE://若随机数等于当前position，则置为0
+                    int position = new Random().nextInt(mSongData.size());
+                    mCurrentPosition = mCurrentPosition != position ? position : 0;
+                    break;
+            }
             play();
         }
     }
 
     private void skipToPrevious() {
         if (mSongData != null && !mSongData.isEmpty()) {
-            if (mCurrentPosition > 0) {
-                mCurrentPosition--;
-            } else {
-                mCurrentPosition = mSongData.size() - 1;
-            }
             setState(PlaybackState.STATE_SKIPPING_TO_PREVIOUS);
+            switch (SharePrefHelper.getRepeatMode(this.getApplicationContext())) {
+                case REPEAT_ALL_MODE:
+                    if (mCurrentPosition > 0) {
+                        mCurrentPosition--;
+                    } else {
+                        mCurrentPosition = mSongData.size() - 1;
+                    }
+                    break;
+                case REPEAT_SINGLE_MODE:
+                    break;
+                case REPEAT_RANDOM_MODE:
+                    int position = new Random().nextInt(mSongData.size());
+                    mCurrentPosition = mCurrentPosition != position ? position : 0;
+                    break;
+            }
             play();
         }
     }
@@ -193,6 +215,7 @@ public class MusicService extends Service {
                 pos = mMediaPlayer.getDuration();
             }
             mMediaPlayer.seekTo((int) pos);
+            start();
         }
     }
 

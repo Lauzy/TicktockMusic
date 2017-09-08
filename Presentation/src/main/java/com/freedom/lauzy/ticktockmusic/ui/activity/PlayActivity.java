@@ -3,11 +3,11 @@ package com.freedom.lauzy.ticktockmusic.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,6 +21,9 @@ import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.PlayPresenter;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
+import com.freedom.lauzy.ticktockmusic.service.MusicService;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayQueueBottomSheetFragment;
+import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.lauzy.freedom.data.local.LocalUtil;
 import com.lauzy.freedom.librarys.widght.CircleImageView;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
@@ -78,7 +81,22 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     @Override
     protected void initViews() {
         showBackIcon();
+        setModeView();
         mToolbarCommon.setBackgroundColor(Color.TRANSPARENT);
+    }
+
+    private void setModeView() {
+        switch (SharePrefHelper.getRepeatMode(this)) {
+            case MusicService.REPEAT_SINGLE_MODE:
+                mImgPlayMode.setImageResource(R.drawable.ic_repeat_one_black);
+                break;
+            case MusicService.REPEAT_ALL_MODE:
+                mImgPlayMode.setImageResource(R.drawable.ic_repeat_black);
+                break;
+            case MusicService.REPEAT_RANDOM_MODE:
+                mImgPlayMode.setImageResource(R.drawable.ic_shuffle_black);
+                break;
+        }
     }
 
     @Override
@@ -132,6 +150,9 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     public void onStopTrackingTouch(SeekBar seekBar) {
         MusicManager.getInstance().resumeProgress();
         MusicManager.getInstance().seekTo(seekBar.getProgress());
+        if (!mPlayPause.isPlaying()) {
+            mPlayPause.play();
+        }
     }
 
     @Override
@@ -177,6 +198,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.img_play_mode:
+                switchMode();
                 break;
             case R.id.img_play_previous:
                 MusicManager.getInstance().skipToPrevious();
@@ -185,6 +207,29 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
                 MusicManager.getInstance().skipToNext();
                 break;
             case R.id.img_play_queue:
+//                View queueView = View.inflate(this, R.layout.layout_play_queue, null);
+//                BottomSheetDialog dialog = new BottomSheetDialog(this);
+//                dialog.setContentView(queueView);
+//                dialog.show();
+                PlayQueueBottomSheetFragment sheetFragment = new PlayQueueBottomSheetFragment();
+                sheetFragment.show(getSupportFragmentManager(), sheetFragment.getTag());
+                break;
+        }
+    }
+
+    private void switchMode() {
+        switch (SharePrefHelper.getRepeatMode(this)) {
+            case MusicService.REPEAT_SINGLE_MODE:
+                SharePrefHelper.setRepeatMode(this, MusicService.REPEAT_RANDOM_MODE);
+                mImgPlayMode.setImageResource(R.drawable.ic_shuffle_black);
+                break;
+            case MusicService.REPEAT_ALL_MODE:
+                SharePrefHelper.setRepeatMode(this, MusicService.REPEAT_SINGLE_MODE);
+                mImgPlayMode.setImageResource(R.drawable.ic_repeat_one_black);
+                break;
+            case MusicService.REPEAT_RANDOM_MODE:
+                SharePrefHelper.setRepeatMode(this, MusicService.REPEAT_ALL_MODE);
+                mImgPlayMode.setImageResource(R.drawable.ic_repeat_black);
                 break;
         }
     }

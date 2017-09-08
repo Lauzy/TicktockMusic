@@ -28,7 +28,8 @@ public class AlbumAdapter extends BaseQuickAdapter<LocalAlbumBean, BaseViewHolde
 
     @Override
     protected void convert(BaseViewHolder helper, LocalAlbumBean item) {
-        String songsNum = mContext.getResources().getString(R.string.song_num, item.songsNum);
+        String songsNum = mContext.getResources().getString(item.songsNum == 1
+                ? R.string.song_number : R.string.song_numbers, item.songsNum);
         helper.setText(R.id.txt_singer, item.artistName)
                 .setText(R.id.txt_album_name, item.albumName)
                 .setText(R.id.txt_song_num, songsNum);

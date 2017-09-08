@@ -68,7 +68,7 @@ public class SongMapper {
         return songEntity;
     }
 
-    public static List<LocalSongBean> transformToQueue(List<SongEntity> songs) {
+    public static List<LocalSongBean> transformToLocalQueue(List<SongEntity> songs) {
         List<LocalSongBean> localSongEntities;
         if (songs != null && !songs.isEmpty()) {
             localSongEntities = new ArrayList<>();

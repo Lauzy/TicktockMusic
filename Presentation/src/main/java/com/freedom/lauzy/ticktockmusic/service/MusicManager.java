@@ -18,9 +18,6 @@ import com.lauzy.freedom.librarys.common.LogUtil;
 
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableOnSubscribe;
-
 /**
  * Desc : Manager
  * Author : Lauzy
@@ -36,12 +33,22 @@ public class MusicManager {
     private final Handler mProgressHandler = new Handler();
     private String[] mCurIds;
 
+    private QueueManager mQueueManager;
+
+    public MusicManager() {
+        mQueueManager = new QueueManager();
+    }
+
     private static class SingleTon {
         private static final MusicManager INSTANCE = new MusicManager();
     }
 
     public static MusicManager getInstance() {
         return SingleTon.INSTANCE;
+    }
+
+    public void playLocalQueue(List<SongEntity> songEntities, String[] ids) {
+        this.playLocalQueue(songEntities, ids, 0);
     }
 
     /**
@@ -53,22 +60,20 @@ public class MusicManager {
      */
     public void playLocalQueue(List<SongEntity> songEntities, String[] ids, int position) {
         mCurIds = ids;//id赋值给当前ID，以供队列列表使用
-        List<SongEntity> playQueue = QueueManager.getPlayQueue(mMusicService, ids);
-        if (songEntities.equals(playQueue)) {
-            mMusicService.setSongData(playQueue);
-            LogUtil.i(TAG, "data exists.");
-            open(position);
-        } else {
-            Observable.create((ObservableOnSubscribe<List<SongEntity>>) e -> {
-                QueueManager.addLocalQueue(mMusicService.getApplicationContext(), songEntities);
-                e.onNext(QueueManager.getPlayQueue(mMusicService.getApplicationContext(), ids));
-                e.onComplete();
-            }).compose(RxHelper.ioMain())
-                    .subscribe(songData -> {
-                        mMusicService.setSongData(songData);
-                        open(position);
-                    });
-        }
+        mQueueManager.playQueueObservable(ids).subscribe(playQueue -> {
+            if (songEntities.equals(playQueue)) {
+                mMusicService.setSongData(playQueue);
+                LogUtil.i(TAG, "data exists.");
+                open(position);
+            } else {
+                mQueueManager.localQueueObservable(ids, songEntities)
+                        .compose(RxHelper.ioMain())
+                        .subscribe(songData -> {
+                            mMusicService.setSongData(songData);
+                            open(position);
+                        });
+            }
+        });
     }
 
     private MusicService.MediaPlayerUpdateListener mUpdateListener = new MusicService.MediaPlayerUpdateListener() {
@@ -218,11 +223,11 @@ public class MusicManager {
         mProgressHandler.removeCallbacks(mProgressRunnable);
     }
 
-    public void pauseProgress(){
+    public void pauseProgress() {
         mProgressHandler.removeCallbacks(mProgressRunnable);
     }
 
-    public void resumeProgress(){
+    public void resumeProgress() {
         mProgressHandler.post(mProgressRunnable);
     }
 
@@ -274,7 +279,7 @@ public class MusicManager {
         }
     }
 
-    public void seekTo(long position){
+    public void seekTo(long position) {
         if (mMediaController != null) {
             mMediaController.getTransportControls().seekTo(position);
         }

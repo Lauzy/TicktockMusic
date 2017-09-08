@@ -40,7 +40,12 @@
     <string name="open_permission">open</string>
     <string name="permission_denied">Permission to access the music was denied.Please open the permission to enjoy the music.</string>
 
-    <string name="song_num"><xliff:g id="count">%d</xliff:g> queueSongBeen</string>
+    <string name="song_numbers"><xliff:g id="count">%d</xliff:g>songs</string>
+    <string name="song_number"><xliff:g id="count">%d</xliff:g>song</string>
     <string name="_00_00">00:00</string>
+
+    <string name="repeat_loop_mode">QueueLoop</string>
+    <string name="repeat_single_mode">SingleLoop</string>
+    <string name="repeat_shuffle_mode">Shuffle</string>
 
 </resources>

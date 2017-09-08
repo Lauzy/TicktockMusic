@@ -40,6 +40,11 @@
     <string name="open_permission">打开</string>
     <string name="permission_denied">访问音乐的权限被拒绝了哦，点击设置打开享受音乐。</string>
 
-    <string name="song_num"><xliff:g id="count">%d</xliff:g>首</string>
+    <string name="song_numbers"><xliff:g id="count">%d</xliff:g>首</string>
+    <string name="song_number"><xliff:g id="count">%d</xliff:g>首</string>
+
+    <string name="repeat_loop_mode">列表循环</string>
+    <string name="repeat_single_mode">单曲循环</string>
+    <string name="repeat_shuffle_mode">随机播放</string>
 
 </resources>

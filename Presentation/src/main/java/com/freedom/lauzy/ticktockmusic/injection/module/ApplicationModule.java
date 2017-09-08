@@ -5,12 +5,14 @@ import android.content.Context;
 import com.freedom.lauzy.executor.PostExecutionThread;
 import com.freedom.lauzy.executor.ThreadExecutor;
 import com.freedom.lauzy.repository.LocalSongRepository;
+import com.freedom.lauzy.repository.QueueRepository;
 import com.freedom.lauzy.repository.SongRepository;
 import com.freedom.lauzy.ticktockmusic.TicktockApplication;
 import com.freedom.lauzy.ticktockmusic.function.UIThread;
 import com.freedom.lauzy.ticktockmusic.injection.scope.ContextLife;
 import com.lauzy.freedom.data.executor.JobExecutor;
 import com.lauzy.freedom.data.repository.LocalSongRepositoryImpl;
+import com.lauzy.freedom.data.repository.QueueRepositoryImpl;
 import com.lauzy.freedom.data.repository.SongRepositoryImpl;
 
 import javax.inject.Singleton;
@@ -63,5 +65,11 @@ public class ApplicationModule {
     @Singleton
     LocalSongRepository provideLocalSongRepository() {
         return new LocalSongRepositoryImpl(mApplication);
+    }
+
+    @Provides
+    @Singleton
+    QueueRepository provideQueueRepository() {
+        return new QueueRepositoryImpl(mApplication);
     }
 }
