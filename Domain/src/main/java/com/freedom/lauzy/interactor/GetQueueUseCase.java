@@ -35,6 +35,10 @@ public class GetQueueUseCase extends UseCase<List<QueueSongBean>, String[]> {
         return mQueueRepository.getQueueData(ids);
     }
 
+    public Observable<Integer> deleteQueueObservable(String[] ids) {
+        return mQueueRepository.deleteQueueData(ids);
+    }
+
     public Observable<List<QueueSongBean>> localQueueObservable(List<LocalSongBean> localSongBeen,
                                                                 String[] ids) {
         return mQueueRepository.addLocalQueueData(ids, localSongBeen);

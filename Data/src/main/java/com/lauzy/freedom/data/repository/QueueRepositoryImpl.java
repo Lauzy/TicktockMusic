@@ -56,4 +56,16 @@ public class QueueRepositoryImpl implements QueueRepository {
             }
         });
     }
+
+    @Override
+    public Observable<Integer> deleteQueueData(final String[] songIds) {
+        return Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Integer> e) throws Exception {
+                int value = PlayQueueDao.getInstance(mContext).deleteQueueData(songIds);
+                e.onNext(value);
+                e.onComplete();
+            }
+        });
+    }
 }

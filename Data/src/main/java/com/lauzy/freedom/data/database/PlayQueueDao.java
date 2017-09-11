@@ -107,6 +107,7 @@ public class PlayQueueDao implements BaseDao {
 
     public void addLocalQueue(List<LocalSongBean> songBeen) {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
+
         db.beginTransaction();
         try {
             for (LocalSongBean localSongBean : songBeen) {
@@ -116,11 +117,12 @@ public class PlayQueueDao implements BaseDao {
                         String.valueOf(localSongBean.albumCover), localSongBean.duration,
                         localSongBean.songLength);
                 values.put(QueueParam.PLAY_PATH, localSongBean.path);
-                db.insertWithOnConflict(TickDaoHelper.PLAY_QUEUE, null, values,
-                        SQLiteDatabase.CONFLICT_IGNORE);
+//                db.insertWithOnConflict(TickDaoHelper.PLAY_QUEUE, null, values,
+//                        SQLiteDatabase.CONFLICT_IGNORE);
+                db.replace(TickDaoHelper.PLAY_QUEUE, null, values);
             }
-        } finally {
             db.setTransactionSuccessful();
+        } finally {
             db.endTransaction();
         }
     }
@@ -136,10 +138,28 @@ public class PlayQueueDao implements BaseDao {
                 db.insertWithOnConflict(TickDaoHelper.PLAY_QUEUE, null, values,
                         SQLiteDatabase.CONFLICT_IGNORE);
             }
-        } finally {
             db.setTransactionSuccessful();
+        } finally {
             db.endTransaction();
         }
+    }
+
+    public int deleteQueueData(String[] ids) {
+        SQLiteDatabase db = mTickDaoHelper.getWritableDatabase();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < ids.length; i++) {
+            sb.append("?");
+            if (i != ids.length - 1) {
+                sb.append(",");
+            }
+        }
+        db.beginTransaction();
+        int delete = db.delete(TickDaoHelper.PLAY_QUEUE,
+                QueueParam.SONG_ID + " in (" + sb.toString() + ")", ids);
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        db.close();
+        return delete;
     }
 
     private ContentValues addItem(String source, String id, String title, String albumId, String albumName,

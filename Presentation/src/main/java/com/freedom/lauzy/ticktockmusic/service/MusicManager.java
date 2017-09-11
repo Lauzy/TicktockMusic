@@ -63,18 +63,37 @@ public class MusicManager {
         mQueueManager.playQueueObservable(ids).subscribe(playQueue -> {
             if (songEntities.equals(playQueue)) {
                 mMusicService.setSongData(playQueue);
-                LogUtil.i(TAG, "data exists.");
+                LogUtil.i(TAG, "--- data exists ---");
                 open(position);
             } else {
                 mQueueManager.localQueueObservable(ids, songEntities)
                         .compose(RxHelper.ioMain())
                         .subscribe(songData -> {
+                            LogUtil.i(TAG, "--- new data ---");
                             mMusicService.setSongData(songData);
                             open(position);
                         });
             }
         });
     }
+
+    public void setMusicServiceData(String[] ids, int position) {
+        mQueueManager.playQueueObservable(ids)
+                .subscribe(songData -> {
+                    mMusicService.setSongData(songData);
+                    updatePosition(position);
+                });
+    }
+
+    private void updatePosition(int position) {
+        if (getCurPosition() > position) {
+            mMusicService.setCurrentPosition(position);
+        } else if (getCurPosition() == position) {
+            mMusicService.setCurrentPosition(position);
+            play();
+        }
+    }
+
 
     private MusicService.MediaPlayerUpdateListener mUpdateListener = new MusicService.MediaPlayerUpdateListener() {
         @Override
@@ -351,6 +370,15 @@ public class MusicManager {
      */
     public String[] getCurIds() {
         return mCurIds;
+    }
+
+    public void setCurIds(String[] curIds) {
+        mCurIds = curIds;
+    }
+
+    public int getCurPosition() {
+        if (mMusicService != null) return mMusicService.getCurrentPosition();
+        return 0;
     }
 
     private MusicManageListener mMusicManageListener;

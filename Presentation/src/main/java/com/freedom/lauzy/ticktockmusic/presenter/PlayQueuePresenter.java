@@ -3,9 +3,14 @@ package com.freedom.lauzy.ticktockmusic.presenter;
 import com.freedom.lauzy.interactor.GetQueueUseCase;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
 import com.freedom.lauzy.ticktockmusic.contract.PlayQueueContract;
+import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.model.mapper.SongMapper;
 
 import javax.inject.Inject;
+
+import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 
 /**
  * Desc : 播放队列Presenter
@@ -27,20 +32,35 @@ public class PlayQueuePresenter extends BaseRxPresenter<PlayQueueContract.View>
     @Override
     public void loadQueueData(String[] ids) {
         if (ids != null) {
-            mGetQueueUseCase.buildUseCaseObservable(ids).subscribe(queueSongBeen -> {
-                if (queueSongBeen != null) {
-                    getView().loadQueueData(SongMapper.transform(queueSongBeen));
-                } else {
-                    getView().emptyView();
-                }
-            });
-        }else {
+            mGetQueueUseCase.buildUseCaseObservable(ids)
+                    .compose(RxHelper.ioMain())
+                    .subscribe(queueSongBeen -> {
+                        if (queueSongBeen != null) {
+                            getView().loadQueueData(SongMapper.transform(queueSongBeen));
+                        } else {
+                            getView().emptyView();
+                        }
+                    });
+        } else {
             getView().emptyView();
         }
     }
 
     @Override
-    public void deleteQueueData(String[] ids) {
+    public Observable<Integer> deleteQueueData(String[] ids) {
+        if (ids != null) {
+            return mGetQueueUseCase.deleteQueueObservable(ids)
+                    .compose(RxHelper.ioMain());
+        }
+        return null;
+    }
 
+    @Override
+    public void deleteAllQueueData(String[] ids) {
+        if (ids != null) {
+            mGetQueueUseCase.deleteQueueObservable(ids)
+                    .compose(RxHelper.ioMain())
+                    .subscribe(integer -> getView().deleteAllQueueData());
+        }
     }
 }

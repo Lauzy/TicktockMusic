@@ -5,6 +5,8 @@ import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+
 /**
  * Desc : 播放队列接口
  * Author : Lauzy
@@ -16,16 +18,16 @@ public interface PlayQueueContract {
     interface Presenter {
         void loadQueueData(String[] ids);
 
-        void deleteQueueData(String[] ids);
+        Observable<Integer> deleteQueueData(String[] ids);
+
+        void deleteAllQueueData(String[] ids);
     }
 
-    interface View extends IBaseView{
+    interface View extends IBaseView {
         void loadQueueData(List<SongEntity> songEntities);
 
         void emptyView();
 
         void deleteAllQueueData();
-
-        void deleteQueueItem();
     }
 }
