@@ -125,6 +125,7 @@ public class PlayPauseView extends View {
 //        mRectWidth = mRect.width();
 //        mRectHeight = mRect.height();
         //不再使用int类型，改用float类型，并在原有值的基础上+1像素，确保合并成三角形时中间无缝隙
+        // (若尺寸较大仍有缝隙)
         mRectWidth = space * 2 + 1f;
         mRectHeight = space * 2 + 1f;
         mGapWidth = getGapWidth() != 0 ? getGapWidth() : mRectWidth / 3;

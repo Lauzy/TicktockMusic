@@ -48,7 +48,7 @@ public class Navigator {
                 .commit();
     }
 
-    public void navigateToPlayFragment(Context context) {
+    public void navigateToPlayActivity(Context context) {
         if (context != null) {
             Intent intent = PlayActivity.newInstance(context);
             context.startActivity(intent);

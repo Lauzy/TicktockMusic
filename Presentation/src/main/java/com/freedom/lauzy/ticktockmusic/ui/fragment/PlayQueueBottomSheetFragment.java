@@ -10,6 +10,7 @@ import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -98,6 +99,7 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment
     private void setUpRv(View view) {
         RecyclerView rvPlayQueue = (RecyclerView) view.findViewById(R.id.rv_play_queue);
         rvPlayQueue.setLayoutManager(new LinearLayoutManager(mActivity));
+        ((SimpleItemAnimator) rvPlayQueue.getItemAnimator()).setSupportsChangeAnimations(false);
         mAdapter = new PlayQueueAdapter(R.layout.layout_play_queue_item, mSongEntities);
         rvPlayQueue.setAdapter(mAdapter);
         mAdapter.setQueuePresenter(mQueuePresenter);
@@ -177,6 +179,8 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment
     public void deleteAllQueueData() {
         mSongEntities.clear();
         mAdapter.notifyDataSetChanged();
+        MusicManager.getInstance().clearPlayData();
+        mActivity.finish();
     }
 
     @Override

@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
+import com.freedom.lauzy.ticktockmusic.event.ClearQueueEvent;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
@@ -93,11 +94,25 @@ public class MainActivity extends BaseActivity<MainPresenter>
         super.onCreate(savedInstanceState);
         loadFragments(savedInstanceState);
         subscribeDrawerEvent();
+        subscribeQueueEvent();
         setDrawItemColor();
     }
 
+    private void subscribeQueueEvent() {
+        Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(ClearQueueEvent.class, clearQueueEvent -> {
+            mPbCurSong.setProgress(0);
+            mTxtCurSong.setText(R.string.app_name);
+            mTxtCurSinger.setText(R.string.app_name);
+            ImageLoader.INSTANCE.clean(MainActivity.this, new ImageConfig.Builder().into(mImgCurSong).build());
+            mImgCurSong.setImageResource(R.drawable.ic_default);
+            mPlayPauseView.pause();
+            mPlayPauseView.setPlaying(false);
+        });
+        RxBus.INSTANCE.addDisposable(this, disposable);
+    }
+
     /**
-     * Subscribe the event of the drawer theme.
+     * 订阅换肤事件
      */
     private void subscribeDrawerEvent() {
         Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(ThemeEvent.class,
@@ -106,7 +121,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
     }
 
     /**
-     * Change the theme of the drawer.
+     * 更换指定View的皮肤
      */
     private void setDrawItemColor() {
         ColorStateList stateList = ThemeUtils.getThemeColorStateList(MainActivity.this, R.color.color_drawer_item);
@@ -215,12 +230,6 @@ public class MainActivity extends BaseActivity<MainPresenter>
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        RxBus.INSTANCE.dispose(this);
-    }
-
     @OnClick({R.id.img_play_next, R.id.img_play_last, R.id.layout_music_bar})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -231,19 +240,20 @@ public class MainActivity extends BaseActivity<MainPresenter>
                 MusicManager.getInstance().skipToPrevious();
                 break;
             case R.id.layout_music_bar:
-                mNavigator.navigateToPlayFragment(this);
+                if (MusicManager.getInstance().getCurrentSong() != null)
+                    mNavigator.navigateToPlayActivity(this);
                 break;
         }
     }
 
     @Override
     public void play() {
-        MusicManager.getInstance().start();
+        if (MusicManager.getInstance().getCurrentSong() != null) MusicManager.getInstance().start();
     }
 
     @Override
     public void pause() {
-        MusicManager.getInstance().pause();
+        if (MusicManager.getInstance().getCurrentSong() != null) MusicManager.getInstance().pause();
     }
 
     @Override
@@ -283,14 +293,20 @@ public class MainActivity extends BaseActivity<MainPresenter>
     }
 
     private void setMusicBarView(SongEntity songEntity) {
-        if (!this.isDestroyed()) {
+        if (!this.isDestroyed() && songEntity != null) {
             mTxtCurSong.setText(SubTextUtil.addEllipsis(songEntity.title, 15));
             mTxtCurSinger.setText(SubTextUtil.addEllipsis(songEntity.artistName, 15));
             ImageLoader.INSTANCE.display(MainActivity.this,
                     new ImageConfig.Builder()
                             .url(songEntity.albumCover)
-                            .placeholder(R.drawable.ic_album_default)
+                            .placeholder(R.drawable.ic_default)
                             .into(mImgCurSong).build());
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        RxBus.INSTANCE.dispose(this);
     }
 }

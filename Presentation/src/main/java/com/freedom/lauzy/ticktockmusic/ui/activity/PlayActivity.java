@@ -160,14 +160,18 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     @Override
     public void play() {
-        MusicManager.getInstance().start();
-        mAlbumCoverView.start();
+        if (MusicManager.getInstance().getCurrentSong() != null) {
+            MusicManager.getInstance().start();
+            mAlbumCoverView.start();
+        }
     }
 
     @Override
     public void pause() {
-        MusicManager.getInstance().pause();
-        mAlbumCoverView.pause();
+        if (MusicManager.getInstance().getCurrentSong() != null) {
+            MusicManager.getInstance().pause();
+            mAlbumCoverView.pause();
+        }
     }
 
     @Override
@@ -210,10 +214,6 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
                 MusicManager.getInstance().skipToNext();
                 break;
             case R.id.img_play_queue:
-//                View queueView = View.inflate(this, R.layout.layout_play_queue, null);
-//                BottomSheetDialog dialog = new BottomSheetDialog(this);
-//                dialog.setContentView(queueView);
-//                dialog.show();
                 PlayQueueBottomSheetFragment sheetFragment = new PlayQueueBottomSheetFragment();
                 sheetFragment.show(getSupportFragmentManager(), sheetFragment.getTag());
                 break;

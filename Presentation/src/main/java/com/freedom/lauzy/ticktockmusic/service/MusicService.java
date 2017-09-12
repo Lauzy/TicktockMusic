@@ -133,16 +133,17 @@ public class MusicService extends Service {
     }
 
     private void play() {
-//        int state = mPlaybackState.getState();
         try {
-            SongEntity entity = mSongData.get(mCurrentPosition);
-            mMediaPlayer.reset();
-            mMediaPlayer.setDataSource(entity.path);
-            mMediaPlayer.prepareAsync();
-            setState(PlaybackState.STATE_CONNECTING);
-            mMediaSession.setMetadata(getMediaData(entity));
-            if (mUpdateListener != null) {
-                mUpdateListener.currentPlay(entity);
+            if (mSongData != null && mSongData.size() != 0) {
+                SongEntity entity = mSongData.get(mCurrentPosition);
+                mMediaPlayer.reset();
+                mMediaPlayer.setDataSource(entity.path);
+                mMediaPlayer.prepareAsync();
+                setState(PlaybackState.STATE_CONNECTING);
+                mMediaSession.setMetadata(getMediaData(entity));
+                if (mUpdateListener != null) {
+                    mUpdateListener.currentPlay(entity);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -219,6 +220,12 @@ public class MusicService extends Service {
         }
     }
 
+    public void stopPlayer() {
+        mMediaPlayer.stop();
+        mTickNotification.stopNotify(this);
+        setState(PlaybackState.STATE_STOPPED);
+    }
+
     private void setState(int state) {
         mPlaybackState = new PlaybackState.Builder()
                 .setActions(PlaybackState.ACTION_PLAY |
@@ -259,7 +266,11 @@ public class MusicService extends Service {
         @Override
         public void onPlay() {
             super.onPlay();
-            play();
+            if (getPlaybackState().getState() == STATE_PAUSED) {
+                start();
+            } else {
+                play();
+            }
         }
 
         @Override
@@ -316,14 +327,14 @@ public class MusicService extends Service {
     }
 
     public SongEntity getCurrentSong() {
-        if (mSongData != null) {
+        if (mSongData != null && mSongData.size() != 0) {
             return mSongData.get(mCurrentPosition);
         }
         return null;
     }
 
     public long getCurrentProgress() {
-        return mMediaPlayer != null ? mMediaPlayer.getCurrentPosition() : 0;
+        return mMediaPlayer != null && mMediaPlayer.isPlaying() ? mMediaPlayer.getCurrentPosition() : 0;
     }
 
     public MediaSession getMediaSession() {

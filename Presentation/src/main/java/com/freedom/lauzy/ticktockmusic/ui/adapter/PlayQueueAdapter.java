@@ -1,10 +1,14 @@
 package com.freedom.lauzy.ticktockmusic.ui.adapter;
 
+import android.app.Activity;
+import android.content.res.ColorStateList;
+import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 
+import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.freedom.lauzy.ticktockmusic.R;
@@ -38,9 +42,12 @@ public class PlayQueueAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
     @Override
     protected void convert(BaseViewHolder helper, SongEntity item) {
         if (MusicManager.getInstance().getCurPosition() == helper.getAdapterPosition()) {
-            helper.setTextColor(R.id.txt_queue_title, ContextCompat.getColor(mContext, R.color.blue));
+            ColorStateList csl = ThemeUtils.getThemeColorStateList(mContext, R.color.color_tab);
+            helper.setTextColor(R.id.txt_queue_title, csl.getDefaultColor());
+            helper.setTextColor(R.id.txt_queue_singer, csl.getDefaultColor());
         } else {
-            helper.setTextColor(R.id.txt_queue_title, ContextCompat.getColor(mContext, R.color.gray_dark));
+            helper.setTextColor(R.id.txt_queue_title, ContextCompat.getColor(mContext, R.color.txt_black));
+            helper.setTextColor(R.id.txt_queue_singer, ContextCompat.getColor(mContext, R.color.gray_dark));
         }
         helper.setText(R.id.txt_queue_title, SubTextUtil.addEllipsis(item.title, 15))
                 .setText(R.id.txt_queue_singer, item.artistName);
@@ -49,8 +56,12 @@ public class PlayQueueAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
     }
 
     private View.OnClickListener playListener(BaseViewHolder helper) {
-        return v -> MusicManager.getInstance().playLocalQueue(mData, MusicUtil.getSongIds(mData),
-                helper.getAdapterPosition());
+        return v -> new Handler().postDelayed(() -> {
+            notifyItemChanged(MusicManager.getInstance().getCurPosition());
+            MusicManager.getInstance().playLocalQueue(mData, MusicUtil.getSongIds(mData), helper.getAdapterPosition());
+            notifyItemChanged(helper.getAdapterPosition());
+//            notifyDataSetChanged();
+        }, 100);
     }
 
     private View.OnClickListener deleteItemListener(BaseViewHolder helper, SongEntity item) {
@@ -60,6 +71,13 @@ public class PlayQueueAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
                             helper.getAdapterPosition());
                     mData.remove(helper.getAdapterPosition());
                     notifyItemRemoved(helper.getAdapterPosition());
+                    new Handler().postDelayed(() -> {
+                        notifyItemChanged(MusicManager.getInstance().getCurPosition());
+                        if (mData == null || mData.size() == 0) {
+                            MusicManager.getInstance().clearPlayData();
+                            ((Activity) mContext).finish();
+                        }
+                    }, 120);
                 });
     }
 }

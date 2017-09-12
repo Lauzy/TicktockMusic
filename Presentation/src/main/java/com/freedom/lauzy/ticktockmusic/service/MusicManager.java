@@ -12,10 +12,13 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 
 import com.freedom.lauzy.ticktockmusic.TicktockApplication;
+import com.freedom.lauzy.ticktockmusic.event.ClearQueueEvent;
+import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.lauzy.freedom.librarys.common.LogUtil;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -77,6 +80,12 @@ public class MusicManager {
         });
     }
 
+    /**
+     * 设置播放队列数据
+     *
+     * @param ids      ids
+     * @param position 列表位置
+     */
     public void setMusicServiceData(String[] ids, int position) {
         mQueueManager.playQueueObservable(ids)
                 .subscribe(songData -> {
@@ -85,6 +94,11 @@ public class MusicManager {
                 });
     }
 
+    /**
+     * 播放队列中特定歌曲时更新位置信息
+     *
+     * @param position 列表位置
+     */
     private void updatePosition(int position) {
         if (getCurPosition() > position) {
             mMusicService.setCurrentPosition(position);
@@ -94,6 +108,23 @@ public class MusicManager {
         }
     }
 
+    /**
+     * 清空播放队列
+     */
+    public void clearPlayData() {
+        mMusicService.setSongData(Collections.emptyList());
+        mProgressHandler.removeCallbacks(mProgressRunnable);
+        mMusicService.stopPlayer();
+        RxBus.INSTANCE.post(new ClearQueueEvent());
+    }
+
+    public void quit() {
+        mMusicService.getMediaPlayer().reset();
+        mMusicService.getMediaPlayer().release();
+        mMusicService.stopSelf();
+        unbindService();
+        stopService();
+    }
 
     private MusicService.MediaPlayerUpdateListener mUpdateListener = new MusicService.MediaPlayerUpdateListener() {
         @Override
@@ -198,8 +229,9 @@ public class MusicManager {
     }
 
     public void unbindService() {
-        if (null != mMusicService) {
-            mMusicService.unbindService(mConnection);
+        if (null != mConnection) {
+            TicktockApplication context = TicktockApplication.getInstance();
+            context.unbindService(mConnection);
         }
     }
 
@@ -255,9 +287,10 @@ public class MusicManager {
      *
      * @param position 当前位置
      */
-    public void open(int position) {
+    private void open(int position) {
         if (mMusicService != null) {
-            if (position == 0 || mMusicService.getCurrentPosition() != position) {
+            if (position == 0 || mMusicService.getCurrentPosition() != position
+                    || getMusicState() == PlaybackState.STATE_STOPPED) {
                 mMusicService.setCurrentPosition(position);
                 play();
             } else if (getMusicState() == PlaybackState.STATE_PAUSED) {
