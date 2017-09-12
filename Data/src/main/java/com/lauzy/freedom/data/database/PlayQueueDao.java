@@ -74,7 +74,7 @@ public class PlayQueueDao implements BaseDao {
             }
             cursor = db.query(TickDaoHelper.PLAY_QUEUE, null,
                     QueueParam.SONG_ID + " in (" + sb.toString() + ")", songIds, null, null, null);
-            if (cursor.getCount() > 0) {
+            if (cursor!= null && cursor.getCount() > 0) {
                 List<QueueSongBean> listBeen = new ArrayList<>(cursor.getCount());
                 while (cursor.moveToNext()) {
                     QueueSongBean listBean = new QueueSongBean();
@@ -101,13 +101,11 @@ public class PlayQueueDao implements BaseDao {
             }
             db.close();
         }
-
         return null;
     }
 
     public void addLocalQueue(List<LocalSongBean> songBeen) {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
-
         db.beginTransaction();
         try {
             for (LocalSongBean localSongBean : songBeen) {
@@ -145,7 +143,7 @@ public class PlayQueueDao implements BaseDao {
     }
 
     public int deleteQueueData(String[] ids) {
-        SQLiteDatabase db = mTickDaoHelper.getWritableDatabase();
+        SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < ids.length; i++) {
             sb.append("?");

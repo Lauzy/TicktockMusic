@@ -29,11 +29,13 @@ public class TickDaoHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         NetMusicDao.getInstance(mContext).createTable(db);
         PlayQueueDao.getInstance(mContext).createTable(db);
+        FavoriteDao.getInstance(mContext).createTable(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         NetMusicDao.getInstance(mContext).upgradeTable(db, oldVersion, newVersion);
         PlayQueueDao.getInstance(mContext).upgradeTable(db, oldVersion, newVersion);
+        FavoriteDao.getInstance(mContext).upgradeTable(db, oldVersion, newVersion);
     }
 }

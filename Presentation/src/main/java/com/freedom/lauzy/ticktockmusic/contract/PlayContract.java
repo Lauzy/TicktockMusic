@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.freedom.lauzy.ticktockmusic.base.IBaseView;
+import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 
 /**
  * Desc :
@@ -19,9 +20,12 @@ public class PlayContract {
         void setCoverBitmap(Bitmap bitmap);
 
         void setCoverBackground(int color);
+
+        void addFavoriteSong();
     }
 
     public interface Presenter {
         void setCoverImgUrl(Object url);
+        void addFavoriteSong(SongEntity entity);
     }
 }

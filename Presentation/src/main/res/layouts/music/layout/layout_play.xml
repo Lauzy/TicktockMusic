@@ -28,6 +28,7 @@
     </FrameLayout>
 
     <ImageView
+        android:id="@+id/img_favorite"
         android:layout_width="@dimen/dp_30"
         android:layout_height="@dimen/dp_30"
         android:layout_gravity="end"

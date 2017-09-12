@@ -3,10 +3,12 @@ package com.freedom.lauzy.ticktockmusic.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,6 +27,7 @@ import com.freedom.lauzy.ticktockmusic.service.MusicService;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayQueueBottomSheetFragment;
 import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.lauzy.freedom.data.local.LocalUtil;
+import com.lauzy.freedom.librarys.common.ToastUtils;
 import com.lauzy.freedom.librarys.widght.CircleImageView;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 import com.lauzy.freedom.librarys.widght.music.PlayPauseView;
@@ -55,6 +58,8 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     PlayPauseView mPlayPause;
     @BindView(R.id.layout_play)
     LinearLayout mLayoutPlay;
+    @BindView(R.id.img_favorite)
+    ImageView mImgFavorite;
     private static final String TAG = "PlayActivity";
 
     public static Intent newInstance(Context context) {
@@ -196,12 +201,22 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     }
 
     @Override
+    public void addFavoriteSong() {
+        mImgFavorite.setImageResource(R.drawable.ic_favorite_white);
+        ColorStateList stateList = new ColorStateList(new int[][]{new int[]{}}, new int[]
+                {ContextCompat.getColor(getApplicationContext(), R.color.theme_color_primary)});
+        mImgFavorite.setBackgroundTintList(stateList);
+        ToastUtils.showSingle(PlayActivity.this, "Add Successful");
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         RxBus.INSTANCE.dispose(this);
     }
 
-    @OnClick({R.id.img_play_mode, R.id.img_play_previous, R.id.img_play_next, R.id.img_play_queue})
+    @OnClick({R.id.img_play_mode, R.id.img_play_previous, R.id.img_play_next, R.id.img_play_queue,
+            R.id.img_favorite})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.img_play_mode:
@@ -216,6 +231,9 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
             case R.id.img_play_queue:
                 PlayQueueBottomSheetFragment sheetFragment = new PlayQueueBottomSheetFragment();
                 sheetFragment.show(getSupportFragmentManager(), sheetFragment.getTag());
+                break;
+            case R.id.img_favorite:
+                mPresenter.addFavoriteSong(MusicManager.getInstance().getCurrentSong());
                 break;
         }
     }

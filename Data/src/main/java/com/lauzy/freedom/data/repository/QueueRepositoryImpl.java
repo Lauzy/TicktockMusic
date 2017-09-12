@@ -51,7 +51,8 @@ public class QueueRepositoryImpl implements QueueRepository {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<QueueSongBean>> e) throws Exception {
                 PlayQueueDao.getInstance(mContext).addLocalQueue(queueSongBeen);
-                e.onNext(PlayQueueDao.getInstance(mContext).queryQueue(songIds));
+                List<QueueSongBean> songBeen = PlayQueueDao.getInstance(mContext).queryQueue(songIds);
+                e.onNext(songBeen != null ? songBeen : Collections.<QueueSongBean>emptyList());
                 e.onComplete();
             }
         });

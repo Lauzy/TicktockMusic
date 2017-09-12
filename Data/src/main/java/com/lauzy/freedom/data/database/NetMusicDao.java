@@ -101,7 +101,7 @@ public class NetMusicDao implements BaseDao {
     }
 
     public void addNetSongData(int type, List<NetSongBean> songListBeen) {
-        SQLiteDatabase db = mTickDaoHelper.getWritableDatabase();
+        SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         db.beginTransaction();
         try {
             for (NetSongBean netSongBean : songListBeen) {
@@ -139,7 +139,7 @@ public class NetMusicDao implements BaseDao {
     }
 
     public void removeData(int type) {
-        SQLiteDatabase db = mTickDaoHelper.getWritableDatabase();
+        SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         db.beginTransaction();
         db.delete(TickDaoHelper.NET_MUSIC_TABLE, NetParam.TYPE + " = ?",
                 new String[]{String.valueOf(type)});

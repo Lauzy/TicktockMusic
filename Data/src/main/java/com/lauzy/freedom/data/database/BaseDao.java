@@ -43,4 +43,17 @@ public interface BaseDao {
         static final String NET = "NET";
         static final String LOCAL = "LOCAL";
     }
+
+    class FavoriteParam {
+        static final String SOURCE = "source";
+        static final String SONG_ID = "songId";
+        static final String SONG_NAME = "songName";
+        static final String ALBUM_ID = "albumId";
+        static final String ALBUM_NAME = "albumName";
+        static final String SINGER_NAME = "singerName";
+        static final String PLAY_PATH = "playPath";
+        static final String ADD_TIME = "add_time";
+        static final String DURATION = "duration";
+        static final String LENGTH = "length";
+    }
 }

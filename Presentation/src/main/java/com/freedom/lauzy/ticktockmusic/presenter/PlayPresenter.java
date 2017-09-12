@@ -4,8 +4,12 @@ import android.graphics.Bitmap;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.freedom.lauzy.interactor.FavoriteSongUseCase;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
 import com.freedom.lauzy.ticktockmusic.contract.PlayContract;
+import com.freedom.lauzy.ticktockmusic.function.RxHelper;
+import com.freedom.lauzy.ticktockmusic.model.SongEntity;
+import com.freedom.lauzy.ticktockmusic.model.mapper.FavoriteMapper;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.view.util.PaletteColor;
@@ -25,9 +29,13 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
         implements PlayContract.Presenter {
 
     private HashMap<String, Integer> mColorMap = new HashMap<>();
+    private FavoriteSongUseCase mFavoriteSongUseCase;
+    private FavoriteMapper mFavoriteMapper;
 
     @Inject
-    public PlayPresenter() {
+    public PlayPresenter(FavoriteSongUseCase favoriteSongUseCase, FavoriteMapper favoriteMapper) {
+        mFavoriteSongUseCase = favoriteSongUseCase;
+        mFavoriteMapper = favoriteMapper;
     }
 
     @Override
@@ -51,5 +59,16 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                         }
                     }
                 }).build());
+    }
+
+    @Override
+    public void addFavoriteSong(SongEntity entity) {
+        mFavoriteSongUseCase.buildObservable(mFavoriteMapper.transform(entity))
+                .compose(RxHelper.ioMain())
+                .subscribe(value -> {
+                    if (value != -1) {
+                        getView().addFavoriteSong();
+                    }
+                });
     }
 }
