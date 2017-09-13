@@ -3,12 +3,13 @@ package com.freedom.lauzy.ticktockmusic.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,7 +28,6 @@ import com.freedom.lauzy.ticktockmusic.service.MusicService;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayQueueBottomSheetFragment;
 import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.lauzy.freedom.data.local.LocalUtil;
-import com.lauzy.freedom.librarys.common.ToastUtils;
 import com.lauzy.freedom.librarys.widght.CircleImageView;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 import com.lauzy.freedom.librarys.widght.music.PlayPauseView;
@@ -38,7 +38,8 @@ import io.reactivex.disposables.Disposable;
 
 
 public class PlayActivity extends BaseActivity<PlayPresenter> implements
-        SeekBar.OnSeekBarChangeListener, PlayPauseView.PlayPauseListener, PlayContract.View, MusicManager.SeekBarProgressListener {
+        SeekBar.OnSeekBarChangeListener, PlayPauseView.PlayPauseListener, PlayContract.View,
+        MusicManager.SeekBarProgressListener {
 
     @BindView(R.id.toolbar_common)
     TickToolbar mToolbarCommon;
@@ -61,6 +62,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     @BindView(R.id.img_favorite)
     ImageView mImgFavorite;
     private static final String TAG = "PlayActivity";
+    private boolean mIsFavorite;
 
     public static Intent newInstance(Context context) {
         return new Intent(context, PlayActivity.class);
@@ -111,6 +113,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     protected void loadData() {
         setCurProgress((int) MusicManager.getInstance().getCurrentProgress(),
                 MusicManager.getInstance().getDuration());
+        mPresenter.isFavoriteSong((int) MusicManager.getInstance().getCurrentSong().id);
         mTxtCurrentProgress.setText(LocalUtil.formatTime(MusicManager.getInstance().getCurrentProgress()));
         setCurData(MusicManager.getInstance().getCurrentSong());
         mSeekPlay.setOnSeekBarChangeListener(this);
@@ -202,11 +205,28 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     @Override
     public void addFavoriteSong() {
-        mImgFavorite.setImageResource(R.drawable.ic_favorite_white);
-        ColorStateList stateList = new ColorStateList(new int[][]{new int[]{}}, new int[]
-                {ContextCompat.getColor(getApplicationContext(), R.color.theme_color_primary)});
-        mImgFavorite.setBackgroundTintList(stateList);
-        ToastUtils.showSingle(PlayActivity.this, "Add Successful");
+        setImageTint();
+    }
+
+    @Override
+    public void deleteFavoriteSong() {
+        mImgFavorite.setImageResource(R.drawable.ic_favorite_border_black);
+    }
+
+    @Override
+    public void isFavoriteSong(boolean isFavorite) {
+        mIsFavorite = isFavorite;
+        mImgFavorite.setImageResource(isFavorite ? R.drawable.ic_favorite_white :
+                R.drawable.ic_favorite_border_black);
+        if (isFavorite) {
+            setImageTint();
+        }
+    }
+
+    private void setImageTint() {
+        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_favorite_white);
+        DrawableCompat.setTint(drawable, ContextCompat.getColor(this, R.color.theme_color_primary));
+        mImgFavorite.setImageDrawable(drawable);
     }
 
     @Override
@@ -233,7 +253,13 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
                 sheetFragment.show(getSupportFragmentManager(), sheetFragment.getTag());
                 break;
             case R.id.img_favorite:
-                mPresenter.addFavoriteSong(MusicManager.getInstance().getCurrentSong());
+                if (!mIsFavorite) {
+                    mPresenter.addFavoriteSong(MusicManager.getInstance().getCurrentSong());
+                    mIsFavorite = true;
+                } else {
+                    mPresenter.deleteFavoriteSong(MusicManager.getInstance().getCurrentSong().id);
+                    mIsFavorite = false;
+                }
                 break;
         }
     }

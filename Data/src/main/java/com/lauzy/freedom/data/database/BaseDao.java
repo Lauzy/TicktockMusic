@@ -55,5 +55,6 @@ public interface BaseDao {
         static final String ADD_TIME = "add_time";
         static final String DURATION = "duration";
         static final String LENGTH = "length";
+        static final String ALBUM_COVER = "albumCover";
     }
 }

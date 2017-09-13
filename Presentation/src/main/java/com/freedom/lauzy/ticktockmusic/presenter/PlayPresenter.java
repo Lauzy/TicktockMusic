@@ -10,6 +10,7 @@ import com.freedom.lauzy.ticktockmusic.contract.PlayContract;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.model.mapper.FavoriteMapper;
+import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.view.util.PaletteColor;
@@ -18,8 +19,11 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+
 /**
- * Desc :
+ * Desc : 播放Presenter
  * Author : Lauzy
  * Date : 2017/9/7
  * Blog : http://www.jianshu.com/u/e76853f863a9
@@ -31,6 +35,7 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
     private HashMap<String, Integer> mColorMap = new HashMap<>();
     private FavoriteSongUseCase mFavoriteSongUseCase;
     private FavoriteMapper mFavoriteMapper;
+    private static final String TAG = "PlayPresenter";
 
     @Inject
     public PlayPresenter(FavoriteSongUseCase favoriteSongUseCase, FavoriteMapper favoriteMapper) {
@@ -66,9 +71,24 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
         mFavoriteSongUseCase.buildObservable(mFavoriteMapper.transform(entity))
                 .compose(RxHelper.ioMain())
                 .subscribe(value -> {
+                    LogUtil.i(TAG, "add value is " + value);
                     if (value != -1) {
                         getView().addFavoriteSong();
                     }
                 });
+    }
+
+    @Override
+    public void deleteFavoriteSong(long songId) {
+        mFavoriteSongUseCase.deleteFavoriteSong(songId).subscribe(aLong -> {
+            LogUtil.i(TAG, "delete value is " + aLong);
+            getView().deleteFavoriteSong();
+        });
+    }
+
+    @Override
+    public void isFavoriteSong(long songId) {
+        mFavoriteSongUseCase.isFavoriteSong(songId)
+                .subscribe(aBoolean -> getView().isFavoriteSong(aBoolean));
     }
 }

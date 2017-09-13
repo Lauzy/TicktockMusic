@@ -7,6 +7,7 @@
     <string name="navigation_drawer_close">关闭</string>
 
     <string name="action_search">搜索</string>
+    <string name="action_clear">清空</string>
     <string name="author">Lauzy</string>
     <string name="drawer_music">我的曲库</string>
     <string name="drawer_net_song">网络曲库</string>
@@ -47,4 +48,7 @@
     <string name="repeat_single_mode">单曲循环</string>
     <string name="repeat_shuffle_mode">随机播放</string>
 
+    <string name="clear_favorite_songs">清空你喜欢的歌曲？</string>
+
+    <string name="empty">空空如也</string>
 </resources>

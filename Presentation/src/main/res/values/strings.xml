@@ -8,6 +8,7 @@
     <string name="author">Lauzy</string>
 
     <string name="action_search">Search</string>
+    <string name="action_clear">Clear</string>
     <string name="drawer_music">Local Music</string>
     <string name="drawer_net_song">Network Song</string>
     <string name="drawer_favorite">Favorite</string>
@@ -48,4 +49,7 @@
     <string name="repeat_single_mode">SingleLoop</string>
     <string name="repeat_shuffle_mode">Shuffle</string>
 
+    <string name="clear_favorite_songs">Clear your favorite songs?</string>
+
+    <string name="empty">Empty</string>
 </resources>

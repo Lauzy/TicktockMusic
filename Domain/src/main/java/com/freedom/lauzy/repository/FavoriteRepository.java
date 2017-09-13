@@ -2,6 +2,8 @@ package com.freedom.lauzy.repository;
 
 import com.freedom.lauzy.model.FavoriteSongBean;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 
 /**
@@ -13,4 +15,12 @@ import io.reactivex.Observable;
  */
 public interface FavoriteRepository {
     Observable<Long> addFavoriteSong(FavoriteSongBean songBean);
+
+    Observable<List<FavoriteSongBean>> getFavoriteSongs();
+
+    Observable<Integer> clearFavoriteSongs();
+
+    Observable<Boolean> isFavoriteSong(long songId);
+
+    Observable<Long> deleteFavoriteSong(long songId);
 }

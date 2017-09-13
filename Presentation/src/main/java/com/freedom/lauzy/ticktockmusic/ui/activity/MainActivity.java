@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
+import com.freedom.lauzy.ticktockmusic.event.ClearFavoriteEvent;
 import com.freedom.lauzy.ticktockmusic.event.ClearQueueEvent;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
@@ -26,6 +27,7 @@ import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.MainPresenter;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.AlbumDetailFragment;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.FavoriteFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.LocalMusicFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongFragment;
 import com.lauzy.freedom.librarys.common.LogUtil;
@@ -155,6 +157,10 @@ public class MainActivity extends BaseActivity<MainPresenter>
             getSupportFragmentManager().beginTransaction().replace(R.id.layout_main,
                     NetSongFragment.newInstance()).commit();
 
+    private Runnable mFavoriteRunnable = () ->
+            getSupportFragmentManager().beginTransaction().replace(R.id.layout_main,
+                    FavoriteFragment.newInstance()).commit();
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Runnable drawerRunnable = null;
@@ -172,6 +178,9 @@ public class MainActivity extends BaseActivity<MainPresenter>
                 }
                 break;
             case R.id.nav_favorite:
+                if (!(fragment instanceof FavoriteFragment)) {
+                    drawerRunnable = mFavoriteRunnable;
+                }
                 break;
             case R.id.nav_recent:
                 break;
@@ -196,7 +205,8 @@ public class MainActivity extends BaseActivity<MainPresenter>
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.layout_main);
+        getMenuInflater().inflate(!(fragment instanceof FavoriteFragment) ? R.menu.menu_search : R.menu.menu_delete, menu);
         return true;
     }
 
@@ -211,6 +221,10 @@ public class MainActivity extends BaseActivity<MainPresenter>
                 }
                 return true;
             case R.id.action_search:
+                LogUtil.i(LYTAG, "Search");
+                return true;
+            case R.id.action_clear:
+                RxBus.INSTANCE.post(new ClearFavoriteEvent());
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -218,7 +232,8 @@ public class MainActivity extends BaseActivity<MainPresenter>
 
     private boolean isNavigatingMain() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.layout_main);
-        return (fragment instanceof LocalMusicFragment || fragment instanceof NetSongFragment);
+        return (fragment instanceof LocalMusicFragment || fragment instanceof NetSongFragment
+                || fragment instanceof FavoriteFragment);
     }
 
     @Override

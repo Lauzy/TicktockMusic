@@ -85,7 +85,6 @@ dependencies {
     debugCompile project(path: ':Libraries', configuration: 'debug')
     releaseCompile project(path: ':Data', configuration: 'release')
     debugCompile project(path: ':Data', configuration: 'debug')
-    compile 'com.android.support:support-v4:25.3.1'
 }
 
 configurations.all {

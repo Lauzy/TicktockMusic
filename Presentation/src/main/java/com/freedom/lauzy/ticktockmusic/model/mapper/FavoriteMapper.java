@@ -36,6 +36,7 @@ public class FavoriteMapper {
         songEntity.title = favoriteBean.title;
         songEntity.songLength = favoriteBean.songLength;
         songEntity.type = favoriteBean.type;
+        songEntity.albumCover = favoriteBean.albumCover;
         return songEntity;
     }
 
@@ -67,6 +68,7 @@ public class FavoriteMapper {
         favoriteBean.title = songEntity.title;
         favoriteBean.songLength = songEntity.songLength;
         favoriteBean.type = songEntity.type;
+        favoriteBean.albumCover = String.valueOf(songEntity.albumCover);
         return favoriteBean;
     }
 }

@@ -17,4 +17,5 @@ public class FavoriteSongBean {
     public long duration;//时长
     public String songLength;//音乐长度（时间格式化）
     public String type;//来源（本地或网络）
+    public String albumCover;
 }

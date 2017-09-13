@@ -50,6 +50,7 @@ public class FavoriteDao implements BaseDao {
                 + FavoriteParam.DURATION + " LONG,"
                 + FavoriteParam.LENGTH + " VARCHAR(255),"
                 + FavoriteParam.ADD_TIME + " VARCHAR(255),"
+                + FavoriteParam.ALBUM_COVER + " VARCHAR(255),"
                 + "CONSTRAINT UC_FAVORITE UNIQUE ("
                 + FavoriteParam.SOURCE + "," + FavoriteParam.SONG_ID + " ));");
     }
@@ -79,10 +80,13 @@ public class FavoriteDao implements BaseDao {
                 values.put(FavoriteParam.DURATION, songBean.duration);
                 values.put(FavoriteParam.LENGTH, songBean.songLength);
                 values.put(FavoriteParam.PLAY_PATH, songBean.path);
+                values.put(FavoriteParam.ALBUM_COVER, songBean.albumCover);
                 values.put(FavoriteParam.ADD_TIME, System.currentTimeMillis());
                 result = db.insert(TickDaoHelper.FAVORITE_TABLE, null, values);
             }
             db.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -112,6 +116,7 @@ public class FavoriteDao implements BaseDao {
                     listBean.type = cursor.getString(cursor.getColumnIndex(FavoriteParam.SOURCE));
                     listBean.duration = cursor.getLong(cursor.getColumnIndex(FavoriteParam.DURATION));
                     listBean.songLength = cursor.getString(cursor.getColumnIndex(FavoriteParam.LENGTH));
+                    listBean.albumCover = cursor.getString(cursor.getColumnIndex(FavoriteParam.ALBUM_COVER));
                     favoriteSongBeen.add(listBean);
                 }
                 return favoriteSongBeen;
@@ -126,5 +131,40 @@ public class FavoriteDao implements BaseDao {
             db.close();
         }
         return null;
+    }
+
+    public boolean isFavorite(long songId) {
+        SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
+        Cursor cursor = db.query(TickDaoHelper.FAVORITE_TABLE, new String[]{FavoriteParam.SONG_ID},
+                FavoriteParam.SONG_ID + " = ? ", new String[]{String.valueOf(songId)},
+                null, null, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            return true;
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        return false;
+    }
+
+    public long deleteFavoriteSong(long songId) {
+        SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
+        db.beginTransaction();
+        int delete = db.delete(TickDaoHelper.FAVORITE_TABLE, FavoriteParam.SONG_ID + " = ? ",
+                new String[]{String.valueOf(songId)});
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        db.close();
+        return delete;
+    }
+
+    public int clearFavoriteSongs() {
+        SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
+        db.beginTransaction();
+        int delete = db.delete(TickDaoHelper.FAVORITE_TABLE, null, null);
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        db.close();
+        return delete;
     }
 }

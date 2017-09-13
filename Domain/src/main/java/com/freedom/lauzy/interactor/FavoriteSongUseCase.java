@@ -5,6 +5,8 @@ import com.freedom.lauzy.executor.ThreadExecutor;
 import com.freedom.lauzy.model.FavoriteSongBean;
 import com.freedom.lauzy.repository.FavoriteRepository;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
@@ -30,5 +32,21 @@ public class FavoriteSongUseCase extends UseCase<Long, FavoriteSongBean> {
     @Override
     Observable<Long> buildUseCaseObservable(FavoriteSongBean favoriteSongBean) {
         return mFavoriteRepository.addFavoriteSong(favoriteSongBean);
+    }
+
+    public Observable<Long> deleteFavoriteSong(long songId) {
+        return mFavoriteRepository.deleteFavoriteSong(songId);
+    }
+
+    public Observable<List<FavoriteSongBean>> favoriteSongObservable() {
+        return mFavoriteRepository.getFavoriteSongs();
+    }
+
+    public Observable<Integer> clearFavoriteSongs() {
+        return mFavoriteRepository.clearFavoriteSongs();
+    }
+
+    public Observable<Boolean> isFavoriteSong(long songId) {
+        return mFavoriteRepository.isFavoriteSong(songId);
     }
 }
