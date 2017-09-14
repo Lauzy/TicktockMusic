@@ -2,6 +2,7 @@ package com.freedom.lauzy.ticktockmusic.ui.fragment;
 
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,12 +12,13 @@ import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
 import com.freedom.lauzy.ticktockmusic.contract.FavoriteContract;
+import com.freedom.lauzy.ticktockmusic.event.ChangeFavoriteItemEvent;
 import com.freedom.lauzy.ticktockmusic.event.ClearFavoriteEvent;
-import com.freedom.lauzy.ticktockmusic.event.ClearQueueEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.FavoritePresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.FavoriteAdapter;
+import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 
 import java.util.ArrayList;
@@ -64,6 +66,10 @@ public class FavoriteFragment extends BaseFragment<FavoritePresenter> implements
         super.onCreate(savedInstanceState);
         Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(ClearFavoriteEvent.class,
                 clearFavoriteEvent -> clearFavoriteData());
+        //订阅喜欢及取消喜欢事件，延迟加载，防止数据库未关闭就读取
+        Disposable refreshDisposable = RxBus.INSTANCE.doDefaultSubscribe(ChangeFavoriteItemEvent.class,
+                changeFavoriteItemEvent -> new Handler().postDelayed(() -> mPresenter.loadFavoriteSongs(), 100));
+        RxBus.INSTANCE.addDisposable(this, refreshDisposable);
         RxBus.INSTANCE.addDisposable(this, disposable);
     }
 
@@ -86,6 +92,7 @@ public class FavoriteFragment extends BaseFragment<FavoritePresenter> implements
     protected void initViews() {
         setToolbarPadding();
         setDrawerSync();
+        mToolbarCommon.setTitle(R.string.drawer_favorite);
         mRvFavorite.setLayoutManager(new LinearLayoutManager(mActivity));
         mAdapter = new FavoriteAdapter(R.layout.layout_song_item, mSongEntities);
         mRvFavorite.setAdapter(mAdapter);
@@ -105,6 +112,8 @@ public class FavoriteFragment extends BaseFragment<FavoritePresenter> implements
 
     @Override
     public void emptyView() {
+        mSongEntities.clear();
+        mAdapter.notifyDataSetChanged();
         mAdapter.setEmptyView(R.layout.layout_empty, mRvFavorite);
     }
 

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
 import com.freedom.lauzy.ticktockmusic.contract.PlayContract;
+import com.freedom.lauzy.ticktockmusic.event.ChangeFavoriteItemEvent;
 import com.freedom.lauzy.ticktockmusic.event.PlayModeEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
@@ -36,7 +38,13 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
 
-
+/**
+ * Desc : 播放界面
+ * Author : Lauzy
+ * Date : 2017/9/14
+ * Blog : http://www.jianshu.com/u/e76853f863a9
+ * Email : freedompaladin@gmail.com
+ */
 public class PlayActivity extends BaseActivity<PlayPresenter> implements
         SeekBar.OnSeekBarChangeListener, PlayPauseView.PlayPauseListener, PlayContract.View,
         MusicManager.SeekBarProgressListener {
@@ -81,7 +89,9 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //订阅当前播放数据
         Disposable disposable = RxBus.INSTANCE.doStickySubscribe(SongEntity.class, this::setCurData);
+        //订阅播放模式设置View
         Disposable playModeDisposable = RxBus.INSTANCE.doDefaultSubscribe(PlayModeEvent.class,
                 playModeEvent -> setModeView());
         RxBus.INSTANCE.addDisposable(this, disposable);
@@ -137,6 +147,20 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     @Override
     public void onProgress(int progress, int duration) {
         setCurProgress(progress, duration);
+    }
+
+    @Override
+    public void onPlayerPause() {
+        if (mPlayPause.isPlaying()) {
+            mPlayPause.pause();
+        }
+    }
+
+    @Override
+    public void onPlayerResume() {
+        if (!mPlayPause.isPlaying()) {
+            mPlayPause.play();
+        }
     }
 
     private void setCurProgress(int progress, int duration) {
@@ -229,12 +253,6 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         mImgFavorite.setImageDrawable(drawable);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        RxBus.INSTANCE.dispose(this);
-    }
-
     @OnClick({R.id.img_play_mode, R.id.img_play_previous, R.id.img_play_next, R.id.img_play_queue,
             R.id.img_favorite})
     public void onViewClicked(View view) {
@@ -244,24 +262,35 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
                 break;
             case R.id.img_play_previous:
                 MusicManager.getInstance().skipToPrevious();
+                refreshFavoriteIcon();
                 break;
             case R.id.img_play_next:
                 MusicManager.getInstance().skipToNext();
+                refreshFavoriteIcon();
                 break;
             case R.id.img_play_queue:
                 PlayQueueBottomSheetFragment sheetFragment = new PlayQueueBottomSheetFragment();
                 sheetFragment.show(getSupportFragmentManager(), sheetFragment.getTag());
                 break;
             case R.id.img_favorite:
-                if (!mIsFavorite) {
-                    mPresenter.addFavoriteSong(MusicManager.getInstance().getCurrentSong());
-                    mIsFavorite = true;
-                } else {
-                    mPresenter.deleteFavoriteSong(MusicManager.getInstance().getCurrentSong().id);
-                    mIsFavorite = false;
-                }
+                addOrDeleteFavoriteSong();
                 break;
         }
+    }
+
+    private void refreshFavoriteIcon() {
+        new Handler().postDelayed(() -> mPresenter.isFavoriteSong(MusicManager.getInstance()
+                .getCurrentSong().id), 50);
+    }
+
+    private void addOrDeleteFavoriteSong() {
+        if (!mIsFavorite) {
+            mPresenter.addFavoriteSong(MusicManager.getInstance().getCurrentSong());
+        } else {
+            mPresenter.deleteFavoriteSong(MusicManager.getInstance().getCurrentSong().id);
+        }
+        mIsFavorite = !mIsFavorite;
+        RxBus.INSTANCE.post(new ChangeFavoriteItemEvent());
     }
 
     private void switchMode() {
@@ -279,5 +308,11 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
                 mImgPlayMode.setImageResource(R.drawable.ic_repeat_black);
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        RxBus.INSTANCE.dispose(this);
     }
 }

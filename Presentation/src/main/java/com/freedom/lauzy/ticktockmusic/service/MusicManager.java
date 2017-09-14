@@ -50,82 +50,6 @@ public class MusicManager {
         return SingleTon.INSTANCE;
     }
 
-    public void playLocalQueue(List<SongEntity> songEntities, String[] ids) {
-        this.playLocalQueue(songEntities, ids, 0);
-    }
-
-    /**
-     * 播放当前音乐，并将当前列表添加至播放队列
-     *
-     * @param songEntities 列表
-     * @param ids          id
-     * @param position     当前位置
-     */
-    public void playLocalQueue(List<SongEntity> songEntities, String[] ids, int position) {
-        mCurIds = ids;//id赋值给当前ID，以供队列列表使用
-        mQueueManager.playQueueObservable(ids).subscribe(playQueue -> {
-            if (songEntities.equals(playQueue)) {
-                mMusicService.setSongData(playQueue);
-                LogUtil.i(TAG, "--- data exists ---");
-                open(position);
-            } else {
-                mQueueManager.localQueueObservable(ids, songEntities)
-                        .compose(RxHelper.ioMain())
-                        .subscribe(songData -> {
-                            LogUtil.i(TAG, "--- new data ---");
-                            mMusicService.setSongData(songData);
-                            open(position);
-                        });
-            }
-        });
-    }
-
-    /**
-     * 设置播放队列数据
-     *
-     * @param ids      ids
-     * @param position 列表位置
-     */
-    public void setMusicServiceData(String[] ids, int position) {
-        mQueueManager.playQueueObservable(ids)
-                .subscribe(songData -> {
-                    mMusicService.setSongData(songData);
-                    updatePosition(position);
-                });
-    }
-
-    /**
-     * 播放队列中特定歌曲时更新位置信息
-     *
-     * @param position 列表位置
-     */
-    private void updatePosition(int position) {
-        if (getCurPosition() > position) {
-            mMusicService.setCurrentPosition(position);
-        } else if (getCurPosition() == position) {
-            mMusicService.setCurrentPosition(position);
-            play();
-        }
-    }
-
-    /**
-     * 清空播放队列
-     */
-    public void clearPlayData() {
-        mMusicService.setSongData(Collections.emptyList());
-        mProgressHandler.removeCallbacks(mProgressRunnable);
-        mMusicService.stopPlayer();
-        RxBus.INSTANCE.post(new ClearQueueEvent());
-    }
-
-    public void quit() {
-        mMusicService.getMediaPlayer().reset();
-        mMusicService.getMediaPlayer().release();
-        mMusicService.stopSelf();
-        unbindService();
-        stopService();
-    }
-
     private MusicService.MediaPlayerUpdateListener mUpdateListener = new MusicService.MediaPlayerUpdateListener() {
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
@@ -168,11 +92,17 @@ public class MusicManager {
                     if (mMusicManageListener != null) {
                         mMusicManageListener.onPlayerResume();
                     }
+                    if (mSeekBarProgressListener != null) {
+                        mSeekBarProgressListener.onPlayerResume();
+                    }
                     break;
                 case PlaybackState.STATE_PAUSED:
                     LogUtil.i(TAG, "STATE_PAUSED");
                     if (mMusicManageListener != null) {
                         mMusicManageListener.onPlayerPause();
+                    }
+                    if (mSeekBarProgressListener != null) {
+                        mSeekBarProgressListener.onPlayerPause();
                     }
                     break;
                 case PlaybackState.STATE_BUFFERING:
@@ -248,6 +178,114 @@ public class MusicManager {
         context.stopService(new Intent(context, MusicService.class));
     }
 
+    public void playLocalQueue(List<SongEntity> songEntities, String[] ids) {
+        this.playLocalQueue(songEntities, ids, 0);
+    }
+
+    /**
+     * 播放当前音乐，并将当前列表添加至播放队列
+     *
+     * @param songEntities 列表
+     * @param ids          id
+     * @param position     当前位置
+     */
+    public void playLocalQueue(List<SongEntity> songEntities, String[] ids, int position) {
+        mCurIds = ids;//id赋值给当前ID，以供队列列表使用
+        mQueueManager.playQueueObservable(ids).subscribe(playQueue -> {
+            if (songEntities.equals(playQueue)) {
+                mMusicService.setSongData(playQueue);
+                LogUtil.i(TAG, "--- data exists ---");
+                open(position, playQueue.get(position));
+            } else {
+                mQueueManager.localQueueObservable(ids, songEntities)
+                        .compose(RxHelper.ioMain())
+                        .subscribe(songData -> {
+                            LogUtil.i(TAG, "--- new data ---");
+                            mMusicService.setSongData(songData);
+                            open(position, playQueue.get(position));
+                        });
+            }
+        });
+    }
+
+    /**
+     * 打开指定列表位置的音乐
+     *
+     * @param position 当前位置
+     */
+    private void open(int position, SongEntity entity) {
+        if (mMusicService != null) {
+//            if (position == 0) {
+//                if (!entity.equals(mMusicService.getCurrentSong())) {
+//                    mMusicService.setCurrentPosition(position);
+//                    play();
+//                } else {
+//                    resume();
+//                }
+//            }
+            if (position == 0
+                    || position != mMusicService.getCurrentPosition()
+                    || !entity.equals(mMusicService.getCurrentSong())
+                    || getMusicState() == PlaybackState.STATE_STOPPED) {
+                if (!entity.equals(mMusicService.getCurrentSong())) {
+                    mMusicService.setCurrentPosition(position);
+                    play();
+                }else {
+                    resume();
+                }
+            } else if (getMusicState() == PlaybackState.STATE_PAUSED) {
+                //当前为同一首歌曲，并且为暂停状态时继续播放
+                resume();
+            }
+        }
+    }
+
+    /**
+     * 设置播放队列数据
+     *
+     * @param ids      ids
+     * @param position 列表位置
+     */
+    public void setMusicServiceData(String[] ids, int position) {
+        mQueueManager.playQueueObservable(ids)
+                .subscribe(songData -> {
+                    mMusicService.setSongData(songData);
+                    updatePosition(position);
+                });
+    }
+
+    /**
+     * 播放队列中特定歌曲时更新位置信息
+     *
+     * @param position 列表位置
+     */
+    private void updatePosition(int position) {
+        if (getCurPosition() > position) {
+            mMusicService.setCurrentPosition(position);
+        } else if (getCurPosition() == position) {
+            mMusicService.setCurrentPosition(position);
+            play();
+        }
+    }
+
+    /**
+     * 清空播放队列
+     */
+    public void clearPlayData() {
+        mMusicService.setSongData(Collections.emptyList());
+        mProgressHandler.removeCallbacks(mProgressRunnable);
+        mMusicService.stopPlayer();
+        RxBus.INSTANCE.post(new ClearQueueEvent());
+    }
+
+    public void quit() {
+        mMusicService.getMediaPlayer().reset();
+        mMusicService.getMediaPlayer().release();
+        mMusicService.stopSelf();
+        unbindService();
+        stopService();
+    }
+
     /**
      * 播放音乐
      */
@@ -280,24 +318,6 @@ public class MusicManager {
 
     public void resumeProgress() {
         mProgressHandler.post(mProgressRunnable);
-    }
-
-    /**
-     * 打开指定列表位置的音乐
-     *
-     * @param position 当前位置
-     */
-    private void open(int position) {
-        if (mMusicService != null) {
-            if (position == 0 || mMusicService.getCurrentPosition() != position
-                    || getMusicState() == PlaybackState.STATE_STOPPED) {
-                mMusicService.setCurrentPosition(position);
-                play();
-            } else if (getMusicState() == PlaybackState.STATE_PAUSED) {
-                //当前为同一首歌曲，并且为暂停状态时继续播放
-                resume();
-            }
-        }
     }
 
     /**
@@ -443,7 +463,9 @@ public class MusicManager {
 
     public interface SeekBarProgressListener {
         void onProgress(int progress, int duration);
-//        void onPlayerPause();
-//        void onPlayerResume();
+
+        void onPlayerPause();
+
+        void onPlayerResume();
     }
 }

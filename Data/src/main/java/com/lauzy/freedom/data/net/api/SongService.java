@@ -8,7 +8,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 /**
- * Desc :
+ * Desc : 网络音乐Api
  * Author : Lauzy
  * Date : 2017/7/11
  * Blog : http://www.jianshu.com/u/e76853f863a9

@@ -54,9 +54,10 @@ public class MusicService extends Service {
     private PlaybackState mPlaybackState;
     private MediaSession mMediaSession;
     private MediaPlayer mMediaPlayer;
-    private int mCurrentPosition;
+    private int mCurrentPosition = -1; //默认-1
     private List<SongEntity> mSongData;
     private TickNotification mTickNotification;
+    private SongEntity mCurrentSong;
 
     @Nullable
     @Override
@@ -133,17 +134,32 @@ public class MusicService extends Service {
     }
 
     private void play() {
-        try {
-            if (mSongData != null && mSongData.size() != 0) {
-                SongEntity entity = mSongData.get(mCurrentPosition);
-                mMediaPlayer.reset();
-                mMediaPlayer.setDataSource(entity.path);
-                mMediaPlayer.prepareAsync();
-                setState(PlaybackState.STATE_CONNECTING);
-                mMediaSession.setMetadata(getMediaData(entity));
-                if (mUpdateListener != null) {
-                    mUpdateListener.currentPlay(entity);
+        if (mSongData != null && mSongData.size() != 0) {
+//                SongEntity entity = mSongData.get(mCurrentPosition);
+            SongEntity entity = getPlaySong();
+            if (getPlaybackState().getState() == PlaybackState.STATE_SKIPPING_TO_NEXT
+                    || getPlaybackState().getState() == PlaybackState.STATE_SKIPPING_TO_PREVIOUS) {
+                play(entity);
+            }else {
+                if (!entity.equals(mCurrentSong)) {
+                    play(entity);
+                } else {
+                    start();
                 }
+            }
+        }
+    }
+
+    private void play(SongEntity entity) {
+        try {
+            mCurrentSong = entity;
+            mMediaPlayer.reset();
+            mMediaPlayer.setDataSource(entity.path);
+            mMediaPlayer.prepareAsync();
+            setState(PlaybackState.STATE_CONNECTING);
+            mMediaSession.setMetadata(getMediaData(entity));
+            if (mUpdateListener != null) {
+                mUpdateListener.currentPlay(entity);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -266,11 +282,7 @@ public class MusicService extends Service {
         @Override
         public void onPlay() {
             super.onPlay();
-            if (getPlaybackState().getState() == STATE_PAUSED) {
-                start();
-            } else {
-                play();
-            }
+            play();
         }
 
         @Override
@@ -326,11 +338,15 @@ public class MusicService extends Service {
         mSongData = songData;
     }
 
-    public SongEntity getCurrentSong() {
-        if (mSongData != null && mSongData.size() != 0) {
+    public SongEntity getPlaySong() {
+        if (mSongData != null && mSongData.size() != 0 && mCurrentPosition != -1) {
             return mSongData.get(mCurrentPosition);
         }
         return null;
+    }
+
+    public SongEntity getCurrentSong() {
+        return mCurrentSong;
     }
 
     public long getCurrentProgress() {
