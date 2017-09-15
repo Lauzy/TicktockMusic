@@ -7,6 +7,7 @@ import com.freedom.lauzy.executor.ThreadExecutor;
 import com.freedom.lauzy.repository.FavoriteRepository;
 import com.freedom.lauzy.repository.LocalSongRepository;
 import com.freedom.lauzy.repository.QueueRepository;
+import com.freedom.lauzy.repository.RecentRepository;
 import com.freedom.lauzy.repository.SongRepository;
 import com.freedom.lauzy.ticktockmusic.injection.module.ApplicationModule;
 import com.freedom.lauzy.ticktockmusic.injection.scope.ContextLife;
@@ -41,4 +42,6 @@ public interface ApplicationComponent {
     QueueRepository queueRepository();
 
     FavoriteRepository favoriteRepository();
+
+    RecentRepository recentRepository();
 }

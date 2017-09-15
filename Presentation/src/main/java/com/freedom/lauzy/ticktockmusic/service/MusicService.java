@@ -25,6 +25,7 @@ import com.lauzy.freedom.librarys.common.LogUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -58,6 +59,7 @@ public class MusicService extends Service {
     private List<SongEntity> mSongData;
     private TickNotification mTickNotification;
     private SongEntity mCurrentSong;
+    private QueueManager mQueueManager;
 
     @Nullable
     @Override
@@ -140,7 +142,7 @@ public class MusicService extends Service {
             if (getPlaybackState().getState() == PlaybackState.STATE_SKIPPING_TO_NEXT
                     || getPlaybackState().getState() == PlaybackState.STATE_SKIPPING_TO_PREVIOUS) {
                 play(entity);
-            }else {
+            } else {
                 if (!entity.equals(mCurrentSong)) {
                     play(entity);
                 } else {
@@ -155,6 +157,8 @@ public class MusicService extends Service {
             mCurrentSong = entity;
             mMediaPlayer.reset();
             mMediaPlayer.setDataSource(entity.path);
+            //添加到播放队列
+            mQueueManager.addRecentPlaySong(entity).subscribe();
             mMediaPlayer.prepareAsync();
             setState(PlaybackState.STATE_CONNECTING);
             mMediaSession.setMetadata(getMediaData(entity));
@@ -345,12 +349,20 @@ public class MusicService extends Service {
         return null;
     }
 
+    public List<SongEntity> getSongData() {
+        return mSongData != null ? mSongData : Collections.emptyList();
+    }
+
     public SongEntity getCurrentSong() {
         return mCurrentSong;
     }
 
     public long getCurrentProgress() {
         return mMediaPlayer != null && mMediaPlayer.isPlaying() ? mMediaPlayer.getCurrentPosition() : 0;
+    }
+
+    public void setQueueManager(QueueManager queueManager) {
+        mQueueManager = queueManager;
     }
 
     public MediaSession getMediaSession() {

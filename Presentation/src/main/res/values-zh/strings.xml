@@ -49,6 +49,7 @@
     <string name="repeat_shuffle_mode">随机播放</string>
 
     <string name="clear_favorite_songs">清空你喜欢的歌曲？</string>
+    <string name="clear_recent_songs">清空最近播放的歌曲？</string>
 
     <string name="empty">空空如也</string>
 </resources>

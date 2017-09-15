@@ -38,7 +38,7 @@ public class MusicManager {
 
     private QueueManager mQueueManager;
 
-    public MusicManager() {
+    private MusicManager() {
         mQueueManager = new QueueManager();
     }
 
@@ -158,7 +158,7 @@ public class MusicManager {
         context.bindService(new Intent(context, MusicService.class), mConnection, Context.BIND_AUTO_CREATE);
     }
 
-    public void unbindService() {
+    private void unbindService() {
         if (null != mConnection) {
             TicktockApplication context = TicktockApplication.getInstance();
             context.unbindService(mConnection);
@@ -173,7 +173,7 @@ public class MusicManager {
         context.startService(intent);
     }
 
-    public void stopService() {
+    private void stopService() {
         TicktockApplication context = TicktockApplication.getInstance();
         context.stopService(new Intent(context, MusicService.class));
     }
@@ -202,7 +202,7 @@ public class MusicManager {
                         .subscribe(songData -> {
                             LogUtil.i(TAG, "--- new data ---");
                             mMusicService.setSongData(songData);
-                            open(position, playQueue.get(position));
+                            open(position, songData.get(position));
                         });
             }
         });
@@ -215,14 +215,6 @@ public class MusicManager {
      */
     private void open(int position, SongEntity entity) {
         if (mMusicService != null) {
-//            if (position == 0) {
-//                if (!entity.equals(mMusicService.getCurrentSong())) {
-//                    mMusicService.setCurrentPosition(position);
-//                    play();
-//                } else {
-//                    resume();
-//                }
-//            }
             if (position == 0
                     || position != mMusicService.getCurrentPosition()
                     || !entity.equals(mMusicService.getCurrentSong())
@@ -230,7 +222,7 @@ public class MusicManager {
                 if (!entity.equals(mMusicService.getCurrentSong())) {
                     mMusicService.setCurrentPosition(position);
                     play();
-                }else {
+                } else {
                     resume();
                 }
             } else if (getMusicState() == PlaybackState.STATE_PAUSED) {
@@ -263,7 +255,11 @@ public class MusicManager {
         if (getCurPosition() > position) {
             mMusicService.setCurrentPosition(position);
         } else if (getCurPosition() == position) {
-            mMusicService.setCurrentPosition(position);
+            if (position == mMusicService.getSongData().size()) {
+                mMusicService.setCurrentPosition(position - 1);
+            } else {
+                mMusicService.setCurrentPosition(position);
+            }
             play();
         }
     }
@@ -290,6 +286,7 @@ public class MusicManager {
      * 播放音乐
      */
     private void play() {
+        mMusicService.setQueueManager(mQueueManager);
         mMediaController.getTransportControls().play();
         mProgressHandler.post(mProgressRunnable);
     }
@@ -423,10 +420,6 @@ public class MusicManager {
      */
     public String[] getCurIds() {
         return mCurIds;
-    }
-
-    public void setCurIds(String[] curIds) {
-        mCurIds = curIds;
     }
 
     public int getCurPosition() {

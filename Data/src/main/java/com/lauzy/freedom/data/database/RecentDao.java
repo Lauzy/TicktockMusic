@@ -21,7 +21,7 @@ public class RecentDao implements BaseDao {
 
     private static RecentDao sInstance;
     private TickDaoHelper mTickDaoHelper;
-    private static final int RECENT_LIMIT = 10;
+    private static final int RECENT_LIMIT = 50;//最多50首
 
     private RecentDao(Context context) {
         mTickDaoHelper = new TickDaoHelper(context);
@@ -73,32 +73,24 @@ public class RecentDao implements BaseDao {
             //判断是否存在
             Cursor exitCursor = null;
             try {
-                exitCursor = db.query(TickDaoHelper.RECENT_TABLE, null, null, null, null, null,
-                        RecentParam.PLAY_TIME + " DESC", String.valueOf(1));
+                exitCursor = db.query(TickDaoHelper.RECENT_TABLE, new String[]{RecentParam.SONG_ID},
+                        RecentParam.SONG_ID + " = ? ", new String[]{String.valueOf(songBean.id)},
+                        null, null, null, null);
                 if (exitCursor != null && exitCursor.getCount() > 0) {
-                    if (songBean.id == exitCursor.getLong(exitCursor.getColumnIndex(RecentParam.SONG_ID))) {
-                        return;
-                    }
+                    ContentValues values = putContentValue(songBean);
+                    db.update(TickDaoHelper.RECENT_TABLE, values, RecentParam.SONG_ID + " = ? ",
+                            new String[]{String.valueOf(songBean.id)});
+                }else {
+                    //插入数据
+                    ContentValues values = putContentValue(songBean);
+                    db.replace(TickDaoHelper.RECENT_TABLE, null, values);
                 }
             } finally {
                 if (exitCursor != null) {
                     exitCursor.close();
                 }
             }
-            //插入数据
-            ContentValues values = new ContentValues();
-            values.put(RecentParam.SOURCE, songBean.type);
-            values.put(RecentParam.SONG_ID, songBean.id);
-            values.put(RecentParam.SONG_NAME, songBean.title);
-            values.put(RecentParam.ALBUM_ID, songBean.albumId);
-            values.put(RecentParam.ALBUM_NAME, songBean.albumName);
-            values.put(RecentParam.SINGER_NAME, songBean.artistName);
-            values.put(RecentParam.DURATION, songBean.duration);
-            values.put(RecentParam.LENGTH, songBean.songLength);
-            values.put(RecentParam.PLAY_PATH, songBean.path);
-            values.put(RecentParam.ALBUM_COVER, songBean.albumCover);
-            values.put(RecentParam.PLAY_TIME, System.currentTimeMillis());
-            db.insert(TickDaoHelper.RECENT_TABLE, null, values);
+
             //限制条数
             Cursor limitCursor = null;
             try {
@@ -120,6 +112,22 @@ public class RecentDao implements BaseDao {
             db.endTransaction();
             db.close();
         }
+    }
+
+    private ContentValues putContentValue(RecentSongBean songBean) {
+        ContentValues values = new ContentValues();
+        values.put(RecentParam.SOURCE, songBean.type);
+        values.put(RecentParam.SONG_ID, songBean.id);
+        values.put(RecentParam.SONG_NAME, songBean.title);
+        values.put(RecentParam.ALBUM_ID, songBean.albumId);
+        values.put(RecentParam.ALBUM_NAME, songBean.albumName);
+        values.put(RecentParam.SINGER_NAME, songBean.artistName);
+        values.put(RecentParam.DURATION, songBean.duration);
+        values.put(RecentParam.LENGTH, songBean.songLength);
+        values.put(RecentParam.PLAY_PATH, songBean.path);
+        values.put(RecentParam.ALBUM_COVER, songBean.albumCover);
+        values.put(RecentParam.PLAY_TIME, System.currentTimeMillis());
+        return values;
     }
 
     public List<RecentSongBean> getRecentSongBean() {
@@ -155,5 +163,26 @@ public class RecentDao implements BaseDao {
             db.close();
         }
         return null;
+    }
+
+    public long deleteRecentSong(long songId) {
+        SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
+        db.beginTransaction();
+        int delete = db.delete(TickDaoHelper.RECENT_TABLE, RecentParam.SONG_ID + " = ? ",
+                new String[]{String.valueOf(songId)});
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        db.close();
+        return delete;
+    }
+
+    public int clearRecentSongs() {
+        SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
+        db.beginTransaction();
+        int delete = db.delete(TickDaoHelper.RECENT_TABLE, null, null);
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        db.close();
+        return delete;
     }
 }

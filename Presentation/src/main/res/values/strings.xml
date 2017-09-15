@@ -12,7 +12,7 @@
     <string name="drawer_music">Local Music</string>
     <string name="drawer_net_song">Network Song</string>
     <string name="drawer_favorite">Favorite</string>
-    <string name="drawer_recent">Recently</string>
+    <string name="drawer_recent">Recent</string>
     <string name="drawer_setting">Setting</string>
     <string name="drawer_about">About</string>
     <string name="drawer_exit">Exit</string>
@@ -50,6 +50,7 @@
     <string name="repeat_shuffle_mode">Shuffle</string>
 
     <string name="clear_favorite_songs">Clear your favorite songs?</string>
+    <string name="clear_recent_songs">Clear your recently played songs?</string>
 
     <string name="empty">Empty</string>
 </resources>
