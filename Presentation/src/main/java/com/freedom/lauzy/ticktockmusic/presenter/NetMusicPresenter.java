@@ -46,17 +46,21 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View>
         mType = type;
     }
 
+    /**
+     * 加载缓存数据
+     */
     @Override
     public void loadCacheMusicList() {
         Observable<List<NetSongBean>> observable = mSongListUseCase.buildCacheObservable(mType);
         observable.subscribe(songListBeen -> getView().loadCacheData(songListBeen));
     }
 
+    /**
+     * 加载网络数据
+     */
     @Override
     public void loadNetMusicList() {
         GetSongListUseCase.Params params = GetSongListUseCase.Params.forSongList(METHOD, mType, 0, SIZE);
-//        Observable<List<NetSongBean>> observable = mSongListUseCase.buildCacheObservable(mType);
-//        observable.subscribe(songListBeen -> getView().loadCacheData(songListBeen));
         mSongListUseCase.buildCacheObservable(mType).flatMap(new Function<List<NetSongBean>,
                 ObservableSource<List<NetSongBean>>>() {
             @Override
@@ -67,6 +71,9 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View>
                 .subscribeWith(new NetSongObserver(DConstants.Status.INIT_STATUS));
     }
 
+    /**
+     * 加载更多网络数据
+     */
     @Override
     public void loadMoreNetMusicList() {
         GetSongListUseCase.Params params = GetSongListUseCase.Params.forSongList(METHOD, mType, mPage, SIZE);

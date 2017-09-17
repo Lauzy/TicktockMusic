@@ -1,6 +1,7 @@
 package com.lauzy.freedom.data.net.api;
 
 import com.lauzy.freedom.data.entity.MusicEntity;
+import com.lauzy.freedom.data.entity.OnlineSongEntity;
 import com.lauzy.freedom.data.net.constants.NetConstants;
 
 import io.reactivex.Observable;
@@ -20,4 +21,8 @@ public interface SongService {
                                          @Query(NetConstants.Param.TYPE) int type,
                                          @Query(NetConstants.Param.OFFSET) int offset,
                                          @Query(NetConstants.Param.SIZE) int size);
+
+    @GET(NetConstants.URL_PARAM)
+    Observable<OnlineSongEntity> getOnlineSongData(@Query(NetConstants.Param.METHOD) String method,
+                                                   @Query(NetConstants.Param.SONG_ID) long songId);
 }

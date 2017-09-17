@@ -18,8 +18,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
 import com.freedom.lauzy.ticktockmusic.R;
+import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
+import com.lauzy.freedom.data.database.BaseDao;
 import com.lauzy.freedom.data.local.LocalUtil;
 import com.lauzy.freedom.librarys.common.LogUtil;
 
@@ -154,17 +156,33 @@ public class MusicService extends Service {
 
     private void play(SongEntity entity) {
         try {
-            mCurrentSong = entity;
-            mMediaPlayer.reset();
-            mMediaPlayer.setDataSource(entity.path);
+            if (entity.type.equals(BaseDao.QueueParam.LOCAL)) {
+                mCurrentSong = entity;
+                mMediaPlayer.reset();
+                mMediaPlayer.setDataSource(entity.path);
+                mMediaPlayer.prepareAsync();
+                setState(PlaybackState.STATE_CONNECTING);
+                mMediaSession.setMetadata(getMediaData(entity));
+                if (mUpdateListener != null) {
+                    mUpdateListener.currentPlay(entity);
+                }
+            } else if (entity.type.equals(BaseDao.QueueParam.NET)) {
+                mQueueManager.netSongEntityObservable(entity.id)
+                        .compose(RxHelper.ioMain())
+                        .subscribe(entity1 -> {
+                            mCurrentSong = entity1;
+                            mMediaPlayer.reset();
+                            mMediaPlayer.setDataSource(entity1.path);
+                            mMediaPlayer.prepareAsync();
+                            setState(PlaybackState.STATE_CONNECTING);
+                            mMediaSession.setMetadata(getMediaData(entity1));
+                            if (mUpdateListener != null) {
+                                mUpdateListener.currentPlay(entity1);
+                            }
+                        });
+            }
             //添加到播放队列
             mQueueManager.addRecentPlaySong(entity).subscribe();
-            mMediaPlayer.prepareAsync();
-            setState(PlaybackState.STATE_CONNECTING);
-            mMediaSession.setMetadata(getMediaData(entity));
-            if (mUpdateListener != null) {
-                mUpdateListener.currentPlay(entity);
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -267,17 +285,20 @@ public class MusicService extends Service {
         builder.putString(MediaMetadata.METADATA_KEY_TITLE, entity.title)
                 .putString(MediaMetadata.METADATA_KEY_ARTIST, entity.artistName)
                 .putString(MediaMetadata.METADATA_KEY_ALBUM, entity.albumName)
-                .putLong(MediaMetadata.METADATA_KEY_DURATION, entity.duration)
-                .putString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI, String.valueOf(entity.albumCover));
-        String coverUri = LocalUtil.getCoverUri(this, entity.albumId);
-        Bitmap bitmap;
-        if (coverUri != null && new File(coverUri).exists()) {
-            bitmap = BitmapFactory.decodeFile(coverUri);
-        } else {
-            Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_album_default);
-            bitmap = ((BitmapDrawable) drawable).getBitmap();
+                .putLong(MediaMetadata.METADATA_KEY_DURATION, entity.duration);
+        if (entity.type.equals(BaseDao.QueueParam.LOCAL)) {
+            Bitmap bitmap;
+            String coverUri = LocalUtil.getCoverUri(this, entity.albumId);
+            if (coverUri != null && new File(coverUri).exists()) {
+                bitmap = BitmapFactory.decodeFile(coverUri);
+            } else {
+                Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_album_default);
+                bitmap = ((BitmapDrawable) drawable).getBitmap();
+            }
+            builder.putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, bitmap);
+        }else if (entity.type.equals(BaseDao.QueueParam.NET)){
+            builder.putString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI, String.valueOf(entity.albumCover));
         }
-        builder.putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, bitmap);
         return builder.build();
     }
 

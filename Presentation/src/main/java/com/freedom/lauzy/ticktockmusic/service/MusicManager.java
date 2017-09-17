@@ -88,7 +88,6 @@ public class MusicManager {
                 case PlaybackState.STATE_NONE:
                     break;
                 case PlaybackState.STATE_PLAYING:
-                    LogUtil.i(TAG, "STATE_PLAYING");
                     if (mMusicManageListener != null) {
                         mMusicManageListener.onPlayerResume();
                     }
@@ -183,7 +182,7 @@ public class MusicManager {
     }
 
     /**
-     * 播放当前音乐，并将当前列表添加至播放队列
+     * 播放当前本地音乐，并将当前列表添加至播放队列
      *
      * @param songEntities 列表
      * @param ids          id

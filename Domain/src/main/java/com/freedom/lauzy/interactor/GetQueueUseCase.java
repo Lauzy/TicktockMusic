@@ -43,4 +43,9 @@ public class GetQueueUseCase extends UseCase<List<QueueSongBean>, String[]> {
                                                                 String[] ids) {
         return mQueueRepository.addLocalQueueData(ids, localSongBeen);
     }
+
+//    public Observable<List<QueueSongBean>> netQueueObservable(List<NetSongBean> netSongBeen,
+//                                                              String[] ids) {
+//        return mQueueRepository.addNetQueueData(ids, netSongBeen);
+//    }
 }

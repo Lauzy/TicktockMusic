@@ -33,6 +33,7 @@ public class SongMapper {
         songEntity.size = queueSongBean.size;
         songEntity.title = queueSongBean.title;
         songEntity.songLength = queueSongBean.songLength;
+        songEntity.type = queueSongBean.type;
         return songEntity;
     }
 
@@ -65,6 +66,7 @@ public class SongMapper {
         songEntity.size = song.size;
         songEntity.title = song.title;
         songEntity.songLength = song.songLength;
+        songEntity.type = song.type;
         return songEntity;
     }
 

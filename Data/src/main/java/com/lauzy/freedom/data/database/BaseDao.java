@@ -40,8 +40,8 @@ public interface BaseDao {
         static final String DURATION = "duration";
         static final String LENGTH = "length";
 
-        static final String NET = "NET";
-        static final String LOCAL = "LOCAL";
+        public static final String NET = "NET";
+        public static final String LOCAL = "LOCAL";
     }
 
     class FavoriteParam {

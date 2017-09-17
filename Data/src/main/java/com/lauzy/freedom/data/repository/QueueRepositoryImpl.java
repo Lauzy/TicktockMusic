@@ -58,6 +58,20 @@ public class QueueRepositoryImpl implements QueueRepository {
         });
     }
 
+//    @Override
+//    public Observable<List<QueueSongBean>> addNetQueueData(final String[] songIds,
+//                                                           final List<NetSongBean> netSongBeen) {
+//        return Observable.create(new ObservableOnSubscribe<List<QueueSongBean>>() {
+//            @Override
+//            public void subscribe(@NonNull ObservableEmitter<List<QueueSongBean>> e) throws Exception {
+//                PlayQueueDao.getInstance(mContext).addNetQueue(netSongBeen);
+//                List<QueueSongBean> songBeen = PlayQueueDao.getInstance(mContext).queryQueue(songIds);
+//                e.onNext(songBeen != null ? songBeen : Collections.<QueueSongBean>emptyList());
+//                e.onComplete();
+//            }
+//        });
+//    }
+
     @Override
     public Observable<Integer> deleteQueueData(final String[] songIds) {
         return Observable.create(new ObservableOnSubscribe<Integer>() {

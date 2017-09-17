@@ -28,6 +28,8 @@ public class NetConstants {
         public static final String SIZE = "size";
         public static final String OFFSET = "offset";
 
+        public static final String SONG_ID = "songid";
+
         public static final String SEARCH_QUERY = "query";
     }
 

@@ -19,5 +19,7 @@ public interface QueueRepository {
 
     Observable<List<QueueSongBean>> addLocalQueueData(String[] songIds, List<LocalSongBean> queueSongBeen);
 
+//    Observable<List<QueueSongBean>> addNetQueueData(String[] songIds, List<NetSongBean> netSongBeen);
+
     Observable<Integer> deleteQueueData(String[] songIds);
 }

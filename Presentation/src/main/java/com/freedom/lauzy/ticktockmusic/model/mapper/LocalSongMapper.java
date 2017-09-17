@@ -2,6 +2,7 @@ package com.freedom.lauzy.ticktockmusic.model.mapper;
 
 import com.freedom.lauzy.model.LocalSongBean;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
+import com.lauzy.freedom.data.database.BaseDao;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,6 +39,7 @@ public class LocalSongMapper {
         songEntity.size = localSongBean.size;
         songEntity.title = localSongBean.title;
         songEntity.songLength = localSongBean.songLength;
+        songEntity.type = localSongBean.type;
         return songEntity;
     }
 
@@ -47,6 +49,44 @@ public class LocalSongMapper {
         if (localSongBeen != null && !localSongBeen.isEmpty()) {
             localSongEntities = new ArrayList<>();
             for (LocalSongBean localSongBean : localSongBeen) {
+                localSongEntities.add(transform(localSongBean));
+            }
+        } else {
+            localSongEntities = Collections.emptyList();
+        }
+        return localSongEntities;
+    }
+
+    /**
+     * 本地默认修改type为LOCAL
+     * @param localSongBean SongEntity
+     * @return SongEntity
+     */
+    public static SongEntity transform(SongEntity localSongBean) {
+        if (localSongBean == null) {
+            throw new IllegalArgumentException("Cannot transform a null value");
+        }
+        SongEntity songEntity = new SongEntity();
+        songEntity.id = localSongBean.id;
+        songEntity.albumCover = localSongBean.albumCover;
+        songEntity.albumId = localSongBean.albumId;
+        songEntity.albumName = localSongBean.albumName;
+        songEntity.artistId = localSongBean.artistId;
+        songEntity.artistName = localSongBean.artistName;
+        songEntity.duration = localSongBean.duration;
+        songEntity.path = localSongBean.path;
+        songEntity.size = localSongBean.size;
+        songEntity.title = localSongBean.title;
+        songEntity.songLength = localSongBean.songLength;
+        songEntity.type = BaseDao.QueueParam.LOCAL;
+        return songEntity;
+    }
+
+    public static List<SongEntity> transformLocal(List<SongEntity> localSongBeen) {
+        List<SongEntity> localSongEntities;
+        if (localSongBeen != null && !localSongBeen.isEmpty()) {
+            localSongEntities = new ArrayList<>();
+            for (SongEntity localSongBean : localSongBeen) {
                 localSongEntities.add(transform(localSongBean));
             }
         } else {

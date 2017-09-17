@@ -28,6 +28,7 @@ public class SongEntity extends QueueSongBean implements Parcelable {
         artistId = in.readLong();
         artistName = in.readString();
         size = in.readLong();
+        type = in.readString();
     }
 
     public static final Creator<SongEntity> CREATOR = new Creator<SongEntity>() {
@@ -59,6 +60,7 @@ public class SongEntity extends QueueSongBean implements Parcelable {
         dest.writeLong(artistId);
         dest.writeString(artistName);
         dest.writeLong(size);
+        dest.writeString(type);
     }
 
     @Override
@@ -74,6 +76,7 @@ public class SongEntity extends QueueSongBean implements Parcelable {
                 && this.albumName.equals(obj1.albumName)
                 && this.albumId == obj1.albumId
                 && this.duration == obj1.duration
+                && this.type.equals(obj1.type)
                 || super.equals(obj);
     }
 }

@@ -11,6 +11,7 @@ import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -46,6 +47,7 @@ import javax.inject.Inject;
 public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment
         implements View.OnClickListener, PlayQueueContract.View {
 
+    private static final String TAG = "PlayQueueBottomSheet";
     @Inject
     PlayQueuePresenter mQueuePresenter;
     private Activity mActivity;
@@ -165,6 +167,7 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment
 
     @Override
     public void loadQueueData(List<SongEntity> songEntities) {
+        Log.d(TAG, "size is " + songEntities.size());
         mSongEntities.clear();
         mSongEntities.addAll(songEntities);
         mAdapter.notifyDataSetChanged();

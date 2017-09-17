@@ -80,7 +80,7 @@ public class RecentDao implements BaseDao {
                     ContentValues values = putContentValue(songBean);
                     db.update(TickDaoHelper.RECENT_TABLE, values, RecentParam.SONG_ID + " = ? ",
                             new String[]{String.valueOf(songBean.id)});
-                }else {
+                } else {
                     //插入数据
                     ContentValues values = putContentValue(songBean);
                     db.replace(TickDaoHelper.RECENT_TABLE, null, values);

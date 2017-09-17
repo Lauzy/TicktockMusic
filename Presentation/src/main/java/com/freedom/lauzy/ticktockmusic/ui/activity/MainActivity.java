@@ -301,8 +301,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
 
     @Override
     public void onBufferingUpdate(MediaPlayer mediaPlayer, int percent) {
-        mPbCurSong.setSecondaryProgress(percent);
-        LogUtil.i(LYTAG, "mPreferences");
+        //加载缓冲进度（100%后开始播放）
     }
 
     @Override

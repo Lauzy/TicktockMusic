@@ -19,9 +19,6 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
-
 /**
  * Desc : 播放Presenter
  * Author : Lauzy

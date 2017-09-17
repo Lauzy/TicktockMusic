@@ -62,7 +62,6 @@ public class TickNotification {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(musicService);
             builder.setContentTitle(description.getTitle())
                     .setSmallIcon(R.drawable.ic_notification)
-                    .setLargeIcon(description.getIconBitmap())
                     .setShowWhen(false)
                     .setOngoing(isPlaying)
                     .setContentText(description.getSubtitle())
@@ -78,7 +77,12 @@ public class TickNotification {
                 int color = palette.getMutedColor(ThemeHelper.getThemeColorResId(musicService.getApplicationContext()));
                 builder.setColor(color);
             }*/
-            return builder.build();
+            if (description.getIconUri() != null) {
+                return builder.build();
+            } else {
+                builder.setLargeIcon(description.getIconBitmap());
+                return builder.build();
+            }
         }
         return null;
     }

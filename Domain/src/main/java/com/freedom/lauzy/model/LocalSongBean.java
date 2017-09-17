@@ -19,4 +19,5 @@ public class LocalSongBean {
     public long artistId; //歌手ID
     public String artistName; //歌手名
     public long size;//大小
+    public String type;//类型
 }

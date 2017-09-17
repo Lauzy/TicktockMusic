@@ -4,9 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.freedom.lauzy.model.LocalSongBean;
-import com.freedom.lauzy.model.NetSongBean;
 import com.freedom.lauzy.model.QueueSongBean;
 
 import java.util.ArrayList;
@@ -21,6 +21,7 @@ import java.util.List;
  */
 public class PlayQueueDao implements BaseDao {
 
+    private static final String TAG = "PlayQueueDao";
     private static PlayQueueDao sInstance;
     private TickDaoHelper mTickDaoHelper;
 
@@ -62,6 +63,7 @@ public class PlayQueueDao implements BaseDao {
     }
 
     public List<QueueSongBean> queryQueue(String[] songIds) {
+        Log.d(TAG, "The length of songIds is : " + songIds.length);
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         Cursor cursor = null;
         try {
@@ -74,7 +76,7 @@ public class PlayQueueDao implements BaseDao {
             }
             cursor = db.query(TickDaoHelper.PLAY_QUEUE, null,
                     QueueParam.SONG_ID + " in (" + sb.toString() + ")", songIds, null, null, null);
-            if (cursor!= null && cursor.getCount() > 0) {
+            if (cursor != null && cursor.getCount() > 0) {
                 List<QueueSongBean> listBeen = new ArrayList<>(cursor.getCount());
                 while (cursor.moveToNext()) {
                     QueueSongBean listBean = new QueueSongBean();
@@ -109,7 +111,7 @@ public class PlayQueueDao implements BaseDao {
         db.beginTransaction();
         try {
             for (LocalSongBean localSongBean : songBeen) {
-                ContentValues values = addItem(QueueParam.LOCAL, String.valueOf(localSongBean.id),
+                ContentValues values = addItem(localSongBean.type, String.valueOf(localSongBean.id),
                         localSongBean.title, String.valueOf(localSongBean.albumId),
                         localSongBean.albumName, localSongBean.artistName,
                         String.valueOf(localSongBean.albumCover), localSongBean.duration,
@@ -124,23 +126,23 @@ public class PlayQueueDao implements BaseDao {
             db.endTransaction();
         }
     }
-
-    public void addNetQueue(List<NetSongBean> songListBeen) {
-        SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
-        db.beginTransaction();
-        try {
-            for (NetSongBean netSongBean : songListBeen) {
-                ContentValues values = addItem(QueueParam.NET, netSongBean.songId, netSongBean.title,
-                        netSongBean.albumId, netSongBean.albumTitle, netSongBean.artistName,
-                        netSongBean.imgUrl, netSongBean.duration, netSongBean.songLength);
-                db.insertWithOnConflict(TickDaoHelper.PLAY_QUEUE, null, values,
-                        SQLiteDatabase.CONFLICT_IGNORE);
-            }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-    }
+//
+//    public void addNetQueue(List<NetSongBean> songListBeen) {
+//        SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
+//        db.beginTransaction();
+//        try {
+//            for (NetSongBean netSongBean : songListBeen) {
+//                ContentValues values = addItem(QueueParam.NET, netSongBean.songId, netSongBean.title,
+//                        netSongBean.albumId, netSongBean.albumTitle, netSongBean.artistName,
+//                        netSongBean.imgUrl, netSongBean.duration, netSongBean.songLength);
+//                db.insertWithOnConflict(TickDaoHelper.PLAY_QUEUE, null, values,
+//                        SQLiteDatabase.CONFLICT_IGNORE);
+//            }
+//            db.setTransactionSuccessful();
+//        } finally {
+//            db.endTransaction();
+//        }
+//    }
 
     public int deleteQueueData(String[] ids) {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();

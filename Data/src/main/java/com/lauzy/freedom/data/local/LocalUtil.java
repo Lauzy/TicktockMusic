@@ -56,4 +56,23 @@ public class LocalUtil {
         }
         return "00:00";
     }
+
+    public static String formatSecondTime(long time) {
+        if (time > 0) {
+            String min = time / 60 + "";
+            String sec = time % 60 + "";
+            if (min.length() < 2) {
+                min = "0" + time / 60 + "";
+            } else {
+                min = time / 60 + "";
+            }
+            if (sec.length() == 2) {
+                sec = (time % 60) + "";
+            } else if (sec.length() == 1) {
+                sec = "0" + (time % 60) + "";
+            }
+            return min + ":" + sec.trim().substring(0, 2);
+        }
+        return "00:00";
+    }
 }

@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
+import com.freedom.lauzy.ticktockmusic.model.mapper.LocalSongMapper;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
@@ -39,7 +40,7 @@ public class LocalSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
                         .into(helper.getView(R.id.img_song_pic))
                         .build());
         helper.getView(R.id.layout_song_item).setOnClickListener(v ->
-                MusicManager.getInstance().playLocalQueue(mData,
+                MusicManager.getInstance().playLocalQueue(LocalSongMapper.transformLocal(mData),
                         MusicUtil.getSongIds(mData), helper.getAdapterPosition()));
     }
 }

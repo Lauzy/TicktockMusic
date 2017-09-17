@@ -2,6 +2,7 @@ package com.freedom.lauzy.ticktockmusic.ui.fragment;
 
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
 import com.freedom.lauzy.ticktockmusic.contract.RecentContract;
+import com.freedom.lauzy.ticktockmusic.event.ChangeRecentEvent;
 import com.freedom.lauzy.ticktockmusic.event.ClearRecentEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
@@ -39,6 +41,7 @@ public class RecentFragment extends BaseFragment<RecentPresenter> implements Rec
     RecyclerView mRvRecent;
     private List<SongEntity> mSongEntities = new ArrayList<>();
     private RecentAdapter mAdapter;
+    private final int DELAY_RELOAD = 100;
 
     public static RecentFragment newInstance() {
         Bundle args = new Bundle();
@@ -53,6 +56,10 @@ public class RecentFragment extends BaseFragment<RecentPresenter> implements Rec
         Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(ClearRecentEvent.class,
                 clearRecentEvent -> clearRecentData());
         RxBus.INSTANCE.addDisposable(this, disposable);
+        Disposable recentDisposable = RxBus.INSTANCE.doDefaultSubscribe(ChangeRecentEvent.class,
+                changeRecentEvent -> new Handler().postDelayed(() ->
+                        mPresenter.loadRecentSongs(), DELAY_RELOAD));
+        RxBus.INSTANCE.addDisposable(this, recentDisposable);
     }
 
     private void clearRecentData() {

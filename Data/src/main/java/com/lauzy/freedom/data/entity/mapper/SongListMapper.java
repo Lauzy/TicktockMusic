@@ -1,6 +1,7 @@
 package com.lauzy.freedom.data.entity.mapper;
 
 import com.freedom.lauzy.model.NetSongBean;
+import com.lauzy.freedom.data.database.BaseDao;
 import com.lauzy.freedom.data.entity.SongListEntity;
 import com.lauzy.freedom.data.local.LocalUtil;
 
@@ -12,7 +13,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Desc : SongListMapper 转换实体类
+ * Desc : SongListMapper 将Json默认生成格式的SongListEntity转化为直接使用的NetSongBean
  * Author : Lauzy
  * Date : 2017/7/11
  * Blog : http://www.jianshu.com/u/e76853f863a9
@@ -53,6 +54,7 @@ public class SongListMapper {
             netSongBean.rank = entity.rank;
             netSongBean.duration = entity.file_duration;
             netSongBean.songLength = LocalUtil.formatTime(entity.file_duration);
+            netSongBean.type = BaseDao.QueueParam.NET;
         }
         return netSongBean;
     }
