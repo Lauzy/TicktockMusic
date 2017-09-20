@@ -18,7 +18,7 @@ public class NetSongMapper {
         try {
             if (songEntity != null && songEntity.songinfo != null && songEntity.bitrate != null) {
                 netSongBean = new NetSongEntity();
-                netSongBean.imgUrl = songEntity.songinfo.pic_premium;
+                netSongBean.imgUrl = songEntity.songinfo.pic_big;
                 netSongBean.lrcLink = songEntity.songinfo.lrclink;
                 netSongBean.songId = songEntity.songinfo.song_id;
                 netSongBean.title = songEntity.songinfo.title;

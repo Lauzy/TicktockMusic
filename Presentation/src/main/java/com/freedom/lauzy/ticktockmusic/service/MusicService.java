@@ -17,13 +17,20 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.freedom.lauzy.ticktockmusic.R;
+import com.freedom.lauzy.ticktockmusic.base.DefaultDisposableObserver;
+import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.lauzy.freedom.data.database.BaseDao;
 import com.lauzy.freedom.data.local.LocalUtil;
 import com.lauzy.freedom.librarys.common.LogUtil;
+import com.lauzy.freedom.librarys.common.ToastUtils;
+import com.lauzy.freedom.librarys.imageload.ImageConfig;
+import com.lauzy.freedom.librarys.imageload.ImageLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -169,15 +176,29 @@ public class MusicService extends Service {
             } else if (entity.type.equals(BaseDao.QueueParam.NET)) {
                 mQueueManager.netSongEntityObservable(entity.id)
                         .compose(RxHelper.ioMain())
-                        .subscribe(entity1 -> {
-                            mCurrentSong = entity1;
-                            mMediaPlayer.reset();
-                            mMediaPlayer.setDataSource(entity1.path);
-                            mMediaPlayer.prepareAsync();
-                            setState(PlaybackState.STATE_CONNECTING);
-                            mMediaSession.setMetadata(getMediaData(entity1));
-                            if (mUpdateListener != null) {
-                                mUpdateListener.currentPlay(entity1);
+                        .subscribeWith(new DefaultDisposableObserver<SongEntity>() {
+                            @Override
+                            public void onNext(@io.reactivex.annotations.NonNull SongEntity entity) {
+                                super.onNext(entity);
+                                try {
+                                    mCurrentSong = entity;
+                                    mMediaPlayer.reset();
+                                    mMediaPlayer.setDataSource(entity.path);
+                                    mMediaPlayer.prepareAsync();
+                                    setState(PlaybackState.STATE_CONNECTING);
+                                    mMediaSession.setMetadata(getMediaData(entity));
+                                    if (mUpdateListener != null) {
+                                        mUpdateListener.currentPlay(entity);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                                super.onError(e);
+                                ToastUtils.showSingle(MusicService.this, "No NetWork");
                             }
                         });
             }
@@ -296,10 +317,37 @@ public class MusicService extends Service {
                 bitmap = ((BitmapDrawable) drawable).getBitmap();
             }
             builder.putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, bitmap);
-        }else if (entity.type.equals(BaseDao.QueueParam.NET)){
-            builder.putString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI, String.valueOf(entity.albumCover));
+        } else if (entity.type.equals(BaseDao.QueueParam.NET)) {
+            ImageLoader.INSTANCE
+                    .display(this, new ImageConfig.Builder()
+                            .asBitmap(true)
+                            .isRound(false)
+                            .url(entity.albumCover)
+                            .intoTarget(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                                    LogUtil.e(TAG, "url is " + entity.albumCover + "   ---size is " + resource.getByteCount());
+                                    RxBus.INSTANCE.postSticky(new NotifyEvent(resource));
+                                }
+                            }).build());
         }
         return builder.build();
+    }
+
+    class NotifyEvent {
+        public Bitmap mBitmap;
+
+        public NotifyEvent(Bitmap bitmap) {
+            mBitmap = bitmap;
+        }
+
+        public Bitmap getBitmap() {
+            return mBitmap;
+        }
+
+        public void setBitmap(Bitmap bitmap) {
+            mBitmap = bitmap;
+        }
     }
 
     private MediaSession.Callback mSessionCallback = new MediaSession.Callback() {

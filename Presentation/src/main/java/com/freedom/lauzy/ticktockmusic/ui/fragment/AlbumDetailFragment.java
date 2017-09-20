@@ -21,6 +21,7 @@ import com.freedom.lauzy.ticktockmusic.contract.LocalMusicContract;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
+import com.freedom.lauzy.ticktockmusic.model.mapper.LocalSongMapper;
 import com.freedom.lauzy.ticktockmusic.presenter.LocalMusicPresenter;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
@@ -146,7 +147,7 @@ public class AlbumDetailFragment extends BaseFragment<LocalMusicPresenter>
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab_play:
-                MusicManager.getInstance().playLocalQueue(mLocalSongBeen,
+                MusicManager.getInstance().playLocalQueue(LocalSongMapper.transformLocal(mLocalSongBeen),
                         MusicUtil.getSongIds(mLocalSongBeen));
                 break;
         }

@@ -1,7 +1,6 @@
 package com.lauzy.freedom.librarys.imageload;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.Target;
@@ -14,8 +13,7 @@ import com.bumptech.glide.request.target.Target;
  * Email : freedompaladin@gmail.com
  */
 public class ImageConfig {
-   /* private Param.UrlType urlType = Param.UrlType.URL;
-    private Uri uri;*/
+
     private Object url;
     private ImageView imageView;
     private int defaultRes;
@@ -25,11 +23,16 @@ public class ImageConfig {
     private Target<Bitmap> target;
     private boolean isAsBitmap;
     private int duration;//Glide的crossFade时长
+    private int cacheStrategy;
+
+    public static final int CACHE_NONE = 1;
+    public static final int CACHE_RESULT = 2;
+    public static final int CACHE_ALL = 3;
+    public static final int CACHE_SOURCE = 4;
+    public static final int CACHE_AUTO = 5;
 
     public ImageConfig(Builder builder) {
         this.url = builder.url;
-        /*this.uri = builder.uri;
-        this.urlType = builder.urlType;*/
         this.imageView = builder.imageView;
         this.defaultRes = builder.defaultRes;
         this.errorRes = builder.errorRes;
@@ -38,15 +41,12 @@ public class ImageConfig {
         this.target = builder.target;
         this.isAsBitmap = builder.isAsBitmap;
         this.duration = builder.duration;
+        this.cacheStrategy = builder.cacheStrategy;
     }
 
-   /* public Param.UrlType getUrlType() {
-        return urlType;
+    public int getCacheStrategy() {
+        return cacheStrategy;
     }
-
-    public Uri getUri() {
-        return uri;
-    }*/
 
     public int getDuration() {
         return duration;
@@ -85,8 +85,6 @@ public class ImageConfig {
     }
 
     public static class Builder {
-        /*private Param.UrlType urlType = Param.UrlType.URL;
-        private Uri uri;*/
         private Object url;
         private ImageView imageView;
         private int defaultRes;
@@ -96,11 +94,12 @@ public class ImageConfig {
         private boolean isAsBitmap;
         private Target<Bitmap> target;
         private int duration;
-/*
-        public Builder urlType(Param.UrlType urlType) {
-            this.urlType = urlType;
+        private int cacheStrategy;
+
+        public Builder cacheStrategy(int cacheStrategy) {
+            this.cacheStrategy = cacheStrategy;
             return this;
-        }*/
+        }
 
         public Builder crossFade(int duration) {
             this.duration = duration;
@@ -126,11 +125,6 @@ public class ImageConfig {
             this.url = url;
             return this;
         }
-
-       /* public Builder url(Uri uri) {
-            this.uri = uri;
-            return this;
-        }*/
 
         public Builder into(ImageView imageView) {
             this.imageView = imageView;

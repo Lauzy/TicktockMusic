@@ -32,16 +32,18 @@ public class NetSongAdapter extends BaseQuickAdapter<NetSongBean, BaseViewHolder
     protected void convert(BaseViewHolder helper, NetSongBean item) {
         helper.setText(R.id.txt_song_title, item.title)
                 .setText(R.id.txt_song_singer, item.artistName);
+
         ImageLoader.INSTANCE.display(mContext,
                 new ImageConfig.Builder()
+                        .isRound(false)
                         .url(item.imgUrl)
                         .placeholder(R.drawable.ic_album_default)
                         .into(helper.getView(R.id.img_song_pic))
                         .build());
-//        helper.getView(R.id.layout_song_item).setOnClickListener(v -> MusicManager.getInstance()
-//                .playNetQueue(mData, MusicUtil.getNetSongIds(mData), helper.getAdapterPosition()));
+
         helper.getView(R.id.layout_song_item).setOnClickListener(v -> MusicManager.getInstance()
-                .playLocalQueue(NetEntityMapper.transform(mData), MusicUtil.getSongIds(NetEntityMapper.transform(mData)),
+                .playLocalQueue(NetEntityMapper.transform(mData),
+                        MusicUtil.getSongIds(NetEntityMapper.transform(mData)),
                         helper.getAdapterPosition()));
     }
 

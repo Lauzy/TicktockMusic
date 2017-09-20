@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 
 import com.freedom.lauzy.ticktockmusic.TicktockApplication;
+import com.freedom.lauzy.ticktockmusic.base.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.event.ClearQueueEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
@@ -198,10 +199,20 @@ public class MusicManager {
             } else {
                 mQueueManager.localQueueObservable(ids, songEntities)
                         .compose(RxHelper.ioMain())
-                        .subscribe(songData -> {
-                            LogUtil.i(TAG, "--- new data ---");
-                            mMusicService.setSongData(songData);
-                            open(position, songData.get(position));
+                        .subscribeWith(new DefaultDisposableObserver<List<SongEntity>>() {
+                            @Override
+                            public void onNext(@io.reactivex.annotations.NonNull List<SongEntity> songData) {
+                                super.onNext(songEntities);
+                                LogUtil.i(TAG, "--- new data ---");
+                                mMusicService.setSongData(songData);
+                                open(position, songData.get(position));
+                            }
+
+                            @Override
+                            public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                                super.onError(e);
+                                e.printStackTrace();
+                            }
                         });
             }
         });
@@ -381,10 +392,6 @@ public class MusicManager {
     };
 
     /* ------- getter , setter and so on-------- */
-
-    public MusicService getMusicService() {
-        return mMusicService;
-    }
 
     public long getCurrentProgress() {
         return mMusicService != null ? mMusicService.getCurrentProgress() : 0;

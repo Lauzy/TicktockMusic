@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
@@ -65,6 +66,25 @@ public class GlideImageLoaderStrategy implements IBaseImageStrategy {
                 options.transform(new GlideCornerTransformation(context, imageConfig.getCornerSize()));
             }
         }
+        DiskCacheStrategy strategy = DiskCacheStrategy.RESOURCE;//默认无缓存
+        switch (imageConfig.getCacheStrategy()) {
+            case ImageConfig.CACHE_NONE:
+                strategy = DiskCacheStrategy.NONE;
+                break;
+            case ImageConfig.CACHE_ALL:
+                strategy = DiskCacheStrategy.ALL;
+                break;
+            case ImageConfig.CACHE_RESULT://加载后缓存
+                strategy = DiskCacheStrategy.RESOURCE;
+                break;
+            case ImageConfig.CACHE_SOURCE://源数据缓存
+                strategy = DiskCacheStrategy.DATA;
+                break;
+            case ImageConfig.CACHE_AUTO:
+                strategy = DiskCacheStrategy.AUTOMATIC;
+                break;
+        }
+        options.diskCacheStrategy(strategy);
         return options;
     }
 
@@ -75,17 +95,6 @@ public class GlideImageLoaderStrategy implements IBaseImageStrategy {
      * @return path
      */
     private Object getPath(ImageConfig config) {
-      /*  Object url = null;
-        switch (config.getUrlType()) {
-            case URL:
-                url = config.getUrl();
-                break;
-            case URI:
-                url = config.getUri();
-                break;
-            case FILE:
-                break;
-        }*/
         return config.getUrl();
     }
 
