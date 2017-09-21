@@ -53,6 +53,7 @@ public class PlayQueueDao implements BaseDao {
                 + QueueParam.DURATION + " LONG,"
                 + QueueParam.LENGTH + " VARCHAR(255),"
                 + QueueParam.ALBUM_COVER + " VARCHAR(255),"
+//                + QueueParam.ALBUM_BITMAP + " BLOB,"
                 + "CONSTRAINT UC_PlayQueue UNIQUE ("
                 + QueueParam.SOURCE + "," + QueueParam.SONG_ID + " ));");
     }
@@ -126,23 +127,6 @@ public class PlayQueueDao implements BaseDao {
             db.endTransaction();
         }
     }
-//
-//    public void addNetQueue(List<NetSongBean> songListBeen) {
-//        SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
-//        db.beginTransaction();
-//        try {
-//            for (NetSongBean netSongBean : songListBeen) {
-//                ContentValues values = addItem(QueueParam.NET, netSongBean.songId, netSongBean.title,
-//                        netSongBean.albumId, netSongBean.albumTitle, netSongBean.artistName,
-//                        netSongBean.imgUrl, netSongBean.duration, netSongBean.songLength);
-//                db.insertWithOnConflict(TickDaoHelper.PLAY_QUEUE, null, values,
-//                        SQLiteDatabase.CONFLICT_IGNORE);
-//            }
-//            db.setTransactionSuccessful();
-//        } finally {
-//            db.endTransaction();
-//        }
-//    }
 
     public int deleteQueueData(String[] ids) {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();

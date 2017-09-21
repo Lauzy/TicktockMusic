@@ -1,9 +1,28 @@
 package com.freedom.lauzy.ticktockmusic.service;
 
-import com.freedom.lauzy.model.NetSongBean;
-import com.freedom.lauzy.ticktockmusic.model.SongEntity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.freedom.lauzy.ticktockmusic.R;
+import com.freedom.lauzy.ticktockmusic.model.SongEntity;
+import com.lauzy.freedom.data.local.LocalUtil;
+import com.lauzy.freedom.librarys.imageload.ImageConfig;
+import com.lauzy.freedom.librarys.imageload.ImageLoader;
+
+import java.io.File;
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
 
 /**
  * Desc : MusicUtil
@@ -25,15 +44,76 @@ public class MusicUtil {
         return null;
     }
 
-    public static String[] getNetSongIds(List<NetSongBean> songEntities) {
-        if (songEntities != null) {
-            int size = songEntities.size();
-            String[] ids = new String[size];
-            for (int i = 0; i < size; i++) {
-                ids[i] = String.valueOf(songEntities.get(i).songId);
+    public static Observable<Bitmap> albumCoverObservable(Context context, SongEntity entity) {
+        return Observable.create(e -> {
+            Bitmap bitmap;
+            String coverUri = LocalUtil.getCoverUri(context, entity.albumId);
+            if (coverUri != null && new File(coverUri).exists()) {
+                bitmap = BitmapFactory.decodeFile(coverUri);
+            } else {
+                Drawable drawable = ContextCompat.getDrawable(context, R.drawable.ic_album_default);
+                bitmap = ((BitmapDrawable) drawable).getBitmap();
             }
-            return ids;
+            e.onNext(bitmap);
+            e.onComplete();
+        });
+    }
+
+    /**
+     * 加载网络音乐的图片，将转化 Observable<SongEntity> 为 ObservableSource<NetMusicData>
+     * @param context
+     * @return
+     */
+    @SuppressWarnings("all")
+    public static ObservableTransformer<SongEntity, NetMusicData> transformNetData(Context context) {
+        return new ObservableTransformer<SongEntity, NetMusicData>() {
+            @Override
+            public ObservableSource<NetMusicData> apply(@NonNull Observable<SongEntity> upstream) {
+                return upstream.flatMap(new Function<SongEntity, ObservableSource<NetMusicData>>() {
+                    @Override
+                    public ObservableSource<NetMusicData> apply(@NonNull SongEntity entity) throws Exception {
+                        return observer ->
+                                ImageLoader.INSTANCE.display(context, new ImageConfig.Builder()
+                                        .asBitmap(true)
+                                        .url(entity.albumCover)
+                                        .placeholder(R.drawable.ic_default)
+                                        .isRound(false)
+                                        .cacheStrategy(ImageConfig.CACHE_SOURCE)
+                                        .intoTarget(new SimpleTarget<Bitmap>() {
+                                            @Override
+                                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                                                NetMusicData netMusicData = new NetMusicData();
+                                                netMusicData.setSongEntity(entity);
+                                                netMusicData.setBitmap(resource);
+                                                observer.onNext(netMusicData);
+                                                observer.onComplete();
+                                            }
+                                        }).build());
+                    }
+                });
+            }
+        };
+    }
+
+
+    static class NetMusicData {
+        private SongEntity mSongEntity;
+        private Bitmap mBitmap;
+
+        public SongEntity getSongEntity() {
+            return mSongEntity;
         }
-        return null;
+
+        public void setSongEntity(SongEntity songEntity) {
+            mSongEntity = songEntity;
+        }
+
+        public Bitmap getBitmap() {
+            return mBitmap;
+        }
+
+        public void setBitmap(Bitmap bitmap) {
+            mBitmap = bitmap;
+        }
     }
 }

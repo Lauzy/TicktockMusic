@@ -39,6 +39,7 @@ public interface BaseDao {
         static final String ALBUM_COVER = "albumCover";
         static final String DURATION = "duration";
         static final String LENGTH = "length";
+//        static final String ALBUM_BITMAP = "albumBitmap";
 
         public static final String NET = "NET";
         public static final String LOCAL = "LOCAL";

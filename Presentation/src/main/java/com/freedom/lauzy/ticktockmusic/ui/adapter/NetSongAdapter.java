@@ -35,8 +35,8 @@ public class NetSongAdapter extends BaseQuickAdapter<NetSongBean, BaseViewHolder
 
         ImageLoader.INSTANCE.display(mContext,
                 new ImageConfig.Builder()
-                        .isRound(false)
                         .url(item.imgUrl)
+                        .cacheStrategy(ImageConfig.CACHE_SOURCE)
                         .placeholder(R.drawable.ic_album_default)
                         .into(helper.getView(R.id.img_song_pic))
                         .build());
