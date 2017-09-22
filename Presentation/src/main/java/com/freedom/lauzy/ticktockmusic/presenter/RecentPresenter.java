@@ -44,9 +44,9 @@ public class RecentPresenter extends BaseRxPresenter<RecentContract.View>
                         super.onNext(recentSongBeen);
                         List<SongEntity> songEntities = mRecentMapper.transform(recentSongBeen);
                         if (songEntities != null && songEntities.size() != 0) {
-                            getView().getRecentSongs(songEntities);
+                            if (getView() != null) getView().getRecentSongs(songEntities);
                         } else {
-                            getView().emptyView();
+                            if (getView() != null) getView().emptyView();
                         }
                     }
 

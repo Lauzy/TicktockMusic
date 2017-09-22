@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
@@ -28,6 +29,7 @@ import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.PlayQueuePresenter;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.service.MusicService;
+import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.PlayQueueAdapter;
 import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.lauzy.freedom.librarys.common.ScreenUtils;
@@ -44,10 +46,10 @@ import javax.inject.Inject;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment
-        implements View.OnClickListener, PlayQueueContract.View {
+public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment implements
+        View.OnClickListener, PlayQueueContract.View, PlayQueueAdapter.DeleteQueueItemListener {
 
-    private static final String TAG = "PlayQueueBottomSheet";
+    private static final String TAG = "QueueBottomSheet";
     @Inject
     PlayQueuePresenter mQueuePresenter;
     private Activity mActivity;
@@ -55,6 +57,7 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment
     private TextView mTxtPlayMode;
     private ImageView mImgMode;
     private List<SongEntity> mSongEntities = new ArrayList<>();
+    private static final int DELETE_DELAY = 150; //删除后更新Item视图延迟时间
 
     @Override
     public void onAttach(Context context) {
@@ -104,7 +107,7 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment
         ((SimpleItemAnimator) rvPlayQueue.getItemAnimator()).setSupportsChangeAnimations(false);
         mAdapter = new PlayQueueAdapter(R.layout.layout_play_queue_item, mSongEntities);
         rvPlayQueue.setAdapter(mAdapter);
-        mAdapter.setQueuePresenter(mQueuePresenter);
+        mAdapter.setDeleteQueueItemListener(this);
         mQueuePresenter.loadQueueData(MusicManager.getInstance().getCurIds());
     }
 
@@ -125,6 +128,10 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment
         }
     }
 
+    /**
+     * 设置 bottomSheet 的宽高
+     * @param view fragmentView
+     */
     private void setViewSize(View view) {
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT);
@@ -174,8 +181,28 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment
     }
 
     @Override
+    public void deleteItem(int position) {
+        MusicManager.getInstance().setMusicServiceData(MusicUtil.getSongIds(mSongEntities), position);
+        mSongEntities.remove(position);
+        mAdapter.notifyItemRemoved(position);
+        new Handler().postDelayed(() -> {
+            mAdapter.notifyItemChanged(MusicManager.getInstance().getCurPosition());
+            if (mSongEntities == null || mSongEntities.size() == 0) {
+                MusicManager.getInstance().clearPlayData();
+                mActivity.finish();
+            }
+        }, DELETE_DELAY);
+    }
+
+    @Override
     public void emptyView() {
 
+    }
+
+
+    @Override
+    public void deleteQueueItem(int position, SongEntity entity) {
+        mQueuePresenter.deleteQueueData(new String[]{String.valueOf(entity.id)}, position, entity);
     }
 
     @Override
@@ -191,4 +218,5 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment
         super.onDestroy();
         mQueuePresenter.detachView();
     }
+
 }

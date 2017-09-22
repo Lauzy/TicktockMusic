@@ -2,7 +2,6 @@ package com.freedom.lauzy.ticktockmusic.ui.fragment;
 
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,11 +11,12 @@ import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
 import com.freedom.lauzy.ticktockmusic.contract.RecentContract;
-import com.freedom.lauzy.ticktockmusic.event.ChangeRecentEvent;
 import com.freedom.lauzy.ticktockmusic.event.ClearRecentEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.RecentPresenter;
+import com.freedom.lauzy.ticktockmusic.service.MusicManager;
+import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.RecentAdapter;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 
@@ -33,7 +33,8 @@ import io.reactivex.disposables.Disposable;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class RecentFragment extends BaseFragment<RecentPresenter> implements RecentContract.View {
+public class RecentFragment extends BaseFragment<RecentPresenter> implements RecentContract.View,
+        RecentAdapter.RecentPlayListener {
 
     @BindView(R.id.toolbar_common)
     TickToolbar mToolbarCommon;
@@ -41,7 +42,6 @@ public class RecentFragment extends BaseFragment<RecentPresenter> implements Rec
     RecyclerView mRvRecent;
     private List<SongEntity> mSongEntities = new ArrayList<>();
     private RecentAdapter mAdapter;
-    private final int DELAY_RELOAD = 100;
 
     public static RecentFragment newInstance() {
         Bundle args = new Bundle();
@@ -56,10 +56,6 @@ public class RecentFragment extends BaseFragment<RecentPresenter> implements Rec
         Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(ClearRecentEvent.class,
                 clearRecentEvent -> clearRecentData());
         RxBus.INSTANCE.addDisposable(this, disposable);
-        Disposable recentDisposable = RxBus.INSTANCE.doDefaultSubscribe(ChangeRecentEvent.class,
-                changeRecentEvent -> new Handler().postDelayed(() ->
-                        mPresenter.loadRecentSongs(), DELAY_RELOAD));
-        RxBus.INSTANCE.addDisposable(this, recentDisposable);
     }
 
     private void clearRecentData() {
@@ -104,6 +100,20 @@ public class RecentFragment extends BaseFragment<RecentPresenter> implements Rec
         mRvRecent.setLayoutManager(new LinearLayoutManager(mActivity));
         mAdapter = new RecentAdapter(R.layout.layout_song_item, mSongEntities);
         mRvRecent.setAdapter(mAdapter);
+        mAdapter.setRecentPlayListener(this);
+    }
+
+    /**
+     * 播放当前队列的音乐，并更新最近播放列表
+     *
+     * @param entity   当前播放音乐
+     * @param position 当前位置
+     */
+    @Override
+    public void playRecent(SongEntity entity, int position) {
+        MusicManager.getInstance().playLocalQueue(mSongEntities,
+                MusicUtil.getSongIds(mSongEntities), position);
+        MusicManager.getInstance().setRecentUpdateListener(() -> mPresenter.loadRecentSongs());
     }
 
     @Override
@@ -134,4 +144,5 @@ public class RecentFragment extends BaseFragment<RecentPresenter> implements Rec
         super.onDestroy();
         RxBus.INSTANCE.dispose(this);
     }
+
 }

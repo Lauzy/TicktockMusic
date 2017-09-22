@@ -1,6 +1,5 @@
 package com.freedom.lauzy.ticktockmusic.ui.adapter;
 
-import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.os.Handler;
 import android.support.annotation.LayoutRes;
@@ -13,7 +12,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
-import com.freedom.lauzy.ticktockmusic.presenter.PlayQueuePresenter;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
 import com.lauzy.freedom.librarys.widght.fonts.SubTextUtil;
@@ -28,12 +26,6 @@ import java.util.List;
  * Email : freedompaladin@gmail.com
  */
 public class PlayQueueAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolder> {
-
-    private PlayQueuePresenter mPresenter;
-
-    public void setQueuePresenter(PlayQueuePresenter presenter) {
-        mPresenter = presenter;
-    }
 
     public PlayQueueAdapter(@LayoutRes int layoutResId, @Nullable List<SongEntity> data) {
         super(layoutResId, data);
@@ -55,6 +47,13 @@ public class PlayQueueAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
         helper.getView(R.id.layout_queue_item).setOnClickListener(playListener(helper));
     }
 
+    private View.OnClickListener deleteItemListener(BaseViewHolder helper, SongEntity item) {
+        return v -> {
+            if (mDeleteQueueItemListener != null)
+                mDeleteQueueItemListener.deleteQueueItem(helper.getAdapterPosition(), item);
+        };
+    }
+
     private View.OnClickListener playListener(BaseViewHolder helper) {
         return v -> new Handler().postDelayed(() -> {
             notifyItemChanged(MusicManager.getInstance().getCurPosition());
@@ -64,20 +63,13 @@ public class PlayQueueAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
         }, 100);
     }
 
-    private View.OnClickListener deleteItemListener(BaseViewHolder helper, SongEntity item) {
-        return v -> mPresenter.deleteQueueData(new String[]{String.valueOf(item.id)})
-                .subscribe(integer -> {
-                    MusicManager.getInstance().setMusicServiceData(MusicUtil.getSongIds(mData),
-                            helper.getAdapterPosition());
-                    mData.remove(helper.getAdapterPosition());
-                    notifyItemRemoved(helper.getAdapterPosition());
-                    new Handler().postDelayed(() -> {
-                        notifyItemChanged(MusicManager.getInstance().getCurPosition());
-                        if (mData == null || mData.size() == 0) {
-                            MusicManager.getInstance().clearPlayData();
-                            ((Activity) mContext).finish();
-                        }
-                    }, 120);
-                });
+    private DeleteQueueItemListener mDeleteQueueItemListener;
+
+    public void setDeleteQueueItemListener(DeleteQueueItemListener deleteQueueItemListener) {
+        mDeleteQueueItemListener = deleteQueueItemListener;
+    }
+
+    public interface DeleteQueueItemListener {
+        void deleteQueueItem(int position, SongEntity entity);
     }
 }

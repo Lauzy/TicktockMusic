@@ -6,11 +6,9 @@ import android.support.annotation.Nullable;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.freedom.lauzy.ticktockmusic.R;
-import com.freedom.lauzy.ticktockmusic.event.ChangeRecentEvent;
-import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
+import com.freedom.lauzy.ticktockmusic.navigation.Navigator;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
-import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 
@@ -36,14 +34,31 @@ public class RecentAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolder> 
         ImageLoader.INSTANCE.display(mContext,
                 new ImageConfig.Builder()
                         .url(item.albumCover)
+                        .isRound(false)
+                        .cacheStrategy(ImageConfig.CACHE_SOURCE)
                         .placeholder(R.drawable.ic_default)
                         .into(helper.getView(R.id.img_song_pic))
                         .build());
 
         helper.getView(R.id.layout_song_item).setOnClickListener(v -> {
-            MusicManager.getInstance().playLocalQueue(mData,
-                    MusicUtil.getSongIds(mData), helper.getAdapterPosition());
-            RxBus.INSTANCE.post(new ChangeRecentEvent());
+            if (item.equals(MusicManager.getInstance().getCurrentSong())) {
+                Navigator navigator = new Navigator();
+                navigator.navigateToPlayActivity(mContext);
+            } else {
+                if (mRecentPlayListener != null) {
+                    mRecentPlayListener.playRecent(item, helper.getAdapterPosition());
+                }
+            }
         });
+    }
+
+    private RecentPlayListener mRecentPlayListener;
+
+    public void setRecentPlayListener(RecentPlayListener recentPlayListener) {
+        mRecentPlayListener = recentPlayListener;
+    }
+
+    public interface RecentPlayListener {
+        void playRecent(SongEntity entity, int position);
     }
 }

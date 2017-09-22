@@ -71,6 +71,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     ImageView mImgFavorite;
     private static final String TAG = "PlayActivity";
     private boolean mIsFavorite;
+    private static final int PLAY_DELAY = 500;
 
     public static Intent newInstance(Context context) {
         return new Intent(context, PlayActivity.class);
@@ -90,7 +91,8 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //订阅当前播放数据
-        Disposable disposable = RxBus.INSTANCE.doStickySubscribe(SongEntity.class, this::setCurData);
+        Disposable disposable = RxBus.INSTANCE.doStickySubscribe(SongEntity.class, entity ->
+                new Handler().postDelayed(() -> setCurData(entity), PLAY_DELAY));
         //订阅播放模式设置View
         Disposable playModeDisposable = RxBus.INSTANCE.doDefaultSubscribe(PlayModeEvent.class,
                 playModeEvent -> setModeView());
@@ -105,6 +107,9 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         mToolbarCommon.setBackgroundColor(Color.TRANSPARENT);
     }
 
+    /**
+     * 设置播放模式
+     */
     private void setModeView() {
         switch (SharePrefHelper.getRepeatMode(this)) {
             case MusicService.REPEAT_SINGLE_MODE:
@@ -130,6 +135,10 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         mPlayPause.setPlayPauseListener(this);
     }
 
+    /**
+     * 更新当前播放视图
+     * @param songEntity 当前播放音乐
+     */
     private void setCurData(SongEntity songEntity) {
         if (songEntity != null) {
             mToolbarCommon.setTitle(songEntity.title);
@@ -141,6 +150,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
             }
             MusicManager.getInstance().setSeekBarProgressListener(this);
             mPresenter.setCoverImgUrl(songEntity.albumCover);
+            mPresenter.isFavoriteSong(songEntity.id);
         }
     }
 
@@ -187,6 +197,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         MusicManager.getInstance().seekTo(seekBar.getProgress());
         if (!mPlayPause.isPlaying()) {
             mPlayPause.play();
+            mAlbumCoverView.start();
         }
     }
 
@@ -249,7 +260,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     private void setImageTint() {
         Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_favorite_white);
-        DrawableCompat.setTint(drawable, ContextCompat.getColor(this, R.color.theme_color_primary));
+        DrawableCompat.setTint(drawable, ContextCompat.getColor(this, R.color.red_trans));
         mImgFavorite.setImageDrawable(drawable);
     }
 

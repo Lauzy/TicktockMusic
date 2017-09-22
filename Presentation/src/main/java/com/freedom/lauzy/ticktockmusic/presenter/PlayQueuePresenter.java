@@ -4,11 +4,11 @@ import com.freedom.lauzy.interactor.GetQueueUseCase;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
 import com.freedom.lauzy.ticktockmusic.contract.PlayQueueContract;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
+import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.model.mapper.SongMapper;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 
@@ -47,12 +47,13 @@ public class PlayQueuePresenter extends BaseRxPresenter<PlayQueueContract.View>
     }
 
     @Override
-    public Observable<Integer> deleteQueueData(String[] ids) {
+
+    public void deleteQueueData(String[] ids, int position, SongEntity entity ) {
         if (ids != null) {
-            return mGetQueueUseCase.deleteQueueObservable(ids)
-                    .compose(RxHelper.ioMain());
+            mGetQueueUseCase.deleteQueueObservable(ids)
+                    .compose(RxHelper.ioMain())
+                    .subscribe(integer -> getView().deleteItem(position));
         }
-        return null;
     }
 
     @Override
