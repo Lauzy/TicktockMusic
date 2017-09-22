@@ -9,6 +9,7 @@ import android.media.session.MediaController;
 import android.media.session.PlaybackState;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 
 import com.freedom.lauzy.ticktockmusic.TicktockApplication;
@@ -19,6 +20,8 @@ import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.lauzy.freedom.librarys.common.LogUtil;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Collections;
 import java.util.List;
 
@@ -75,6 +78,13 @@ public class MusicManager {
         public void currentPlay(SongEntity songEntity) {
             if (mMusicManageListener != null) {
                 mMusicManageListener.currentPlay(songEntity);
+            }
+        }
+
+        @Override
+        public void startPlay() {
+            if (mRecentUpdateListener != null) {
+                mRecentUpdateListener.startPlay();
             }
         }
     };
@@ -195,7 +205,7 @@ public class MusicManager {
             if (songEntities.equals(playQueue)) {
                 mMusicService.setSongData(playQueue);
                 LogUtil.i(TAG, "--- data exists ---");
-                open(position, playQueue.get(position));
+                open(position, playQueue.get(position), DATA_EXITS);
             } else {
                 mQueueManager.localQueueObservable(ids, songEntities)
                         .compose(RxHelper.ioMain())
@@ -205,7 +215,7 @@ public class MusicManager {
                                 super.onNext(songEntities);
                                 LogUtil.i(TAG, "--- new data ---");
                                 mMusicService.setSongData(songData);
-                                open(position, songData.get(position));
+                                open(position, songData.get(position), NEW_DATA);
                             }
 
                             @Override
@@ -223,21 +233,29 @@ public class MusicManager {
      *
      * @param position 当前位置
      */
-    private void open(int position, SongEntity entity) {
+    private void open(int position, SongEntity entity, @QueueMode int mode) {
         if (mMusicService != null) {
-            if (position == 0
-                    || position != mMusicService.getCurrentPosition()
-                    || !entity.equals(mMusicService.getCurrentSong())
-                    || getMusicState() == PlaybackState.STATE_STOPPED) {
-                if (!entity.equals(mMusicService.getCurrentSong())) {
+            switch (mode) {
+                case NEW_DATA:
                     mMusicService.setCurrentPosition(position);
                     play();
-                } else {
-                    resume();
-                }
-            } else if (getMusicState() == PlaybackState.STATE_PAUSED) {
-                //当前为同一首歌曲，并且为暂停状态时继续播放
-                resume();
+                    break;
+                case DATA_EXITS:
+                    if (position == 0
+                            || position != mMusicService.getCurrentPosition()
+                            || !entity.equals(mMusicService.getCurrentSong())
+                            || getMusicState() == PlaybackState.STATE_STOPPED) {
+                        if (!entity.equals(mMusicService.getCurrentSong())) {
+                            mMusicService.setCurrentPosition(position);
+                            play();
+                        } else {
+                            resume();
+                        }
+                    } else if (getMusicState() == PlaybackState.STATE_PAUSED) {
+                        //当前为同一首歌曲，并且为暂停状态时继续播放
+                        resume();
+                    }
+                    break;
             }
         }
     }
@@ -381,11 +399,11 @@ public class MusicManager {
                     getMusicState() == PlaybackState.STATE_SKIPPING_TO_PREVIOUS;
             if (isUpdate && mUpdateListener != null && getCurrentSong() != null) {
                 mUpdateListener.onProgress((int) mMusicService.getCurrentProgress(),
-                        mMusicService.getMediaPlayer().getDuration());
+                        mMusicService.getDuration());
             }
             if (isUpdate && mSeekBarProgressListener != null && getCurrentSong() != null) {
                 mSeekBarProgressListener.onProgress((int) mMusicService.getCurrentProgress(),
-                        mMusicService.getMediaPlayer().getDuration());
+                        mMusicService.getDuration());
             }
             mProgressHandler.postDelayed(this, 100);
         }
@@ -399,7 +417,7 @@ public class MusicManager {
 
     public int getDuration() {
         return mMusicService != null ? mMusicService.getMediaPlayer() != null
-                ? mMusicService.getMediaPlayer().getDuration() : 0 : 0;
+                ? mMusicService.getDuration() : 0 : 0;
     }
 
     /**
@@ -419,6 +437,14 @@ public class MusicManager {
                 && mMusicService.getPlaybackState().getState() == PlaybackState.STATE_PLAYING;
     }
 
+    private static final int NEW_DATA = 0x0015;
+    private static final int DATA_EXITS = 0x0017;
+
+    @IntDef({NEW_DATA, DATA_EXITS})
+    @Retention(RetentionPolicy.SOURCE)
+    @interface QueueMode {
+    }
+
     /**
      * 获取当前队列ID
      *
@@ -435,6 +461,7 @@ public class MusicManager {
 
     private MusicManageListener mMusicManageListener;
     private SeekBarProgressListener mSeekBarProgressListener;
+    private RecentUpdateListener mRecentUpdateListener;
 
     public void setManageListener(MusicManageListener updateListener) {
         mMusicManageListener = updateListener;
@@ -444,8 +471,12 @@ public class MusicManager {
         mSeekBarProgressListener = seekBarProgressListener;
     }
 
+    public void setRecentUpdateListener(RecentUpdateListener recentUpdateListener) {
+        mRecentUpdateListener = recentUpdateListener;
+    }
+
     /**
-     * 音乐管理回调接口，便于 Activity 等控制 UI 变化
+     * 音乐管理回调接口，便于 Activity 等控制 UI 变化(主要用于MainActivity)
      */
     public interface MusicManageListener {
 
@@ -460,11 +491,21 @@ public class MusicManager {
         void onPlayerResume();//继续播放
     }
 
+    /**
+     * 音乐管理回调接口（用于PlayActivity）
+     */
     public interface SeekBarProgressListener {
         void onProgress(int progress, int duration);
 
         void onPlayerPause();
 
         void onPlayerResume();
+    }
+
+    /**
+     * 最近播放列表刷新接口
+     */
+    public interface RecentUpdateListener {
+        void startPlay();
     }
 }

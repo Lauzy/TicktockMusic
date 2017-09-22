@@ -57,6 +57,7 @@ public class MusicService extends Service {
     private TickNotification mTickNotification;
     private SongEntity mCurrentSong;
     private QueueManager mQueueManager;
+    private int mDuration;
 
     @Nullable
     @Override
@@ -82,17 +83,6 @@ public class MusicService extends Service {
                 MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
         // 设置音频流类型
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mMediaPlayer.setOnPreparedListener(mp -> start());
-        mMediaPlayer.setOnCompletionListener(mp -> {
-            if (mUpdateListener != null) {
-                mUpdateListener.onCompletion(mp);
-            }
-        });
-        mMediaPlayer.setOnBufferingUpdateListener((mp, percent) -> {
-            if (mUpdateListener != null) {
-                mUpdateListener.onBufferingUpdate(mp, percent);
-            }
-        });
     }
 
     @Override
@@ -132,14 +122,17 @@ public class MusicService extends Service {
         mTickNotification.stopNotify(this);
     }
 
+    /**
+     * 播放音乐
+     */
     private void play() {
         if (mSongData != null && mSongData.size() != 0) {
 //                SongEntity entity = mSongData.get(mCurrentPosition);
-            SongEntity entity = getPlaySong();
+            SongEntity entity = getPlaySong();//获取当前播放音乐
             if (getPlaybackState().getState() == PlaybackState.STATE_SKIPPING_TO_NEXT
                     || getPlaybackState().getState() == PlaybackState.STATE_SKIPPING_TO_PREVIOUS) {
-                play(entity);
-            } else {
+                play(entity);//跳转状态直接重新播放
+            } else {//其他状态判断重新播放还是继续播放
                 if (!entity.equals(mCurrentSong)) {
                     play(entity);
                 } else {
@@ -149,11 +142,19 @@ public class MusicService extends Service {
         }
     }
 
+    /**
+     * 播放当前音乐
+     *
+     * @param entity 当前音乐
+     */
     private void play(SongEntity entity) {
-        if (entity.type.equals(BaseDao.QueueParam.LOCAL)) {
+        if (entity.type.equals(BaseDao.QueueParam.LOCAL)) {//本地音乐
+            //直接获取到音乐专辑图片的bitmap，便于更新通知
             MusicUtil.albumCoverObservable(this, entity)
                     .subscribe(bitmap -> playMusic(entity, bitmap));
-        } else if (entity.type.equals(BaseDao.QueueParam.NET)) {
+        } else if (entity.type.equals(BaseDao.QueueParam.NET)) {//网络音乐
+            //根据ID查询播放队列的数据获取当前SongEntity，根据此entity的url获取音乐图片的bitmap对象，
+            //将entity和bitmap转化为NetMusicData对象，直接获取此对象的entity和bitmap即可，简化代码
             mQueueManager.netSongEntityObservable(entity.id)
                     .compose(RxHelper.ioMain())
                     .compose(MusicUtil.transformNetData(this))
@@ -178,13 +179,14 @@ public class MusicService extends Service {
      * 播放音乐
      *
      * @param entity music
-     * @param bitmap bitmap
+     * @param bitmap 通知栏多媒体风格的图片
      */
     private void playMusic(SongEntity entity, Bitmap bitmap) {
         try {
             mCurrentSong = entity;
             mMediaPlayer.reset();
             mMediaPlayer.setDataSource(entity.path);
+            setListeners();
             mMediaPlayer.prepareAsync();
             setState(PlaybackState.STATE_CONNECTING);
             mMediaSession.setMetadata(getMediaData(entity, bitmap));
@@ -198,10 +200,28 @@ public class MusicService extends Service {
         }
     }
 
+    private void setListeners() {
+        mMediaPlayer.setOnPreparedListener(mp -> start());
+        mMediaPlayer.setOnCompletionListener(mp -> {
+            if (mUpdateListener != null) {
+                mUpdateListener.onCompletion(mp);
+            }
+        });
+        mMediaPlayer.setOnBufferingUpdateListener((mp, percent) -> {
+            if (mUpdateListener != null) {
+                mUpdateListener.onBufferingUpdate(mp, percent);
+            }
+        });
+    }
+
     public void start() {
         mMediaPlayer.start();
+        mDuration = mMediaPlayer.getDuration();
         setState(PlaybackState.STATE_PLAYING);
         mTickNotification.notifyPlay(this);
+        if (mUpdateListener != null) {
+            mUpdateListener.startPlay();
+        }
     }
 
     private void pause() {
@@ -269,7 +289,9 @@ public class MusicService extends Service {
     }
 
     public void stopPlayer() {
-        mMediaPlayer.stop();
+        mMediaPlayer.pause();
+        mMediaPlayer.reset();
+        mCurrentSong = null;//重置
         mTickNotification.stopNotify(this);
         setState(PlaybackState.STATE_STOPPED);
     }
@@ -290,6 +312,13 @@ public class MusicService extends Service {
         mMediaSession.setActive(state != PlaybackState.STATE_NONE && state != PlaybackState.STATE_STOPPED);
     }
 
+    /**
+     * 将当前播放的音乐SongEntity转化为MediaMetadata
+     *
+     * @param entity      当前播放音乐
+     * @param albumBitmap 当前音乐的封面或专辑图片bitmap
+     * @return MediaMetadata对象
+     */
     private MediaMetadata getMediaData(SongEntity entity, Bitmap albumBitmap) {
         MediaMetadata.Builder builder = new MediaMetadata.Builder();
         builder.putString(MediaMetadata.METADATA_KEY_TITLE, entity.title)
@@ -368,6 +397,10 @@ public class MusicService extends Service {
         return null;
     }
 
+    public int getDuration() {
+        return mDuration;
+    }
+
     public List<SongEntity> getSongData() {
         return mSongData != null ? mSongData : Collections.emptyList();
     }
@@ -377,7 +410,9 @@ public class MusicService extends Service {
     }
 
     public long getCurrentProgress() {
-        return mMediaPlayer != null && mMediaPlayer.isPlaying() ? mMediaPlayer.getCurrentPosition() : 0;
+        return mMediaPlayer != null && mMediaPlayer.isPlaying() || mMediaPlayer != null
+                && getPlaybackState() != null && getPlaybackState().getState()
+                == PlaybackState.STATE_PAUSED ? mMediaPlayer.getCurrentPosition() : 0;
     }
 
     public void setQueueManager(QueueManager queueManager) {
@@ -416,5 +451,7 @@ public class MusicService extends Service {
         void onProgress(int progress, int duration);
 
         void currentPlay(SongEntity songEntity);
+
+        void startPlay();
     }
 }
