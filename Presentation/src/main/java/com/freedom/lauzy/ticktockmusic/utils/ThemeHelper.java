@@ -60,9 +60,9 @@ public class ThemeHelper {
 
     public static String getThemeName(Context context) {
         if (ThemeHelper.getTheme(context) == ThemeHelper.CARD_SAKURA) {
-            return THEME_PINK;
-        } else if (ThemeHelper.getTheme(context) == ThemeHelper.CARD_STORM) {
             return THEME_BLUE;
+        } else if (ThemeHelper.getTheme(context) == ThemeHelper.CARD_STORM) {
+            return THEME_PINK;
         } else if (ThemeHelper.getTheme(context) == ThemeHelper.CARD_HOPE) {
             return THEME_PURPLE;
         } else if (ThemeHelper.getTheme(context) == ThemeHelper.CARD_WOOD) {
@@ -83,7 +83,7 @@ public class ThemeHelper {
     public static int getThemeColorResId(Context context) {
         switch (ThemeHelper.getTheme(context)) {
             case ThemeHelper.CARD_SAKURA:
-                return ContextCompat.getColor(context, R.color.pink);
+                return ContextCompat.getColor(context, R.color.blue);
             case ThemeHelper.CARD_FIREY:
                 return ContextCompat.getColor(context, R.color.red);
             case ThemeHelper.CARD_HOPE:
@@ -93,7 +93,7 @@ public class ThemeHelper {
             case ThemeHelper.CARD_SAND:
                 return ContextCompat.getColor(context, R.color.orange);
             case ThemeHelper.CARD_STORM:
-                return ContextCompat.getColor(context, R.color.blue);
+                return ContextCompat.getColor(context, R.color.pink);
             case ThemeHelper.CARD_THUNDER:
                 return ContextCompat.getColor(context, R.color.yellow);
             case ThemeHelper.CARD_WOOD:
@@ -105,7 +105,7 @@ public class ThemeHelper {
 
     public static void setSelectedTheme(Context context, int colorRes) {
         int currentTheme = CARD_SAKURA;
-        if (colorRes == ContextCompat.getColor(context, R.color.pink)) {
+        if (colorRes == ContextCompat.getColor(context, R.color.blue)) {
             currentTheme = CARD_SAKURA;
         } else if (colorRes == ContextCompat.getColor(context, R.color.red)) {
             currentTheme = CARD_FIREY;
@@ -115,7 +115,7 @@ public class ThemeHelper {
             currentTheme = CARD_LIGHT;
         } else if (colorRes == ContextCompat.getColor(context, R.color.orange)) {
             currentTheme = CARD_SAND;
-        } else if (colorRes == ContextCompat.getColor(context, R.color.blue)) {
+        } else if (colorRes == ContextCompat.getColor(context, R.color.pink)) {
             currentTheme = CARD_STORM;
         } else if (colorRes == ContextCompat.getColor(context, R.color.yellow)) {
             currentTheme = CARD_THUNDER;
@@ -128,11 +128,11 @@ public class ThemeHelper {
     @ColorRes
     public static int getThemeColor(Context context, int color, String theme) {
         switch (color) {
-            case 0xfffb7299:
+            case 0xff2196F3:
                 return context.getResources().getIdentifier(theme, "color", context.getPackageName());
-            case 0xffb85671:
+            case 0xff1565C0:
                 return context.getResources().getIdentifier(theme + "_dark", "color", context.getPackageName());
-            case 0x99f0486c:
+            case 0xB41A78C3:
                 return context.getResources().getIdentifier(theme + "_trans", "color", context.getPackageName());
         }
         return -1;

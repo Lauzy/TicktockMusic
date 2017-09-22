@@ -1,6 +1,7 @@
 package com.freedom.lauzy.ticktockmusic.ui.activity;
 
 import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -54,7 +56,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
         implements NavigationView.OnNavigationItemSelectedListener, PlayPauseView.PlayPauseListener,
         MusicManager.MusicManageListener {
 
-    private static final String LYTAG = "MainActivity";
+    private static final String TAG = "MainActivity";
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view)
@@ -71,6 +73,9 @@ public class MainActivity extends BaseActivity<MainPresenter>
     TextView mTxtCurSinger;
     private static final int FRAGMENT_CHANGE_DELAY = 400;
     private Handler mDrawerHandler = new Handler();
+    private TextView mNavTitle;
+    private TextView mNavSinger;
+    private ImageView mImgNavHeadBg;
 
     @Override
     protected int getLayoutRes() {
@@ -90,6 +95,10 @@ public class MainActivity extends BaseActivity<MainPresenter>
     private void initDrawer() {
         mNavView.setNavigationItemSelectedListener(this);
         mNavView.setCheckedItem(R.id.nav_music);
+        View headerView = mNavView.getHeaderView(0);
+        mNavTitle = ((TextView) headerView.findViewById(R.id.txt_nav_song_title));
+        mNavSinger = ((TextView) headerView.findViewById(R.id.txt_nav_song_singer));
+        mImgNavHeadBg = ((ImageView) headerView.findViewById(R.id.img_nav_song));
     }
 
     @Override
@@ -231,7 +240,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
                 }
                 return true;
             case R.id.action_search:
-                LogUtil.i(LYTAG, "Search");
+                LogUtil.i(TAG, "Search");
                 return true;
             case R.id.action_clear:
                 postClearEvent();
@@ -310,7 +319,6 @@ public class MainActivity extends BaseActivity<MainPresenter>
         mPbCurSong.setProgress(progress);
     }
 
-
     @Override
     public void currentPlay(SongEntity songEntity) {
         if (!mPlayPauseView.isPlaying()) {
@@ -318,6 +326,39 @@ public class MainActivity extends BaseActivity<MainPresenter>
         }
         RxBus.INSTANCE.postSticky(songEntity);
         setMusicBarView(songEntity);
+        setNavHeadView(songEntity);
+    }
+
+    /**
+     * 设置侧滑抽屉的属性
+     * @param songEntity 当前播放音乐
+     */
+    private void setNavHeadView(SongEntity songEntity) {
+        mNavTitle.setText(songEntity.title);
+        mNavSinger.setText(songEntity.artistName);
+        ImageLoader.INSTANCE.display(MainActivity.this, new ImageConfig.Builder()
+                .url(songEntity.albumCover)
+                .isRound(false)
+                .placeholder(R.drawable.ic_default)
+                .into(mImgNavHeadBg).build());
+        mImgNavHeadBg.setColorFilter(ContextCompat.getColor(MainActivity.this,
+                R.color.colorDarkerTransparent), PorterDuff.Mode.SRC_OVER);
+    }
+
+    /**
+     * 设置底部快捷控制条的属性
+     * @param songEntity 当前播放音乐
+     */
+    private void setMusicBarView(SongEntity songEntity) {
+        if (!this.isDestroyed() && songEntity != null) {
+            mTxtCurSong.setText(SubTextUtil.addEllipsis(songEntity.title, 15));
+            mTxtCurSinger.setText(SubTextUtil.addEllipsis(songEntity.artistName, 15));
+            ImageLoader.INSTANCE.display(MainActivity.this,
+                    new ImageConfig.Builder()
+                            .url(songEntity.albumCover)
+                            .placeholder(R.drawable.ic_default)
+                            .into(mImgCurSong).build());
+        }
     }
 
     @Override
@@ -331,18 +372,6 @@ public class MainActivity extends BaseActivity<MainPresenter>
     public void onPlayerResume() {
         if (!mPlayPauseView.isPlaying()) {
             mPlayPauseView.play();
-        }
-    }
-
-    private void setMusicBarView(SongEntity songEntity) {
-        if (!this.isDestroyed() && songEntity != null) {
-            mTxtCurSong.setText(SubTextUtil.addEllipsis(songEntity.title, 15));
-            mTxtCurSinger.setText(SubTextUtil.addEllipsis(songEntity.artistName, 15));
-            ImageLoader.INSTANCE.display(MainActivity.this,
-                    new ImageConfig.Builder()
-                            .url(songEntity.albumCover)
-                            .placeholder(R.drawable.ic_default)
-                            .into(mImgCurSong).build());
         }
     }
 

@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#fb7299</color>
-    <color name="colorPrimaryDark">#b85671</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1565C0</color>
+    <color name="colorAccent">#1f89de</color>
 
     <color name="colorHalfTransparent">#30000000</color>
     <color name="colorDarkerTransparent">#50000000</color>
     <color name="colorEdgeTransparent">#10000000</color>
     <color name="colorTransparent">#00000000</color>
 
-    <color name="theme_color_primary">#fb7299</color>
-    <color name="theme_color_primary_dark">#b85671</color>
-    <color name="theme_color_primary_trans">#99f0486c</color>
-    <color name="theme_color_secondary">#fb7299</color>
+    <color name="theme_color_primary">#2196F3</color>
+    <color name="theme_color_primary_dark">#1565C0</color>
+    <color name="theme_color_primary_trans">#B41A78C3</color>
+    <color name="theme_color_secondary">#2196F3</color>
+
 
     <color name="text_primary_color">#2d2d2d</color>
     <color name="window_background">#eaeaea</color>
