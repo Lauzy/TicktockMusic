@@ -40,14 +40,27 @@ public class RecentSongUseCase extends UseCase<Void, RecentSongBean> {
         return mRecentRepository.addRecentSong(songBean);
     }
 
+    /**
+     * 获取最近播放数据 Observable
+     * @return Observable
+     */
     public Observable<List<RecentSongBean>> getRecentSongs() {
         return mRecentRepository.getRecentSongs();
     }
 
+    /**
+     * 清空最近播放数据 Observable
+     * @return Observable
+     */
     public Observable<Integer> clearRecentSongs() {
         return mRecentRepository.clearRecentSongs();
     }
 
+    /**
+     * 根据 songId 删除最近播放数据 Observable
+     * @param songId songId
+     * @return Observable
+     */
     public Observable<Long> deleteRecentSong(long songId) {
         return mRecentRepository.deleteRecentSong(songId);
     }

@@ -440,10 +440,10 @@ public class CircleImageView extends TintImageView {
 
         mShaderMatrix.setScale(scale, scale);
         mShaderMatrix.postTranslate((int) (dx + 0.5f) + mDrawableRect.left, (int) (dy + 0.5f) + mDrawableRect.top);
-        mShaderMatrix.preRotate(mRotation, mBitmapWidth / 2, mBitmapHeight / 2);
+        mShaderMatrix.preRotate(mRotation, mBitmapWidth / 2, mBitmapHeight / 2);//旋转
         mBitmapShader.setLocalMatrix(mShaderMatrix);
     }
-
+   /*---------------------------------以下为旋转实现------------------------------*/
     private Runnable mRotationRunnable = new Runnable() {
         @Override
         public void run() {

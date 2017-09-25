@@ -130,6 +130,10 @@ public class RecentDao implements BaseDao {
         return values;
     }
 
+    /**
+     * 获取最近播放的数据集合
+     * @return 最近播放的数据集合
+     */
     public List<RecentSongBean> getRecentSongBean() {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         Cursor cursor = null;
@@ -165,6 +169,11 @@ public class RecentDao implements BaseDao {
         return null;
     }
 
+    /**
+     * 删除最近播放的数据
+     * @param songId songId
+     * @return 删除结果
+     */
     public long deleteRecentSong(long songId) {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         db.beginTransaction();
@@ -176,6 +185,10 @@ public class RecentDao implements BaseDao {
         return delete;
     }
 
+    /**
+     * 清空最近播放数据
+     * @return 清除结果
+     */
     public int clearRecentSongs() {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         db.beginTransaction();

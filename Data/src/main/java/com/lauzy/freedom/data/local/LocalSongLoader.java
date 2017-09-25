@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Desc : Load Local QueueSongBean
+ * Desc : 本地音乐加载类
  * Author : Lauzy
  * Date : 2017/8/10
  * Blog : http://www.jianshu.com/u/e76853f863a9
@@ -22,6 +22,12 @@ public class LocalSongLoader {
         return queryLocalSongs(cursor);
     }
 
+    /**
+     * 获取本地音乐列表
+     * @param context context
+     * @param id 专辑Id，为0时返回所有本地音乐数据
+     * @return 本地音乐数据集合
+     */
     public static List<LocalSongBean> getLocalSongList(Context context, long id) {
         Cursor cursor = getSongCursor(context, id != 0 ? "album_id = ? " : null,
                 id != 0 ? new String[]{String.valueOf(id)} : null);

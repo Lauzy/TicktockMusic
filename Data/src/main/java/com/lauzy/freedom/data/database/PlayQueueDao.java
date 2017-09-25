@@ -63,6 +63,11 @@ public class PlayQueueDao implements BaseDao {
 
     }
 
+    /**
+     * 根据songId获取播放队列
+     * @param songIds songIds
+     * @return 播放队列数据集合
+     */
     public List<QueueSongBean> queryQueue(String[] songIds) {
         Log.d(TAG, "The length of songIds is : " + songIds.length);
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
@@ -107,7 +112,11 @@ public class PlayQueueDao implements BaseDao {
         return null;
     }
 
-    public void addLocalQueue(List<LocalSongBean> songBeen) {
+    /**
+     * 添加播放队列数据
+     * @param songBeen 添加的数据集合
+     */
+    public void addToQueue(List<LocalSongBean> songBeen) {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         db.beginTransaction();
         try {
@@ -128,6 +137,11 @@ public class PlayQueueDao implements BaseDao {
         }
     }
 
+    /**
+     * 删除播放队列
+     * @param ids ids
+     * @return 删除结果
+     */
     public int deleteQueueData(String[] ids) {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         StringBuilder sb = new StringBuilder();

@@ -5,7 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 
 /**
- * Desc :
+ * Desc : 基类 SwipeRefreshLayout
  * Author : Lauzy
  * Date : 2017/8/8
  * Blog : http://www.jianshu.com/u/e76853f863a9

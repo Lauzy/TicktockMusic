@@ -24,7 +24,8 @@
 
     <!--local -->
     <string name="music">歌曲</string>
-    <string name="singer">专辑</string>
+    <string name="album">专辑</string>
+    <string name="singer">歌手</string>
 
     <!--category-->
     <string name="new_song">新歌</string>
@@ -52,4 +53,8 @@
     <string name="clear_recent_songs">清空最近播放的歌曲？</string>
 
     <string name="empty">空空如也</string>
+
+    <string name="menu_delete">删除</string>
+    <string name="menu_share">分享</string>
+    <string name="menu_play_next">下一首播放</string>
 </resources>

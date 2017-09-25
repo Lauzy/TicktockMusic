@@ -1,7 +1,7 @@
 package com.freedom.lauzy.model;
 
 /**
- * Desc :  本地音乐Bean
+ * Desc :  原设计仅为本地音乐Bean。添加至播放队列时，网络数据经映射转换后也采用了此对象。
  * Author : Lauzy
  * Date : 2017/8/9
  * Blog : http://www.jianshu.com/u/e76853f863a9

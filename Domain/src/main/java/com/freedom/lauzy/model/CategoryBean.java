@@ -11,5 +11,4 @@ public class CategoryBean {
     public String title;
     public int type;
     public String imgUrl;
-    public int imgRes;
 }

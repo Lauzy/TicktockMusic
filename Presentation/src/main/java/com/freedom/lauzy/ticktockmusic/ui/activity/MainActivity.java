@@ -52,8 +52,8 @@ import io.reactivex.disposables.Disposable;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class MainActivity extends BaseActivity<MainPresenter>
-        implements NavigationView.OnNavigationItemSelectedListener, PlayPauseView.PlayPauseListener,
+public class MainActivity extends BaseActivity<MainPresenter> implements
+        NavigationView.OnNavigationItemSelectedListener, PlayPauseView.PlayPauseListener,
         MusicManager.MusicManageListener {
 
     private static final String TAG = "MainActivity";

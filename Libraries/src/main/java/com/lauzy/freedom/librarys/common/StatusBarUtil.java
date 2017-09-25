@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import com.lauzy.freedom.librarys.R;
 
 /**
- * Desc :
+ * Desc : 状态栏工具类（未使用）
  * Author : Lauzy
  * Date : 2017/8/3
  * Blog : http://www.jianshu.com/u/e76853f863a9

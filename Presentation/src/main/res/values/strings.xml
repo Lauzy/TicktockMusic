@@ -24,7 +24,8 @@
 
     <!--local -->
     <string name="music">Song</string>
-    <string name="singer">Album</string>
+    <string name="album">Album</string>
+    <string name="singer">Singer</string>
 
     <!--category-->
     <string name="new_song">New Song</string>
@@ -53,4 +54,8 @@
     <string name="clear_recent_songs">Clear your recently played songs?</string>
 
     <string name="empty">Empty</string>
+
+    <string name="menu_delete">Delete</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_play_next">Play next</string>
 </resources>

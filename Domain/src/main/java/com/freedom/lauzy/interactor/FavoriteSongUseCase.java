@@ -29,23 +29,46 @@ public class FavoriteSongUseCase extends UseCase<Long, FavoriteSongBean> {
         mFavoriteRepository = favoriteRepository;
     }
 
+    /**
+     * 添加至我的喜欢
+     * @param favoriteSongBean 喜欢的歌曲
+     * @return Observable
+     */
     @Override
     Observable<Long> buildUseCaseObservable(FavoriteSongBean favoriteSongBean) {
         return mFavoriteRepository.addFavoriteSong(favoriteSongBean);
     }
 
+    /**
+     * 删除我的喜欢歌曲
+     * @param songId songId
+     * @return Observable
+     */
     public Observable<Long> deleteFavoriteSong(long songId) {
         return mFavoriteRepository.deleteFavoriteSong(songId);
     }
 
+    /**
+     * 获取我的喜欢数据
+     * @return Observable
+     */
     public Observable<List<FavoriteSongBean>> favoriteSongObservable() {
         return mFavoriteRepository.getFavoriteSongs();
     }
 
+    /**
+     * 清空我的喜欢数据
+     * @return Observable
+     */
     public Observable<Integer> clearFavoriteSongs() {
         return mFavoriteRepository.clearFavoriteSongs();
     }
 
+    /**
+     * 判断是否为我的喜欢歌曲
+     * @param songId songId
+     * @return Observable
+     */
     public Observable<Boolean> isFavoriteSong(long songId) {
         return mFavoriteRepository.isFavoriteSong(songId);
     }

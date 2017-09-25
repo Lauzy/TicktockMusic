@@ -29,6 +29,12 @@ public abstract class UseCase<T, Params>{
 //        mDisposable = new CompositeDisposable();
     }
 
+    /**
+     * 设置线程调度，直接执行
+     * @param observer DisposableObserver
+     * @param params Params
+     * @return Disposable
+     */
     public Disposable execute(DisposableObserver<T> observer, Params params) {
         Preconditions.checkNotNull(observer);
         Observable<T> observable = this.buildUseCaseObservable(params)
@@ -38,12 +44,18 @@ public abstract class UseCase<T, Params>{
 //        addDisposable(observable.subscribeWith(observer));
     }
 
+    /**
+     * 不进行线程调度的设置，直接返回 Observable，灵活控制
+     * @param params 参数
+     * @return Observable
+     */
     public Observable<T> buildObservable(Params params) {
         return this.buildUseCaseObservable(params);
     }
 
     abstract Observable<T> buildUseCaseObservable(Params params);
 
+    /* 取消了addDisposable 和 dispose，在业务层的 Presenter 中控制，更加灵活 */
     /*private void addDisposable(Disposable disposable) {
         Preconditions.checkNotNull(disposable);
         Preconditions.checkNotNull(mDisposable);

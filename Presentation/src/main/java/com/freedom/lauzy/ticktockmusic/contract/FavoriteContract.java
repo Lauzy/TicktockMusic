@@ -1,6 +1,5 @@
 package com.freedom.lauzy.ticktockmusic.contract;
 
-import com.freedom.lauzy.model.FavoriteSongBean;
 import com.freedom.lauzy.ticktockmusic.base.IBaseView;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 
@@ -16,10 +15,11 @@ import java.util.List;
 public interface FavoriteContract {
     interface Presenter {
         void loadFavoriteSongs();
+
         void clearFavoriteSongs();
     }
 
-    interface View extends IBaseView{
+    interface View extends IBaseView {
         void getFavoriteSongs(List<SongEntity> songEntities);
 
         void emptyView();

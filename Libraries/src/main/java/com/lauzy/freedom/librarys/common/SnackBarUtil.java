@@ -1,4 +1,4 @@
-package com.lauzy.freedom.librarys.view.util;
+package com.lauzy.freedom.librarys.common;
 
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
@@ -12,7 +12,11 @@ import com.lauzy.freedom.librarys.R;
 
 
 /**
- * Created by Lauzy on 2017/3/17.
+ * Desc : SnackBar工具类
+ * Author : Lauzy
+ * Date : 2017/8/25
+ * Blog : http://www.jianshu.com/u/e76853f863a9
+ * Email : freedompaladin@gmail.com
  */
 @SuppressWarnings("all")
 public class SnackBarUtil {

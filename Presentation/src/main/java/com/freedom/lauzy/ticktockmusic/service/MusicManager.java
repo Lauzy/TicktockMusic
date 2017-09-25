@@ -207,7 +207,7 @@ public class MusicManager {
                 LogUtil.i(TAG, "--- data exists ---");
                 open(position, playQueue.get(position), DATA_EXITS);
             } else {
-                mQueueManager.localQueueObservable(ids, songEntities)
+                mQueueManager.addGetQueueObservable(ids, songEntities)
                         .compose(RxHelper.ioMain())
                         .subscribeWith(new DefaultDisposableObserver<List<SongEntity>>() {
                             @Override
@@ -216,12 +216,6 @@ public class MusicManager {
                                 LogUtil.i(TAG, "--- new data ---");
                                 mMusicService.setSongData(songData);
                                 open(position, songData.get(position), NEW_DATA);
-                            }
-
-                            @Override
-                            public void onError(@io.reactivex.annotations.NonNull Throwable e) {
-                                super.onError(e);
-                                e.printStackTrace();
                             }
                         });
             }

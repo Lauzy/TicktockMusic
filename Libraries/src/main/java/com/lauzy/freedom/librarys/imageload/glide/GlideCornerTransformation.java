@@ -16,7 +16,7 @@ import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
 import java.security.MessageDigest;
 
 /**
- * Desc :
+ * Desc : 圆角 Transformation
  * Author : Lauzy
  * Date : 2017/8/9
  * Blog : http://www.jianshu.com/u/e76853f863a9

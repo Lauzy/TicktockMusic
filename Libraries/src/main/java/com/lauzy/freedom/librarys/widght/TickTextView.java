@@ -20,7 +20,6 @@ import com.lauzy.freedom.librarys.widght.fonts.FontsCache;
 public class TickTextView extends TintTextView {
 
     private boolean rippleEnabled;
-    private boolean fontEnable;
 
     public TickTextView(Context context) {
         super(context);
@@ -42,7 +41,7 @@ public class TickTextView extends TintTextView {
         rippleEnabled = ta.getBoolean(R.styleable.RippleValue_enable_ripple, false);
 
         TypedArray fontTa = context.obtainStyledAttributes(attrs, R.styleable.CustomFont);
-        fontEnable = fontTa.getBoolean(R.styleable.CustomFont_enable_font_type, true);
+        boolean fontEnable = fontTa.getBoolean(R.styleable.CustomFont_enable_font_type, true);
 
         if (fontEnable) {
             setTypeface(FontsCache.getTypeface("fonts/fzltzxh.TTF", context));

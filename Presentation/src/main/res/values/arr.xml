@@ -13,7 +13,7 @@
 
     <string-array name="LocalMusicTitleArr">
         <item>@string/music</item>
-        <item>@string/singer</item>
+        <item>@string/album</item>
     </string-array>
 
     <string-array name="CategoryArr">

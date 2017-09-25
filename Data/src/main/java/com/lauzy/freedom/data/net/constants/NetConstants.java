@@ -15,6 +15,7 @@ package com.lauzy.freedom.data.net.constants;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
+@SuppressWarnings("unused")
 public class NetConstants {
     //http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=baidu.ting.billboard.billList&type=2&size=10&offset=0
     public static final String BASE_API = "http://tingapi.ting.baidu.com/";

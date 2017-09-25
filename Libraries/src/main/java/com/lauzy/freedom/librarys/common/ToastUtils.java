@@ -78,6 +78,7 @@ public class ToastUtils {
     public static void show(Context context, int message, int duration) {
         Toast.makeText(context, message, duration).show();
     }
+    private static Toast sToast;
 
     /**
      * 防止重复创建Toast
@@ -86,35 +87,32 @@ public class ToastUtils {
      * @param message message
      */
     public static void showSingle(Context context, CharSequence message) {
-        if (mToast == null) {
-            mToast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+        if (sToast == null) {
+            sToast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
         } else {
-            mToast.setText(message);
-            mToast.setDuration(Toast.LENGTH_SHORT);
+            sToast.setText(message);
+            sToast.setDuration(Toast.LENGTH_SHORT);
         }
-        mToast.show();
+        sToast.show();
     }
 
-    private static Toast mToast;
-
-
     public static void showLongSingle(Context context, CharSequence message) {
-        if (mToast == null) {
-            mToast = Toast.makeText(context, message, Toast.LENGTH_LONG);
+        if (sToast == null) {
+            sToast = Toast.makeText(context, message, Toast.LENGTH_LONG);
         } else {
-            mToast.setText(message);
-            mToast.setDuration(Toast.LENGTH_LONG);
+            sToast.setText(message);
+            sToast.setDuration(Toast.LENGTH_LONG);
         }
-        mToast.show();
+        sToast.show();
     }
 
     public static void showDurSingle(Context context, CharSequence message,int dur) {
-        if (mToast == null) {
-            mToast = Toast.makeText(context, message, dur);
+        if (sToast == null) {
+            sToast = Toast.makeText(context, message, dur);
         } else {
-            mToast.setText(message);
-            mToast.setDuration(dur);
+            sToast.setText(message);
+            sToast.setDuration(dur);
         }
-        mToast.show();
+        sToast.show();
     }
 }

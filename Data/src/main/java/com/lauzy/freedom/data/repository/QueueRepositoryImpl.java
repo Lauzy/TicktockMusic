@@ -18,7 +18,7 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.annotations.NonNull;
 
 /**
- * Desc : 队列数据实现
+ * Desc : 队列数据仓库实现类
  * Author : Lauzy
  * Date : 2017/9/8
  * Blog : http://www.jianshu.com/u/e76853f863a9
@@ -46,31 +46,17 @@ public class QueueRepositoryImpl implements QueueRepository {
     }
 
     @Override
-    public Observable<List<QueueSongBean>> addLocalQueueData(final String[] songIds, final List<LocalSongBean> queueSongBeen) {
+    public Observable<List<QueueSongBean>> addQueueData(final String[] songIds, final List<LocalSongBean> queueSongBeen) {
         return Observable.create(new ObservableOnSubscribe<List<QueueSongBean>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<QueueSongBean>> e) throws Exception {
-                PlayQueueDao.getInstance(mContext).addLocalQueue(queueSongBeen);
+                PlayQueueDao.getInstance(mContext).addToQueue(queueSongBeen);
                 List<QueueSongBean> songBeen = PlayQueueDao.getInstance(mContext).queryQueue(songIds);
                 e.onNext(songBeen != null ? songBeen : Collections.<QueueSongBean>emptyList());
                 e.onComplete();
             }
         });
     }
-
-//    @Override
-//    public Observable<List<QueueSongBean>> addNetQueueData(final String[] songIds,
-//                                                           final List<NetSongBean> netSongBeen) {
-//        return Observable.create(new ObservableOnSubscribe<List<QueueSongBean>>() {
-//            @Override
-//            public void subscribe(@NonNull ObservableEmitter<List<QueueSongBean>> e) throws Exception {
-//                PlayQueueDao.getInstance(mContext).addNetQueue(netSongBeen);
-//                List<QueueSongBean> songBeen = PlayQueueDao.getInstance(mContext).queryQueue(songIds);
-//                e.onNext(songBeen != null ? songBeen : Collections.<QueueSongBean>emptyList());
-//                e.onComplete();
-//            }
-//        });
-//    }
 
     @Override
     public Observable<Integer> deleteQueueData(final String[] songIds) {

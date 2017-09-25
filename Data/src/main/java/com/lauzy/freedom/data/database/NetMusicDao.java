@@ -14,7 +14,7 @@ import java.util.List;
 import static com.lauzy.freedom.data.database.TickDaoHelper.NET_MUSIC_TABLE;
 
 /**
- * Desc : 网络音乐数据库
+ * Desc : 网络音乐数据库，本地缓存
  * Author : Lauzy
  * Date : 2017/8/28
  * Blog : http://www.jianshu.com/u/e76853f863a9
@@ -63,6 +63,12 @@ public class NetMusicDao implements BaseDao {
 
     }
 
+    /**
+     * 获取缓存数据
+     *
+     * @param type 类型（新歌，摇滚等）
+     * @return 缓存的数据集合
+     */
     public List<NetSongBean> querySongData(int type) {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         Cursor cursor = null;
@@ -100,6 +106,12 @@ public class NetMusicDao implements BaseDao {
         return null;
     }
 
+    /**
+     * 根据type添加网络数据
+     *
+     * @param type         type
+     * @param songListBeen 网络数据集合
+     */
     public void addNetSongData(int type, List<NetSongBean> songListBeen) {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         db.beginTransaction();
@@ -119,16 +131,6 @@ public class NetMusicDao implements BaseDao {
 //                long conflict = db.insertWithOnConflict(TickDaoHelper.NET_MUSIC_TABLE, null, values,
 //                        SQLiteDatabase.CONFLICT_IGNORE);
                 long conflict = db.replace(TickDaoHelper.NET_MUSIC_TABLE, null, values);
-                /*Log.i(LTAG, "type is " + type + ";\n"
-                        + "id is " + netSongBean.songId + ";\n"
-                        + "name is " + netSongBean.title + ";\n"
-                        + "singerID is " + netSongBean.artistId + ";\n"
-                        + "singerName is " + netSongBean.artistName + ";\n"
-                        + "PIC is " + netSongBean.imgUrl + ";\n"
-                        + "LRC is " + netSongBean.lrcLink + ";\n"
-                        + "albumId is " + netSongBean.albumId + ";\n"
-                        + "albumName is " + netSongBean.albumTitle + ";\n"
-                        + "rank is " + netSongBean.rank + ";\n");*/
                 Log.i(LTAG, "DbConflict --- " + conflict);
             }
             db.setTransactionSuccessful();
@@ -138,6 +140,10 @@ public class NetMusicDao implements BaseDao {
         }
     }
 
+    /**
+     * 移除特定分类数据
+     * @param type 分类
+     */
     public void removeData(int type) {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         db.beginTransaction();

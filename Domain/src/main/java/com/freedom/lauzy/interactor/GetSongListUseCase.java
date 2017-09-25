@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 
 /**
- * Desc : 音乐数据列表用例
+ * Desc : 网络音乐数据列表用例
  * Author : Lauzy
  * Date : 2017/7/6
  * Blog : http://www.jianshu.com/u/e76853f863a9
@@ -35,6 +35,11 @@ public class GetSongListUseCase extends UseCase<List<NetSongBean>, GetSongListUs
         return mSongRepository.getSongList(params.method, params.type, params.offset, params.size);
     }
 
+    /**
+     * 获取缓存数据 Observable
+     * @param param 类型
+     * @return Observable
+     */
     public Observable<List<NetSongBean>> buildCacheObservable(int param) {
         return mSongRepository.getCacheSongList(param);
     }

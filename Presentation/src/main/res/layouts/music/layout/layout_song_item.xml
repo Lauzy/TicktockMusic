@@ -49,6 +49,7 @@
             tools:text="@string/app_name"/>
 
         <ImageView
+            android:id="@+id/img_item_menu"
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
             android:layout_alignParentEnd="true"

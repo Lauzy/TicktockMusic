@@ -60,6 +60,11 @@ public class FavoriteDao implements BaseDao {
 
     }
 
+    /**
+     * 添加喜欢的歌曲
+     * @param songBean songBean
+     * @return 添加结果
+     */
     public long addFavoriteSong(FavoriteSongBean songBean) {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         db.beginTransaction();
@@ -97,6 +102,10 @@ public class FavoriteDao implements BaseDao {
         return result;
     }
 
+    /**
+     * 获取所有喜欢的歌曲
+     * @return 喜欢的歌曲集合
+     */
     public List<FavoriteSongBean> getFavoriteSongs() {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         Cursor cursor = null;
@@ -133,6 +142,11 @@ public class FavoriteDao implements BaseDao {
         return null;
     }
 
+    /**
+     * 判断是否是喜欢的歌曲
+     * @param songId songId
+     * @return 是否是喜欢的歌曲
+     */
     public boolean isFavorite(long songId) {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         Cursor cursor = db.query(TickDaoHelper.FAVORITE_TABLE, new String[]{FavoriteParam.SONG_ID},
@@ -147,6 +161,11 @@ public class FavoriteDao implements BaseDao {
         return false;
     }
 
+    /**
+     * 删除喜欢的歌曲
+     * @param songId songId
+     * @return 删除结果
+     */
     public long deleteFavoriteSong(long songId) {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         db.beginTransaction();
@@ -158,6 +177,10 @@ public class FavoriteDao implements BaseDao {
         return delete;
     }
 
+    /**
+     * 清空喜欢的歌曲
+     * @return 清空结果
+     */
     public int clearFavoriteSongs() {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         db.beginTransaction();

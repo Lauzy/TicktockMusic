@@ -7,6 +7,7 @@ package com.lauzy.freedom.data.entity;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
+@SuppressWarnings("unused")
 public class OnlineSongEntity {
 
     public SonginfoBean songinfo;

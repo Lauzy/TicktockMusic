@@ -30,22 +30,33 @@ public class GetQueueUseCase extends UseCase<List<QueueSongBean>, String[]> {
         mQueueRepository = queueRepository;
     }
 
+    /**
+     * 获取播放队列数据集合Observable
+     * @param ids 音乐Ids
+     * @return Observable
+     */
     @Override
     public Observable<List<QueueSongBean>> buildUseCaseObservable(String[] ids) {
         return mQueueRepository.getQueueData(ids);
     }
 
+    /**
+     * 删除数据
+     * @param ids songIds
+     * @return Observable
+     */
     public Observable<Integer> deleteQueueObservable(String[] ids) {
         return mQueueRepository.deleteQueueData(ids);
     }
 
-    public Observable<List<QueueSongBean>> localQueueObservable(List<LocalSongBean> localSongBeen,
+    /**
+     * 添加数据到播放队列
+     * @param songBeen 音乐数据({@link LocalSongBean} 原设计为本地音乐，后网络数据经映射转换后也采用了此对象)
+     * @param ids ids
+     * @return Observable
+     */
+    public Observable<List<QueueSongBean>> addQueueObservable(List<LocalSongBean> songBeen,
                                                                 String[] ids) {
-        return mQueueRepository.addLocalQueueData(ids, localSongBeen);
+        return mQueueRepository.addQueueData(ids, songBeen);
     }
-
-//    public Observable<List<QueueSongBean>> netQueueObservable(List<NetSongBean> netSongBeen,
-//                                                              String[] ids) {
-//        return mQueueRepository.addNetQueueData(ids, netSongBeen);
-//    }
 }

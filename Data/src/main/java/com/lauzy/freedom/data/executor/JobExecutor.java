@@ -12,7 +12,13 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-
+/**
+ * Desc : 自定义线程池
+ * Author : Lauzy
+ * Date : 2017/7/25
+ * Blog : http://www.jianshu.com/u/e76853f863a9
+ * Email : freedompaladin@gmail.com
+ */
 @Singleton
 public class JobExecutor implements ThreadExecutor {
 

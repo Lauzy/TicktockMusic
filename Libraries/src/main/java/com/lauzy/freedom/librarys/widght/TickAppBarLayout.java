@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import com.bilibili.magicasakura.widgets.TintAppBarLayout;
 
 /**
- * Desc :
+ * Desc : 换肤AppBarLayout
  * Author : Lauzy
  * Date : 2017/8/8
  * Blog : http://www.jianshu.com/u/e76853f863a9

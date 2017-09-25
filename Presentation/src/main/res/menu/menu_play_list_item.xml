@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_item_play_next"
+        android:title="@string/menu_play_next"/>
+
+    <item
+        android:id="@+id/menu_item_singer"
+        android:title="@string/singer"/>
+
+    <item
+        android:id="@+id/menu_item_album"
+        android:title="@string/album"/>
+
+    <item
+        android:id="@+id/menu_item_share"
+        android:title="@string/menu_share"/>
+
+    <item
+        android:id="@+id/menu_item_delete"
+        android:title="@string/menu_delete"/>
+</menu>
