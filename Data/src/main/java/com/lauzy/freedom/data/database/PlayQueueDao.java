@@ -65,6 +65,7 @@ public class PlayQueueDao implements BaseDao {
 
     /**
      * 根据songId获取播放队列
+     *
      * @param songIds songIds
      * @return 播放队列数据集合
      */
@@ -114,6 +115,7 @@ public class PlayQueueDao implements BaseDao {
 
     /**
      * 添加播放队列数据
+     *
      * @param songBeen 添加的数据集合
      */
     public void addToQueue(List<LocalSongBean> songBeen) {
@@ -139,6 +141,7 @@ public class PlayQueueDao implements BaseDao {
 
     /**
      * 删除播放队列
+     *
      * @param ids ids
      * @return 删除结果
      */

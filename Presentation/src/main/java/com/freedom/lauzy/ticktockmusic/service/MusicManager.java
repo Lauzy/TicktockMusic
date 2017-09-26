@@ -405,6 +405,10 @@ public class MusicManager {
 
     /* ------- getter , setter and so on-------- */
 
+    public MusicService getMusicService() {
+        return mMusicService;
+    }
+
     public long getCurrentProgress() {
         return mMusicService != null ? mMusicService.getCurrentProgress() : 0;
     }
@@ -445,7 +449,11 @@ public class MusicManager {
      * @return 当前列表的ID
      */
     public String[] getCurIds() {
-        return mCurIds;
+        return mCurIds != null ? mCurIds : new String[]{};
+    }
+
+    public void setCurIds(String[] curIds) {
+        mCurIds = curIds;
     }
 
     public int getCurPosition() {

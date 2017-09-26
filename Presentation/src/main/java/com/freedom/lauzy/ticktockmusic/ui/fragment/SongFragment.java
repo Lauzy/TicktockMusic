@@ -22,7 +22,7 @@ import java.util.List;
 import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
 
-public class SongFragment extends BaseFragment<LocalMusicPresenter> implements LocalMusicContract.View {
+public class SongFragment extends BaseFragment<LocalMusicPresenter> implements LocalMusicContract.View, LocalSongAdapter.PlayNextListener {
 
     @BindView(R.id.rv_local_song)
     RecyclerView mRvLocalSong;
@@ -74,6 +74,7 @@ public class SongFragment extends BaseFragment<LocalMusicPresenter> implements L
         mPresenter.loadLocalSong();
         mAdapter = new LocalSongAdapter(R.layout.layout_song_item, mLocalSongBeen);
         mRvLocalSong.setAdapter(mAdapter);
+        mAdapter.setPlayNextListener(this);
     }
 
     @Override
@@ -98,5 +99,10 @@ public class SongFragment extends BaseFragment<LocalMusicPresenter> implements L
     public void onDestroy() {
         super.onDestroy();
         RxBus.INSTANCE.dispose(this);
+    }
+
+    @Override
+    public void playNext(SongEntity entity) {
+        mPresenter.setNewQueueData(entity);
     }
 }

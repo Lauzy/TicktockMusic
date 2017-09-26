@@ -58,7 +58,7 @@ public class LocalSongMapper {
     }
 
     /**
-     * 本地默认修改type为LOCAL
+     * 重要：本地默认修改type为LOCAL
      * @param localSongBean SongEntity
      * @return SongEntity
      */
@@ -93,5 +93,25 @@ public class LocalSongMapper {
             localSongEntities = Collections.emptyList();
         }
         return localSongEntities;
+    }
+
+    public LocalSongBean transformToLocal(SongEntity songEntity) {
+        if (songEntity == null) {
+            throw new IllegalArgumentException("Cannot transform a null value");
+        }
+        LocalSongBean localSongBean = new LocalSongBean();
+        localSongBean.id = songEntity.id;
+        localSongBean.albumCover = songEntity.albumCover;
+        localSongBean.albumId = songEntity.albumId;
+        localSongBean.albumName = songEntity.albumName;
+        localSongBean.artistId = songEntity.artistId;
+        localSongBean.artistName = songEntity.artistName;
+        localSongBean.duration = songEntity.duration;
+        localSongBean.path = songEntity.path;
+        localSongBean.size = songEntity.size;
+        localSongBean.title = songEntity.title;
+        localSongBean.songLength = songEntity.songLength;
+        localSongBean.type = songEntity.type;
+        return localSongBean;
     }
 }

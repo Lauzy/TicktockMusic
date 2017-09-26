@@ -7,15 +7,12 @@ import android.widget.PopupMenu;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.freedom.lauzy.model.QueueSongBean;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.model.mapper.LocalSongMapper;
 import com.freedom.lauzy.ticktockmusic.navigation.Navigator;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
-import com.lauzy.freedom.data.database.PlayQueueDao;
-import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 
@@ -57,12 +54,8 @@ public class LocalSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.menu_item_play_next:
-                        //TODO 插入数组，再获取队列（判断是否为空）
-                        String[] curIds = MusicManager.getInstance().getCurIds();
-                        String[] newIds = insertArr(curIds, MusicManager.getInstance().getCurPosition() + 1, String.valueOf(songEntity.id));
-                        List<QueueSongBean> songBeen = PlayQueueDao.getInstance(mContext).queryQueue(newIds);
-                        for (QueueSongBean queueSongBean : songBeen) {
-                            LogUtil.e("EEEEE", queueSongBean.title);
+                        if (mPlayNextListener != null) {
+                            mPlayNextListener.playNext(LocalSongMapper.transform(songEntity));
                         }
                         break;
                     case R.id.menu_item_singer:
@@ -89,18 +82,13 @@ public class LocalSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
                 transName, songEntity.albumName, songEntity.albumId);
     }
 
-    public String[] insertArr(String[] arr, int index, String value) {
-        String[] newArr = new String[arr.length + 1];
-//        for (int i = 0; i < arr.length; i++) {
-//            newArr[i] = arr[i];
-//        }
-//        for (int i = newArr.length - 1; i > index; i--) {
-//            newArr[i] = newArr[i - 1];
-//        }
+    private PlayNextListener mPlayNextListener;
 
-        System.arraycopy(arr, 0, newArr, 0, arr.length);
-        System.arraycopy(newArr, index, newArr, index + 1, newArr.length - 1 - index);
-        newArr[index] = value;
-        return newArr;
+    public void setPlayNextListener(PlayNextListener playNextListener) {
+        mPlayNextListener = playNextListener;
+    }
+
+    public interface PlayNextListener {
+        void playNext(SongEntity entity);
     }
 }
