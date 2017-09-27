@@ -9,9 +9,6 @@ import com.freedom.lauzy.ticktockmusic.model.mapper.SongMapper;
 
 import javax.inject.Inject;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
-
 /**
  * Desc : 播放队列Presenter
  * Author : Lauzy
@@ -47,8 +44,7 @@ public class PlayQueuePresenter extends BaseRxPresenter<PlayQueueContract.View>
     }
 
     @Override
-
-    public void deleteQueueData(String[] ids, int position, SongEntity entity ) {
+    public void deleteQueueData(String[] ids, int position, SongEntity entity) {
         if (ids != null) {
             mGetQueueUseCase.deleteQueueObservable(ids)
                     .compose(RxHelper.ioMain())

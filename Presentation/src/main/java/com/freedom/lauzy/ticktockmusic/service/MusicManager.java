@@ -86,6 +86,9 @@ public class MusicManager {
             if (mRecentUpdateListener != null) {
                 mRecentUpdateListener.startPlay();
             }
+            if (mPlayQueueListener != null) {
+                mPlayQueueListener.playSuccess();
+            }
         }
     };
 
@@ -193,7 +196,7 @@ public class MusicManager {
     }
 
     /**
-     * 播放当前本地音乐，并将当前列表添加至播放队列
+     * 播放当前列表音乐，并将当前列表添加至播放队列
      *
      * @param songEntities 列表
      * @param ids          id
@@ -452,10 +455,6 @@ public class MusicManager {
         return mCurIds != null ? mCurIds : new String[]{};
     }
 
-    public void setCurIds(String[] curIds) {
-        mCurIds = curIds;
-    }
-
     public int getCurPosition() {
         if (mMusicService != null) return mMusicService.getCurrentPosition();
         return 0;
@@ -464,6 +463,11 @@ public class MusicManager {
     private MusicManageListener mMusicManageListener;
     private SeekBarProgressListener mSeekBarProgressListener;
     private RecentUpdateListener mRecentUpdateListener;
+    private PlayQueueListener mPlayQueueListener;
+
+    public void setPlayQueueListener(PlayQueueListener playQueueListener) {
+        mPlayQueueListener = playQueueListener;
+    }
 
     public void setManageListener(MusicManageListener updateListener) {
         mMusicManageListener = updateListener;
@@ -509,5 +513,12 @@ public class MusicManager {
      */
     public interface RecentUpdateListener {
         void startPlay();
+    }
+
+    /**
+     * 播放队列状态刷新列表
+     */
+    public interface PlayQueueListener {
+        void playSuccess();
     }
 }

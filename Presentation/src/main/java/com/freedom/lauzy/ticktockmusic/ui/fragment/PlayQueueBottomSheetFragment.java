@@ -47,7 +47,7 @@ import javax.inject.Inject;
  * Email : freedompaladin@gmail.com
  */
 public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment implements
-        View.OnClickListener, PlayQueueContract.View, PlayQueueAdapter.DeleteQueueItemListener {
+        View.OnClickListener, PlayQueueContract.View, PlayQueueAdapter.QueueItemListener {
 
     private static final String TAG = "QueueBottomSheet";
     @Inject
@@ -99,6 +99,7 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment impl
         setModeView();
         view.findViewById(R.id.img_clear_queue).setOnClickListener(this);
         mImgMode.setOnClickListener(this);
+        MusicManager.getInstance().setPlayQueueListener(() -> mAdapter.notifyDataSetChanged());
     }
 
     private void setUpRv(View view) {
@@ -130,6 +131,7 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment impl
 
     /**
      * 设置 bottomSheet 的宽高
+     *
      * @param view fragmentView
      */
     private void setViewSize(View view) {
@@ -201,6 +203,14 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment impl
 
 
     @Override
+    public void playNewSong(int position) {
+        MusicManager.getInstance().playLocalQueue(mSongEntities,
+                MusicUtil.getSongIds(mSongEntities), position);
+        //设置回调接口，确保播放后刷新Adapter(setPlayQueueListener())
+//        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void deleteQueueItem(int position, SongEntity entity) {
         mQueuePresenter.deleteQueueData(new String[]{String.valueOf(entity.id)}, position, entity);
     }
@@ -218,5 +228,4 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment impl
         super.onDestroy();
         mQueuePresenter.detachView();
     }
-
 }

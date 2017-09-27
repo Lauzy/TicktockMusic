@@ -33,7 +33,8 @@ public class PlayQueueAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
 
     @Override
     protected void convert(BaseViewHolder helper, SongEntity item) {
-        if (MusicManager.getInstance().getCurPosition() == helper.getAdapterPosition()) {
+//        if (MusicManager.getInstance().getCurPosition() == helper.getAdapterPosition()) {
+        if (MusicManager.getInstance().getCurrentSong().equals(item)) {
             ColorStateList csl = ThemeUtils.getThemeColorStateList(mContext, R.color.color_tab);
             helper.setTextColor(R.id.txt_queue_title, csl.getDefaultColor());
             helper.setTextColor(R.id.txt_queue_singer, csl.getDefaultColor());
@@ -49,27 +50,30 @@ public class PlayQueueAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
 
     private View.OnClickListener deleteItemListener(BaseViewHolder helper, SongEntity item) {
         return v -> {
-            if (mDeleteQueueItemListener != null)
-                mDeleteQueueItemListener.deleteQueueItem(helper.getAdapterPosition(), item);
+            if (mQueueItemListener != null)
+                mQueueItemListener.deleteQueueItem(helper.getAdapterPosition(), item);
         };
     }
 
     private View.OnClickListener playListener(BaseViewHolder helper) {
         return v -> new Handler().postDelayed(() -> {
-            notifyItemChanged(MusicManager.getInstance().getCurPosition());
-            MusicManager.getInstance().playLocalQueue(mData, MusicUtil.getSongIds(mData), helper.getAdapterPosition());
-            notifyItemChanged(helper.getAdapterPosition());
-//            notifyDataSetChanged();
+//            notifyItemChanged(MusicManager.getInstance().getCurPosition());
+//            MusicManager.getInstance().playLocalQueue(mData, MusicUtil.getSongIds(mData), helper.getAdapterPosition());
+//            notifyItemChanged(helper.getAdapterPosition());
+            if (mQueueItemListener!= null) {
+                mQueueItemListener.playNewSong(helper.getAdapterPosition());
+            }
         }, 100);
     }
 
-    private DeleteQueueItemListener mDeleteQueueItemListener;
+    private QueueItemListener mQueueItemListener;
 
-    public void setDeleteQueueItemListener(DeleteQueueItemListener deleteQueueItemListener) {
-        mDeleteQueueItemListener = deleteQueueItemListener;
+    public void setDeleteQueueItemListener(QueueItemListener queueItemListener) {
+        mQueueItemListener = queueItemListener;
     }
 
-    public interface DeleteQueueItemListener {
+    public interface QueueItemListener {
+        void playNewSong(int position);
         void deleteQueueItem(int position, SongEntity entity);
     }
 }

@@ -52,7 +52,7 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                         getView().setCoverBitmap(resource);
                         if (mColorMap.get(String.valueOf(url)) == null) {
                             PaletteColor.mainColorObservable(resource).subscribe(color -> {
-                                        mColorMap.put((String) url, color);
+                                        mColorMap.put(String.valueOf(url), color);
                                         getView().setCoverBackground(color);
                                     }
                             );

@@ -15,8 +15,6 @@ import java.util.List;
 public interface LocalMusicContract {
     interface SongPresenter {
         void loadLocalSong();
-
-        void setNewQueueData(SongEntity songEntity);
     }
 
     interface View extends IBaseView {

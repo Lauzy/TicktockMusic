@@ -53,11 +53,6 @@ public class LocalSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
             PopupMenu popupMenu = new PopupMenu(mContext, v);
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
-                    case R.id.menu_item_play_next:
-                        if (mPlayNextListener != null) {
-                            mPlayNextListener.playNext(LocalSongMapper.transform(songEntity));
-                        }
-                        break;
                     case R.id.menu_item_singer:
                         break;
                     case R.id.menu_item_album:
@@ -80,15 +75,5 @@ public class LocalSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
         helper.getView(R.id.img_song_pic).setTransitionName(transName);
         Navigator.navigateToAlbumDetail(mContext, helper.getView(R.id.img_song_pic),
                 transName, songEntity.albumName, songEntity.albumId);
-    }
-
-    private PlayNextListener mPlayNextListener;
-
-    public void setPlayNextListener(PlayNextListener playNextListener) {
-        mPlayNextListener = playNextListener;
-    }
-
-    public interface PlayNextListener {
-        void playNext(SongEntity entity);
     }
 }
