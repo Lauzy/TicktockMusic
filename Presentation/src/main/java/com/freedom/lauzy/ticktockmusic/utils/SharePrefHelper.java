@@ -14,9 +14,14 @@ public class SharePrefHelper {
     private static final String CONFIG_NAME = "ticktock_shared_prefs";
     private static final String REPEAT_MODE = "repeat_mode";
     private static final String SONG_ID = "song_id";
+    private static final String ARTIST_SHARED_PREFS = "artist_avatar_prefs";
 
     private static SharedPreferences getSharePrefs(Context context) {
         return context.getSharedPreferences(CONFIG_NAME, Context.MODE_PRIVATE);
+    }
+
+    private static SharedPreferences getArtistSharePrefs(Context context) {
+        return context.getSharedPreferences(ARTIST_SHARED_PREFS, Context.MODE_PRIVATE);
     }
 
     public static void setRepeatMode(Context context, int mode) {
@@ -33,5 +38,13 @@ public class SharePrefHelper {
 
     public static long getCurrentSongId(Context context) {
         return getSharePrefs(context).getLong(SONG_ID, 0);
+    }
+
+    public static void setArtistAvatar(Context context, String artistName, String avatarUrl) {
+        getArtistSharePrefs(context).edit().putString(artistName, avatarUrl).apply();
+    }
+
+    public static String getArtistAvatar(Context context, String artistName) {
+        return getArtistSharePrefs(context).getString(artistName, "");
     }
 }

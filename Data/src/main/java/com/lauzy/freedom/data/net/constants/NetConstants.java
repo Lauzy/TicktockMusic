@@ -2,6 +2,7 @@ package com.lauzy.freedom.data.net.constants;
 
 /**
  * Desc : 网络常量
+ * 一、百度Api
  * 1、获取列表：method=baidu.ting.billboard.billList&type=1&size=10&offset=0
  * 2、搜索：method=baidu.ting.search.catalogSug&query=海阔天空
  * 3、播放：method=baidu.ting.song.play&songid=877578 或 method=baidu.ting.song.playAAC&songid=877578
@@ -10,6 +11,11 @@ package com.lauzy.freedom.data.net.constants;
  * 6、下载：method=baidu.ting.song.downWeb&songid=877578&bit=24&_t=1393123213
  * 7、歌手信息：method=baidu.ting.artist.getInfo&tinguid=877578
  * 8、歌手歌曲列表：method=baidu.ting.artist.getSongList&tinguid=877578&limits=6&use_cluster=1&order=2
+ * <p>
+ * 二、Bandsintown：获取歌手头像(必须翻墙，故废弃)
+ * https://rest.bandsintown.com/artists/%E5%BC%A0%E5%AD%A6%E5%8F%8B?app_id=com.freedom.lauzy.ticktockmusic
+ * 三、LastFm:
+ * http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=488ab9cda4285fbb1bb7dfde5a1b010f&artist=%E5%BC%A0%E5%AD%A6%E5%8F%8B&format=json
  * Author : Lauzy
  * Date : 2017/7/7
  * Blog : http://www.jianshu.com/u/e76853f863a9
@@ -20,6 +26,33 @@ public class NetConstants {
     //http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=baidu.ting.billboard.billList&type=2&size=10&offset=0
     public static final String BASE_API = "http://tingapi.ting.baidu.com/";
     public static final String URL_PARAM = "v1/restserver/ting";
+
+    //    public static final String BASE_ARTIST_URL = "https://rest.bandsintown.com/";
+    //    public static final String ARTIST_URL_PARAM = "artists";
+    public static final String BASE_ARTIST_URL = "http://ws.audioscrobbler.com/";
+    public static final String ARTIST_URL_PARAM = "2.0";
+
+    //    http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=488ab9cda4285fbb1bb7dfde5a1b010f&artist=%E5%BC%A0%E5%AD%A6%E5%8F%8B&format=json
+    public static class Artist {
+        //        public static final String APP_ID = "app_id";
+        public static final String METHOD = "method";
+        public static final String API_KEY = "api_key";
+        public static final String ARTIST_NAME = "artist";
+        public static final String FORMAT = "format";
+        public static final String FORMAT_JSON = "json";
+
+        public static final String API_KEY_CONTENT = "488ab9cda4285fbb1bb7dfde5a1b010f";
+        public static final String GET_ARTIST_INFO = "artist.getinfo";
+    }
+
+    public static class Header {
+        public static final String BASE_URL_HEAD = "BaseUrlHead";
+        public static final String BAIDU_HEAD_CONTENT = "BaiduApi";
+        public static final String BANDSINTOWN_HEAD_CONTENT = "LastFmApi";
+        public static final String USER_AGENT = "User-Agent";
+        public static final String USER_AGENT_CONTENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) " +
+                "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36";
+    }
 
     public static class Param {
         public static final String FORMAT = "format";

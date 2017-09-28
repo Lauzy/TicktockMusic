@@ -44,10 +44,10 @@ public class LocalAlbumLoader {
     }
 
     private static List<LocalAlbumBean> queryResult(Cursor cursor) {
-        List<LocalAlbumBean> albumBeen = new ArrayList<>();
         if (cursor == null) {
             return null;
         }
+        List<LocalAlbumBean> albumBeen = new ArrayList<>();
         while (cursor.moveToNext()) {
             String artistName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
             String albumName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));

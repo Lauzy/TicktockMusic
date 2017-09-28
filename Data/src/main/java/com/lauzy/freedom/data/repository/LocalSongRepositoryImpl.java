@@ -2,11 +2,18 @@ package com.lauzy.freedom.data.repository;
 
 import android.content.Context;
 
+import com.freedom.lauzy.model.ArtistAvatar;
 import com.freedom.lauzy.model.LocalAlbumBean;
+import com.freedom.lauzy.model.LocalArtistBean;
 import com.freedom.lauzy.model.LocalSongBean;
 import com.freedom.lauzy.repository.LocalSongRepository;
+import com.lauzy.freedom.data.entity.SingerAvatarEntity;
+import com.lauzy.freedom.data.entity.mapper.SingerAvatarMapper;
 import com.lauzy.freedom.data.local.LocalAlbumLoader;
+import com.lauzy.freedom.data.local.LocalArtistLoader;
 import com.lauzy.freedom.data.local.LocalSongLoader;
+import com.lauzy.freedom.data.net.RetrofitHelper;
+import com.lauzy.freedom.data.net.api.SongService;
 
 import java.util.List;
 
@@ -17,6 +24,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
 
 /**
  * Desc : Local Data
@@ -56,5 +64,29 @@ public class LocalSongRepositoryImpl implements LocalSongRepository {
                 e.onComplete();
             }
         });
+    }
+
+    @Override
+    public Observable<List<LocalArtistBean>> getLocalArtistList() {
+        return Observable.create(new ObservableOnSubscribe<List<LocalArtistBean>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<LocalArtistBean>> e) throws Exception {
+                e.onNext(LocalArtistLoader.getLocalArtists(mContext));
+                e.onComplete();
+            }
+        });
+    }
+
+    @Override
+    public Observable<ArtistAvatar> getArtistAvatar(String method, String apiKey, String artistName, String format) {
+        return RetrofitHelper.INSTANCE
+                .createApi(SongService.class)
+                .getSingerAvatar(method, apiKey, artistName, format)
+                .map(new Function<SingerAvatarEntity, ArtistAvatar>() {
+                    @Override
+                    public ArtistAvatar apply(@NonNull SingerAvatarEntity avatarEntity) throws Exception {
+                        return SingerAvatarMapper.transform(avatarEntity);
+                    }
+                });
     }
 }

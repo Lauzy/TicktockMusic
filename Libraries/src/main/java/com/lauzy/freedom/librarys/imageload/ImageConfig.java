@@ -24,6 +24,7 @@ public class ImageConfig {
     private boolean isAsBitmap;
     private int duration;//Glide的crossFade时长
     private int cacheStrategy;
+    private boolean isSkipMemoryCache;
 
     public static final int CACHE_NONE = 1;
     public static final int CACHE_RESULT = 2;
@@ -42,6 +43,11 @@ public class ImageConfig {
         this.isAsBitmap = builder.isAsBitmap;
         this.duration = builder.duration;
         this.cacheStrategy = builder.cacheStrategy;
+        this.isSkipMemoryCache = builder.isSkipMemoryCache;
+    }
+
+    public boolean isSkipMemoryCache() {
+        return isSkipMemoryCache;
     }
 
     public int getCacheStrategy() {
@@ -95,6 +101,12 @@ public class ImageConfig {
         private Target<Bitmap> target;
         private int duration;
         private int cacheStrategy;
+        private boolean isSkipMemoryCache;
+
+        public Builder skipMemoryCache(boolean isSkipMemoryCache) {
+            this.isSkipMemoryCache = isSkipMemoryCache;
+            return this;
+        }
 
         public Builder cacheStrategy(int cacheStrategy) {
             this.cacheStrategy = cacheStrategy;

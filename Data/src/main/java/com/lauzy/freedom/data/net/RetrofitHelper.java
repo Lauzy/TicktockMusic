@@ -2,8 +2,7 @@ package com.lauzy.freedom.data.net;
 
 import com.lauzy.freedom.data.BuildConfig;
 import com.lauzy.freedom.data.net.constants.NetConstants;
-import com.lauzy.freedom.data.net.interceptor.UserAgentInterceptor;
-import com.lauzy.freedom.data.net.retrofit.TickJsonConverterFactory;
+import com.lauzy.freedom.data.net.interceptor.BaseUrlInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -11,6 +10,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Desc : RetrofitHelper
@@ -29,7 +29,8 @@ public enum RetrofitHelper {
         mRetrofit = new Retrofit.Builder()
                 .client(initOkHttp())
                 .baseUrl(NetConstants.BASE_API)
-                .addConverterFactory(TickJsonConverterFactory.create())
+//                .addConverterFactory(TickJsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
     }
@@ -45,7 +46,8 @@ public enum RetrofitHelper {
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             builder.addInterceptor(loggingInterceptor);
         }
-        builder.addInterceptor(new UserAgentInterceptor());//reset User-Agent
+//        builder.addInterceptor(new UserAgentInterceptor());//reset User-Agent
+        builder.addInterceptor(new BaseUrlInterceptor());
         builder.connectTimeout(10, TimeUnit.SECONDS);
         builder.readTimeout(10, TimeUnit.SECONDS);
         builder.writeTimeout(10, TimeUnit.SECONDS);

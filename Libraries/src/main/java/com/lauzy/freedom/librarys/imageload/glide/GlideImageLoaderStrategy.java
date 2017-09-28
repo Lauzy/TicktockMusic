@@ -85,6 +85,7 @@ public class GlideImageLoaderStrategy implements IBaseImageStrategy {
                 break;
         }
         options.diskCacheStrategy(strategy);
+        options.skipMemoryCache(imageConfig.isSkipMemoryCache());
         return options;
     }
 

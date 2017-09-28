@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_72"
+    android:layout_marginLeft="@dimen/dp_5"
+    android:layout_marginRight="@dimen/dp_5"
+    android:layout_marginTop="@dimen/dp_003"
+    app:cardCornerRadius="@dimen/dp_3"
+    app:cardElevation="@dimen/dp_2">
+
+    <com.lauzy.freedom.librarys.widght.TickRelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/layout_singer_item"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:paddingBottom="@dimen/dp_10"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_15"
+        android:paddingTop="@dimen/dp_10">
+
+        <ImageView
+            android:id="@+id/img_singer_pic"
+            android:layout_width="@dimen/dp_48"
+            android:layout_height="@dimen/dp_48"
+            android:layout_centerVertical="true"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_album_default"/>
+
+        <com.lauzy.freedom.librarys.widght.TickTextView
+            android:id="@+id/txt_singer_name"
+            style="@style/MarqueeTxtStyle"
+            android:layout_marginTop="@dimen/dp_6"
+            android:layout_toRightOf="@id/img_singer_pic"
+            tools:text="@string/app_name"/>
+
+        <com.lauzy.freedom.librarys.widght.TickTextView
+            android:id="@+id/txt_singer_album_num"
+            style="@style/MarqueeTxtStyle"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_6"
+            android:layout_toRightOf="@id/img_singer_pic"
+            android:textColor="@color/gray_dark"
+            android:textSize="@dimen/sp_1205"
+            tools:text="@string/app_name"/>
+
+        <ImageView
+            android:id="@+id/img_singer_item_menu"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:scaleType="center"
+            android:contentDescription="@null"
+            android:tint="@color/gray"
+            app:srcCompat="@drawable/ic_menu_point"/>
+
+    </com.lauzy.freedom.librarys.widght.TickRelativeLayout>
+</android.support.v7.widget.CardView>
