@@ -48,4 +48,11 @@ public interface LocalSongRepository {
      */
     Observable<ArtistAvatar> getArtistAvatar(String method, String apiKey, String artistName, String format);
 
+    /**
+     * 获取本地歌手的音乐
+     * @param artistId 歌手ID
+     * @return Observable
+     */
+    Observable<List<LocalSongBean>> getLocalArtistSongList(long artistId);
+
 }

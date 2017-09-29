@@ -3,7 +3,6 @@ package com.freedom.lauzy.ticktockmusic.contract;
 import android.content.Context;
 import android.widget.ImageView;
 
-import com.freedom.lauzy.model.ArtistAvatar;
 import com.freedom.lauzy.model.LocalArtistBean;
 import com.freedom.lauzy.ticktockmusic.base.IBaseView;
 
@@ -16,15 +15,15 @@ import java.util.List;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class LocalArtistContract {
+public interface LocalArtistContract {
 
-    public interface Presenter {
+    interface Presenter {
         void loadLocalArtists();
 
         void loadArtistAvatar(String artistName, ImageView imageView);
     }
 
-    public interface View extends IBaseView {
+    interface View extends IBaseView {
 
         Context getContext();
 

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.lauzy.freedom.librarys.widght.TickAppBarLayout
+        android:id="@+id/abl_singer_detail"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_300"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/ctl_singer_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:collapsedTitleGravity="left"
+            app:collapsedTitleTextAppearance="@style/WhiteText"
+            app:contentScrim="@color/theme_color_primary"
+            app:expandedTitleGravity="left|bottom"
+            app:expandedTitleTextAppearance="@style/CollapsingToolbarTitleStyle"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:scrimVisibleHeightTrigger="0dp">
+
+            <ImageView
+                android:id="@+id/img_singer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/app_name"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_album_default"
+                app:layout_collapseMode="parallax"
+                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"/>
+
+            <com.lauzy.freedom.librarys.widght.TickToolbar
+                android:id="@+id/toolbar_common"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:titleTextColor="@android:color/white"/>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_singer_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingBottom="@dimen/dp_1"
+            app:tabBackground="@drawable/ripple_bg"
+            app:tabIndicatorColor="@color/theme_color_primary"
+            app:tabMaxWidth="@dimen/dp_85"
+            app:tabMinWidth="@dimen/dp_80"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/theme_color_primary"
+            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+            app:tabTextColor="@color/black_light">
+        </android.support.design.widget.TabLayout>
+
+    </com.lauzy.freedom.librarys.widght.TickAppBarLayout>
+
+   <android.support.v4.view.ViewPager
+       android:id="@+id/vp_singer_detail"
+       app:layout_behavior="@string/appbar_scrolling_view_behavior"
+       android:layout_width="match_parent"
+       android:background="@color/white"
+       android:layout_height="match_parent">
+   </android.support.v4.view.ViewPager>
+
+</android.support.design.widget.CoordinatorLayout>

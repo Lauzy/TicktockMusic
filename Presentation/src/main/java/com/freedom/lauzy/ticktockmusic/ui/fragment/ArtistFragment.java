@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 
-import com.freedom.lauzy.model.ArtistAvatar;
 import com.freedom.lauzy.model.LocalArtistBean;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
@@ -21,7 +20,7 @@ import java.util.List;
 import butterknife.BindView;
 
 /**
- * Desc :
+ * Desc : 歌手Fragment
  * Author : Lauzy
  * Date : 2017/9/28
  * Blog : http://www.jianshu.com/u/e76853f863a9

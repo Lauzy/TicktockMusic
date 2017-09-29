@@ -39,12 +39,13 @@ public class AlbumAdapter extends BaseQuickAdapter<LocalAlbumBean, BaseViewHolde
                 .placeholder(R.drawable.ic_album_default)
                 .into(helper.getView(R.id.img_album))
                 .build());
-
-        String transName = mContext.getString(R.string.img_transition) + helper.getAdapterPosition();
-        helper.getView(R.id.img_album).setTransitionName(transName);
-        helper.getView(R.id.cv_category).setOnClickListener(v ->
-                Navigator.navigateToAlbumDetail(mContext, helper.getView(R.id.img_album),
-                        transName, item.albumName, item.id)
+//        String transName = mContext.getString(R.string.img_transition) + helper.getAdapterPosition();
+        helper.getView(R.id.cv_category).setOnClickListener(v -> {
+                    String transName = mContext.getString(R.string.img_transition) + item.id;
+                    helper.getView(R.id.img_album).setTransitionName(transName);
+                    Navigator.navigateToAlbumDetail(mContext, helper.getView(R.id.img_album),
+                            transName, item.albumName, item.id);
+                }
         );
     }
 }

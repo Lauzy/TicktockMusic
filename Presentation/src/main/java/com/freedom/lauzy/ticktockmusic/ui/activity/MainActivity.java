@@ -30,6 +30,7 @@ import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.MainPresenter;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.AlbumDetailFragment;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.ArtistDetailFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.FavoriteFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.LocalMusicFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongFragment;
@@ -183,7 +184,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
         switch (item.getItemId()) {
             case R.id.nav_music:
                 if (!(fragment instanceof LocalMusicFragment) && !(fragment instanceof
-                        AlbumDetailFragment)) {
+                        AlbumDetailFragment) && !(fragment instanceof ArtistDetailFragment)) {
                     drawerRunnable = mLmRunnable;
                 }
                 break;
@@ -211,7 +212,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
                 break;
 
         }
-        if (item.getItemId() != R.id.nav_setting && !(fragment instanceof AlbumDetailFragment)) {
+        if (item.getItemId() != R.id.nav_setting && !(fragment instanceof AlbumDetailFragment) &&
+                !(fragment instanceof ArtistDetailFragment)) {
             getSupportFragmentManager().popBackStackImmediate();
         }
         if (drawerRunnable != null) {
@@ -331,6 +333,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
 
     /**
      * 设置侧滑抽屉的属性
+     *
      * @param songEntity 当前播放音乐
      */
     private void setNavHeadView(SongEntity songEntity) {
@@ -347,6 +350,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
 
     /**
      * 设置底部快捷控制条的属性
+     *
      * @param songEntity 当前播放音乐
      */
     private void setMusicBarView(SongEntity songEntity) {

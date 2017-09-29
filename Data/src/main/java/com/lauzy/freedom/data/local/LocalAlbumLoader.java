@@ -34,12 +34,14 @@ public class LocalAlbumLoader {
      * 根据ID，获取本地专辑
      *
      * @param context context
-     * @param id      专辑ID，若ID为0，则获取全部数据；不为0，则查找指定ID的数据
+     * @param id      歌手ID，若ID为0，则获取全部数据；不为0，则查找指定ID的数据
      * @return 专辑列表
      */
     public static List<LocalAlbumBean> getLocalAlbums(Context context, long id) {
-        Cursor cursor = getAlbumCursor(context, id != 0 ? "_id = ？" : null,
+        Cursor cursor = getAlbumCursor(context, id != 0 ? "artist_id = ? " : null,
                 id != 0 ? new String[]{String.valueOf(id)} : null);
+//        Cursor cursor = getAlbumCursor(context, id != 0 ? "_id in ( ? ) " : null,
+//                id != 0 ? new String[]{String.valueOf(id)} : null);
         return queryResult(cursor);
     }
 
@@ -74,10 +76,10 @@ public class LocalAlbumLoader {
      * @return cursor
      */
     private static Cursor getAlbumCursor(Context context, String selection, String[] paramArr) {
-        String[] projections = new String[]{MediaStore.Audio.Media._ID, MediaStore.Audio.Media.ALBUM,
-                MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ARTIST_ID,
-                MediaStore.Audio.AlbumColumns.NUMBER_OF_SONGS};
+//        String[] projections = new String[]{MediaStore.Audio.Media._ID, MediaStore.Audio.Media.ALBUM,
+//                MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ARTIST_ID,
+//                MediaStore.Audio.AlbumColumns.NUMBER_OF_SONGS};
         return context.getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
-                projections, selection, paramArr, MediaStore.Audio.Albums.DEFAULT_SORT_ORDER);
+                null, selection, paramArr, MediaStore.Audio.Albums.DEFAULT_SORT_ORDER);
     }
 }

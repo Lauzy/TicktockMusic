@@ -13,8 +13,8 @@ import com.freedom.lauzy.ticktockmusic.model.SongEntity;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class PlayContract {
-    public interface View extends IBaseView {
+public interface PlayContract {
+    interface View extends IBaseView {
         Context getContext();
 
         void setCoverBitmap(Bitmap bitmap);
@@ -28,7 +28,7 @@ public class PlayContract {
         void isFavoriteSong(boolean isFavorite);
     }
 
-    public interface Presenter {
+    interface Presenter {
         void setCoverImgUrl(Object url);
 
         void addFavoriteSong(SongEntity entity);

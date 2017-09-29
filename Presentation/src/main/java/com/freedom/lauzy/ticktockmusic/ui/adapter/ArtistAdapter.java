@@ -8,6 +8,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.freedom.lauzy.model.LocalArtistBean;
 import com.freedom.lauzy.ticktockmusic.R;
+import com.freedom.lauzy.ticktockmusic.navigation.Navigator;
 
 import java.util.List;
 
@@ -30,13 +31,19 @@ public class ArtistAdapter extends BaseQuickAdapter<LocalArtistBean, BaseViewHol
                 ? R.string.album_number : R.string.album_numbers, item.albumsNum);
         String songsNum = mContext.getResources().getString(item.songsNum == 1
                 ? R.string.song_number : R.string.song_numbers, item.songsNum);
-        String detail = albumNum + " | " + songsNum;
+        String detail = albumNum + "  |  " + songsNum;
         helper.setText(R.id.txt_singer_name, item.artistName)
                 .setText(R.id.txt_singer_album_num, detail);
         ((ImageView) helper.getView(R.id.img_singer_pic)).setImageResource(R.drawable.ic_default);
         if (mAvatarListener != null) {
             mAvatarListener.setArtistAvatar(item, helper.getView(R.id.img_singer_pic));
         }
+
+        String transName = mContext.getString(R.string.img_singer_transition) + helper.getAdapterPosition();
+        helper.getView(R.id.img_singer_pic).setTransitionName(transName);
+        helper.getView(R.id.layout_singer_item).setOnClickListener(v ->
+                Navigator.navigateToArtistDetail(mContext, helper.getView(R.id.img_singer_pic),
+                        transName, item.artistName, item.artistId, item.albumsNum, item.songsNum));
     }
 
     private ArtistAvatarListener mAvatarListener;

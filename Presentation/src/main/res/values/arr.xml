@@ -17,6 +17,11 @@
         <item>@string/singer</item>
     </string-array>
 
+    <string-array name="ArtistDetailTitleArr">
+        <item>@string/music</item>
+        <item>@string/album</item>
+    </string-array>
+
     <string-array name="CategoryArr">
         <item>@string/new_song</item>
         <item>@string/hot_song</item>

@@ -4,6 +4,7 @@ import com.freedom.lauzy.executor.PostExecutionThread;
 import com.freedom.lauzy.executor.ThreadExecutor;
 import com.freedom.lauzy.model.ArtistAvatar;
 import com.freedom.lauzy.model.LocalArtistBean;
+import com.freedom.lauzy.model.LocalSongBean;
 import com.freedom.lauzy.repository.LocalSongRepository;
 
 import java.util.List;
@@ -37,5 +38,9 @@ public class GetLocalArtistUseCase extends UseCase<List<LocalArtistBean>, Void> 
 
     public Observable<ArtistAvatar> getArtistAvatar(String method, String apiKey, String artistName, String format) {
         return mLocalSongRepository.getArtistAvatar(method, apiKey, artistName, format);
+    }
+
+    public Observable<List<LocalSongBean>> getArtistSongList(long id) {
+        return mLocalSongRepository.getLocalArtistSongList(id);
     }
 }

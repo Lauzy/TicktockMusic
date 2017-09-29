@@ -24,13 +24,20 @@ public class LocalSongLoader {
 
     /**
      * 获取本地音乐列表
+     *
      * @param context context
-     * @param id 专辑Id，为0时返回所有本地音乐数据
+     * @param id      专辑Id，为0时返回所有本地音乐数据
      * @return 本地音乐数据集合
      */
     public static List<LocalSongBean> getLocalSongList(Context context, long id) {
         Cursor cursor = getSongCursor(context, id != 0 ? "album_id = ? " : null,
                 id != 0 ? new String[]{String.valueOf(id)} : null);
+        return queryLocalSongs(cursor);
+    }
+
+    public static List<LocalSongBean> getLocalArtistSongList(Context context, long artistId) {
+        Cursor cursor = getSongCursor(context, artistId != 0 ? "artist_id = ? " : null,
+                artistId != 0 ? new String[]{String.valueOf(artistId)} : null);
         return queryLocalSongs(cursor);
     }
 

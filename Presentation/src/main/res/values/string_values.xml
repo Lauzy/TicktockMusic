@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="img_transition">TransitionImage</string>
+    <string name="img_singer_transition">TransitionSingerImage</string>
     <string name="txt_transition">TransitionText</string>
 </resources>

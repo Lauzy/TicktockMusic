@@ -89,4 +89,15 @@ public class LocalSongRepositoryImpl implements LocalSongRepository {
                     }
                 });
     }
+
+    @Override
+    public Observable<List<LocalSongBean>> getLocalArtistSongList(final long artistId) {
+        return Observable.create(new ObservableOnSubscribe<List<LocalSongBean>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<LocalSongBean>> e) throws Exception {
+                e.onNext(LocalSongLoader.getLocalArtistSongList(mContext,artistId));
+                e.onComplete();
+            }
+        });
+    }
 }
