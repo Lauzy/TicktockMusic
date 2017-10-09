@@ -125,8 +125,10 @@ public class ArtistDetailFragment extends BaseFragment {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(ArtistSongFragment.newInstance(mArtistId));
         fragments.add(ArtistAlbumFragment.newInstance(mArtistId));
-        String albumTitle = getResources().getString(R.string.album) + "(" + mAlbumNum + ")";
-        String songTitle = getResources().getString(R.string.music) + "(" + mSongNum + ")";
+        String albumTitle = mAlbumNum == 0 ? getResources().getString(R.string.album)
+                : getResources().getString(R.string.album) + "(" + mAlbumNum + ")";
+        String songTitle = mSongNum == 0 ? getResources().getString(R.string.music)
+                : getResources().getString(R.string.music) + "(" + mSongNum + ")";
         String[] titleArr = {songTitle, albumTitle};
         ArtistDetailPagerAdapter adapter = new ArtistDetailPagerAdapter(getChildFragmentManager(),
                 fragments, titleArr);
