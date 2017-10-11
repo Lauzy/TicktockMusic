@@ -3,8 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/cl_play"
     android:background="@color/gray_light"
     tools:context="com.freedom.lauzy.ticktockmusic.ui.activity.PlayActivity">
+
+    <ImageView
+        android:contentDescription="@null"
+        android:id="@+id/img_play_bg"
+        android:scaleType="centerCrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <include layout="@layout/layout_play"/>
 

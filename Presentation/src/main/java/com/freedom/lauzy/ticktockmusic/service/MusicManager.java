@@ -13,7 +13,7 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 
 import com.freedom.lauzy.ticktockmusic.TicktockApplication;
-import com.freedom.lauzy.ticktockmusic.base.DefaultDisposableObserver;
+import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.event.ClearQueueEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;

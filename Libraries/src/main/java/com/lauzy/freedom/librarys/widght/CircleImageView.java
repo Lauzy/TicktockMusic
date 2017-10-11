@@ -443,7 +443,8 @@ public class CircleImageView extends TintImageView {
         mShaderMatrix.preRotate(mRotation, mBitmapWidth / 2, mBitmapHeight / 2);//旋转
         mBitmapShader.setLocalMatrix(mShaderMatrix);
     }
-   /*---------------------------------以下为旋转实现------------------------------*/
+
+    /*---------------------------------以下为旋转实现------------------------------*/
     private Runnable mRotationRunnable = new Runnable() {
         @Override
         public void run() {
@@ -458,7 +459,7 @@ public class CircleImageView extends TintImageView {
     private Handler mHandler = new Handler();
     private boolean isPlaying;
 
-    public void start(){
+    public void start() {
         if (isPlaying) {
             return;
         }
@@ -467,12 +468,17 @@ public class CircleImageView extends TintImageView {
         mHandler.post(mRotationRunnable);
     }
 
-    public void pause(){
+    public void pause() {
         if (!isPlaying) {
             return;
         }
         isPlaying = false;
         mHandler.removeCallbacks(mRotationRunnable);
+    }
+
+    @Override
+    public void setRotation(float rotation) {
+        mRotation = rotation;
     }
 
     public boolean isPlaying() {

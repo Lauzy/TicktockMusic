@@ -33,6 +33,7 @@ import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.PlayQueueAdapter;
 import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.lauzy.freedom.librarys.common.ScreenUtils;
+import com.lauzy.freedom.librarys.widght.TickBottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +85,8 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment impl
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mQueuePresenter.attachView(this);
-        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+//        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+        BottomSheetDialog dialog = new TickBottomSheetDialog(mActivity, getTheme());
         View view = View.inflate(getContext(), R.layout.layout_play_queue, null);
         setUpBottomView(view);
         dialog.setContentView(view);

@@ -69,6 +69,9 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     LinearLayout mLayoutPlay;
     @BindView(R.id.img_favorite)
     ImageView mImgFavorite;
+    @BindView(R.id.img_play_bg)
+    ImageView mImageViewBg;
+    @SuppressWarnings("unused")
     private static final String TAG = "PlayActivity";
     private boolean mIsFavorite;
     private static final int PLAY_DELAY = 500;
@@ -137,6 +140,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     /**
      * 更新当前播放视图
+     *
      * @param songEntity 当前播放音乐
      */
     private void setCurData(SongEntity songEntity) {
@@ -205,7 +209,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     public void play() {
         if (MusicManager.getInstance().getCurrentSong() != null) {
             MusicManager.getInstance().start();
-            mAlbumCoverView.start();
+            mAlbumCoverView.postDelayed(() -> mAlbumCoverView.start(), 400);
         }
     }
 
@@ -213,7 +217,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     public void pause() {
         if (MusicManager.getInstance().getCurrentSong() != null) {
             MusicManager.getInstance().pause();
-            mAlbumCoverView.pause();
+            mAlbumCoverView.postDelayed(() -> mAlbumCoverView.pause(), 400);
         }
     }
 
@@ -226,16 +230,14 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     public void setCoverBitmap(Bitmap bitmap) {
         mAlbumCoverView.setImageBitmap(bitmap);
         if (MusicManager.getInstance().isPlaying()) {
-            mAlbumCoverView.post(() -> mAlbumCoverView.start());
+            mAlbumCoverView.setRotation(0);
+            mAlbumCoverView.postDelayed(() -> mAlbumCoverView.start(), 1000);
         }
     }
 
     @Override
-    public void setCoverBackground(int color) {
-        mLayoutPlay.setBackgroundColor(color);
-//        ColorStateList stateList = new ColorStateList(new int[][]{new int[]{}}, new int[]{color});
-//        mSeekPlay.setThumbTintList(stateList);
-//        mSeekPlay.setProgressTintList(stateList);
+    public void setCoverBackground(Bitmap background) {
+        mImageViewBg.setImageBitmap(background);
     }
 
     @Override

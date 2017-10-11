@@ -6,7 +6,7 @@ import com.freedom.lauzy.interactor.GetLocalArtistUseCase;
 import com.freedom.lauzy.model.ArtistAvatar;
 import com.freedom.lauzy.model.LocalArtistBean;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
-import com.freedom.lauzy.ticktockmusic.base.DefaultDisposableObserver;
+import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.contract.LocalArtistContract;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;

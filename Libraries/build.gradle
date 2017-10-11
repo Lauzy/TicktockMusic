@@ -12,6 +12,14 @@ android {
         versionCode globalConfiguration["androidVersionCode"]
         versionName globalConfiguration["androidVersionName"]
         testInstrumentationRunner globalConfiguration["testInstrumentationRunner"]
+        ndk {
+            moduleName = 'ImageBlurJni'
+            abiFilters "armeabi", "armeabi-v7a"
+            ldLibs "jnigraphics"
+//            ldLibs.addAll(['m', 'log', 'jnigraphics'])
+            //abiFilters.addAll(['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64', 'mips', 'mips64'])
+            //cppFlags.addAll(['-DANDROID_NDK', '-D_RELEASE'])
+        }
     }
 
     publishNonDefault true
@@ -22,6 +30,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+    sourceSets { main { jni.srcDirs = ['src/main/jni', 'src/main/cpp/'] } }
 }
 
 dependencies {

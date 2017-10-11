@@ -3,7 +3,7 @@ package com.freedom.lauzy.ticktockmusic.presenter;
 import com.freedom.lauzy.interactor.RecentSongUseCase;
 import com.freedom.lauzy.model.RecentSongBean;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
-import com.freedom.lauzy.ticktockmusic.base.DefaultDisposableObserver;
+import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.contract.RecentContract;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;

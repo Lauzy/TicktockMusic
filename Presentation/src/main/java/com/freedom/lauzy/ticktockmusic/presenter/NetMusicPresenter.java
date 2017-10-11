@@ -4,7 +4,7 @@ import com.freedom.lauzy.DConstants;
 import com.freedom.lauzy.interactor.GetSongListUseCase;
 import com.freedom.lauzy.model.NetSongBean;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
-import com.freedom.lauzy.ticktockmusic.base.DefaultDisposableObserver;
+import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.contract.NetMusicContract;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.lauzy.freedom.data.net.constants.NetConstants;

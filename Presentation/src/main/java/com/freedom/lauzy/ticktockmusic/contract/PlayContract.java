@@ -2,6 +2,7 @@ package com.freedom.lauzy.ticktockmusic.contract;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 
 import com.freedom.lauzy.ticktockmusic.base.IBaseView;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
@@ -19,7 +20,7 @@ public interface PlayContract {
 
         void setCoverBitmap(Bitmap bitmap);
 
-        void setCoverBackground(int color);
+        void setCoverBackground(Bitmap background);
 
         void addFavoriteSong();
 

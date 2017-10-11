@@ -13,9 +13,7 @@ import com.freedom.lauzy.ticktockmusic.model.mapper.FavoriteMapper;
 import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
-import com.lauzy.freedom.librarys.view.util.PaletteColor;
-
-import java.util.HashMap;
+import com.lauzy.freedom.librarys.view.blur.ImageBlur;
 
 import javax.inject.Inject;
 
@@ -29,13 +27,12 @@ import javax.inject.Inject;
 public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
         implements PlayContract.Presenter {
 
-    private HashMap<String, Integer> mColorMap = new HashMap<>();
     private FavoriteSongUseCase mFavoriteSongUseCase;
     private FavoriteMapper mFavoriteMapper;
     private static final String TAG = "PlayPresenter";
 
     @Inject
-    public PlayPresenter(FavoriteSongUseCase favoriteSongUseCase, FavoriteMapper favoriteMapper) {
+    PlayPresenter(FavoriteSongUseCase favoriteSongUseCase, FavoriteMapper favoriteMapper) {
         mFavoriteSongUseCase = favoriteSongUseCase;
         mFavoriteMapper = favoriteMapper;
     }
@@ -50,17 +47,13 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                     @Override
                     public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                         getView().setCoverBitmap(resource);
-                        if (mColorMap.get(String.valueOf(url)) == null) {
-                            PaletteColor.mainColorObservable(resource).subscribe(color -> {
-                                        mColorMap.put(String.valueOf(url), color);
-                                        getView().setCoverBackground(color);
-                                    }
-                            );
-                        } else {
-                            getView().setCoverBackground(mColorMap.get(String.valueOf(url)));
-                        }
+                        Bitmap bg = Bitmap.createBitmap(resource);
+//                        BitmapDrawable drawable = new BitmapDrawable(null, ImageBlur.onStackBlur(bg, 20));
+//                        getView().setCoverBackground(drawable);
+                        getView().setCoverBackground(ImageBlur.onStackBlur(bg, 50));
                     }
                 }).build());
+
     }
 
     @Override
