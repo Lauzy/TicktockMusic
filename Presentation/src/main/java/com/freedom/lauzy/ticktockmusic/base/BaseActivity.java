@@ -157,5 +157,4 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
         }
         RxBus.INSTANCE.dispose(this);
     }
-
 }
