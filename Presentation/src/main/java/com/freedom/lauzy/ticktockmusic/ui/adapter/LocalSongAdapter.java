@@ -71,10 +71,11 @@ public class LocalSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
         };
     }
 
+    @SuppressWarnings("unused")
     private void gotoSingerDetail(BaseViewHolder helper, SongEntity songEntity) {
-        String transName = mContext.getString(R.string.img_singer_transition) + songEntity.albumId;
-        helper.getView(R.id.img_song_pic).setTransitionName(transName);
-        Navigator.navigateToArtistDetail(mContext, helper.getView(R.id.img_song_pic), transName,
+//        String transName = mContext.getString(R.string.img_singer_transition) + songEntity.albumId;
+//        helper.getView(R.id.img_song_pic).setTransitionName(transName);
+        Navigator.navigateToArtistDetail(mContext, null, null,
                 songEntity.artistName, songEntity.artistId, 0, 0);
     }
 

@@ -40,14 +40,14 @@ public class Navigator {
         Fragment fragment = AlbumDetailFragment.newInstance(transName, albumName, id);
         FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
         FragmentAnimUtil.setEnterExitAnim(fragment);
-        if (view != null && transName != null)
-            transaction
-                    .addSharedElement(view, transName)
-                    .hide(((AppCompatActivity) context).getSupportFragmentManager()
-                            .findFragmentById(R.id.layout_main))
-                    .add(R.id.layout_main, fragment)
-                    .addToBackStack(null)
-                    .commit();
+        if (view != null && transName != null && !"".equals(transName)) {
+            transaction.addSharedElement(view, transName);
+        }
+        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager()
+                .findFragmentById(R.id.layout_main))
+                .add(R.id.layout_main, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     public void navigateToPlayActivity(Context context) {
@@ -62,10 +62,11 @@ public class Navigator {
         Fragment fragment = ArtistDetailFragment.newInstance(transName, artistName, artistId, albumNum, songNum);
         FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
         FragmentAnimUtil.setEnterExitAnim(fragment);
-        transaction
-                .addSharedElement(view, transName)
-                .hide(((AppCompatActivity) context).getSupportFragmentManager()
-                        .findFragmentById(R.id.layout_main))
+        if (transName != null && !"".equals(transName) && view != null) {
+            transaction.addSharedElement(view, transName);
+        }
+        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager()
+                .findFragmentById(R.id.layout_main))
                 .add(R.id.layout_main, fragment)
                 .addToBackStack(null)
                 .commit();
