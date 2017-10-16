@@ -44,6 +44,13 @@ public class MusicUtil {
         return null;
     }
 
+    /**
+     * 专辑图片 Observable
+     * @param context context
+     * @param entity 音乐
+     * @return Observable
+     */
+    @SuppressWarnings("WeakerAccess")
     public static Observable<Bitmap> albumCoverObservable(Context context, SongEntity entity) {
         return Observable.create(e -> {
             Bitmap bitmap;

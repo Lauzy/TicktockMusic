@@ -36,6 +36,7 @@ import static android.media.session.PlaybackState.STATE_PLAYING;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
+@SuppressWarnings("WeakerAccess")
 public class MusicService extends Service {
 
     private static final String TAG = "MusicService";

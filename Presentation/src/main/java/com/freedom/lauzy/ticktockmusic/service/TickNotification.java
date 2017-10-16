@@ -20,6 +20,7 @@ import com.freedom.lauzy.ticktockmusic.R;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
+@SuppressWarnings("WeakerAccess")
 public class TickNotification {
 
     private static final int NOTIFY_ID = 0x0277;

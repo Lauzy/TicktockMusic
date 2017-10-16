@@ -1,5 +1,7 @@
 package com.freedom.lauzy.ticktockmusic.function;
 
+import com.freedom.lauzy.ticktockmusic.function.exception.ArtistAvatarException;
+
 import io.reactivex.annotations.NonNull;
 import io.reactivex.observers.DisposableObserver;
 
@@ -19,7 +21,9 @@ public class DefaultDisposableObserver<T> extends DisposableObserver<T> {
 
     @Override
     public void onError(@NonNull Throwable e) {
-        e.printStackTrace();
+        if (!(e instanceof ArtistAvatarException)) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -24,6 +24,7 @@ import io.reactivex.Observable;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
+@SuppressWarnings("WeakerAccess")
 public class QueueManager {
 
     private GetQueueUseCase mGetQueueUseCase;
