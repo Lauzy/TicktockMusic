@@ -8,9 +8,11 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,12 +29,14 @@ import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.PlayPresenter;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.service.MusicService;
+import com.freedom.lauzy.ticktockmusic.ui.adapter.PlayCoverPagerAdapter;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayQueueBottomSheetFragment;
 import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.lauzy.freedom.data.local.LocalUtil;
-import com.lauzy.freedom.librarys.widght.CircleImageView;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 import com.lauzy.freedom.librarys.widght.music.PlayPauseView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -45,16 +49,18 @@ import io.reactivex.disposables.Disposable;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
+@SuppressWarnings("unused")
 public class PlayActivity extends BaseActivity<PlayPresenter> implements
         SeekBar.OnSeekBarChangeListener, PlayPauseView.PlayPauseListener, PlayContract.View,
         MusicManager.SeekBarProgressListener {
 
+    private static final int SKIP_DELAY = 400;
+    private static final int PRE_MUSIC = 0x0011;
+    private static final int NEXT_MUSIC = 0x0012;
     @BindView(R.id.toolbar_common)
     TickToolbar mToolbarCommon;
-    //    @BindView(R.id.vp_album_cover)
-//    ViewPager mVpAlbumCover;
-    @BindView(R.id.acv_music)
-    CircleImageView mAlbumCoverView;
+    @BindView(R.id.vp_play_view)
+    ViewPager mVpPlayView;
     @BindView(R.id.txt_current_progress)
     TextView mTxtCurrentProgress;
     @BindView(R.id.seek_play)
@@ -71,10 +77,21 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     ImageView mImgFavorite;
     @BindView(R.id.img_play_bg)
     ImageView mImageViewBg;
-    @SuppressWarnings("unused")
     private static final String TAG = "PlayActivity";
     private boolean mIsFavorite;
     private static final int PLAY_DELAY = 500;
+    private PlayCoverPagerAdapter mPagerAdapter;
+    private Handler mPlayHandler = new Handler(msg -> {
+        switch (msg.what) {
+            case PRE_MUSIC:
+                MusicManager.getInstance().skipToPrevious();
+                break;
+            case NEXT_MUSIC:
+                MusicManager.getInstance().skipToNext();
+                break;
+        }
+        return false;
+    });
 
     public static Intent newInstance(Context context) {
         return new Intent(context, PlayActivity.class);
@@ -133,9 +150,44 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
                 MusicManager.getInstance().getDuration());
         mPresenter.isFavoriteSong((int) MusicManager.getInstance().getCurrentSong().id);
         mTxtCurrentProgress.setText(LocalUtil.formatTime(MusicManager.getInstance().getCurrentProgress()));
+        setUpViewPager();
         setCurData(MusicManager.getInstance().getCurrentSong());
         mSeekPlay.setOnSeekBarChangeListener(this);
         mPlayPause.setPlayPauseListener(this);
+    }
+
+    /**
+     * 配置ViewPager
+     */
+    private void setUpViewPager() {
+        List<SongEntity> songData = MusicManager.getInstance().getMusicService().getSongData();
+        mPagerAdapter = new PlayCoverPagerAdapter(getSupportFragmentManager(),songData);
+        mVpPlayView.setAdapter(mPagerAdapter);
+        mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
+        mVpPlayView.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (MusicManager.getInstance().getCurPosition() > position) {
+                    Message msg = new Message();
+                    msg.what = PRE_MUSIC;
+                    mPlayHandler.sendMessageDelayed(msg, SKIP_DELAY);
+                } else if (MusicManager.getInstance().getCurPosition() < position) {
+                    Message msg = new Message();
+                    msg.what = NEXT_MUSIC;
+                    mPlayHandler.sendMessageDelayed(msg, SKIP_DELAY);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     /**
@@ -150,11 +202,14 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
             mTxtTotalLength.setText(songEntity.songLength);
             if (MusicManager.getInstance().isPlaying() && !mPlayPause.isPlaying()) {
                 mPlayPause.playWithoutAnim();
-                mAlbumCoverView.pause();
+//                mAlbumCoverView.pause();
+//                mPagerAdapter.getCurrentFragment().songPause(0);
             }
             MusicManager.getInstance().setSeekBarProgressListener(this);
             mPresenter.setCoverImgUrl(songEntity.albumCover);
             mPresenter.isFavoriteSong(songEntity.id);
+            mPagerAdapter.updateFragments(MusicManager.getInstance().getMusicService().getSongData());
+            mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
         }
     }
 
@@ -201,7 +256,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         MusicManager.getInstance().seekTo(seekBar.getProgress());
         if (!mPlayPause.isPlaying()) {
             mPlayPause.play();
-            mAlbumCoverView.start();
+//            mAlbumCoverView.start();
         }
     }
 
@@ -209,7 +264,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     public void play() {
         if (MusicManager.getInstance().getCurrentSong() != null) {
             MusicManager.getInstance().start();
-            mAlbumCoverView.postDelayed(() -> mAlbumCoverView.start(), 400);
+//            mAlbumCoverView.postDelayed(() -> mAlbumCoverView.start(), 400);
         }
     }
 
@@ -217,22 +272,13 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     public void pause() {
         if (MusicManager.getInstance().getCurrentSong() != null) {
             MusicManager.getInstance().pause();
-            mAlbumCoverView.postDelayed(() -> mAlbumCoverView.pause(), 400);
+//            mAlbumCoverView.postDelayed(() -> mAlbumCoverView.pause(), 400);
         }
     }
 
     @Override
     public Context getContext() {
         return PlayActivity.this;
-    }
-
-    @Override
-    public void setCoverBitmap(Bitmap bitmap) {
-        mAlbumCoverView.setImageBitmap(bitmap);
-        if (MusicManager.getInstance().isPlaying()) {
-            mAlbumCoverView.setRotation(0);
-            mAlbumCoverView.postDelayed(() -> mAlbumCoverView.start(), 1000);
-        }
     }
 
     @Override

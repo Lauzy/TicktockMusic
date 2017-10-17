@@ -46,9 +46,8 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                 .intoTarget(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        getView().setCoverBitmap(resource);
                         Bitmap bg = Bitmap.createBitmap(resource);
-//                        BitmapDrawable drawable = new BitmapDrawable(null, ImageBlur.onStackBlur(bg, 20));
+//                        BitmapDrawable drawable = new BitmapDrawable(null, ImageBlur.onStackBlur(bg, 50));
 //                        getView().setCoverBackground(drawable);
                         getView().setCoverBackground(ImageBlur.onStackBlur(bg, 50));
                     }

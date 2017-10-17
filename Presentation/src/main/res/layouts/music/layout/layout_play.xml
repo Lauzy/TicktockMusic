@@ -16,15 +16,22 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <com.lauzy.freedom.librarys.widght.CircleImageView
+       <!-- <com.lauzy.freedom.librarys.widght.CircleImageView
             android:id="@+id/acv_music"
             android:layout_width="@dimen/dp_240"
             android:layout_height="@dimen/dp_240"
+            android:visibility="gone"
             android:layout_gravity="center"
             android:layout_margin="@dimen/dp_20"
             android:src="@drawable/ic_default"
             app:civ_border_color="@color/colorDarkerTransparent"
-            app:civ_border_width="@dimen/dp_15"/>
+            app:civ_border_width="@dimen/dp_15"/>-->
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_play_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v4.view.ViewPager>
     </FrameLayout>
 
     <ImageView

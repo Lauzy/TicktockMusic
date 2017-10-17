@@ -408,6 +408,10 @@ public class MusicManager {
 
     /* ------- getter , setter and so on-------- */
 
+    public MusicService getMusicService() {
+        return mMusicService;
+    }
+
     public long getCurrentProgress() {
         return mMusicService != null ? mMusicService.getCurrentProgress() : 0;
     }

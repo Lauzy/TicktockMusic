@@ -387,6 +387,10 @@ public class MusicService extends Service {
     }
 
     public void setSongData(List<SongEntity> songData) {
+        //pay attention
+        if (mSongData != null) {
+            mSongData.clear();
+        }
         mSongData = songData;
     }
 

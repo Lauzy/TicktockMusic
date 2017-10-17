@@ -51,4 +51,5 @@ public interface FragmentComponent {
     void inject(ArtistSongFragment artistSongFragment);
 
     void inject(ArtistAlbumFragment artistAlbumFragment);
+
 }
