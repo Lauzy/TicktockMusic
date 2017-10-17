@@ -12,6 +12,13 @@ import com.lauzy.freedom.librarys.widght.CircleImageView;
 
 import butterknife.BindView;
 
+/**
+ * Desc : 播放界面专辑图片Fragment
+ * Author : Lauzy
+ * Date : 2017/10/18
+ * Blog : http://www.jianshu.com/u/e76853f863a9
+ * Email : freedompaladin@gmail.com
+ */
 public class PlayCoverFragment extends BaseFragment {
     private static final String SONG_BUNDLE = "song_bundle";
 
@@ -50,12 +57,38 @@ public class PlayCoverFragment extends BaseFragment {
 
     }
 
+    public void coverStart(boolean isFromZero, int delay) {
+        if (mCvMusicCover != null) {
+            if (isFromZero) {
+                mCvMusicCover.setRotation(0);
+            }
+            mCvMusicCover.postDelayed(() -> mCvMusicCover.start(), delay);
+        }
+    }
+
+    public void coverPause(int delay) {
+        if (mCvMusicCover != null) {
+            mCvMusicCover.postDelayed(() -> mCvMusicCover.pause(), delay);
+        }
+    }
+
     @Override
     protected void loadData() {
-        ImageLoader.INSTANCE.display(mActivity, new ImageConfig.Builder()
-                .url(mSongEntity.albumCover)
-                .placeholder(R.drawable.ic_default)
-                .into(mCvMusicCover)
-                .build());
+        if (mCvMusicCover != null) {
+            ImageLoader.INSTANCE.display(mActivity, new ImageConfig.Builder()
+                    .url(mSongEntity.albumCover)
+                    .placeholder(R.drawable.ic_default)
+                    .into(mCvMusicCover)
+                    .build());
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        //不可见时停止转动并复位
+        if (mSongEntity != null && mCvMusicCover != null) {
+            mCvMusicCover.stop();
+        }
     }
 }

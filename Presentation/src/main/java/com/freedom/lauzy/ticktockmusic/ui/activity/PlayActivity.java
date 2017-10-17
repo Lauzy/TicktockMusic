@@ -30,13 +30,12 @@ import com.freedom.lauzy.ticktockmusic.presenter.PlayPresenter;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.service.MusicService;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.PlayCoverPagerAdapter;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayCoverFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayQueueBottomSheetFragment;
 import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.lauzy.freedom.data.local.LocalUtil;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 import com.lauzy.freedom.librarys.widght.music.PlayPauseView;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -81,6 +80,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     private boolean mIsFavorite;
     private static final int PLAY_DELAY = 500;
     private PlayCoverPagerAdapter mPagerAdapter;
+
     private Handler mPlayHandler = new Handler(msg -> {
         switch (msg.what) {
             case PRE_MUSIC:
@@ -95,6 +95,11 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     public static Intent newInstance(Context context) {
         return new Intent(context, PlayActivity.class);
+    }
+
+    @Override
+    public Context getContext() {
+        return PlayActivity.this;
     }
 
     @Override
@@ -160,14 +165,13 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
      * 配置ViewPager
      */
     private void setUpViewPager() {
-        List<SongEntity> songData = MusicManager.getInstance().getMusicService().getSongData();
-        mPagerAdapter = new PlayCoverPagerAdapter(getSupportFragmentManager(),songData);
+        mPagerAdapter = new PlayCoverPagerAdapter(getSupportFragmentManager());
+        mPagerAdapter.setSongEntities(MusicManager.getInstance().getMusicService().getSongData());
         mVpPlayView.setAdapter(mPagerAdapter);
         mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
         mVpPlayView.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -202,8 +206,6 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
             mTxtTotalLength.setText(songEntity.songLength);
             if (MusicManager.getInstance().isPlaying() && !mPlayPause.isPlaying()) {
                 mPlayPause.playWithoutAnim();
-//                mAlbumCoverView.pause();
-//                mPagerAdapter.getCurrentFragment().songPause(0);
             }
             MusicManager.getInstance().setSeekBarProgressListener(this);
             mPresenter.setCoverImgUrl(songEntity.albumCover);
@@ -257,6 +259,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         if (!mPlayPause.isPlaying()) {
             mPlayPause.play();
 //            mAlbumCoverView.start();
+            startRotate(false, 50);
         }
     }
 
@@ -264,7 +267,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     public void play() {
         if (MusicManager.getInstance().getCurrentSong() != null) {
             MusicManager.getInstance().start();
-//            mAlbumCoverView.postDelayed(() -> mAlbumCoverView.start(), 400);
+            startRotate(false, 400);
         }
     }
 
@@ -272,18 +275,28 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     public void pause() {
         if (MusicManager.getInstance().getCurrentSong() != null) {
             MusicManager.getInstance().pause();
-//            mAlbumCoverView.postDelayed(() -> mAlbumCoverView.pause(), 400);
+            pauseRotate(0);
         }
     }
 
-    @Override
-    public Context getContext() {
-        return PlayActivity.this;
+    private void startRotate(boolean isFromZero, int delay) {
+        PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
+                .instantiateItem(mVpPlayView, mVpPlayView.getCurrentItem());
+        coverFragment.coverStart(isFromZero, delay);
+    }
+
+    private void pauseRotate(int delay) {
+        PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
+                .instantiateItem(mVpPlayView, mVpPlayView.getCurrentItem());
+        coverFragment.coverPause(delay);
     }
 
     @Override
     public void setCoverBackground(Bitmap background) {
         mImageViewBg.setImageBitmap(background);
+        if (MusicManager.getInstance().isPlaying()) {
+            startRotate(true, 0);
+        }
     }
 
     @Override
@@ -306,6 +319,9 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         }
     }
 
+    /**
+     * 设置喜欢图标
+     */
     private void setImageTint() {
         Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_favorite_white);
         DrawableCompat.setTint(drawable, ContextCompat.getColor(this, R.color.red_trans));
@@ -337,11 +353,17 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         }
     }
 
+    /**
+     * 切换歌曲时刷新喜欢图标
+     */
     private void refreshFavoriteIcon() {
         new Handler().postDelayed(() -> mPresenter.isFavoriteSong(MusicManager.getInstance()
                 .getCurrentSong().id), 50);
     }
 
+    /**
+     * 添加删除喜欢歌曲
+     */
     private void addOrDeleteFavoriteSong() {
         if (!mIsFavorite) {
             mPresenter.addFavoriteSong(MusicManager.getInstance().getCurrentSong());
@@ -349,6 +371,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
             mPresenter.deleteFavoriteSong(MusicManager.getInstance().getCurrentSong().id);
         }
         mIsFavorite = !mIsFavorite;
+        //若Navigation目录为喜欢的歌曲，则发送事件，更新喜欢列表
         RxBus.INSTANCE.post(new ChangeFavoriteItemEvent());
     }
 

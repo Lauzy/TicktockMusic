@@ -203,7 +203,6 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment impl
 
     }
 
-
     @Override
     public void playNewSong(int position) {
         MusicManager.getInstance().playLocalQueue(mSongEntities,

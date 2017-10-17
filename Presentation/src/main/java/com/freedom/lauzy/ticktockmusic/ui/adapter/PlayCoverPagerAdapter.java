@@ -20,11 +20,14 @@ import java.util.List;
 public class PlayCoverPagerAdapter extends FragmentStatePagerAdapter {
 
     private List<Fragment> mFragments;
-    private List<SongEntity> mSongEntities;
+    private List<SongEntity> mSongEntities = new ArrayList<>();
 
-    public PlayCoverPagerAdapter(FragmentManager fm, List<SongEntity> songEntities) {
+    public PlayCoverPagerAdapter(FragmentManager fm) {
         super(fm);
-        mSongEntities = songEntities;
+    }
+
+    public void setSongEntities(List<SongEntity> songEntities) {
+        mSongEntities.addAll(songEntities);
         updateFragments(songEntities);
     }
 
@@ -33,7 +36,7 @@ public class PlayCoverPagerAdapter extends FragmentStatePagerAdapter {
         for (int i = 0, size = songEntities.size(); i < size; i++) {
             fragments.add(PlayCoverFragment.newInstance(songEntities.get(i)));
         }
-        if (!mSongEntities.equals(songEntities)) {
+        if (mSongEntities != null && !mSongEntities.equals(songEntities)) {
             setFragmentList(fragments);
             notifyDataSetChanged();
         } else {
