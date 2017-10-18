@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.TicktockApplication;
 import com.freedom.lauzy.ticktockmusic.contract.PlayQueueContract;
+import com.freedom.lauzy.ticktockmusic.event.DeleteQueueItemEvent;
 import com.freedom.lauzy.ticktockmusic.event.PlayModeEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.injection.component.DaggerFragmentComponent;
@@ -191,6 +192,7 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment impl
         mAdapter.notifyItemRemoved(position);
         new Handler().postDelayed(() -> {
             mAdapter.notifyItemChanged(MusicManager.getInstance().getCurPosition());
+            RxBus.INSTANCE.post(new DeleteQueueItemEvent());
             if (mSongEntities == null || mSongEntities.size() == 0) {
                 MusicManager.getInstance().clearPlayData();
                 mActivity.finish();

@@ -23,6 +23,7 @@ import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
 import com.freedom.lauzy.ticktockmusic.contract.PlayContract;
 import com.freedom.lauzy.ticktockmusic.event.ChangeFavoriteItemEvent;
+import com.freedom.lauzy.ticktockmusic.event.DeleteQueueItemEvent;
 import com.freedom.lauzy.ticktockmusic.event.PlayModeEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
@@ -34,6 +35,7 @@ import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayCoverFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayQueueBottomSheetFragment;
 import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.lauzy.freedom.data.local.LocalUtil;
+import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 import com.lauzy.freedom.librarys.widght.music.PlayPauseView;
 
@@ -121,8 +123,11 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         //订阅播放模式设置View
         Disposable playModeDisposable = RxBus.INSTANCE.doDefaultSubscribe(PlayModeEvent.class,
                 playModeEvent -> setModeView());
+        Disposable resetDisposable = RxBus.INSTANCE.doDefaultSubscribe(DeleteQueueItemEvent.class,
+                playModeEvent -> resetPagerData());
         RxBus.INSTANCE.addDisposable(this, disposable);
         RxBus.INSTANCE.addDisposable(this, playModeDisposable);
+        RxBus.INSTANCE.addDisposable(this, resetDisposable);
     }
 
     @Override
@@ -155,7 +160,8 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
                 MusicManager.getInstance().getDuration());
         mPresenter.isFavoriteSong((int) MusicManager.getInstance().getCurrentSong().id);
         mTxtCurrentProgress.setText(LocalUtil.formatTime(MusicManager.getInstance().getCurrentProgress()));
-        setUpViewPager();
+        if (MusicManager.getInstance().getMusicService().getSongData() != null)
+            setUpViewPager();
         setCurData(MusicManager.getInstance().getCurrentSong());
         mSeekPlay.setOnSeekBarChangeListener(this);
         mPlayPause.setPlayPauseListener(this);
@@ -169,7 +175,9 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         mPagerAdapter.setSongEntities(MusicManager.getInstance().getMusicService().getSongData());
         mVpPlayView.setAdapter(mPagerAdapter);
         mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
-        mVpPlayView.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mVpPlayView.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
+
+        {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -213,6 +221,11 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
             mPagerAdapter.updateFragments(MusicManager.getInstance().getMusicService().getSongData());
             mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
         }
+    }
+
+    private void resetPagerData() {
+        LogUtil.d(TAG, "resetData");
+        // FIXME: 2017/10/18    删除播放队列后切换闪屏
     }
 
     @Override

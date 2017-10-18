@@ -51,13 +51,24 @@ public class PlayCoverPagerAdapter extends FragmentStatePagerAdapter {
         mFragments = fragmentList;
     }
 
+  /*  @Override
+    public int getCount() {
+        return MusicManager.getInstance().getMusicService().getSongData().size();
+    }*/
+
     @Override
     public int getCount() {
         return mFragments.size();
     }
 
+    @Override
     public int getItemPosition(Object object) {
         return POSITION_NONE;
+       /* if (mChildCount > 0) {
+            mChildCount--;
+            return POSITION_NONE;
+        }
+        return super.getItemPosition(object);*/
     }
 
     @Override
