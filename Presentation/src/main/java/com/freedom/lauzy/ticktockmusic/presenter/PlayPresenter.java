@@ -39,20 +39,21 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
 
     @Override
     public void setCoverImgUrl(Object url) {
-        ImageLoader.INSTANCE.display(getView().getContext(), new ImageConfig.Builder()
-                .asBitmap(true)
-                .url(url)
-                .isRound(false)
-                .intoTarget(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        Bitmap bg = Bitmap.createBitmap(resource);
+        if (getView() != null && getView().getContext() != null) {
+            ImageLoader.INSTANCE.display(getView().getContext(), new ImageConfig.Builder()
+                    .asBitmap(true)
+                    .url(url)
+                    .isRound(false)
+                    .intoTarget(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            Bitmap bg = Bitmap.createBitmap(resource);
 //                        BitmapDrawable drawable = new BitmapDrawable(null, ImageBlur.onStackBlur(bg, 50));
 //                        getView().setCoverBackground(drawable);
-                        getView().setCoverBackground(ImageBlur.onStackBlur(bg, 50));
-                    }
-                }).build());
-
+                            getView().setCoverBackground(ImageBlur.onStackBlur(bg, 50));
+                        }
+                    }).build());
+        }
     }
 
     @Override

@@ -2,10 +2,14 @@ package com.freedom.lauzy.ticktockmusic.ui.fragment;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
+import com.freedom.lauzy.ticktockmusic.service.MusicManager;
+import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.widght.CircleImageView;
@@ -20,11 +24,13 @@ import butterknife.BindView;
  * Email : freedompaladin@gmail.com
  */
 public class PlayCoverFragment extends BaseFragment {
-    private static final String SONG_BUNDLE = "song_bundle";
+    public static final String SONG_BUNDLE = "song_bundle";
+    private static final String TAG = "PlayCoverFragment";
 
     @BindView(R.id.cv_music_cover)
     CircleImageView mCvMusicCover;
     private SongEntity mSongEntity;
+    private boolean isVisible;
 
     public static PlayCoverFragment newInstance(SongEntity songEntity) {
         PlayCoverFragment fragment = new PlayCoverFragment();
@@ -57,18 +63,62 @@ public class PlayCoverFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        isVisible = isVisibleToUser;
+        //停止转动并复位
+        if (mCvMusicCover != null) {
+            mCvMusicCover.stop();
+        }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+//        if (mSongEntity != null && mCvMusicCover != null) {
+//            mCvMusicCover.stop();
+//        }
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        /*if (MusicManager.getInstance().isPlaying() && mCvMusicCover != null
+                && !mCvMusicCover.isPlaying() && isVisible() && isVisible) {
+            mCvMusicCover.postDelayed(() -> {
+                if (!mCvMusicCover.isPlaying()) {
+                    mCvMusicCover.start();
+                }
+            }, 200);
+        }*/
+    }
+
     public void coverStart(boolean isFromZero, int delay) {
         if (mCvMusicCover != null) {
-            if (isFromZero) {
+            if (isFromZero && !mCvMusicCover.isPlaying()) {
                 mCvMusicCover.setRotation(0);
             }
-            mCvMusicCover.postDelayed(() -> mCvMusicCover.start(), delay);
+//            mCvMusicCover.postDelayed(() -> {
+//                if (!mCvMusicCover.isPlaying()) {
+//                    mCvMusicCover.start();
+//                }
+//            }, delay);
+            if (!mCvMusicCover.isPlaying()) {
+                mCvMusicCover.start();
+            }
+        } else {
+            LogUtil.d(TAG, "mCvMusicCover is null");
         }
     }
 
     public void coverPause(int delay) {
         if (mCvMusicCover != null) {
-            mCvMusicCover.postDelayed(() -> mCvMusicCover.pause(), delay);
+            mCvMusicCover.postDelayed(() -> {
+                if (mCvMusicCover.isPlaying()) {
+                    mCvMusicCover.pause();
+                }
+            }, delay);
         }
     }
 
@@ -77,18 +127,10 @@ public class PlayCoverFragment extends BaseFragment {
         if (mCvMusicCover != null) {
             ImageLoader.INSTANCE.display(mActivity, new ImageConfig.Builder()
                     .url(mSongEntity.albumCover)
+                    .cacheStrategy(ImageConfig.CACHE_ALL)
                     .placeholder(R.drawable.ic_default)
                     .into(mCvMusicCover)
                     .build());
-        }
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        //不可见时停止转动并复位
-        if (mSongEntity != null && mCvMusicCover != null) {
-            mCvMusicCover.stop();
         }
     }
 }

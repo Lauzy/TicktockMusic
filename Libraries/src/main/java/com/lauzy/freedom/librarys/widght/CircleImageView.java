@@ -477,16 +477,17 @@ public class CircleImageView extends TintImageView {
     }
 
     public void stop() {
-        if (!isPlaying) {
-            return;
-        }
-        isPlaying = false;
+//        if (!isPlaying) {
+//            return;
+//        }
+//        isPlaying = false;
 //        mRotation = 0;
         if (mShaderMatrix != null && mBitmapShader != null) {
             mShaderMatrix.preRotate(-mRotation, mBitmapWidth / 2, mBitmapHeight / 2);
             mBitmapShader.setLocalMatrix(mShaderMatrix);
         }
         mHandler.removeCallbacks(mRotationRunnable);
+        isPlaying = false;
     }
 
     @Override

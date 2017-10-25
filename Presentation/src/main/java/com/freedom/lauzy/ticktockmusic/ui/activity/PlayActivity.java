@@ -35,7 +35,6 @@ import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayCoverFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayQueueBottomSheetFragment;
 import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.lauzy.freedom.data.local.LocalUtil;
-import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 import com.lauzy.freedom.librarys.widght.music.PlayPauseView;
 
@@ -172,12 +171,10 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
      */
     private void setUpViewPager() {
         mPagerAdapter = new PlayCoverPagerAdapter(getSupportFragmentManager());
-        mPagerAdapter.setSongEntities(MusicManager.getInstance().getMusicService().getSongData());
+//        mPagerAdapter.setSongEntities(MusicManager.getInstance().getMusicService().getSongData());
         mVpPlayView.setAdapter(mPagerAdapter);
         mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
-        mVpPlayView.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
-
-        {
+        mVpPlayView.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -218,14 +215,20 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
             MusicManager.getInstance().setSeekBarProgressListener(this);
             mPresenter.setCoverImgUrl(songEntity.albumCover);
             mPresenter.isFavoriteSong(songEntity.id);
-            mPagerAdapter.updateFragments(MusicManager.getInstance().getMusicService().getSongData());
+            mPagerAdapter.notifyDataSetChanged();
             mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
+            if (MusicManager.getInstance().isPlaying()) {
+                startRotate(false, 0);
+            }
         }
     }
 
     private void resetPagerData() {
-        LogUtil.d(TAG, "resetData");
-        // FIXME: 2017/10/18    删除播放队列后切换闪屏
+       /* mPagerAdapter.notifyDataSetChanged();
+        mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
+        if (MusicManager.getInstance().isPlaying()) {
+            startRotate(false, 0);
+        }*/
     }
 
     @Override

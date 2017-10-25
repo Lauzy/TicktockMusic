@@ -3,12 +3,11 @@ package com.freedom.lauzy.ticktockmusic.ui.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.ViewGroup;
 
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
+import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayCoverFragment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Desc : 歌词、专辑图片 PagerAdapter
@@ -19,7 +18,39 @@ import java.util.List;
  */
 public class PlayCoverPagerAdapter extends FragmentStatePagerAdapter {
 
-    private List<Fragment> mFragments;
+    public PlayCoverPagerAdapter(FragmentManager fm) {
+        super(fm);
+    }
+
+    @Override
+    public Fragment getItem(int position) {
+        return PlayCoverFragment.newInstance(MusicManager.getInstance().getMusicService()
+                .getSongData().get(position));
+    }
+
+    @Override
+    public int getCount() {
+        return MusicManager.getInstance().getMusicService().getSongData().size();
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        SongEntity songEntity = ((PlayCoverFragment) object).getArguments().getParcelable(PlayCoverFragment.SONG_BUNDLE);
+        return POSITION_NONE;
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        if (MusicManager.getInstance().getCurPosition() < position)
+        super.destroyItem(container, position, object);
+    }
+
+    /* private List<Fragment> mFragments;
     private List<SongEntity> mSongEntities = new ArrayList<>();
 
     public PlayCoverPagerAdapter(FragmentManager fm) {
@@ -51,10 +82,10 @@ public class PlayCoverPagerAdapter extends FragmentStatePagerAdapter {
         mFragments = fragmentList;
     }
 
-  /*  @Override
+  *//*  @Override
     public int getCount() {
         return MusicManager.getInstance().getMusicService().getSongData().size();
-    }*/
+    }*//*
 
     @Override
     public int getCount() {
@@ -64,15 +95,15 @@ public class PlayCoverPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getItemPosition(Object object) {
         return POSITION_NONE;
-       /* if (mChildCount > 0) {
+       *//* if (mChildCount > 0) {
             mChildCount--;
             return POSITION_NONE;
         }
-        return super.getItemPosition(object);*/
+        return super.getItemPosition(object);*//*
     }
 
     @Override
     public Fragment getItem(int position) {
         return mFragments.get(position);
-    }
+    }*/
 }
