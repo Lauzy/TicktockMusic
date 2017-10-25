@@ -14,7 +14,7 @@ android {
         testInstrumentationRunner globalConfiguration["testInstrumentationRunner"]
         ndk {
             moduleName = 'ImageBlurJni'
-            abiFilters "armeabi", "armeabi-v7a"
+            abiFilters "armeabi", "armeabi-v7a","x86"
             ldLibs "jnigraphics"
 //            ldLibs.addAll(['m', 'log', 'jnigraphics'])
             //abiFilters.addAll(['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64', 'mips', 'mips64'])
