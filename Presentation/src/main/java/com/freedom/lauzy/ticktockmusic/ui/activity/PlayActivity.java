@@ -215,20 +215,20 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
             MusicManager.getInstance().setSeekBarProgressListener(this);
             mPresenter.setCoverImgUrl(songEntity.albumCover);
             mPresenter.isFavoriteSong(songEntity.id);
-            mPagerAdapter.notifyDataSetChanged();
+//            mPagerAdapter.notifyDataSetChanged();
             mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
-            if (MusicManager.getInstance().isPlaying()) {
-                startRotate(false, 0);
-            }
+//            if (MusicManager.getInstance().isPlaying()) {
+//                startRotate(false, 0);
+//            }
         }
     }
 
     private void resetPagerData() {
-       /* mPagerAdapter.notifyDataSetChanged();
+        mPagerAdapter.notifyDataSetChanged();
         mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
         if (MusicManager.getInstance().isPlaying()) {
             startRotate(false, 0);
-        }*/
+        }
     }
 
     @Override
