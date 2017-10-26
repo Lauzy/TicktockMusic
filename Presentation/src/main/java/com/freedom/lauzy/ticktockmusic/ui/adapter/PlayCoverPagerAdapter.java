@@ -3,9 +3,7 @@ package com.freedom.lauzy.ticktockmusic.ui.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.view.ViewGroup;
 
-import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayCoverFragment;
 
@@ -35,19 +33,7 @@ public class PlayCoverPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getItemPosition(Object object) {
-        SongEntity songEntity = ((PlayCoverFragment) object).getArguments().getParcelable(PlayCoverFragment.SONG_BUNDLE);
         return POSITION_NONE;
-    }
-
-    @Override
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
-    }
-
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        if (MusicManager.getInstance().getCurPosition() < position)
-        super.destroyItem(container, position, object);
     }
 
     /* private List<Fragment> mFragments;

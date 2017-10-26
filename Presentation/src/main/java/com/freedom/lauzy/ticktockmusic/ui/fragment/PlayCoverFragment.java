@@ -68,30 +68,23 @@ public class PlayCoverFragment extends BaseFragment {
         super.setUserVisibleHint(isVisibleToUser);
         isVisible = isVisibleToUser;
         //停止转动并复位
-        if (mCvMusicCover != null) {
+        if (!isVisibleToUser && mCvMusicCover != null) {
             mCvMusicCover.stop();
         }
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-//        if (mSongEntity != null && mCvMusicCover != null) {
-//            mCvMusicCover.stop();
-//        }
-    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        /*if (MusicManager.getInstance().isPlaying() && mCvMusicCover != null
+        if (MusicManager.getInstance().isPlaying() && mCvMusicCover != null
                 && !mCvMusicCover.isPlaying() && isVisible() && isVisible) {
             mCvMusicCover.postDelayed(() -> {
                 if (!mCvMusicCover.isPlaying()) {
                     mCvMusicCover.start();
                 }
             }, 200);
-        }*/
+        }
     }
 
     public void coverStart(boolean isFromZero, int delay) {
@@ -99,14 +92,11 @@ public class PlayCoverFragment extends BaseFragment {
             if (isFromZero && !mCvMusicCover.isPlaying()) {
                 mCvMusicCover.setRotation(0);
             }
-//            mCvMusicCover.postDelayed(() -> {
-//                if (!mCvMusicCover.isPlaying()) {
-//                    mCvMusicCover.start();
-//                }
-//            }, delay);
-            if (!mCvMusicCover.isPlaying()) {
-                mCvMusicCover.start();
-            }
+            mCvMusicCover.postDelayed(() -> {
+                if (!mCvMusicCover.isPlaying()) {
+                    mCvMusicCover.start();
+                }
+            }, delay);
         } else {
             LogUtil.d(TAG, "mCvMusicCover is null");
         }

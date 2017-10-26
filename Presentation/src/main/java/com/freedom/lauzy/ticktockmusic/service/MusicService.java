@@ -457,5 +457,6 @@ public class MusicService extends Service {
         void currentPlay(SongEntity songEntity);
 
         void startPlay();
+
     }
 }

@@ -23,7 +23,6 @@ import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
 import com.freedom.lauzy.ticktockmusic.contract.PlayContract;
 import com.freedom.lauzy.ticktockmusic.event.ChangeFavoriteItemEvent;
-import com.freedom.lauzy.ticktockmusic.event.DeleteQueueItemEvent;
 import com.freedom.lauzy.ticktockmusic.event.PlayModeEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
@@ -52,7 +51,7 @@ import io.reactivex.disposables.Disposable;
 @SuppressWarnings("unused")
 public class PlayActivity extends BaseActivity<PlayPresenter> implements
         SeekBar.OnSeekBarChangeListener, PlayPauseView.PlayPauseListener, PlayContract.View,
-        MusicManager.SeekBarProgressListener {
+        MusicManager.PlayProgressListener, ViewPager.OnPageChangeListener {
 
     private static final int SKIP_DELAY = 400;
     private static final int PRE_MUSIC = 0x0011;
@@ -116,17 +115,10 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //订阅当前播放数据
-        Disposable disposable = RxBus.INSTANCE.doStickySubscribe(SongEntity.class, entity ->
-                new Handler().postDelayed(() -> setCurData(entity), PLAY_DELAY));
         //订阅播放模式设置View
         Disposable playModeDisposable = RxBus.INSTANCE.doDefaultSubscribe(PlayModeEvent.class,
                 playModeEvent -> setModeView());
-        Disposable resetDisposable = RxBus.INSTANCE.doDefaultSubscribe(DeleteQueueItemEvent.class,
-                playModeEvent -> resetPagerData());
-        RxBus.INSTANCE.addDisposable(this, disposable);
         RxBus.INSTANCE.addDisposable(this, playModeDisposable);
-        RxBus.INSTANCE.addDisposable(this, resetDisposable);
     }
 
     @Override
@@ -155,15 +147,19 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     @Override
     protected void loadData() {
+
         setCurProgress((int) MusicManager.getInstance().getCurrentProgress(),
                 MusicManager.getInstance().getDuration());
         mPresenter.isFavoriteSong((int) MusicManager.getInstance().getCurrentSong().id);
         mTxtCurrentProgress.setText(LocalUtil.formatTime(MusicManager.getInstance().getCurrentProgress()));
+
         if (MusicManager.getInstance().getMusicService().getSongData() != null)
             setUpViewPager();
-        setCurData(MusicManager.getInstance().getCurrentSong());
+
+        MusicManager.getInstance().setPlayProgressListener(this);
         mSeekPlay.setOnSeekBarChangeListener(this);
         mPlayPause.setPlayPauseListener(this);
+        currentPlay(MusicManager.getInstance().getCurrentSong());
     }
 
     /**
@@ -171,64 +167,40 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
      */
     private void setUpViewPager() {
         mPagerAdapter = new PlayCoverPagerAdapter(getSupportFragmentManager());
-//        mPagerAdapter.setSongEntities(MusicManager.getInstance().getMusicService().getSongData());
         mVpPlayView.setAdapter(mPagerAdapter);
         mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
-        mVpPlayView.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (MusicManager.getInstance().getCurPosition() > position) {
-                    Message msg = new Message();
-                    msg.what = PRE_MUSIC;
-                    mPlayHandler.sendMessageDelayed(msg, SKIP_DELAY);
-                } else if (MusicManager.getInstance().getCurPosition() < position) {
-                    Message msg = new Message();
-                    msg.what = NEXT_MUSIC;
-                    mPlayHandler.sendMessageDelayed(msg, SKIP_DELAY);
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+        mVpPlayView.addOnPageChangeListener(this);
     }
 
-    /**
-     * 更新当前播放视图
-     *
-     * @param songEntity 当前播放音乐
-     */
-    private void setCurData(SongEntity songEntity) {
+
+    @Override
+    public void currentPlay(SongEntity songEntity) {
         if (songEntity != null) {
             mToolbarCommon.setTitle(songEntity.title);
             mToolbarCommon.setSubtitle(songEntity.artistName);
             mTxtTotalLength.setText(songEntity.songLength);
+            mPresenter.setCoverImgUrl(songEntity.albumCover);
+            mPresenter.isFavoriteSong(songEntity.id);
+
             if (MusicManager.getInstance().isPlaying() && !mPlayPause.isPlaying()) {
                 mPlayPause.playWithoutAnim();
             }
-            MusicManager.getInstance().setSeekBarProgressListener(this);
-            mPresenter.setCoverImgUrl(songEntity.albumCover);
-            mPresenter.isFavoriteSong(songEntity.id);
 //            mPagerAdapter.notifyDataSetChanged();
             mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
-//            if (MusicManager.getInstance().isPlaying()) {
-//                startRotate(false, 0);
-//            }
+            startRotate(true, 0);
         }
     }
 
-    private void resetPagerData() {
-        mPagerAdapter.notifyDataSetChanged();
-        mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
-        if (MusicManager.getInstance().isPlaying()) {
-            startRotate(false, 0);
-        }
+    private void startRotate(boolean isFromZero, int delay) {
+        PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
+                .instantiateItem(mVpPlayView, mVpPlayView.getCurrentItem());
+        coverFragment.coverStart(isFromZero, delay);
+    }
+
+    private void pauseRotate(int delay) {
+        PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
+                .instantiateItem(mVpPlayView, mVpPlayView.getCurrentItem());
+        coverFragment.coverPause(delay);
     }
 
     @Override
@@ -248,6 +220,11 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         if (!mPlayPause.isPlaying()) {
             mPlayPause.play();
         }
+    }
+
+    @Override
+    public void updateQueue() {
+        mPagerAdapter.notifyDataSetChanged();
     }
 
     private void setCurProgress(int progress, int duration) {
@@ -274,7 +251,6 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         MusicManager.getInstance().seekTo(seekBar.getProgress());
         if (!mPlayPause.isPlaying()) {
             mPlayPause.play();
-//            mAlbumCoverView.start();
             startRotate(false, 50);
         }
     }
@@ -295,24 +271,10 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         }
     }
 
-    private void startRotate(boolean isFromZero, int delay) {
-        PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
-                .instantiateItem(mVpPlayView, mVpPlayView.getCurrentItem());
-        coverFragment.coverStart(isFromZero, delay);
-    }
-
-    private void pauseRotate(int delay) {
-        PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
-                .instantiateItem(mVpPlayView, mVpPlayView.getCurrentItem());
-        coverFragment.coverPause(delay);
-    }
 
     @Override
     public void setCoverBackground(Bitmap background) {
         mImageViewBg.setImageBitmap(background);
-        if (MusicManager.getInstance().isPlaying()) {
-            startRotate(true, 0);
-        }
     }
 
     @Override
@@ -406,6 +368,29 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
                 mImgPlayMode.setImageResource(R.drawable.ic_repeat_black);
                 break;
         }
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if (MusicManager.getInstance().getCurPosition() > position) {
+            Message msg = new Message();
+            msg.what = PRE_MUSIC;
+            mPlayHandler.sendMessageDelayed(msg, SKIP_DELAY);
+        } else if (MusicManager.getInstance().getCurPosition() < position) {
+            Message msg = new Message();
+            msg.what = NEXT_MUSIC;
+            mPlayHandler.sendMessageDelayed(msg, SKIP_DELAY);
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 
     @Override

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
+//apply plugin: 'me.tatarka.retrolambda'
 
 android {
     def globalConfiguration = rootProject.extensions.getByName("ext")
@@ -54,7 +54,7 @@ android {
         release {
             minifyEnabled false
             zipAlignEnabled true
-            shrinkResources true
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -81,11 +81,14 @@ dependencies {
     compile presentationDependencies.rxPermission
     annotationProcessor presentationDependencies.butterKnifeCompiler
     testCompile testDependencies.junit
-    releaseCompile project(path: ':Libraries', configuration: 'release')
-    debugCompile project(path: ':Libraries', configuration: 'debug')
-    releaseCompile project(path: ':Data', configuration: 'release')
-    debugCompile project(path: ':Data', configuration: 'debug')
-    compile 'com.android.support:support-v4:25.3.1'
+    //    releaseCompile project(path: ':Libraries', configuration: 'release')
+    //    debugCompile project(path: ':Libraries', configuration: 'debug')
+    //    releaseCompile project(path: ':Data', configuration: 'release')
+    //    debugCompile project(path: ':Data', configuration: 'debug')
+    releaseImplementation project(':Data')
+    releaseImplementation project(':Libraries')
+    debugImplementation project(':Data')
+    debugImplementation project(':Libraries')
 }
 
 configurations.all {

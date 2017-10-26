@@ -79,6 +79,9 @@ public class MusicManager {
             if (mMusicManageListener != null) {
                 mMusicManageListener.currentPlay(songEntity);
             }
+            if (mPlayProgressListener != null) {
+                mPlayProgressListener.currentPlay(songEntity);
+            }
         }
 
         @Override
@@ -105,8 +108,8 @@ public class MusicManager {
                     if (mMusicManageListener != null) {
                         mMusicManageListener.onPlayerResume();
                     }
-                    if (mSeekBarProgressListener != null) {
-                        mSeekBarProgressListener.onPlayerResume();
+                    if (mPlayProgressListener != null) {
+                        mPlayProgressListener.onPlayerResume();
                     }
                     break;
                 case PlaybackState.STATE_PAUSED:
@@ -114,8 +117,8 @@ public class MusicManager {
                     if (mMusicManageListener != null) {
                         mMusicManageListener.onPlayerPause();
                     }
-                    if (mSeekBarProgressListener != null) {
-                        mSeekBarProgressListener.onPlayerPause();
+                    if (mPlayProgressListener != null) {
+                        mPlayProgressListener.onPlayerPause();
                     }
                     break;
                 case PlaybackState.STATE_BUFFERING:
@@ -278,7 +281,7 @@ public class MusicManager {
      */
     private void updatePosition(int position) {
         if (getCurPosition() > position) {
-            mMusicService.setCurrentPosition(position);
+            mMusicService.setCurrentPosition(getCurPosition() - 1);
         } else if (getCurPosition() == position) {
             if (position == mMusicService.getSongData().size()) {
                 mMusicService.setCurrentPosition(position - 1);
@@ -286,6 +289,9 @@ public class MusicManager {
                 mMusicService.setCurrentPosition(position);
             }
             play();
+        }
+        if (mPlayProgressListener != null) {
+            mPlayProgressListener.updateQueue();
         }
     }
 
@@ -398,8 +404,8 @@ public class MusicManager {
                 mUpdateListener.onProgress((int) mMusicService.getCurrentProgress(),
                         mMusicService.getDuration());
             }
-            if (isUpdate && mSeekBarProgressListener != null && getCurrentSong() != null) {
-                mSeekBarProgressListener.onProgress((int) mMusicService.getCurrentProgress(),
+            if (isUpdate && mPlayProgressListener != null && getCurrentSong() != null) {
+                mPlayProgressListener.onProgress((int) mMusicService.getCurrentProgress(),
                         mMusicService.getDuration());
             }
             mProgressHandler.postDelayed(this, 100);
@@ -461,7 +467,7 @@ public class MusicManager {
     }
 
     private MusicManageListener mMusicManageListener;
-    private SeekBarProgressListener mSeekBarProgressListener;
+    private PlayProgressListener mPlayProgressListener;
     private RecentUpdateListener mRecentUpdateListener;
     private PlayQueueListener mPlayQueueListener;
 
@@ -473,8 +479,8 @@ public class MusicManager {
         mMusicManageListener = updateListener;
     }
 
-    public void setSeekBarProgressListener(SeekBarProgressListener seekBarProgressListener) {
-        mSeekBarProgressListener = seekBarProgressListener;
+    public void setPlayProgressListener(PlayProgressListener playProgressListener) {
+        mPlayProgressListener = playProgressListener;
     }
 
     public void setRecentUpdateListener(RecentUpdateListener recentUpdateListener) {
@@ -500,12 +506,17 @@ public class MusicManager {
     /**
      * 音乐管理回调接口（用于PlayActivity）
      */
-    public interface SeekBarProgressListener {
+    public interface PlayProgressListener {
+
+        void currentPlay(SongEntity songEntity);
+
         void onProgress(int progress, int duration);
 
         void onPlayerPause();
 
         void onPlayerResume();
+
+        void updateQueue();
     }
 
     /**
@@ -521,4 +532,5 @@ public class MusicManager {
     public interface PlayQueueListener {
         void playSuccess();
     }
+
 }

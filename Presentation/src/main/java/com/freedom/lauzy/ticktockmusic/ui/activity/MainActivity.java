@@ -326,7 +326,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
         if (!mPlayPauseView.isPlaying()) {
             mPlayPauseView.play();
         }
-        RxBus.INSTANCE.postSticky(songEntity);
         setMusicBarView(songEntity);
         setNavHeadView(songEntity);
     }
