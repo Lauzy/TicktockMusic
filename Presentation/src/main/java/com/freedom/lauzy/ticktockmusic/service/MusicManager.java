@@ -291,7 +291,7 @@ public class MusicManager {
             play();
         }
         if (mPlayProgressListener != null) {
-            mPlayProgressListener.updateQueue();
+            mPlayProgressListener.updateQueue(position);
         }
     }
 
@@ -516,7 +516,7 @@ public class MusicManager {
 
         void onPlayerResume();
 
-        void updateQueue();
+        void updateQueue(int position);
     }
 
     /**

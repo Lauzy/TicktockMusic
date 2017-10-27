@@ -193,14 +193,14 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     private void startRotate(boolean isFromZero, int delay) {
         PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
-                .instantiateItem(mVpPlayView, mVpPlayView.getCurrentItem());
+                .instantiateItem(mVpPlayView, MusicManager.getInstance().getCurPosition());
         coverFragment.coverStart(isFromZero, delay);
     }
 
-    private void pauseRotate(int delay) {
+    private void pauseRotate() {
         PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
-                .instantiateItem(mVpPlayView, mVpPlayView.getCurrentItem());
-        coverFragment.coverPause(delay);
+                .instantiateItem(mVpPlayView, MusicManager.getInstance().getCurPosition());
+        coverFragment.coverPause();
     }
 
     @Override
@@ -223,8 +223,10 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     }
 
     @Override
-    public void updateQueue() {
-        mPagerAdapter.notifyDataSetChanged();
+    public void updateQueue(int position) {
+        mPagerAdapter.notifyDataSetChanged(position);
+        mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
+        startRotate(false, 0);
     }
 
     private void setCurProgress(int progress, int duration) {
@@ -267,7 +269,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     public void pause() {
         if (MusicManager.getInstance().getCurrentSong() != null) {
             MusicManager.getInstance().pause();
-            pauseRotate(0);
+            pauseRotate();
         }
     }
 

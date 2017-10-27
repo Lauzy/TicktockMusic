@@ -62,7 +62,7 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                 .compose(RxHelper.ioMain())
                 .subscribe(value -> {
                     LogUtil.i(TAG, "add value is " + value);
-                    if (value != -1) {
+                    if (value != -1 && getView() != null) {
                         getView().addFavoriteSong();
                     }
                 });
@@ -72,13 +72,19 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
     public void deleteFavoriteSong(long songId) {
         mFavoriteSongUseCase.deleteFavoriteSong(songId).subscribe(aLong -> {
             LogUtil.i(TAG, "delete value is " + aLong);
-            getView().deleteFavoriteSong();
+            if (getView() != null) {
+                getView().deleteFavoriteSong();
+            }
         });
     }
 
     @Override
     public void isFavoriteSong(long songId) {
         mFavoriteSongUseCase.isFavoriteSong(songId)
-                .subscribe(aBoolean -> getView().isFavoriteSong(aBoolean));
+                .subscribe(aBoolean -> {
+                    if (getView() != null) {
+                        getView().isFavoriteSong(aBoolean);
+                    }
+                });
     }
 }

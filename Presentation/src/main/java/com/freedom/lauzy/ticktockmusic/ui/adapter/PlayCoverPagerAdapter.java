@@ -36,6 +36,17 @@ public class PlayCoverPagerAdapter extends FragmentStatePagerAdapter {
         return POSITION_NONE;
     }
 
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+    }
+
+    private int mPosition;
+    public void notifyDataSetChanged(int position) {
+        mPosition = position;
+        notifyDataSetChanged();
+    }
+
     /* private List<Fragment> mFragments;
     private List<SongEntity> mSongEntities = new ArrayList<>();
 

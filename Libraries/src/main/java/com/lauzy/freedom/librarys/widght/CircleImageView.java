@@ -495,6 +495,11 @@ public class CircleImageView extends TintImageView {
         mRotation = rotation;
     }
 
+    @Override
+    public float getRotation() {
+        return mRotation;
+    }
+
     public boolean isPlaying() {
         return isPlaying;
     }

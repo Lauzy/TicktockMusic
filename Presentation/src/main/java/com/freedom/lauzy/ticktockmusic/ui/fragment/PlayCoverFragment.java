@@ -102,13 +102,13 @@ public class PlayCoverFragment extends BaseFragment {
         }
     }
 
-    public void coverPause(int delay) {
+    public void coverPause() {
         if (mCvMusicCover != null) {
             mCvMusicCover.postDelayed(() -> {
                 if (mCvMusicCover.isPlaying()) {
                     mCvMusicCover.pause();
                 }
-            }, delay);
+            }, 0);
         }
     }
 
@@ -116,6 +116,7 @@ public class PlayCoverFragment extends BaseFragment {
     protected void loadData() {
         if (mCvMusicCover != null) {
             ImageLoader.INSTANCE.display(mActivity, new ImageConfig.Builder()
+                    .isRound(false)
                     .url(mSongEntity.albumCover)
                     .cacheStrategy(ImageConfig.CACHE_ALL)
                     .placeholder(R.drawable.ic_default)
