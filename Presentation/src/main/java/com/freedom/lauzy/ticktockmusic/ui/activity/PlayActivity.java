@@ -224,7 +224,8 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     @Override
     public void updateQueue(int position) {
-        mPagerAdapter.notifyDataSetChanged(position);
+        mPagerAdapter.setNotifyPosition(position);
+        mPagerAdapter.notifyDataSetChanged();
         mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
         startRotate(false, 0);
     }

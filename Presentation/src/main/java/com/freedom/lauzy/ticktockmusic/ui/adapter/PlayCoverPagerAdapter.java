@@ -3,6 +3,7 @@ package com.freedom.lauzy.ticktockmusic.ui.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.ViewGroup;
 
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayCoverFragment;
@@ -41,66 +42,31 @@ public class PlayCoverPagerAdapter extends FragmentStatePagerAdapter {
         super.notifyDataSetChanged();
     }
 
-    private int mPosition;
-    public void notifyDataSetChanged(int position) {
+    private int mPosition = -1;
+
+    public void setNotifyPosition(int position) {
         mPosition = position;
-        notifyDataSetChanged();
     }
 
-    /* private List<Fragment> mFragments;
-    private List<SongEntity> mSongEntities = new ArrayList<>();
-
-    public PlayCoverPagerAdapter(FragmentManager fm) {
-        super(fm);
-    }
-
-    public void setSongEntities(List<SongEntity> songEntities) {
-        mSongEntities.addAll(songEntities);
-        updateFragments(songEntities);
-    }
-
-    public void updateFragments(List<SongEntity> songEntities) {
-        List<Fragment> fragments = new ArrayList<>();
-        for (int i = 0, size = songEntities.size(); i < size; i++) {
-            fragments.add(PlayCoverFragment.newInstance(songEntities.get(i)));
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        if (mPosition == -1) {
+            super.destroyItem(container, position, object);
+            return;
         }
-        if (mSongEntities != null && !mSongEntities.equals(songEntities)) {
-            setFragmentList(fragments);
-            notifyDataSetChanged();
+        if (mPosition == MusicManager.getInstance().getCurPosition()) {
+            super.destroyItem(container, position, object);
+        } else if (mPosition > MusicManager.getInstance().getCurPosition()) {
+            if (position != MusicManager.getInstance().getCurPosition()) {
+                super.destroyItem(container, position, object);
+            }
         } else {
-            setFragmentList(fragments);
+//            int curPosition = MusicManager.getInstance().getCurPosition();
+            /*if (position != curPosition + 1) {
+                super.destroyItem(container, position, object);
+            }*/
+            //此处未解决，网易云音乐采用自定义的 ViewFlipper，有兴趣可以反编译研究下
+            super.destroyItem(container, position, object);
         }
     }
-
-    private void setFragmentList(List<Fragment> fragmentList) {
-        if (mFragments != null) {
-            mFragments.clear();
-        }
-        mFragments = fragmentList;
-    }
-
-  *//*  @Override
-    public int getCount() {
-        return MusicManager.getInstance().getMusicService().getSongData().size();
-    }*//*
-
-    @Override
-    public int getCount() {
-        return mFragments.size();
-    }
-
-    @Override
-    public int getItemPosition(Object object) {
-        return POSITION_NONE;
-       *//* if (mChildCount > 0) {
-            mChildCount--;
-            return POSITION_NONE;
-        }
-        return super.getItemPosition(object);*//*
-    }
-
-    @Override
-    public Fragment getItem(int position) {
-        return mFragments.get(position);
-    }*/
 }

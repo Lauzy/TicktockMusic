@@ -87,6 +87,7 @@ public class PlayCoverFragment extends BaseFragment {
         }
     }
 
+
     public void coverStart(boolean isFromZero, int delay) {
         if (mCvMusicCover != null) {
             if (isFromZero && !mCvMusicCover.isPlaying()) {
