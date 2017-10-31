@@ -295,6 +295,12 @@ public class MusicManager {
         }
     }
 
+    public void setCurPlayPosition(int position) {
+        getMusicService().setCurrentPosition(position);
+        play();
+    }
+
+
     /**
      * 清空播放队列
      */

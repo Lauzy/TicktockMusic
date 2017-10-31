@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -56,6 +57,8 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     private static final int SKIP_DELAY = 400;
     private static final int PRE_MUSIC = 0x0011;
     private static final int NEXT_MUSIC = 0x0012;
+    private static final int FIRST_MUSIC = 0x0013;
+    private static final int LAST_MUSIC = 0x0014;
     @BindView(R.id.toolbar_common)
     TickToolbar mToolbarCommon;
     @BindView(R.id.vp_play_view)
@@ -88,6 +91,14 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
                 break;
             case NEXT_MUSIC:
                 MusicManager.getInstance().skipToNext();
+                break;
+            case FIRST_MUSIC:
+                MusicManager.getInstance().setCurPlayPosition(0);
+                mVpPlayView.setCurrentItem(1, false);
+                break;
+            case LAST_MUSIC:
+                MusicManager.getInstance().setCurPlayPosition(MusicManager.getInstance().getMusicService().getSongData().size() - 1);
+                mVpPlayView.setCurrentItem(MusicManager.getInstance().getMusicService().getSongData().size(), false);
                 break;
         }
         return false;
@@ -168,7 +179,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     private void setUpViewPager() {
         mPagerAdapter = new PlayCoverPagerAdapter(getSupportFragmentManager());
         mVpPlayView.setAdapter(mPagerAdapter);
-        mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
+        mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition() + 1, false);
         mVpPlayView.addOnPageChangeListener(this);
     }
 
@@ -186,20 +197,22 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
                 mPlayPause.playWithoutAnim();
             }
 //            mPagerAdapter.notifyDataSetChanged();
-            mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
+            mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition() + 1, false);
             startRotate(true, 0);
         }
     }
 
     private void startRotate(boolean isFromZero, int delay) {
+      /*  PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
+                .instantiateItem(mVpPlayView, MusicManager.getInstance().getCurPosition());*/
         PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
-                .instantiateItem(mVpPlayView, MusicManager.getInstance().getCurPosition());
+                .instantiateItem(mVpPlayView, MusicManager.getInstance().getCurPosition() + 1);
         coverFragment.coverStart(isFromZero, delay);
     }
 
     private void pauseRotate() {
         PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
-                .instantiateItem(mVpPlayView, MusicManager.getInstance().getCurPosition());
+                .instantiateItem(mVpPlayView, MusicManager.getInstance().getCurPosition() + 1);
         coverFragment.coverPause();
     }
 
@@ -226,7 +239,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     public void updateQueue(int position) {
         mPagerAdapter.setNotifyPosition(position);
         mPagerAdapter.notifyDataSetChanged();
-        mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
+        mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition() + 1, false);
         startRotate(false, 0);
     }
 
@@ -278,6 +291,8 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     @Override
     public void setCoverBackground(Bitmap background) {
         mImageViewBg.setImageBitmap(background);
+        mImageViewBg.setColorFilter(ContextCompat.getColor(this, R.color.colorWhiteTransparent),
+                PorterDuff.Mode.SRC_OVER);
     }
 
     @Override
@@ -380,14 +395,24 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     @Override
     public void onPageSelected(int position) {
-        if (MusicManager.getInstance().getCurPosition() > position) {
+        if (position < 1) {
             Message msg = new Message();
-            msg.what = PRE_MUSIC;
+            msg.what = LAST_MUSIC;
             mPlayHandler.sendMessageDelayed(msg, SKIP_DELAY);
-        } else if (MusicManager.getInstance().getCurPosition() < position) {
+        } else if (position > MusicManager.getInstance().getMusicService().getSongData().size()) {
             Message msg = new Message();
-            msg.what = NEXT_MUSIC;
+            msg.what = FIRST_MUSIC;
             mPlayHandler.sendMessageDelayed(msg, SKIP_DELAY);
+        } else {
+            if (MusicManager.getInstance().getCurPosition() + 1 > position) {
+                Message msg = new Message();
+                msg.what = PRE_MUSIC;
+                mPlayHandler.sendMessageDelayed(msg, SKIP_DELAY);
+            } else if (MusicManager.getInstance().getCurPosition() + 1 < position) {
+                Message msg = new Message();
+                msg.what = NEXT_MUSIC;
+                mPlayHandler.sendMessageDelayed(msg, SKIP_DELAY);
+            }
         }
     }
 

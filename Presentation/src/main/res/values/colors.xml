@@ -8,6 +8,7 @@
     <color name="colorDarkerTransparent">#50000000</color>
     <color name="colorEdgeTransparent">#10000000</color>
     <color name="colorTransparent">#00000000</color>
+    <color name="colorWhiteTransparent">#20FFFFFF</color>
 
     <color name="theme_color_primary">#2196F3</color>
     <color name="theme_color_primary_dark">#1565C0</color>

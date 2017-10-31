@@ -5,8 +5,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
+import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayCoverFragment;
+
+import java.util.List;
 
 /**
  * Desc : 歌词、专辑图片 PagerAdapter
@@ -17,19 +20,29 @@ import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayCoverFragment;
  */
 public class PlayCoverPagerAdapter extends FragmentStatePagerAdapter {
 
+    private int mPosition = -1;
+
     public PlayCoverPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
     @Override
     public Fragment getItem(int position) {
+        if (position == 0) {
+            List<SongEntity> songData = MusicManager.getInstance().getMusicService().getSongData();
+            return PlayCoverFragment.newInstance(songData.get(songData.size() - 1));
+        }
+        if (position == MusicManager.getInstance().getMusicService().getSongData().size() + 1) {
+            List<SongEntity> songData = MusicManager.getInstance().getMusicService().getSongData();
+            return PlayCoverFragment.newInstance(songData.get(0));
+        }
         return PlayCoverFragment.newInstance(MusicManager.getInstance().getMusicService()
-                .getSongData().get(position));
+                .getSongData().get(position - 1));
     }
 
     @Override
     public int getCount() {
-        return MusicManager.getInstance().getMusicService().getSongData().size();
+        return MusicManager.getInstance().getMusicService().getSongData().size() + 2;
     }
 
     @Override
@@ -42,7 +55,6 @@ public class PlayCoverPagerAdapter extends FragmentStatePagerAdapter {
         super.notifyDataSetChanged();
     }
 
-    private int mPosition = -1;
 
     public void setNotifyPosition(int position) {
         mPosition = position;
@@ -57,7 +69,7 @@ public class PlayCoverPagerAdapter extends FragmentStatePagerAdapter {
         if (mPosition == MusicManager.getInstance().getCurPosition()) {
             super.destroyItem(container, position, object);
         } else if (mPosition > MusicManager.getInstance().getCurPosition()) {
-            if (position != MusicManager.getInstance().getCurPosition()) {
+            if (position != MusicManager.getInstance().getCurPosition() + 1) {
                 super.destroyItem(container, position, object);
             }
         } else {
