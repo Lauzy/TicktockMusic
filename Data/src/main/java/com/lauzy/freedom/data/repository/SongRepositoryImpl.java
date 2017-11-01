@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.freedom.lauzy.model.NetSongBean;
 import com.freedom.lauzy.repository.SongRepository;
-import com.lauzy.freedom.data.database.NetMusicDao;
+import com.lauzy.freedom.data.database.NetMusicDb;
 import com.lauzy.freedom.data.entity.MusicEntity;
 import com.lauzy.freedom.data.entity.mapper.SongListMapper;
 import com.lauzy.freedom.data.net.RetrofitHelper;
@@ -60,8 +60,8 @@ public class SongRepositoryImpl implements SongRepository {
                     @Override
                     public void accept(@NonNull List<NetSongBean> songListBeen) throws Exception {
                         if (!songListBeen.isEmpty()) {
-//                            NetMusicDao.getInstance(mContext).removeData(type);
-                            NetMusicDao.getInstance(mContext).addNetSongData(type, songListBeen);
+//                            NetMusicDb.getInstance(mContext).removeData(type);
+                            NetMusicDb.getInstance(mContext).addNetSongData(type, songListBeen);
                         }
                     }
                 });
@@ -72,7 +72,7 @@ public class SongRepositoryImpl implements SongRepository {
         return Observable.create(new ObservableOnSubscribe<List<NetSongBean>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<NetSongBean>> e) throws Exception {
-                List<NetSongBean> listBeen = NetMusicDao.getInstance(mContext).querySongData(type);
+                List<NetSongBean> listBeen = NetMusicDb.getInstance(mContext).querySongData(type);
                 e.onNext(listBeen != null ? listBeen : Collections.<NetSongBean>emptyList());
                 e.onComplete();
             }

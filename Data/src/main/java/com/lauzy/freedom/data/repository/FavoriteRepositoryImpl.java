@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.freedom.lauzy.model.FavoriteSongBean;
 import com.freedom.lauzy.repository.FavoriteRepository;
-import com.lauzy.freedom.data.database.FavoriteDao;
+import com.lauzy.freedom.data.database.FavoriteDb;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +37,7 @@ public class FavoriteRepositoryImpl implements FavoriteRepository {
         return Observable.create(new ObservableOnSubscribe<Long>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Long> e) throws Exception {
-                long value = FavoriteDao.getInstance(mContext).addFavoriteSong(songBean);
+                long value = FavoriteDb.getInstance(mContext).addFavoriteSong(songBean);
                 e.onNext(value);
                 e.onComplete();
             }
@@ -50,7 +50,7 @@ public class FavoriteRepositoryImpl implements FavoriteRepository {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<FavoriteSongBean>> e)
                     throws Exception {
-                List<FavoriteSongBean> favoriteSongs = FavoriteDao.getInstance(mContext)
+                List<FavoriteSongBean> favoriteSongs = FavoriteDb.getInstance(mContext)
                         .getFavoriteSongs();
                 e.onNext(favoriteSongs != null ? favoriteSongs : Collections
                         .<FavoriteSongBean>emptyList());
@@ -64,7 +64,7 @@ public class FavoriteRepositoryImpl implements FavoriteRepository {
         return Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Integer> e) throws Exception {
-                e.onNext(FavoriteDao.getInstance(mContext).clearFavoriteSongs());
+                e.onNext(FavoriteDb.getInstance(mContext).clearFavoriteSongs());
                 e.onComplete();
             }
         });
@@ -75,7 +75,7 @@ public class FavoriteRepositoryImpl implements FavoriteRepository {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
-                e.onNext(FavoriteDao.getInstance(mContext).isFavorite(songId));
+                e.onNext(FavoriteDb.getInstance(mContext).isFavorite(songId));
                 e.onComplete();
             }
         });
@@ -86,7 +86,7 @@ public class FavoriteRepositoryImpl implements FavoriteRepository {
         return Observable.create(new ObservableOnSubscribe<Long>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Long> e) throws Exception {
-                e.onNext(FavoriteDao.getInstance(mContext).deleteFavoriteSong(songId));
+                e.onNext(FavoriteDb.getInstance(mContext).deleteFavoriteSong(songId));
                 e.onComplete();
             }
         });

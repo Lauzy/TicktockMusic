@@ -1,4 +1,4 @@
-package com.freedom.lauzy;
+package com.freedom.lauzy.ticktockmusic.function;
 
 /**
  * Desc :  逻辑常量

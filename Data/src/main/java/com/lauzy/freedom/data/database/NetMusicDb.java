@@ -20,21 +20,21 @@ import static com.lauzy.freedom.data.database.TickDaoHelper.NET_MUSIC_TABLE;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class NetMusicDao implements BaseDao {
+public class NetMusicDb implements BaseDb {
 
-    private static final String LTAG = "NetMusicDao";
-    private static NetMusicDao sInstance;
+    private static final String LTAG = "NetMusicDb";
+    private static NetMusicDb sInstance;
     private TickDaoHelper mTickDaoHelper;
 
-    private NetMusicDao(Context context) {
+    private NetMusicDb(Context context) {
         mTickDaoHelper = new TickDaoHelper(context);
     }
 
-    public static NetMusicDao getInstance(final Context context) {
+    public static NetMusicDb getInstance(final Context context) {
         if (sInstance == null) {
-            synchronized (NetMusicDao.class) {
+            synchronized (NetMusicDb.class) {
                 if (sInstance == null) {
-                    sInstance = new NetMusicDao(context.getApplicationContext());
+                    sInstance = new NetMusicDb(context.getApplicationContext());
                 }
             }
         }

@@ -1,6 +1,6 @@
 package com.freedom.lauzy.ticktockmusic.presenter;
 
-import com.freedom.lauzy.DConstants;
+import com.freedom.lauzy.ticktockmusic.function.DConstants;
 import com.freedom.lauzy.interactor.GetSongListUseCase;
 import com.freedom.lauzy.model.NetSongBean;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;

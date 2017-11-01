@@ -17,7 +17,7 @@ import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
-import com.lauzy.freedom.data.database.BaseDao;
+import com.lauzy.freedom.data.database.BaseDb;
 import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.common.ToastUtils;
 
@@ -149,11 +149,11 @@ public class MusicService extends Service {
      * @param entity 当前音乐
      */
     private void play(SongEntity entity) {
-        if (entity.type.equals(BaseDao.QueueParam.LOCAL)) {//本地音乐
+        if (entity.type.equals(BaseDb.QueueParam.LOCAL)) {//本地音乐
             //直接获取到音乐专辑图片的bitmap，便于更新通知
             MusicUtil.albumCoverObservable(this, entity)
                     .subscribe(bitmap -> playMusic(entity, bitmap));
-        } else if (entity.type.equals(BaseDao.QueueParam.NET)) {//网络音乐
+        } else if (entity.type.equals(BaseDb.QueueParam.NET)) {//网络音乐
             //根据ID查询播放队列的数据获取当前SongEntity，根据此entity的url获取音乐图片的bitmap对象，
             //将entity和bitmap转化为NetMusicData对象，直接获取此对象的entity和bitmap即可，简化代码
             mQueueManager.netSongEntityObservable(entity.id)

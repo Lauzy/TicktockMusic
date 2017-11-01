@@ -1,7 +1,7 @@
 package com.lauzy.freedom.data.entity.mapper;
 
 import com.freedom.lauzy.model.NetSongBean;
-import com.lauzy.freedom.data.database.BaseDao;
+import com.lauzy.freedom.data.database.BaseDb;
 import com.lauzy.freedom.data.entity.SongListEntity;
 import com.lauzy.freedom.data.local.LocalUtil;
 
@@ -54,7 +54,7 @@ public class SongListMapper {
             netSongBean.rank = entity.rank;
             netSongBean.duration = entity.file_duration;
             netSongBean.songLength = LocalUtil.formatTime(entity.file_duration);
-            netSongBean.type = BaseDao.QueueParam.NET;
+            netSongBean.type = BaseDb.QueueParam.NET;
         }
         return netSongBean;
     }

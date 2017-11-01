@@ -9,10 +9,20 @@ import android.database.sqlite.SQLiteDatabase;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public interface BaseDao {
+public interface BaseDb {
 
+    /**
+     * 建表
+     * @param db 数据库
+     */
     void createTable(SQLiteDatabase db);
 
+    /**
+     * 升级表
+     * @param db 数据库
+     * @param oldVersion 旧版本
+     * @param newVersion 新版本
+     */
     void upgradeTable(SQLiteDatabase db, int oldVersion, int newVersion);
 
     class NetParam {

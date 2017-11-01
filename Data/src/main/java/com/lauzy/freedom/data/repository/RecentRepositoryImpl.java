@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.freedom.lauzy.model.RecentSongBean;
 import com.freedom.lauzy.repository.RecentRepository;
-import com.lauzy.freedom.data.database.RecentDao;
+import com.lauzy.freedom.data.database.RecentDb;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +37,7 @@ public class RecentRepositoryImpl implements RecentRepository {
         return Observable.create(new ObservableOnSubscribe<Void>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Void> e) throws Exception {
-                RecentDao.getInstance(mContext).addRecentSong(songBean);
+                RecentDb.getInstance(mContext).addRecentSong(songBean);
             }
         });
     }
@@ -47,7 +47,7 @@ public class RecentRepositoryImpl implements RecentRepository {
         return Observable.create(new ObservableOnSubscribe<List<RecentSongBean>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<RecentSongBean>> e) throws Exception {
-                List<RecentSongBean> songBeen = RecentDao.getInstance(mContext).getRecentSongBean();
+                List<RecentSongBean> songBeen = RecentDb.getInstance(mContext).getRecentSongBean();
                 e.onNext(songBeen != null ? songBeen : Collections.<RecentSongBean>emptyList());
                 e.onComplete();
             }
@@ -59,7 +59,7 @@ public class RecentRepositoryImpl implements RecentRepository {
         return Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Integer> e) throws Exception {
-                int value = RecentDao.getInstance(mContext).clearRecentSongs();
+                int value = RecentDb.getInstance(mContext).clearRecentSongs();
                 e.onNext(value);
                 e.onComplete();
             }
@@ -71,7 +71,7 @@ public class RecentRepositoryImpl implements RecentRepository {
         return Observable.create(new ObservableOnSubscribe<Long>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Long> e) throws Exception {
-                long value = RecentDao.getInstance(mContext).deleteRecentSong(songId);
+                long value = RecentDb.getInstance(mContext).deleteRecentSong(songId);
                 e.onNext(value);
                 e.onComplete();
             }

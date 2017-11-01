@@ -19,21 +19,21 @@ import java.util.List;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class PlayQueueDao implements BaseDao {
+public class PlayQueueDb implements BaseDb {
 
-    private static final String TAG = "PlayQueueDao";
-    private static PlayQueueDao sInstance;
+    private static final String TAG = "PlayQueueDb";
+    private static PlayQueueDb sInstance;
     private TickDaoHelper mTickDaoHelper;
 
-    private PlayQueueDao(Context context) {
+    private PlayQueueDb(Context context) {
         mTickDaoHelper = new TickDaoHelper(context);
     }
 
-    public static PlayQueueDao getInstance(final Context context) {
+    public static PlayQueueDb getInstance(final Context context) {
         if (sInstance == null) {
-            synchronized (PlayQueueDao.class) {
+            synchronized (PlayQueueDb.class) {
                 if (sInstance == null) {
-                    sInstance = new PlayQueueDao(context.getApplicationContext());
+                    sInstance = new PlayQueueDb(context.getApplicationContext());
                 }
             }
         }
@@ -82,7 +82,8 @@ public class PlayQueueDao implements BaseDao {
                 }
             }
             cursor = db.query(TickDaoHelper.PLAY_QUEUE, null,
-                    QueueParam.SONG_ID + " in (" + sb.toString() + ")", songIds, null, null, null);
+                    QueueParam.SONG_ID + " in (" + sb.toString() + ")", songIds,
+                    null, null, null);
             if (cursor != null && cursor.getCount() > 0) {
                 List<QueueSongBean> listBeen = new ArrayList<>(cursor.getCount());
                 while (cursor.moveToNext()) {

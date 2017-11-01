@@ -5,7 +5,7 @@ import android.content.Context;
 import com.freedom.lauzy.model.LocalSongBean;
 import com.freedom.lauzy.model.QueueSongBean;
 import com.freedom.lauzy.repository.QueueRepository;
-import com.lauzy.freedom.data.database.PlayQueueDao;
+import com.lauzy.freedom.data.database.PlayQueueDb;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +38,7 @@ public class QueueRepositoryImpl implements QueueRepository {
         return Observable.create(new ObservableOnSubscribe<List<QueueSongBean>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<QueueSongBean>> e) throws Exception {
-                List<QueueSongBean> songBeen = PlayQueueDao.getInstance(mContext).queryQueue(songIds);
+                List<QueueSongBean> songBeen = PlayQueueDb.getInstance(mContext).queryQueue(songIds);
                 e.onNext(songBeen != null ? songBeen : Collections.<QueueSongBean>emptyList());
                 e.onComplete();
             }
@@ -50,8 +50,8 @@ public class QueueRepositoryImpl implements QueueRepository {
         return Observable.create(new ObservableOnSubscribe<List<QueueSongBean>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<QueueSongBean>> e) throws Exception {
-                PlayQueueDao.getInstance(mContext).addToQueue(queueSongBeen);
-                List<QueueSongBean> songBeen = PlayQueueDao.getInstance(mContext).queryQueue(songIds);
+                PlayQueueDb.getInstance(mContext).addToQueue(queueSongBeen);
+                List<QueueSongBean> songBeen = PlayQueueDb.getInstance(mContext).queryQueue(songIds);
                 e.onNext(songBeen != null ? songBeen : Collections.<QueueSongBean>emptyList());
                 e.onComplete();
             }
@@ -63,7 +63,7 @@ public class QueueRepositoryImpl implements QueueRepository {
         return Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Integer> e) throws Exception {
-                int value = PlayQueueDao.getInstance(mContext).deleteQueueData(songIds);
+                int value = PlayQueueDb.getInstance(mContext).deleteQueueData(songIds);
                 e.onNext(value);
                 e.onComplete();
             }

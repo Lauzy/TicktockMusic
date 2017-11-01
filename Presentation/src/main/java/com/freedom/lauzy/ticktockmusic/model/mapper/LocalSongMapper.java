@@ -2,7 +2,7 @@ package com.freedom.lauzy.ticktockmusic.model.mapper;
 
 import com.freedom.lauzy.model.LocalSongBean;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
-import com.lauzy.freedom.data.database.BaseDao;
+import com.lauzy.freedom.data.database.BaseDb;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,7 +78,7 @@ public class LocalSongMapper {
         songEntity.size = localSongBean.size;
         songEntity.title = localSongBean.title;
         songEntity.songLength = localSongBean.songLength;
-        songEntity.type = BaseDao.QueueParam.LOCAL;
+        songEntity.type = BaseDb.QueueParam.LOCAL;
         return songEntity;
     }
 

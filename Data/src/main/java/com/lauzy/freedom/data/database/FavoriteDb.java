@@ -17,20 +17,20 @@ import java.util.List;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class FavoriteDao implements BaseDao {
+public class FavoriteDb implements BaseDb {
 
-    private static FavoriteDao sInstance;
+    private static FavoriteDb sInstance;
     private TickDaoHelper mTickDaoHelper;
 
-    private FavoriteDao(Context context) {
+    private FavoriteDb(Context context) {
         mTickDaoHelper = new TickDaoHelper(context);
     }
 
-    public static FavoriteDao getInstance(final Context context) {
+    public static FavoriteDb getInstance(final Context context) {
         if (sInstance == null) {
-            synchronized (FavoriteDao.class) {
+            synchronized (FavoriteDb.class) {
                 if (sInstance == null) {
-                    sInstance = new FavoriteDao(context.getApplicationContext());
+                    sInstance = new FavoriteDb(context.getApplicationContext());
                 }
             }
         }

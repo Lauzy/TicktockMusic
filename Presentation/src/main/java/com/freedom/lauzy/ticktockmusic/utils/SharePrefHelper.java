@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 /**
- * Desc :
+ * Desc : SharedPreferences 工具类
  * Author : Lauzy
  * Date : 2017/9/4
  * Blog : http://www.jianshu.com/u/e76853f863a9

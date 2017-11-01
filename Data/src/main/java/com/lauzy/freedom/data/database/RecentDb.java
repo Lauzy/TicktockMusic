@@ -17,21 +17,21 @@ import java.util.List;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class RecentDao implements BaseDao {
+public class RecentDb implements BaseDb {
 
-    private static RecentDao sInstance;
+    private static RecentDb sInstance;
     private TickDaoHelper mTickDaoHelper;
     private static final int RECENT_LIMIT = 50;//最多50首
 
-    private RecentDao(Context context) {
+    private RecentDb(Context context) {
         mTickDaoHelper = new TickDaoHelper(context);
     }
 
-    public static RecentDao getInstance(final Context context) {
+    public static RecentDb getInstance(final Context context) {
         if (sInstance == null) {
-            synchronized (RecentDao.class) {
+            synchronized (RecentDb.class) {
                 if (sInstance == null) {
-                    sInstance = new RecentDao(context.getApplicationContext());
+                    sInstance = new RecentDb(context.getApplicationContext());
                 }
             }
         }
