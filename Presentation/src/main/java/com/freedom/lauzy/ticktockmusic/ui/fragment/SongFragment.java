@@ -22,6 +22,13 @@ import java.util.List;
 import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
 
+/**
+ * Desc : 本地音乐音乐列表Fragment
+ * Author : Lauzy
+ * Date : 2017/11/1
+ * Blog : http://www.jianshu.com/u/e76853f863a9
+ * Email : freedompaladin@gmail.com
+ */
 public class SongFragment extends BaseFragment<LocalMusicPresenter> implements LocalMusicContract.View {
 
     @BindView(R.id.rv_local_song)
@@ -37,7 +44,6 @@ public class SongFragment extends BaseFragment<LocalMusicPresenter> implements L
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     protected int getLayoutRes() {

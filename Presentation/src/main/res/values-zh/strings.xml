@@ -60,4 +60,7 @@
     <string name="menu_delete">删除</string>
     <string name="menu_share">分享</string>
     <string name="menu_play_next">下一首播放</string>
+
+    <string name="delete_song">你确定要删除这首歌曲吗？</string>
+
 </resources>

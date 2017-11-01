@@ -20,7 +20,7 @@ import java.util.List;
 import butterknife.BindView;
 
 /**
- * Desc : 歌手Fragment
+ * Desc : 本地音乐歌手Fragment
  * Author : Lauzy
  * Date : 2017/9/28
  * Blog : http://www.jianshu.com/u/e76853f863a9

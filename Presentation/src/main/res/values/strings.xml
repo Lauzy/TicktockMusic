@@ -62,4 +62,6 @@
     <string name="menu_delete">Delete</string>
     <string name="menu_share">Share</string>
     <string name="menu_play_next">Play next</string>
+
+    <string name="delete_song">Are you sure you wang to delete it?</string>
 </resources>

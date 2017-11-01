@@ -24,6 +24,13 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
 
+/**
+ * Desc : 本地音乐主页面
+ * Author : Lauzy
+ * Date : 2017/11/1
+ * Blog : http://www.jianshu.com/u/e76853f863a9
+ * Email : freedompaladin@gmail.com
+ */
 public class LocalMusicFragment extends BaseFragment {
 
     @BindView(R.id.toolbar_common)

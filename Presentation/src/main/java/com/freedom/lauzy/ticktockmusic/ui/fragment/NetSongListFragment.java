@@ -22,7 +22,7 @@ import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
 
 /**
- * Desc : Net QueueSongBean
+ * Desc : 网络音乐列表页面
  * Author : Lauzy
  * Date : 2017/8/8
  * Blog : http://www.jianshu.com/u/e76853f863a9

@@ -1,10 +1,13 @@
 package com.freedom.lauzy.ticktockmusic.ui.adapter;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.PopupMenu;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.freedom.lauzy.ticktockmusic.R;
@@ -13,6 +16,7 @@ import com.freedom.lauzy.ticktockmusic.model.mapper.LocalSongMapper;
 import com.freedom.lauzy.ticktockmusic.navigation.Navigator;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
+import com.lauzy.freedom.librarys.common.IntentUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 
@@ -54,14 +58,16 @@ public class LocalSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.menu_item_singer:
-                        gotoSingerDetail(helper, songEntity);
+                        gotoSingerDetail(songEntity);
                         break;
                     case R.id.menu_item_album:
                         gotoAlbumDetail(helper, songEntity);
                         break;
                     case R.id.menu_item_share:
+                        IntentUtil.shareFile(mContext, songEntity.path);
                         break;
                     case R.id.menu_item_delete:
+                        deleteSong(helper, songEntity);
                         break;
                 }
                 return false;
@@ -71,8 +77,20 @@ public class LocalSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
         };
     }
 
-    @SuppressWarnings("unused")
-    private void gotoSingerDetail(BaseViewHolder helper, SongEntity songEntity) {
+    private void deleteSong(BaseViewHolder helper, SongEntity songEntity) {
+        new MaterialDialog.Builder(mContext)
+                .content("Are you sure?")
+                .positiveText(android.R.string.yes)
+                .negativeText(android.R.string.cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                    }
+                }).build().show();
+    }
+
+    private void gotoSingerDetail(SongEntity songEntity) {
 //        String transName = mContext.getString(R.string.img_singer_transition) + songEntity.albumId;
 //        helper.getView(R.id.img_song_pic).setTransitionName(transName);
         Navigator.navigateToArtistDetail(mContext, null, null,

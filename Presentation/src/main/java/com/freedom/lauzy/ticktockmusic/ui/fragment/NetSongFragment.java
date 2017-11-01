@@ -25,6 +25,13 @@ import java.util.List;
 
 import butterknife.BindView;
 
+/**
+ * Desc : 网络音乐主页面
+ * Author : Lauzy
+ * Date : 2017/11/1
+ * Blog : http://www.jianshu.com/u/e76853f863a9
+ * Email : freedompaladin@gmail.com
+ */
 public class NetSongFragment extends BaseFragment<NetMusicCategoryPresenter>
         implements NetMusicCategoryContract.View {
 

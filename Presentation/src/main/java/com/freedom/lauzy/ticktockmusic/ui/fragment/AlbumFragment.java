@@ -18,6 +18,13 @@ import java.util.List;
 
 import butterknife.BindView;
 
+/**
+ * Desc : 本地音乐专辑页面
+ * Author : Lauzy
+ * Date : 2017/11/1
+ * Blog : http://www.jianshu.com/u/e76853f863a9
+ * Email : freedompaladin@gmail.com
+ */
 public class AlbumFragment extends BaseFragment<LocalAlbumPresenter> implements LocalAlbumContract.View {
 
     @BindView(R.id.rv_album)
