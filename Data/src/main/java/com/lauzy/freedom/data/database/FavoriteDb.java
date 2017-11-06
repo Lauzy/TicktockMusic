@@ -40,7 +40,7 @@ public class FavoriteDb implements BaseDb {
     @Override
     public void createTable(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TickDaoHelper.FAVORITE_TABLE + " ("
-                + FavoriteParam.SONG_ID + " VARCHAR(255),"
+                + FavoriteParam.SONG_ID + " VARCHAR(255) PRIMARY KEY NOT NULL,"
                 + FavoriteParam.SOURCE + " VARCHAR(255),"
                 + FavoriteParam.SONG_NAME + " VARCHAR(255),"
                 + FavoriteParam.SINGER_NAME + " VARCHAR(255),"

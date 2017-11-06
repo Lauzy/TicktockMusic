@@ -45,7 +45,7 @@ public class NetMusicDb implements BaseDb {
     public void createTable(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + NET_MUSIC_TABLE + " ("
                 + NetParam.TYPE + " INTEGER NOT NULL,"
-                + NetParam.SONG_ID + " VARCHAR(255),"
+                + NetParam.SONG_ID + " VARCHAR(255) PRIMARY KEY NOT NULL,"
                 + NetParam.SONG_NAME + " VARCHAR(255),"
                 + NetParam.SINGER_ID + " VARCHAR(255),"
                 + NetParam.SINGER_NAME + " VARCHAR(255),"

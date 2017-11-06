@@ -41,7 +41,7 @@ public class RecentDb implements BaseDb {
     @Override
     public void createTable(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TickDaoHelper.RECENT_TABLE + " ("
-                + RecentParam.SONG_ID + " VARCHAR(255),"
+                + RecentParam.SONG_ID + " VARCHAR(255) PRIMARY KEY NOT NULL,"
                 + RecentParam.SOURCE + " VARCHAR(255),"
                 + RecentParam.SONG_NAME + " VARCHAR(255),"
                 + RecentParam.SINGER_NAME + " VARCHAR(255),"
