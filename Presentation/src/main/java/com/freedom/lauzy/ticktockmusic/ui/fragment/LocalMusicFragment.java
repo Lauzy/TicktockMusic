@@ -71,11 +71,6 @@ public class LocalMusicFragment extends BaseFragment {
     }
 
     @Override
-    protected void initInjector() {
-//        getFragmentComponent().inject(this);
-    }
-
-    @Override
     protected void initViews() {
         setTabBackground();
         setDrawerSync();
@@ -93,10 +88,6 @@ public class LocalMusicFragment extends BaseFragment {
         mVpLocalMusic.setOffscreenPageLimit(3);
         mVpLocalMusic.setAdapter(adapter);
         mTabLocalMusic.setupWithViewPager(mVpLocalMusic);
-    }
-
-    @Override
-    protected void loadData() {
     }
 
     @Override

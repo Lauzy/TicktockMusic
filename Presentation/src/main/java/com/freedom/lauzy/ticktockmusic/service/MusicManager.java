@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.freedom.lauzy.ticktockmusic.TicktockApplication;
 import com.freedom.lauzy.ticktockmusic.event.ClearQueueEvent;
@@ -208,6 +209,15 @@ public class MusicManager {
     public void playLocalQueue(List<SongEntity> songEntities, String[] ids, int position) {
         mCurIds = ids;//id赋值给当前ID，以供队列列表使用
         mQueueManager.playQueueObservable(ids).subscribe(playQueue -> {
+
+            for (SongEntity songEntity : songEntities) {
+                Log.e(TAG, "songEntity: " + songEntity.id);
+            }
+
+            for (SongEntity songEntity : playQueue) {
+                Log.e(TAG, "playQueue: " + songEntity.id);
+            }
+
             if (songEntities.equals(playQueue)) {
                 mMusicService.setSongData(playQueue);
                 LogUtil.i(TAG, "--- data exists ---");
@@ -218,7 +228,7 @@ public class MusicManager {
                         .subscribeWith(new DefaultDisposableObserver<List<SongEntity>>() {
                             @Override
                             public void onNext(@io.reactivex.annotations.NonNull List<SongEntity> songData) {
-                                super.onNext(songEntities);
+                                super.onNext(songData);
                                 LogUtil.i(TAG, "--- new data ---");
                                 mMusicService.setSongData(songData);
                                 open(position, songData.get(position), NEW_DATA);

@@ -54,16 +54,6 @@ public class PlayCoverFragment extends BaseFragment {
     }
 
     @Override
-    protected void initInjector() {
-
-    }
-
-    @Override
-    protected void initViews() {
-
-    }
-
-    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         isVisible = isVisibleToUser;

@@ -77,11 +77,6 @@ public class ArtistDetailFragment extends BaseFragment {
     }
 
     @Override
-    protected void initInjector() {
-
-    }
-
-    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Disposable disposable = RxBus.INSTANCE.doStickySubscribe(ThemeEvent.class,

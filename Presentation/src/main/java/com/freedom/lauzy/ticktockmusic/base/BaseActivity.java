@@ -34,6 +34,7 @@ import io.reactivex.disposables.Disposable;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
+@SuppressWarnings("unused")
 public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivity implements IBaseView {
 
     @Inject
@@ -55,7 +56,9 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
         loadData();
     }
 
-    protected abstract void initInject();
+    protected  void initInject(){
+
+    }
 
     private void setViews() {
         setStatusBar();
@@ -67,9 +70,13 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
 
     protected abstract int getLayoutRes();
 
-    protected abstract void initViews();
+    protected void initViews(){
 
-    protected abstract void loadData();
+    }
+
+    protected void loadData(){
+
+    }
 
     protected ActivityComponent getActivityComponent() {
         return DaggerActivityComponent.builder()
@@ -146,7 +153,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorHalfTransparent));
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorEdgeTransparent));
     }
 
     @Override

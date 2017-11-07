@@ -291,7 +291,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     @Override
     public void setCoverBackground(Bitmap background) {
         mImageViewBg.setImageBitmap(background);
-        mImageViewBg.setColorFilter(ContextCompat.getColor(this, R.color.colorWhiteTransparent),
+        mImageViewBg.setColorFilter(ContextCompat.getColor(this, R.color.colorDarkerTransparent),
                 PorterDuff.Mode.SRC_OVER);
     }
 

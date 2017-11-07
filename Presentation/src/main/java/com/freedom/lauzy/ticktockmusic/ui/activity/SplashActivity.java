@@ -28,24 +28,9 @@ public class SplashActivity extends BaseActivity {
     private static final int SNACK_BAR_DURATION = 5000;
 
     @Override
-    protected void initInject() {
-
-    }
-
-    @Override
     protected int getLayoutRes() {
         return R.layout.activity_splash;
     }
-
-    @Override
-    protected void initViews() {
-
-    }
-
-    @Override
-    protected void loadData() {
-    }
-
 
     @Override
     protected void onStart() {
@@ -73,8 +58,9 @@ public class SplashActivity extends BaseActivity {
         Snackbar.make(findViewById(android.R.id.content), R.string.permission_denied,
                 Snackbar.LENGTH_INDEFINITE)
                 .setDuration(SNACK_BAR_DURATION)
-                .setAction(R.string.open_permission, v -> startActivity(IntentUtil.openSetting(SplashActivity.this))
-                ).setActionTextColor(ContextCompat.getColor(SplashActivity.this
-                , R.color.theme_color_primary)).show();
+                .setAction(R.string.open_permission, v ->
+                        startActivity(IntentUtil.openSetting(SplashActivity.this)))
+                .setActionTextColor(ContextCompat.getColor(SplashActivity.this
+                        , R.color.theme_color_primary)).show();
     }
 }

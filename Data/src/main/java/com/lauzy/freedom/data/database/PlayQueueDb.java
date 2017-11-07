@@ -43,7 +43,7 @@ public class PlayQueueDb implements BaseDb {
     @Override
     public void createTable(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TickDaoHelper.PLAY_QUEUE + " ("
-                + QueueParam.SONG_ID + " VARCHAR(255) PRIMARY KEY NOT NULL,"
+                + QueueParam.SONG_ID + " VARCHAR(255),"
                 + QueueParam.SOURCE + " VARCHAR(255),"
                 + QueueParam.SONG_NAME + " VARCHAR(255),"
                 + QueueParam.SINGER_NAME + " VARCHAR(255),"

@@ -33,11 +33,6 @@ public class SettingActivity extends BaseActivity implements ColorChooserDialog.
     }
 
     @Override
-    protected void initInject() {
-
-    }
-
-    @Override
     protected int getLayoutRes() {
         return R.layout.activity_setting;
     }
@@ -46,10 +41,6 @@ public class SettingActivity extends BaseActivity implements ColorChooserDialog.
     protected void initViews() {
         showBackIcon();
         setToolbarTitle(getResources().getString(R.string.drawer_setting));
-    }
-
-    @Override
-    protected void loadData() {
     }
 
     @OnClick(R.id.layout_choose_theme)

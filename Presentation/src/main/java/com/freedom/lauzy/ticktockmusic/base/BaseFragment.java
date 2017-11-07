@@ -109,11 +109,17 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
 
     protected abstract int getLayoutRes();
 
-    protected abstract void initInjector();
+    protected void initInjector(){
 
-    protected abstract void initViews();
+    }
 
-    protected abstract void loadData();
+    protected void initViews(){
+
+    }
+
+    protected void loadData(){
+
+    }
 
     protected FragmentComponent getFragmentComponent() {
         return DaggerFragmentComponent.builder()
