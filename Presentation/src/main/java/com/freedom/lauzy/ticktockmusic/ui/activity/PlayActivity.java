@@ -302,14 +302,14 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     @Override
     public void deleteFavoriteSong() {
-        mImgFavorite.setImageResource(R.drawable.ic_favorite_border_black);
+        mImgFavorite.setImageResource(R.drawable.ic_favorite_border_white);
     }
 
     @Override
     public void isFavoriteSong(boolean isFavorite) {
         mIsFavorite = isFavorite;
         mImgFavorite.setImageResource(isFavorite ? R.drawable.ic_favorite_white :
-                R.drawable.ic_favorite_border_black);
+                R.drawable.ic_favorite_border_white);
         if (isFavorite) {
             setImageTint();
         }

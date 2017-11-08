@@ -209,18 +209,9 @@ public class MusicManager {
     public void playLocalQueue(List<SongEntity> songEntities, String[] ids, int position) {
         mCurIds = ids;//id赋值给当前ID，以供队列列表使用
         mQueueManager.playQueueObservable(ids).subscribe(playQueue -> {
-
-            for (SongEntity songEntity : songEntities) {
-                Log.e(TAG, "songEntity: " + songEntity.id);
-            }
-
-            for (SongEntity songEntity : playQueue) {
-                Log.e(TAG, "playQueue: " + songEntity.id);
-            }
-
             if (songEntities.equals(playQueue)) {
                 mMusicService.setSongData(playQueue);
-                LogUtil.i(TAG, "--- data exists ---");
+                LogUtil.d(TAG, "--- data exists ---");
                 open(position, playQueue.get(position), DATA_EXITS);
             } else {
                 mQueueManager.addGetQueueObservable(ids, songEntities)
@@ -229,7 +220,7 @@ public class MusicManager {
                             @Override
                             public void onNext(@io.reactivex.annotations.NonNull List<SongEntity> songData) {
                                 super.onNext(songData);
-                                LogUtil.i(TAG, "--- new data ---");
+                                LogUtil.d(TAG, "--- new data ---");
                                 mMusicService.setSongData(songData);
                                 open(position, songData.get(position), NEW_DATA);
                             }
