@@ -85,10 +85,10 @@ dependencies {
     //    debugCompile project(path: ':Libraries', configuration: 'debug')
     //    releaseCompile project(path: ':Data', configuration: 'release')
     //    debugCompile project(path: ':Data', configuration: 'debug')
-    releaseImplementation project(':Data')
-    releaseImplementation project(':Libraries')
-    debugImplementation project(':Data')
-    debugImplementation project(':Libraries')
+    releaseImplementation project(':data')
+    releaseImplementation project(':libraries')
+    debugImplementation project(':data')
+    debugImplementation project(':libraries')
 }
 
 configurations.all {

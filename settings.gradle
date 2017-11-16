@@ -1,1 +1,1 @@
-include ':Presentation', ':Domain', ':Data', ':Libraries'
+include ':presentation', ':domain', ':data', ':libraries'

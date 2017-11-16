@@ -39,7 +39,7 @@ dependencies {
     androidTestCompile testDependencies.espresso, {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    compile project(':Domain')
+    compile project(':domain')
     compile presentationDependencies.rxJava
     compile presentationDependencies.dagger
     annotationProcessor presentationDependencies.daggerCompiler
