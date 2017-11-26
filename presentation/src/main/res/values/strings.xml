@@ -11,6 +11,7 @@
     <string name="action_clear">Clear</string>
     <string name="drawer_music">Local Music</string>
     <string name="drawer_net_song">Network Song</string>
+    <string name="drawer_file_folder">File Folder</string>
     <string name="drawer_favorite">Favorite</string>
     <string name="drawer_recent">Recent</string>
     <string name="drawer_setting">Setting</string>
@@ -62,6 +63,7 @@
     <string name="menu_delete">Delete</string>
     <string name="menu_share">Share</string>
     <string name="menu_play_next">Play next</string>
+    <string name="play">Play</string>
 
-    <string name="delete_song">Are you sure you wang to delete it?</string>
+    <string name="delete_song">Are you sure to delete it?</string>
 </resources>

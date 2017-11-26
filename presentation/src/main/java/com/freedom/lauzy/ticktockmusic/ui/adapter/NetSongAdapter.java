@@ -42,7 +42,7 @@ public class NetSongAdapter extends BaseQuickAdapter<NetSongBean, BaseViewHolder
                         .build());
 
         helper.getView(R.id.layout_song_item).setOnClickListener(v -> MusicManager.getInstance()
-                .playLocalQueue(NetEntityMapper.transform(mData),
+                .playMusic(NetEntityMapper.transform(mData),
                         MusicUtil.getSongIds(NetEntityMapper.transform(mData)),
                         helper.getAdapterPosition()));
     }

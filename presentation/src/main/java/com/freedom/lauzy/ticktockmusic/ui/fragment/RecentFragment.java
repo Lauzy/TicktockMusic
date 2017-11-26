@@ -111,7 +111,7 @@ public class RecentFragment extends BaseFragment<RecentPresenter> implements Rec
      */
     @Override
     public void playRecent(SongEntity entity, int position) {
-        MusicManager.getInstance().playLocalQueue(mSongEntities,
+        MusicManager.getInstance().playMusic(mSongEntities,
                 MusicUtil.getSongIds(mSongEntities), position);
         MusicManager.getInstance().setRecentUpdateListener(() -> mPresenter.loadRecentSongs());
     }

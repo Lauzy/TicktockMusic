@@ -195,8 +195,8 @@ public class MusicManager {
         context.stopService(new Intent(context, MusicService.class));
     }
 
-    public void playLocalQueue(List<SongEntity> songEntities, String[] ids) {
-        this.playLocalQueue(songEntities, ids, 0);
+    public void playMusic(List<SongEntity> songEntities, String[] ids) {
+        this.playMusic(songEntities, ids, 0);
     }
 
     /**
@@ -206,7 +206,7 @@ public class MusicManager {
      * @param ids          id
      * @param position     当前位置
      */
-    public void playLocalQueue(List<SongEntity> songEntities, String[] ids, int position) {
+    public void playMusic(List<SongEntity> songEntities, String[] ids, int position) {
         mCurIds = ids;//id赋值给当前ID，以供队列列表使用
         mQueueManager.playQueueObservable(ids).subscribe(playQueue -> {
             if (songEntities.equals(playQueue)) {

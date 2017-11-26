@@ -11,6 +11,7 @@
     <string name="author">Lauzy</string>
     <string name="drawer_music">我的曲库</string>
     <string name="drawer_net_song">网络曲库</string>
+    <string name="drawer_file_folder">文件夹</string>
     <string name="drawer_favorite">喜欢</string>
     <string name="drawer_recent">最近播放</string>
     <string name="drawer_setting">设置</string>
@@ -60,6 +61,7 @@
     <string name="menu_delete">删除</string>
     <string name="menu_share">分享</string>
     <string name="menu_play_next">下一首播放</string>
+    <string name="play">播放</string>
 
     <string name="delete_song">你确定要删除这首歌曲吗？</string>
 

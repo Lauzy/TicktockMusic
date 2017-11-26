@@ -13,6 +13,11 @@
             android:id="@+id/nav_net_song"
             android:icon="@drawable/ic_net_song"
             android:title="@string/drawer_net_song"/>
+
+        <item
+            android:id="@+id/nav_file_folder"
+            android:icon="@drawable/ic_file_folder"
+            android:title="@string/drawer_file_folder"/>
         <item
             android:id="@+id/nav_favorite"
             android:icon="@drawable/ic_favorite"

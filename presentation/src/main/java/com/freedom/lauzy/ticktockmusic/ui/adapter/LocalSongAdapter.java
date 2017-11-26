@@ -47,7 +47,7 @@ public class LocalSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
                         .into(helper.getView(R.id.img_song_pic))
                         .build());
         helper.getView(R.id.layout_song_item).setOnClickListener(v ->
-                MusicManager.getInstance().playLocalQueue(LocalSongMapper.transformLocal(mData),
+                MusicManager.getInstance().playMusic(LocalSongMapper.transformLocal(mData),
                         MusicUtil.getSongIds(mData), helper.getAdapterPosition()));
         helper.getView(R.id.img_item_menu).setOnClickListener(menuListener(helper, item));
     }
@@ -79,7 +79,7 @@ public class LocalSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
 
     private void deleteSong(BaseViewHolder helper, SongEntity songEntity) {
         new MaterialDialog.Builder(mContext)
-                .content("Are you sure?")
+                .content(R.string.delete_song)
                 .positiveText(android.R.string.yes)
                 .negativeText(android.R.string.cancel)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {

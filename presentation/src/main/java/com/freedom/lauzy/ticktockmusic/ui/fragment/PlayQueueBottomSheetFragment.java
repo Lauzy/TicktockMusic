@@ -205,7 +205,7 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment impl
 
     @Override
     public void playNewSong(int position) {
-        MusicManager.getInstance().playLocalQueue(mSongEntities,
+        MusicManager.getInstance().playMusic(mSongEntities,
                 MusicUtil.getSongIds(mSongEntities), position);
         //设置回调接口，确保播放后刷新Adapter(setPlayQueueListener())
 //        mAdapter.notifyDataSetChanged();

@@ -17,9 +17,10 @@
         android:layout_height="wrap_content"
         android:background="?selectableItemBackgroundBorderless"
         android:clickable="true"
+        android:focusable="true"
         android:paddingBottom="@dimen/dp_10"
-        android:paddingLeft="@dimen/dp_20"
-        android:paddingRight="@dimen/dp_15"
+        android:paddingStart="@dimen/dp_20"
+        android:paddingEnd="@dimen/dp_15"
         android:paddingTop="@dimen/dp_10">
 
         <ImageView
@@ -35,7 +36,7 @@
             android:id="@+id/txt_song_title"
             style="@style/MarqueeTxtStyle"
             android:layout_marginTop="@dimen/dp_6"
-            android:layout_toRightOf="@id/img_song_pic"
+            android:layout_toEndOf="@id/img_song_pic"
             tools:text="@string/app_name"/>
 
         <com.lauzy.freedom.librarys.widght.TickTextView
@@ -43,7 +44,7 @@
             style="@style/MarqueeTxtStyle"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/dp_6"
-            android:layout_toRightOf="@id/img_song_pic"
+            android:layout_toEndOf="@id/img_song_pic"
             android:textColor="@color/gray_dark"
             android:textSize="@dimen/sp_1205"
             tools:text="@string/app_name"/>
@@ -53,11 +54,11 @@
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
+            android:focusable="true"
             android:scaleType="center"
             android:contentDescription="@null"
             android:tint="@color/gray"

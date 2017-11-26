@@ -147,7 +147,7 @@ public class AlbumDetailFragment extends BaseFragment<LocalMusicPresenter>
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab_play:
-                MusicManager.getInstance().playLocalQueue(LocalSongMapper.transformLocal(mLocalSongBeen),
+                MusicManager.getInstance().playMusic(LocalSongMapper.transformLocal(mLocalSongBeen),
                         MusicUtil.getSongIds(mLocalSongBeen));
                 break;
         }
