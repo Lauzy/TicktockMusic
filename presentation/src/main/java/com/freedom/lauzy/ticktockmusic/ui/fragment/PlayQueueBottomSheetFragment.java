@@ -111,7 +111,12 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment impl
         mAdapter = new PlayQueueAdapter(R.layout.layout_play_queue_item, mSongEntities);
         rvPlayQueue.setAdapter(mAdapter);
         mAdapter.setDeleteQueueItemListener(this);
-        mQueuePresenter.loadQueueData(MusicManager.getInstance().getCurIds());
+        String[] curIds = MusicManager.getInstance().getCurIds();
+        mQueuePresenter.loadQueueData(curIds);
+
+        for (String curId : curIds) {
+            Log.e("TAG",curId);
+        }
     }
 
     private void setModeView() {

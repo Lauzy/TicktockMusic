@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
 import com.freedom.lauzy.ticktockmusic.contract.LocalMusicContract;
+import com.freedom.lauzy.ticktockmusic.event.MediaUpdateEvent;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * Desc : 本地音乐音乐列表Fragment
@@ -61,6 +63,10 @@ public class SongFragment extends BaseFragment<LocalMusicPresenter> implements L
         Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(ThemeEvent.class,
                 themeEvent -> setThemeLayoutBg());
         RxBus.INSTANCE.addDisposable(this, disposable);
+
+//        Disposable updateDisposable = RxBus.INSTANCE.doDefaultSubscribe(MediaUpdateEvent.class,
+//                mediaUpdateEvent -> mPresenter.loadLocalSong());
+//        RxBus.INSTANCE.addDisposable(this,updateDisposable);
     }
 
     @Override

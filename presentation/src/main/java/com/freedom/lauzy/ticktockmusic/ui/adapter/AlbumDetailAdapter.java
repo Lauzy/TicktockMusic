@@ -58,8 +58,10 @@ public class AlbumDetailAdapter extends BaseQuickAdapter<SongEntity, BaseViewHol
             popupMenu.setOnMenuItemClickListener((MenuItem item) -> {
                 switch (item.getItemId()) {
                     case R.id.menu_item_play:
-                        MusicManager.getInstance().playMusic(LocalSongMapper.transformLocal(mData),
-                                MusicUtil.getSongIds(mData), helper.getAdapterPosition());
+                        MusicManager.getInstance().insertElement(String.valueOf(entity.id),
+                                MusicManager.getInstance().getCurPosition() + 1);
+//                        MusicManager.getInstance().playMusic(LocalSongMapper.transformLocal(mData),
+//                                MusicUtil.getSongIds(mData), helper.getAdapterPosition());
                         break;
                     case R.id.menu_item_share:
                         IntentUtil.shareFile(mContext, entity.path);
