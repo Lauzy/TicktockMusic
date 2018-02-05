@@ -22,8 +22,6 @@ import com.lauzy.freedom.librarys.common.LogUtil;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -467,29 +465,6 @@ public class MusicManager {
      */
     public String[] getCurIds() {
         return mCurIds != null ? mCurIds : new String[]{};
-    }
-
-    public void insertElement(String element, int index) {
-        if (!Arrays.asList(mCurIds).contains(element)) {
-            List<String> tempIds = new ArrayList<>();
-            tempIds.addAll(Arrays.asList(mCurIds));
-            tempIds.add(index, element);
-            LogUtil.e("noCon",element);
-            mCurIds = new String[mCurIds.length + 1];
-            for (int i = 0; i < tempIds.size(); i++) {
-                mCurIds[i] = tempIds.get(i);
-            }
-        }else {
-            LogUtil.e("contains",element);
-            List<String> tempIds = new ArrayList<>();
-            tempIds.addAll(Arrays.asList(mCurIds));
-            tempIds.remove(element);
-            tempIds.add(index,element);
-            mCurIds = new String[mCurIds.length];
-            for (int i = 0; i < tempIds.size(); i++) {
-                mCurIds[i] = tempIds.get(i);
-            }
-        }
     }
 
     public int getCurPosition() {
