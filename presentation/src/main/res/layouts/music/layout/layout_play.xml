@@ -27,6 +27,12 @@
             app:civ_border_color="@color/colorDarkerTransparent"
             app:civ_border_width="@dimen/dp_15"/>-->
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_play_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v7.widget.RecyclerView>
+
         <android.support.v4.view.ViewPager
             android:id="@+id/vp_play_view"
             android:layout_width="match_parent"

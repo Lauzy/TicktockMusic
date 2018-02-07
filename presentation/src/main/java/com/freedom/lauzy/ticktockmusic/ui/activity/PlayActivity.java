@@ -14,6 +14,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,8 +33,7 @@ import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.PlayPresenter;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.service.MusicService;
-import com.freedom.lauzy.ticktockmusic.ui.adapter.PlayCoverPagerAdapter;
-import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayCoverFragment;
+import com.freedom.lauzy.ticktockmusic.ui.adapter.PlayAdapter;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayQueueBottomSheetFragment;
 import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.lauzy.freedom.data.local.LocalUtil;
@@ -61,8 +63,6 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     private static final int LAST_MUSIC = 0x0014;
     @BindView(R.id.toolbar_common)
     TickToolbar mToolbarCommon;
-    @BindView(R.id.vp_play_view)
-    ViewPager mVpPlayView;
     @BindView(R.id.txt_current_progress)
     TextView mTxtCurrentProgress;
     @BindView(R.id.seek_play)
@@ -79,10 +79,11 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     ImageView mImgFavorite;
     @BindView(R.id.img_play_bg)
     ImageView mImageViewBg;
+    @BindView(R.id.rv_play_view)
+    RecyclerView mRvPlayView;
     private static final String TAG = "PlayActivity";
     private boolean mIsFavorite;
     private static final int PLAY_DELAY = 500;
-    private PlayCoverPagerAdapter mPagerAdapter;
 
     private Handler mPlayHandler = new Handler(msg -> {
         switch (msg.what) {
@@ -94,11 +95,11 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
                 break;
             case FIRST_MUSIC:
                 MusicManager.getInstance().setCurPlayPosition(0);
-                mVpPlayView.setCurrentItem(1, false);
+//                mVpPlayView.setCurrentItem(1, false);
                 break;
             case LAST_MUSIC:
                 MusicManager.getInstance().setCurPlayPosition(MusicManager.getInstance().getMusicService().getSongData().size() - 1);
-                mVpPlayView.setCurrentItem(MusicManager.getInstance().getMusicService().getSongData().size(), false);
+//                mVpPlayView.setCurrentItem(MusicManager.getInstance().getMusicService().getSongData().size(), false);
                 break;
         }
         return false;
@@ -164,8 +165,10 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         mPresenter.isFavoriteSong((int) MusicManager.getInstance().getCurrentSong().id);
         mTxtCurrentProgress.setText(LocalUtil.formatTime(MusicManager.getInstance().getCurrentProgress()));
 
-        if (MusicManager.getInstance().getMusicService().getSongData() != null)
-            setUpViewPager();
+        if (MusicManager.getInstance().getMusicService().getSongData() != null) {
+//            setUpViewPager();
+            setUpRecyclerView();
+        }
 
         MusicManager.getInstance().setPlayProgressListener(this);
         mSeekPlay.setOnSeekBarChangeListener(this);
@@ -173,17 +176,23 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         currentPlay(MusicManager.getInstance().getCurrentSong());
     }
 
+    private void setUpRecyclerView() {
+        PlayAdapter adapter = new PlayAdapter(R.layout.item_play_view, MusicManager.getInstance().getMusicService().getSongData());
+        mRvPlayView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        mRvPlayView.setAdapter(adapter);
+        new PagerSnapHelper().attachToRecyclerView(mRvPlayView);
+        mRvPlayView.scrollToPosition(MusicManager.getInstance().getCurPosition());
+    }
+
     /**
      * 配置ViewPager
      */
-    private void setUpViewPager() {
-        mPagerAdapter = new PlayCoverPagerAdapter(getSupportFragmentManager());
-        mVpPlayView.setAdapter(mPagerAdapter);
-        mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition() + 1, false);
-        mVpPlayView.addOnPageChangeListener(this);
-    }
-
-
+//    private void setUpViewPager() {
+//        mPagerAdapter = new PlayCoverPagerAdapter(getSupportFragmentManager());
+//        mVpPlayView.setAdapter(mPagerAdapter);
+//        mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition() + 1, false);
+//        mVpPlayView.addOnPageChangeListener(this);
+//    }
     @Override
     public void currentPlay(SongEntity songEntity) {
         if (songEntity != null) {
@@ -197,24 +206,24 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
                 mPlayPause.playWithoutAnim();
             }
 //            mPagerAdapter.notifyDataSetChanged();
-            mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition() + 1, false);
-            startRotate(true, 0);
+//            mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition() + 1, false);
+//            startRotate(true, 0);
         }
     }
 
-    private void startRotate(boolean isFromZero, int delay) {
-      /*  PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
-                .instantiateItem(mVpPlayView, MusicManager.getInstance().getCurPosition());*/
-        PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
-                .instantiateItem(mVpPlayView, MusicManager.getInstance().getCurPosition() + 1);
-        coverFragment.coverStart(isFromZero, delay);
-    }
+//    private void startRotate(boolean isFromZero, int delay) {
+//      /*  PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
+//                .instantiateItem(mVpPlayView, MusicManager.getInstance().getCurPosition());*/
+//        PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
+//                .instantiateItem(mVpPlayView, MusicManager.getInstance().getCurPosition() + 1);
+//        coverFragment.coverStart(isFromZero, delay);
+//    }
 
-    private void pauseRotate() {
-        PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
-                .instantiateItem(mVpPlayView, MusicManager.getInstance().getCurPosition() + 1);
-        coverFragment.coverPause();
-    }
+//    private void pauseRotate() {
+//        PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
+//                .instantiateItem(mVpPlayView, MusicManager.getInstance().getCurPosition() + 1);
+//        coverFragment.coverPause();
+//    }
 
     @Override
     public void onProgress(int progress, int duration) {
@@ -237,10 +246,10 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     @Override
     public void updateQueue(int position) {
-        mPagerAdapter.setNotifyPosition(position);
-        mPagerAdapter.notifyDataSetChanged();
-        mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition() + 1, false);
-        startRotate(false, 0);
+//        mPagerAdapter.setNotifyPosition(position);
+//        mPagerAdapter.notifyDataSetChanged();
+//        mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition() + 1, false);
+//        startRotate(false, 0);
     }
 
     private void setCurProgress(int progress, int duration) {
@@ -267,7 +276,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         MusicManager.getInstance().seekTo(seekBar.getProgress());
         if (!mPlayPause.isPlaying()) {
             mPlayPause.play();
-            startRotate(false, 50);
+//            startRotate(false, 50);
         }
     }
 
@@ -275,7 +284,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     public void play() {
         if (MusicManager.getInstance().getCurrentSong() != null) {
             MusicManager.getInstance().start();
-            startRotate(false, 400);
+//            startRotate(false, 400);
         }
     }
 
@@ -283,7 +292,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     public void pause() {
         if (MusicManager.getInstance().getCurrentSong() != null) {
             MusicManager.getInstance().pause();
-            pauseRotate();
+//            pauseRotate();
         }
     }
 
