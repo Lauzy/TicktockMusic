@@ -28,6 +28,14 @@ public class PlayAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolder> {
     @Override
     protected void convert(BaseViewHolder helper, SongEntity item) {
         CircleImageView cvPlayView = helper.getView(R.id.cv_music_cover);
+        if (item.isStop()) {
+            cvPlayView.setRotation(0);
+        }
+        if (item.isAnim()) {
+            cvPlayView.start();
+        } else {
+            cvPlayView.pause();
+        }
         ImageLoader.INSTANCE.display(mContext, new ImageConfig.Builder()
                 .isRound(false)
                 .url(item.albumCover)

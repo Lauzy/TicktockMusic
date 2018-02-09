@@ -37,8 +37,11 @@ import com.freedom.lauzy.ticktockmusic.ui.adapter.PlayAdapter;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayQueueBottomSheetFragment;
 import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.lauzy.freedom.data.local.LocalUtil;
+import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 import com.lauzy.freedom.librarys.widght.music.PlayPauseView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -104,6 +107,9 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         }
         return false;
     });
+    private PlayAdapter mAdapter;
+    private int mLastPos;
+    private int mCurPos;
 
     public static Intent newInstance(Context context) {
         return new Intent(context, PlayActivity.class);
@@ -177,11 +183,39 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     }
 
     private void setUpRecyclerView() {
-        PlayAdapter adapter = new PlayAdapter(R.layout.item_play_view, MusicManager.getInstance().getMusicService().getSongData());
-        mRvPlayView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
-        mRvPlayView.setAdapter(adapter);
+        mAdapter = new PlayAdapter(R.layout.item_play_view, MusicManager.getInstance().getMusicService().getSongData());
+        mRvPlayView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mRvPlayView.setAdapter(mAdapter);
         new PagerSnapHelper().attachToRecyclerView(mRvPlayView);
         mRvPlayView.scrollToPosition(MusicManager.getInstance().getCurPosition());
+        mRvPlayView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                int itemPosition = ((LinearLayoutManager) mRvPlayView.getLayoutManager()).findFirstVisibleItemPosition();
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    mLastPos = itemPosition;
+                } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    mCurPos = itemPosition;
+                    LogUtil.i("TAG", "position -- " + itemPosition + " last--" + mLastPos);
+                    List<SongEntity> data = mAdapter.getData();
+                    if (mLastPos != itemPosition) {
+                        for (int i = 0; i < data.size(); i++) {
+                            if (i == itemPosition) {
+                                data.get(i).setAnim(true);
+                            } else {
+                                data.get(i).setAnim(false);
+                            }
+                            data.get(i).setStop(true);
+                        }
+                        mAdapter.notifyDataSetChanged();
+                    } else {
+                        data.get(itemPosition).setAnim(true);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        });
     }
 
     /**
