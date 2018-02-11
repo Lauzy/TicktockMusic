@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -87,8 +88,12 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     private static final String TAG = "PlayActivity";
     private boolean mIsFavorite;
     private static final int PLAY_DELAY = 500;
+    private PlayAdapter mAdapter;
+    private int mLastPos;
+    //    private int mCurPos;
 
     private Handler mPlayHandler = new Handler(msg -> {
+        LogUtil.e("CUR", "----- pos --- " + MusicManager.getInstance().getCurPosition());
         switch (msg.what) {
             case PRE_MUSIC:
                 MusicManager.getInstance().skipToPrevious();
@@ -107,9 +112,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         }
         return false;
     });
-    private PlayAdapter mAdapter;
-    private int mLastPos;
-    private int mCurPos;
+
 
     public static Intent newInstance(Context context) {
         return new Intent(context, PlayActivity.class);
@@ -172,7 +175,6 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         mTxtCurrentProgress.setText(LocalUtil.formatTime(MusicManager.getInstance().getCurrentProgress()));
 
         if (MusicManager.getInstance().getMusicService().getSongData() != null) {
-//            setUpViewPager();
             setUpRecyclerView();
         }
 
@@ -183,50 +185,130 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     }
 
     private void setUpRecyclerView() {
-        mAdapter = new PlayAdapter(R.layout.item_play_view, MusicManager.getInstance().getMusicService().getSongData());
+        List<SongEntity> songData = MusicManager.getInstance().getMusicService().getSongData();
+        mAdapter = new PlayAdapter(this, songData);
         mRvPlayView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mRvPlayView.setAdapter(mAdapter);
+//        mRvPlayView.scrollToPosition(MusicManager.getInstance().getCurPosition() + 1);
+
+        mRvPlayView.addOnScrollListener(mScrollListener);
+        int halfMaxValue = Integer.MAX_VALUE / 2;
+        int position = halfMaxValue % songData.size();
+        int playPosition = halfMaxValue - position + MusicManager.getInstance().getCurPosition();
+        mLastPosition = playPosition;
+        mRvPlayView.scrollToPosition(playPosition);
         new PagerSnapHelper().attachToRecyclerView(mRvPlayView);
-        mRvPlayView.scrollToPosition(MusicManager.getInstance().getCurPosition());
-        mRvPlayView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                int itemPosition = ((LinearLayoutManager) mRvPlayView.getLayoutManager()).findFirstVisibleItemPosition();
-                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                    mLastPos = itemPosition;
-                } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    mCurPos = itemPosition;
-                    LogUtil.i("TAG", "position -- " + itemPosition + " last--" + mLastPos);
-                    List<SongEntity> data = mAdapter.getData();
-                    if (mLastPos != itemPosition) {
-                        for (int i = 0; i < data.size(); i++) {
-                            if (i == itemPosition) {
-                                data.get(i).setAnim(true);
-                            } else {
-                                data.get(i).setAnim(false);
-                            }
-                            data.get(i).setStop(true);
-                        }
-                        mAdapter.notifyDataSetChanged();
-                    } else {
-                        data.get(itemPosition).setAnim(true);
-                        mAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-        });
     }
 
-    /**
-     * 配置ViewPager
-     */
-//    private void setUpViewPager() {
-//        mPagerAdapter = new PlayCoverPagerAdapter(getSupportFragmentManager());
-//        mVpPlayView.setAdapter(mPagerAdapter);
-//        mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition() + 1, false);
-//        mVpPlayView.addOnPageChangeListener(this);
-//    }
+    public int mLastPosition = -1;
+    public RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
+        private OrientationHelper orientationHelper;
+
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+            if (newState != RecyclerView.SCROLL_STATE_IDLE) {
+                return;
+            }
+
+            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+            if (orientationHelper == null) {
+                orientationHelper = OrientationHelper.createHorizontalHelper(layoutManager);
+            }
+
+            final int rvCenter;
+            if (recyclerView.getClipToPadding()) {
+                rvCenter = orientationHelper.getStartAfterPadding() + orientationHelper.getTotalSpace() / 2;
+            } else {
+                rvCenter = orientationHelper.getTotalSpace() / 2;
+            }
+
+            int minSpace = Integer.MAX_VALUE;
+            View minCloseView = null;
+            final int childCount = recyclerView.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+
+                View childView = recyclerView.getChildAt(i);
+                RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) childView.getLayoutParams();
+                final int childStart = orientationHelper.getDecoratedStart(childView) + layoutParams.leftMargin;
+                final int childWidth = orientationHelper.getDecoratedMeasurement(childView) - layoutParams.leftMargin - layoutParams.rightMargin;
+                final int childCenter = childStart + childWidth / 2;
+                final int space = Math.abs(childCenter - rvCenter);
+                if (minSpace > space) {
+                    minSpace = space;
+                    minCloseView = childView;
+                }
+            }
+            if (minCloseView != null) {
+                int position = recyclerView.getChildViewHolder(minCloseView).getAdapterPosition();
+                if (position == RecyclerView.NO_POSITION) {
+                    return;
+                }
+                List<SongEntity> data = mAdapter.getData();
+                if (mLastPosition != position) {
+                    if (mLastPosition > position) {
+                        Message msg = new Message();
+                        msg.what = PRE_MUSIC;
+                        mPlayHandler.sendMessageDelayed(msg, SKIP_DELAY);
+                    } else if (mLastPosition < position) {
+                        Message msg = new Message();
+                        msg.what = NEXT_MUSIC;
+                        mPlayHandler.sendMessageDelayed(msg, SKIP_DELAY);
+                    }
+
+                    for (int i = 0; i < data.size(); i++) {
+                        if (i == position % data.size()) {
+                            data.get(i).setAnim(true);
+                        } else {
+                            data.get(i).setAnim(false);
+                        }
+                        data.get(i).setStop(true);
+                    }
+                    mAdapter.notifyDataSetChanged();
+                    mLastPosition = position;
+                }
+            }
+
+
+
+           /* int itemPosition = ((LinearLayoutManager) mRvPlayView.getLayoutManager()).findLastVisibleItemPosition();
+            if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                mLastPos = itemPosition;
+            } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                List<SongEntity> data = mAdapter.getData();
+
+                LogUtil.e("TAG", "lastPos --- " + mLastPos + "  item -- " + itemPosition);
+
+                if (mLastPos > itemPosition) {
+                    Message msg = new Message();
+                    msg.what = PRE_MUSIC;
+                    mPlayHandler.sendMessageDelayed(msg, SKIP_DELAY);
+                } else if (mLastPos < itemPosition) {
+                    Message msg = new Message();
+                    msg.what = NEXT_MUSIC;
+                    mPlayHandler.sendMessageDelayed(msg, SKIP_DELAY);
+                }
+
+                if (mLastPos != itemPosition) {
+                    for (int i = 0; i < data.size(); i++) {
+                        if (i == itemPosition % data.size()) {
+                            data.get(i).setAnim(true);
+                        } else {
+                            data.get(i).setAnim(false);
+                        }
+                        data.get(i).setStop(true);
+                    }
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    SongEntity songEntity = data.get(itemPosition % data.size());
+                    songEntity.setStop(false);
+                    songEntity.setAnim(true);
+                    mAdapter.notifyDataSetChanged();
+                }
+            }*/
+        }
+    };
+
     @Override
     public void currentPlay(SongEntity songEntity) {
         if (songEntity != null) {
@@ -244,20 +326,6 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 //            startRotate(true, 0);
         }
     }
-
-//    private void startRotate(boolean isFromZero, int delay) {
-//      /*  PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
-//                .instantiateItem(mVpPlayView, MusicManager.getInstance().getCurPosition());*/
-//        PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
-//                .instantiateItem(mVpPlayView, MusicManager.getInstance().getCurPosition() + 1);
-//        coverFragment.coverStart(isFromZero, delay);
-//    }
-
-//    private void pauseRotate() {
-//        PlayCoverFragment coverFragment = (PlayCoverFragment) mVpPlayView.getAdapter()
-//                .instantiateItem(mVpPlayView, MusicManager.getInstance().getCurPosition() + 1);
-//        coverFragment.coverPause();
-//    }
 
     @Override
     public void onProgress(int progress, int duration) {
@@ -319,6 +387,10 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         if (MusicManager.getInstance().getCurrentSong() != null) {
             MusicManager.getInstance().start();
 //            startRotate(false, 400);
+            SongEntity songEntity = mAdapter.getData().get(MusicManager.getInstance().getCurPosition());
+            songEntity.setStop(false);
+            songEntity.setAnim(true);
+            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -327,6 +399,11 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         if (MusicManager.getInstance().getCurrentSong() != null) {
             MusicManager.getInstance().pause();
 //            pauseRotate();
+
+            SongEntity songEntity = mAdapter.getData().get(MusicManager.getInstance().getCurPosition());
+            songEntity.setStop(false);
+            songEntity.setAnim(false);
+            mAdapter.notifyDataSetChanged();
         }
     }
 

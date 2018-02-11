@@ -1,9 +1,11 @@
 package com.freedom.lauzy.ticktockmusic.ui.adapter;
 
-import android.support.annotation.Nullable;
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
@@ -12,6 +14,9 @@ import com.lauzy.freedom.librarys.widght.CircleImageView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Desc : PlayViewAdapter
  * Author : Lauzy
@@ -19,15 +24,25 @@ import java.util.List;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class PlayAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolder> {
+public class PlayAdapter extends RecyclerView.Adapter<PlayAdapter.PlayViewHolder> {
 
-    public PlayAdapter(int layoutResId, @Nullable List<SongEntity> data) {
-        super(layoutResId, data);
+    private List<SongEntity> mSongEntities;
+    private Context mContext;
+
+    public PlayAdapter(Context context, List<SongEntity> songEntities) {
+        mSongEntities = songEntities;
+        mContext = context;
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, SongEntity item) {
-        CircleImageView cvPlayView = helper.getView(R.id.cv_music_cover);
+    public PlayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new PlayViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_play_view, parent, false));
+    }
+
+    @Override
+    public void onBindViewHolder(PlayViewHolder holder, int position) {
+        CircleImageView cvPlayView = holder.mCvImageCover;
+        SongEntity item = mSongEntities.get(position % mSongEntities.size());
         if (item.isStop()) {
             cvPlayView.setRotation(0);
         }
@@ -44,4 +59,25 @@ public class PlayAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolder> {
                 .into(cvPlayView)
                 .build());
     }
+
+    @Override
+    public int getItemCount() {
+        return Integer.MAX_VALUE;
+    }
+
+    public List<SongEntity> getData() {
+        return mSongEntities;
+    }
+
+    class PlayViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.cv_music_cover)
+        CircleImageView mCvImageCover;
+
+        PlayViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
 }
