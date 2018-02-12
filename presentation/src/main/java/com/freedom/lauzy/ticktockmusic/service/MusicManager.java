@@ -433,6 +433,10 @@ public class MusicManager {
                 ? mMusicService.getDuration() : 0 : 0;
     }
 
+    public List<SongEntity> getSongData() {
+        return getMusicService().getSongData();
+    }
+
     /**
      * 获取当前正在播放的音乐
      *
