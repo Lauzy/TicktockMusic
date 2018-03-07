@@ -178,7 +178,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
             mCurrentPos = currentPos;
         });
         if (MusicManager.getInstance().isPlaying()) {
-            mAdapter.startRotation();
+            mAdapter.startRotation(MusicManager.getInstance().getCurPosition());
         }
         mRvPlayView.addOnScrollListener(pagerScrollListener);
     }
@@ -219,15 +219,14 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     @Override
     public void updateQueue(int position) {
-//        mPagerAdapter.notifyDataSetChanged();
-//        mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition() + 1, false);
-//        startRotate(false, 0);
         List<SongEntity> songData = MusicManager.getInstance().getSongData();
         if (songData == null || songData.isEmpty()) {
             return;
         }
         LogUtil.e("TAG","pos is -- " + position + " curPos is -- " + MusicManager.getInstance().getCurPosition());
         mAdapter.setData(songData);
+//        mAdapter.getData().remove(position);
+//        mAdapter.notifyItemRemoved(position);
         int playPosition = mAdapter.getPlayPosition(MusicManager.getInstance().getCurPosition());
         mRvPlayView.getLayoutManager().scrollToPosition(playPosition);
         mAdapter.updateAnimView(playPosition);
@@ -257,7 +256,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         MusicManager.getInstance().seekTo(seekBar.getProgress());
         if (!mPlayPause.isPlaying()) {
             mPlayPause.play();
-            mAdapter.startRotation();
+            mAdapter.startRotation(MusicManager.getInstance().getCurPosition());
         }
     }
 
@@ -265,7 +264,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     public void play() {
         if (MusicManager.getInstance().getCurrentSong() != null) {
             MusicManager.getInstance().start();
-            mAdapter.startRotation();
+            mAdapter.startRotation(MusicManager.getInstance().getCurPosition());
         }
     }
 
@@ -273,7 +272,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     public void pause() {
         if (MusicManager.getInstance().getCurrentSong() != null) {
             MusicManager.getInstance().pause();
-            mAdapter.pauseRotation();
+            mAdapter.pauseRotation(MusicManager.getInstance().getCurPosition());
         }
     }
 

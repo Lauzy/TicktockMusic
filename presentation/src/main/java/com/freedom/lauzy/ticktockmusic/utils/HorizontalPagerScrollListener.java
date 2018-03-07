@@ -4,8 +4,6 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.lauzy.freedom.librarys.common.LogUtil;
-
 /**
  * Desc : PagerSnapHelper、水平滑动RecyclerView监听
  * Author : Lauzy
@@ -65,7 +63,7 @@ public class HorizontalPagerScrollListener extends RecyclerView.OnScrollListener
                 if (mOnPageChangeListener != null) {
                     mOnPageChangeListener.onPageChange(mLastPosition, position);
                 }
-                LogUtil.d("POS","currentPos is " + position);
+//                LogUtil.d("POS","currentPos is " + position);
                 mLastPosition = position;
             }
         }

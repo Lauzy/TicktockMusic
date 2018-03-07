@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
-import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.widght.CircleImageView;
@@ -29,7 +28,6 @@ public class PlayAdapter extends RecyclerView.Adapter<PlayAdapter.PlayViewHolder
 
     private List<SongEntity> mSongEntities;
     private Context mContext;
-    private int mAnimPosition;
 
     public PlayAdapter(Context context, List<SongEntity> songEntities) {
         mSongEntities = songEntities;
@@ -45,16 +43,15 @@ public class PlayAdapter extends RecyclerView.Adapter<PlayAdapter.PlayViewHolder
     public void onBindViewHolder(PlayViewHolder holder, int position) {
         CircleImageView cvPlayView = holder.mCvImageCover;
         SongEntity item = mSongEntities.get(position % mSongEntities.size());
-        if (position % mSongEntities.size() == mAnimPosition % mSongEntities.size()) {
-            if (item.isAnim()) {
-                cvPlayView.start();
-            } else {
-                cvPlayView.pause();
-            }
-        } else {
+        if (item.isStop()) {
             cvPlayView.setRotation(0);
-            cvPlayView.stop();
         }
+        if (item.isAnim()) {
+            cvPlayView.start();
+        } else {
+            cvPlayView.pause();
+        }
+
         ImageLoader.INSTANCE.display(mContext, new ImageConfig.Builder()
                 .isRound(false)
                 .url(item.albumCover)
@@ -76,18 +73,16 @@ public class PlayAdapter extends RecyclerView.Adapter<PlayAdapter.PlayViewHolder
     /**
      * 开始旋转
      */
-    public void startRotation() {
-        mAnimPosition = getPlayPosition(MusicManager.getInstance().getCurPosition());
-        mSongEntities.get(mAnimPosition % mSongEntities.size()).setAnim(true);
+    public void startRotation(int curPos) {
+        mSongEntities.get(curPos % mSongEntities.size()).setAnim(true);
         notifyDataSetChanged();
     }
 
     /**
      * 暂停旋转
      */
-    public void pauseRotation() {
-        mAnimPosition = getPlayPosition(MusicManager.getInstance().getCurPosition());
-        mSongEntities.get(mAnimPosition % mSongEntities.size()).setAnim(false);
+    public void pauseRotation(int curPos) {
+        mSongEntities.get(curPos % mSongEntities.size()).setAnim(false);
         notifyDataSetChanged();
     }
 
@@ -104,11 +99,14 @@ public class PlayAdapter extends RecyclerView.Adapter<PlayAdapter.PlayViewHolder
      * @param position 当前position
      */
     public void updateAnimView(int position) {
-        if (mAnimPosition == position) {
-            return;
+        for (int i = 0; i < mSongEntities.size(); i++) {
+            if (i == position % mSongEntities.size()) {
+                mSongEntities.get(i).setAnim(true);
+            } else {
+                mSongEntities.get(i).setAnim(false);
+            }
+            mSongEntities.get(i).setStop(true);
         }
-        mAnimPosition = position;
-        mSongEntities.get(position % mSongEntities.size()).setAnim(true);
         notifyDataSetChanged();
     }
 

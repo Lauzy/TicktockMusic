@@ -2,11 +2,15 @@ package com.freedom.lauzy.ticktockmusic;
 
 import android.app.Application;
 import android.content.Context;
+import android.media.MediaScannerConnection;
+import android.os.Environment;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 
 import com.bilibili.magicasakura.utils.ThemeUtils;
+import com.freedom.lauzy.ticktockmusic.event.MediaUpdateEvent;
+import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.injection.component.ApplicationComponent;
 import com.freedom.lauzy.ticktockmusic.injection.component.DaggerApplicationComponent;
 import com.freedom.lauzy.ticktockmusic.injection.module.ApplicationModule;
@@ -30,6 +34,13 @@ public class TicktockApplication extends Application implements ThemeUtils.switc
         sTicktockApplication = this;
         ThemeUtils.setSwitchColor(this);
         initApplicationComponent();
+        updateMedia();
+    }
+
+    private void updateMedia() {
+        MediaScannerConnection.scanFile(this, new String[]{Environment
+                        .getExternalStorageDirectory().getAbsolutePath()}, null,
+                (path, uri) -> RxBus.INSTANCE.postSticky(new MediaUpdateEvent()));
     }
 
     private void initApplicationComponent() {

@@ -22,7 +22,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 /**
  * Desc : 本地音乐音乐列表Fragment
@@ -64,9 +63,9 @@ public class SongFragment extends BaseFragment<LocalMusicPresenter> implements L
                 themeEvent -> setThemeLayoutBg());
         RxBus.INSTANCE.addDisposable(this, disposable);
 
-//        Disposable updateDisposable = RxBus.INSTANCE.doDefaultSubscribe(MediaUpdateEvent.class,
-//                mediaUpdateEvent -> mPresenter.loadLocalSong());
-//        RxBus.INSTANCE.addDisposable(this,updateDisposable);
+        Disposable updateDisposable = RxBus.INSTANCE.doStickySubscribe(MediaUpdateEvent.class,
+                mediaUpdateEvent -> mPresenter.loadLocalSong());
+        RxBus.INSTANCE.addDisposable(this, updateDisposable);
     }
 
     @Override
