@@ -113,10 +113,6 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment impl
         mAdapter.setDeleteQueueItemListener(this);
         String[] curIds = MusicManager.getInstance().getCurIds();
         mQueuePresenter.loadQueueData(curIds);
-
-        for (String curId : curIds) {
-            Log.e("TAG",curId);
-        }
     }
 
     private void setModeView() {

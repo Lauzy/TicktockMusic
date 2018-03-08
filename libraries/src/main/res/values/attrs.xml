@@ -2,20 +2,20 @@
 <resources>
 
     <declare-styleable name="CircleImageView">
-        <attr name="civ_border_width" format="dimension" />
-        <attr name="civ_border_color" format="color" />
-        <attr name="civ_border_overlay" format="boolean" />
-        <attr name="civ_fill_color" format="color" />
+        <attr name="civ_border_width" format="dimension"/>
+        <attr name="civ_border_color" format="color"/>
+        <attr name="civ_border_overlay" format="boolean"/>
+        <attr name="civ_fill_color" format="color"/>
     </declare-styleable>
 
     <!--波纹效果-->
     <declare-styleable name="RippleValue">
-        <attr name="enable_ripple" format="boolean" />
+        <attr name="enable_ripple" format="boolean"/>
     </declare-styleable>
 
     <!--字体风格-->
     <declare-styleable name="CustomFont">
-        <attr name="enable_font_type" format="boolean" />
+        <attr name="enable_font_type" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="PlayPauseView">

@@ -9,34 +9,18 @@
     android:orientation="vertical"
     tools:context="com.freedom.lauzy.ticktockmusic.ui.activity.PlayActivity">
 
-    <include layout="@layout/layout_toolbar"/>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-       <!-- <com.lauzy.freedom.librarys.widght.CircleImageView
-            android:id="@+id/acv_music"
-            android:layout_width="@dimen/dp_240"
-            android:layout_height="@dimen/dp_240"
-            android:visibility="gone"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/dp_20"
-            android:src="@drawable/ic_default"
-            app:civ_border_color="@color/colorDarkerTransparent"
-            app:civ_border_width="@dimen/dp_15"/>-->
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_play_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </android.support.v7.widget.RecyclerView>
+        <include layout="@layout/layout_toolbar"/>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/vp_play_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="@dimen/dp_300">
         </android.support.v4.view.ViewPager>
     </FrameLayout>
 
@@ -49,8 +33,8 @@
         android:layout_marginRight="@dimen/dp_50"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
-        android:focusable="true"
         android:contentDescription="@null"
+        android:focusable="true"
         android:padding="@dimen/dp_4"
         android:src="@drawable/ic_favorite_border_white"/>
 
@@ -103,8 +87,8 @@
             android:layout_marginRight="@dimen/dp_30"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:focusable="true"
             android:contentDescription="@null"
+            android:focusable="true"
             android:padding="@dimen/dp_3"
             android:tint="@color/white"
             app:srcCompat="@drawable/ic_repeat_black"/>
@@ -115,10 +99,10 @@
             android:layout_height="@dimen/dp_30"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:focusable="true"
-            android:tint="@color/white"
             android:contentDescription="@null"
-            android:src="@drawable/ic_skip_previous"/>
+            android:focusable="true"
+            android:src="@drawable/ic_skip_previous"
+            android:tint="@color/white"/>
 
         <com.lauzy.freedom.librarys.widght.music.PlayPauseView
             android:id="@+id/play_pause"
@@ -127,8 +111,8 @@
             android:layout_marginLeft="@dimen/dp_10"
             android:layout_marginRight="@dimen/dp_10"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:btn_color="@color/white"
-            app:bg_color="@color/colorTransparent"/>
+            app:bg_color="@color/colorTransparent"
+            app:btn_color="@color/white"/>
 
         <ImageView
             android:id="@+id/img_play_next"
@@ -136,10 +120,10 @@
             android:layout_height="@dimen/dp_30"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:focusable="true"
-            android:tint="@color/white"
             android:contentDescription="@null"
-            android:src="@drawable/ic_skip_next"/>
+            android:focusable="true"
+            android:src="@drawable/ic_skip_next"
+            android:tint="@color/white"/>
 
         <ImageView
             android:id="@+id/img_play_queue"
@@ -148,9 +132,9 @@
             android:layout_marginLeft="@dimen/dp_30"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
+            android:contentDescription="@null"
             android:focusable="true"
             android:tint="@color/white"
-            android:contentDescription="@null"
             app:srcCompat="@drawable/ic_playlist_play_black"/>
 
     </LinearLayout>

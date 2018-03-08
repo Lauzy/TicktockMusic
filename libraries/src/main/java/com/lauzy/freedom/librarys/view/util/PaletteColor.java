@@ -17,7 +17,6 @@ import io.reactivex.schedulers.Schedulers;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-@SuppressWarnings("all")
 public class PaletteColor {
 
     public static PaletteColor getInstance() {
@@ -28,23 +27,30 @@ public class PaletteColor {
         void getMainColor(int color);
     }
 
-    private OnMainColorListener mOnMainColorListener;
-
     /**
      * 接口回调版
      *
      * @param bitmap              bitmap
      * @param onMainColorListener 回调接口
      */
-    public void getMainColor(Bitmap bitmap, final OnMainColorListener onMainColorListener) {
+    public void getMainColor(final int defaultColor, Bitmap bitmap, final OnMainColorListener onMainColorListener) {
 
         Palette.Builder builder = new Palette.Builder(bitmap);
-        builder.maximumColorCount(1);
+//        builder.maximumColorCount(1);
         builder.generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
-                Palette.Swatch swatch = palette.getSwatches().get(0);
-                int rgb = swatch.getRgb();
+                Palette.Swatch populousSwatch = getMostPopulousSwatch(palette);
+                int rgb = defaultColor;
+                if (populousSwatch != null) {
+                    rgb = populousSwatch.getRgb();
+                } else {
+                    populousSwatch = palette.getMutedSwatch() == null ?
+                            palette.getVibrantSwatch() : palette.getMutedSwatch();
+                    if (populousSwatch != null) {
+                        rgb = populousSwatch.getRgb();
+                    }
+                }
                 if (onMainColorListener != null) {
                     onMainColorListener.getMainColor(rgb);
                 }
@@ -58,25 +64,43 @@ public class PaletteColor {
      * @param bitmap bitmap
      * @return Observable
      */
-    public static Observable<Integer> mainColorObservable(final Bitmap bitmap) {
+    public static Observable<Integer> mainColorObservable(final int defaultColor, final Bitmap bitmap) {
         return Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(@NonNull final ObservableEmitter<Integer> e) throws Exception {
                 Palette.Builder builder = new Palette.Builder(bitmap);
-                builder.maximumColorCount(1);
+//                builder.maximumColorCount(1);
                 builder.generate(new Palette.PaletteAsyncListener() {
                     @Override
                     public void onGenerated(Palette palette) {
-                        if (palette.getSwatches() != null && palette.getSwatches().size() != 0) {
-                            Palette.Swatch swatch = palette.getSwatches().get(0);
-                            int rgb = swatch.getRgb();
-                            e.onNext(rgb);
+                        Palette.Swatch populousSwatch = getMostPopulousSwatch(palette);
+                        int rgb = defaultColor;
+                        if (populousSwatch != null) {
+                            rgb = populousSwatch.getRgb();
+                        } else {
+                            populousSwatch = palette.getMutedSwatch() == null ? palette.getVibrantSwatch() : palette.getMutedSwatch();
+                            if (populousSwatch != null) {
+                                rgb = populousSwatch.getRgb();
+                            }
                         }
+                        e.onNext(rgb);
                         e.onComplete();
                     }
                 });
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    private static Palette.Swatch getMostPopulousSwatch(Palette palette) {
+        Palette.Swatch mostPopulous = null;
+        if (palette != null) {
+            for (Palette.Swatch swatch : palette.getSwatches()) {
+                if (mostPopulous == null || swatch.getPopulation() > mostPopulous.getPopulation()) {
+                    mostPopulous = swatch;
+                }
+            }
+        }
+        return mostPopulous;
     }
 }

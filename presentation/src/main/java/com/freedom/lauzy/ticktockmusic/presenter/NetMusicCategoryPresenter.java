@@ -6,10 +6,11 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.freedom.lauzy.model.CategoryBean;
 import com.freedom.lauzy.ticktockmusic.R;
-import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
 import com.freedom.lauzy.ticktockmusic.contract.NetMusicCategoryContract;
 import com.freedom.lauzy.ticktockmusic.event.PaletteEvent;
+import com.freedom.lauzy.ticktockmusic.function.RxBus;
+import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.view.util.PaletteColor;
@@ -76,7 +77,8 @@ public class NetMusicCategoryPresenter extends BaseRxPresenter<NetMusicCategoryC
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                                 getView().setCategoryBitmap(resource);
                                 if (mColorMap.get(imgUrl) == null) {//map 缓存 color
-                                    PaletteColor.mainColorObservable(resource).subscribe(integer -> {
+                                    PaletteColor.mainColorObservable(ThemeHelper.getThemeColorResId(getView().context()),
+                                            resource).subscribe(integer -> {
                                                 mColorMap.put(imgUrl, integer);
                                                 setCategoryBgColor(integer);
                                             }
