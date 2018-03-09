@@ -13,10 +13,10 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_default"/>
 
-    <View
+   <!-- <View
         android:id="@+id/view_overlay"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"/>-->
 
 </FrameLayout>
 

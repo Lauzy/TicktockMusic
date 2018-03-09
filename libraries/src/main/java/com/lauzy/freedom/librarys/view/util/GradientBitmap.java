@@ -26,8 +26,8 @@ public class GradientBitmap {
         canvas.drawBitmap(originalBitmap, 0, 0, null);
 
         Paint paint = new Paint();
-        LinearGradient linearGradient = new LinearGradient(0, height * 3 / 4, 0, height,
-                Color.TRANSPARENT, gradientColor, Shader.TileMode.CLAMP);
+        LinearGradient linearGradient = new LinearGradient(0, height / 2, 0, height,
+                Color.TRANSPARENT, gradientColor, Shader.TileMode.MIRROR);
         paint.setShader(linearGradient);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
         canvas.drawRect(0, 0, width, height, paint);

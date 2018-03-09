@@ -1,6 +1,7 @@
 package com.freedom.lauzy.ticktockmusic.ui.activity;
 
 
+import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,12 +11,12 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -34,6 +35,7 @@ import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayQueueBottomSheetFragment;
 import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.freedom.lauzy.ticktockmusic.utils.anim.PlayPagerTransformer;
 import com.lauzy.freedom.data.local.LocalUtil;
+import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 import com.lauzy.freedom.librarys.widght.music.PlayPauseView;
 
@@ -66,14 +68,14 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     ImageView mImgPlayMode;
     @BindView(R.id.play_pause)
     PlayPauseView mPlayPause;
-    @BindView(R.id.layout_play)
-    LinearLayout mLayoutPlay;
     @BindView(R.id.img_favorite)
     ImageView mImgFavorite;
     @BindView(R.id.img_play_bg)
     ImageView mImageViewBg;
     @BindView(R.id.vp_play_view)
     ViewPager mVpPlayView;
+    @BindView(R.id.cl_play)
+    CoordinatorLayout mClPlay;
     private static final String TAG = "PlayActivity";
     private boolean mIsFavorite;
 
@@ -148,26 +150,57 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     }
 
     private void setUpViewPager() {
+        mImageViewBg.setVisibility(View.INVISIBLE);
+
         List<SongEntity> songData = MusicManager.getInstance().getMusicService().getSongData();
         PlayViewAdapter adapter = new PlayViewAdapter(songData);
-        mVpPlayView.setPageTransformer(false,new PlayPagerTransformer());
+        mVpPlayView.setPageTransformer(false, new PlayPagerTransformer());
         mVpPlayView.setAdapter(adapter);
-        mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(),false);
+//        mVpPlayView.setOffscreenPageLimit(songData.size());
+        ArgbEvaluator argbEvaluator = new ArgbEvaluator();
+        mVpPlayView.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                int color = adapter.getColorArr().get(position % songData.size());
+                int nextColor = adapter.getColorArr().get((position + 1) % songData.size());
+                int evaluateColor = (int) argbEvaluator.evaluate(positionOffset, color, nextColor);
+                mClPlay.setBackgroundColor(evaluateColor);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (MusicManager.getInstance().getCurPosition() > position) {
+                    MusicManager.getInstance().skipToPrevious();
+                } else if (MusicManager.getInstance().getCurPosition() < position) {
+                    MusicManager.getInstance().skipToNext();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
     public void currentPlay(SongEntity songEntity) {
-        if (songEntity != null) {
-            mToolbarCommon.setTitle(songEntity.title);
-            mToolbarCommon.setSubtitle(songEntity.artistName);
-            mTxtTotalLength.setText(songEntity.songLength);
-            mPresenter.setCoverImgUrl(songEntity.albumCover);
-            mPresenter.isFavoriteSong(songEntity.id);
-
-            if (MusicManager.getInstance().isPlaying() && !mPlayPause.isPlaying()) {
-                mPlayPause.playWithoutAnim();
-            }
+        if (songEntity == null) {
+            return;
         }
+        mToolbarCommon.setTitle(songEntity.title);
+        mToolbarCommon.setSubtitle(songEntity.artistName);
+        mTxtTotalLength.setText(songEntity.songLength);
+        mPresenter.setCoverImgUrl(songEntity.albumCover);
+        mPresenter.isFavoriteSong(songEntity.id);
+
+        if (MusicManager.getInstance().isPlaying() && !mPlayPause.isPlaying()) {
+            mPlayPause.playWithoutAnim();
+        }
+
+        int curPosition = MusicManager.getInstance().getCurPosition();
+        LogUtil.e("TAG", " --- " + curPosition);
+        mVpPlayView.setCurrentItem(curPosition,false);
     }
 
     @Override
@@ -264,6 +297,11 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         if (isFavorite) {
             setImageTint();
         }
+    }
+
+    @Override
+    public void setViewBgColor(int paletteColor) {
+        mClPlay.setBackgroundColor(paletteColor);
     }
 
     /**

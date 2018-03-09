@@ -28,6 +28,7 @@ public interface PlayContract {
 
         void isFavoriteSong(boolean isFavorite);
 
+        void setViewBgColor(int paletteColor);
     }
 
     interface Presenter {

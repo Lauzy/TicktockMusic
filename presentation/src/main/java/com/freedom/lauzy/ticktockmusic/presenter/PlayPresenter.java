@@ -10,10 +10,14 @@ import com.freedom.lauzy.ticktockmusic.contract.PlayContract;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.model.mapper.FavoriteMapper;
+import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;
 import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.view.blur.ImageBlur;
+import com.lauzy.freedom.librarys.view.util.PaletteColor;
+
+import java.util.HashMap;
 
 import javax.inject.Inject;
 
@@ -30,6 +34,7 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
     private FavoriteSongUseCase mFavoriteSongUseCase;
     private FavoriteMapper mFavoriteMapper;
     private static final String TAG = "PlayPresenter";
+    private HashMap<String, Integer> mColorMap = new HashMap<>();
 
     @Inject
     PlayPresenter(FavoriteSongUseCase favoriteSongUseCase, FavoriteMapper favoriteMapper) {
@@ -40,6 +45,7 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
     @Override
     public void setCoverImgUrl(Object url) {
         if (getView() != null && getView().getContext() != null) {
+            String urlString = String.valueOf(url);
             ImageLoader.INSTANCE.display(getView().getContext(), new ImageConfig.Builder()
                     .asBitmap(true)
                     .url(url)
@@ -48,6 +54,16 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                         @Override
                         public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                             Bitmap bg = Bitmap.createBitmap(resource);
+                            if (mColorMap.get(urlString) == null) {
+                                PaletteColor.mainColorObservable(ThemeHelper.getThemeColorResId(getView().getContext()), resource)
+                                        .subscribe(color -> {
+                                            mColorMap.put(urlString, color);
+                                            getView().setViewBgColor(color);
+                                        });
+                            } else {
+                                getView().setViewBgColor(mColorMap.get(urlString));
+                            }
+
 //                        BitmapDrawable drawable = new BitmapDrawable(null, ImageBlur.onStackBlur(bg, 50));
 //                        getView().setCoverBackground(drawable);
                             getView().setCoverBackground(ImageBlur.onStackBlur(bg, 50));
