@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
@@ -56,6 +57,10 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         SeekBar.OnSeekBarChangeListener, PlayPauseView.PlayPauseListener, PlayContract.View,
         MusicManager.PlayProgressListener {
 
+    private static final int MSG_NEXT = 0X0011;
+    private static final int MSG_PREVIOUS = 0X0012;
+    private int DELAY_PLAY = 500;
+
     @BindView(R.id.toolbar_common)
     TickToolbar mToolbarCommon;
     @BindView(R.id.txt_current_progress)
@@ -78,6 +83,21 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     CoordinatorLayout mClPlay;
     private static final String TAG = "PlayActivity";
     private boolean mIsFavorite;
+    private Handler mPlayHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_NEXT:
+                    MusicManager.getInstance().skipToNext();
+                    break;
+                case MSG_PREVIOUS:
+                    MusicManager.getInstance().skipToPrevious();
+                    break;
+            }
+            return false;
+        }
+    });
+    private PlayViewAdapter mPagerAdapter;
 
     public static Intent newInstance(Context context) {
         return new Intent(context, PlayActivity.class);
@@ -153,16 +173,20 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         mImageViewBg.setVisibility(View.INVISIBLE);
 
         List<SongEntity> songData = MusicManager.getInstance().getMusicService().getSongData();
-        PlayViewAdapter adapter = new PlayViewAdapter(songData);
+        mPagerAdapter = new PlayViewAdapter(songData);
         mVpPlayView.setPageTransformer(false, new PlayPagerTransformer());
-        mVpPlayView.setAdapter(adapter);
+        mVpPlayView.setAdapter(mPagerAdapter);
 //        mVpPlayView.setOffscreenPageLimit(songData.size());
+        int curPosition = MusicManager.getInstance().getCurPosition();
+        mVpPlayView.setCurrentItem(curPosition);
+        mPagerAdapter.setOnPaletteCompleteListener(() ->
+                mClPlay.setBackgroundColor(mPagerAdapter.getColorArr().get(mVpPlayView.getCurrentItem())));
         ArgbEvaluator argbEvaluator = new ArgbEvaluator();
         mVpPlayView.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                int color = adapter.getColorArr().get(position % songData.size());
-                int nextColor = adapter.getColorArr().get((position + 1) % songData.size());
+                int color = mPagerAdapter.getColorArr().get(position % songData.size());
+                int nextColor = mPagerAdapter.getColorArr().get((position + 1) % songData.size());
                 int evaluateColor = (int) argbEvaluator.evaluate(positionOffset, color, nextColor);
                 mClPlay.setBackgroundColor(evaluateColor);
             }
@@ -170,9 +194,9 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
             @Override
             public void onPageSelected(int position) {
                 if (MusicManager.getInstance().getCurPosition() > position) {
-                    MusicManager.getInstance().skipToPrevious();
+                    mPlayHandler.sendEmptyMessageDelayed(MSG_PREVIOUS, DELAY_PLAY);
                 } else if (MusicManager.getInstance().getCurPosition() < position) {
-                    MusicManager.getInstance().skipToNext();
+                    mPlayHandler.sendEmptyMessageDelayed(MSG_NEXT, DELAY_PLAY);
                 }
             }
 
@@ -200,7 +224,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
         int curPosition = MusicManager.getInstance().getCurPosition();
         LogUtil.e("TAG", " --- " + curPosition);
-        mVpPlayView.setCurrentItem(curPosition,false);
+        mVpPlayView.setCurrentItem(curPosition);
     }
 
     @Override
@@ -301,7 +325,10 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     @Override
     public void setViewBgColor(int paletteColor) {
-        mClPlay.setBackgroundColor(paletteColor);
+//        Drawable background = mClPlay.getBackground();
+//        if (background instanceof ColorDrawable && ((ColorDrawable) background).getColor() == 0) {
+//            mClPlay.setBackgroundColor(paletteColor);
+//        }
     }
 
     /**
@@ -337,12 +364,14 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     }
 
     private void playNext() {
-        MusicManager.getInstance().skipToNext();
+        mVpPlayView.setCurrentItem(mVpPlayView.getCurrentItem() + 1, true);
+//        MusicManager.getInstance().skipToNext();
         refreshFavoriteIcon();
     }
 
     private void playPrevious() {
-        MusicManager.getInstance().skipToPrevious();
+        mVpPlayView.setCurrentItem(mVpPlayView.getCurrentItem() - 1, true);
+//        MusicManager.getInstance().skipToPrevious();
         refreshFavoriteIcon();
     }
 

@@ -63,8 +63,6 @@ public class PlayViewAdapter extends PagerAdapter {
         ImageLoader.INSTANCE.display(context, new ImageConfig.Builder()
                 .asBitmap(true)
                 .url(mSongEntities.get(position).albumCover)
-                .cacheStrategy(ImageConfig.CACHE_NONE)
-                .skipMemoryCache(true)
                 .isRound(false)
                 .placeholder(R.drawable.ic_default)
                 .intoTarget(new SimpleTarget<Bitmap>() {
@@ -73,6 +71,9 @@ public class PlayViewAdapter extends PagerAdapter {
                         PaletteColor.mainColorObservable(ThemeHelper.getThemeColorResId(context), resource)
                                 .subscribe(integer -> {
                                     mColorArr.put(position, integer);
+                                    if (mOnPaletteCompleteListener!=null) {
+                                        mOnPaletteCompleteListener.onPaletteComplete();
+                                    }
                                     //过渡效果比 LinearGradient 好
                                     Drawable drawable = ScrimUtil.makeCubicGradientScrimDrawable(integer, 8, Gravity.BOTTOM);
                                     frameLayout.setForeground(drawable);
@@ -89,5 +90,15 @@ public class PlayViewAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
+    }
+
+    private OnPaletteCompleteListener mOnPaletteCompleteListener;
+
+    public void setOnPaletteCompleteListener(OnPaletteCompleteListener onPaletteCompleteListener) {
+        mOnPaletteCompleteListener = onPaletteCompleteListener;
+    }
+
+    public interface OnPaletteCompleteListener{
+        void onPaletteComplete();
     }
 }
