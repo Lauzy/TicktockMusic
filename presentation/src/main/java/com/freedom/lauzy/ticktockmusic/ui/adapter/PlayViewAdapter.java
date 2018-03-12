@@ -36,6 +36,7 @@ public class PlayViewAdapter extends PagerAdapter {
 
     private List<SongEntity> mSongEntities;
     private SparseIntArray mColorArr = new SparseIntArray();
+    private int mUpdatePosition;
 
     public PlayViewAdapter(List<SongEntity> songEntities) {
         mSongEntities = songEntities;
@@ -61,6 +62,7 @@ public class PlayViewAdapter extends PagerAdapter {
         View view = LayoutInflater.from(context).inflate(R.layout.item_play_view, container, false);
         ImageView ivPlay = (ImageView) view.findViewById(R.id.iv_play);
         FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.fl_play);
+        frameLayout.setTag(mSongEntities.get(position).id);
         ImageLoader.INSTANCE.display(context, new ImageConfig.Builder()
                 .asBitmap(true)
 //                .url(MusicManager.getInstance().getSongData().get(position).albumCover)
@@ -113,6 +115,10 @@ public class PlayViewAdapter extends PagerAdapter {
 
     public void setOnPaletteCompleteListener(OnPaletteCompleteListener onPaletteCompleteListener) {
         mOnPaletteCompleteListener = onPaletteCompleteListener;
+    }
+
+    public void setUpdatePosition(int updatePosition) {
+        mUpdatePosition = updatePosition;
     }
 
     public interface OnPaletteCompleteListener {

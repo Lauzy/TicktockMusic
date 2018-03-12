@@ -14,25 +14,6 @@ import com.freedom.lauzy.model.QueueSongBean;
  */
 public class SongEntity extends QueueSongBean implements Parcelable {
 
-    private boolean isAnim;
-    private boolean isStop;
-
-    public boolean isStop() {
-        return isStop;
-    }
-
-    public void setStop(boolean stop) {
-        isStop = stop;
-    }
-
-    public boolean isAnim() {
-        return isAnim;
-    }
-
-    public void setAnim(boolean anim) {
-        isAnim = anim;
-    }
-
     public SongEntity() {
     }
 

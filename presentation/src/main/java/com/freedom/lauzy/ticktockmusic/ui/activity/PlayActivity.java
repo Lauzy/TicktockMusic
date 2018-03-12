@@ -83,19 +83,16 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     CoordinatorLayout mClPlay;
     private static final String TAG = "PlayActivity";
     private boolean mIsFavorite;
-    private Handler mPlayHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case MSG_NEXT:
-                    MusicManager.getInstance().skipToNext();
-                    break;
-                case MSG_PREVIOUS:
-                    MusicManager.getInstance().skipToPrevious();
-                    break;
-            }
-            return false;
+    private Handler mPlayHandler = new Handler(msg -> {
+        switch (msg.what) {
+            case MSG_NEXT:
+                MusicManager.getInstance().skipToNext();
+                break;
+            case MSG_PREVIOUS:
+                MusicManager.getInstance().skipToPrevious();
+                break;
         }
+        return false;
     });
     private PlayViewAdapter mPagerAdapter;
 
@@ -179,12 +176,12 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         int curPosition = MusicManager.getInstance().getCurPosition();
         mVpPlayView.setCurrentItem(curPosition);
         mPagerAdapter.setOnPaletteCompleteListener(() ->
-                mClPlay.setBackgroundColor(mPagerAdapter.getColorArr().get(mVpPlayView.getCurrentItem())));
+                mClPlay.setBackgroundColor(mPagerAdapter.getColorArr().get(mVpPlayView.getCurrentItem()))
+        );
         ArgbEvaluator argbEvaluator = new ArgbEvaluator();
         mVpPlayView.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                List<SongEntity> songData = MusicManager.getInstance().getSongData();
                 int color = mPagerAdapter.getColorArr().get(position % songEntities.size());
                 int nextColor = mPagerAdapter.getColorArr().get((position + 1) % songEntities.size());
                 int evaluateColor = (int) argbEvaluator.evaluate(positionOffset, color, nextColor);
@@ -252,6 +249,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         if (songData == null || songData.isEmpty()) {
             return;
         }
+        mPagerAdapter.setUpdatePosition(position);
         mPagerAdapter.setSongEntities(songData);
         mPagerAdapter.notifyDataSetChanged();
         mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
@@ -421,5 +419,8 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     protected void onDestroy() {
         super.onDestroy();
         RxBus.INSTANCE.dispose(this);
+        MusicManager.getInstance().setPlayProgressListener(null);
+        mSeekPlay.setOnSeekBarChangeListener(null);
+        mPlayPause.setPlayPauseListener(null);
     }
 }
