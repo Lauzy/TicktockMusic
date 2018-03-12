@@ -118,7 +118,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
             mPbCurSong.setProgress(0);
             mTxtCurSong.setText(R.string.app_name);
             mTxtCurSinger.setText(R.string.app_name);
-            ImageLoader.INSTANCE.clean(MainActivity.this, new ImageConfig.Builder().into(mImgCurSong).build());
+            ImageLoader.INSTANCE.clean(MainActivity.this, mImgCurSong);
             mImgCurSong.setImageResource(R.drawable.ic_default);
             mPlayPauseView.pause();
             mPlayPauseView.setPlaying(false);

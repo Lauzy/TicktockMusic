@@ -1,6 +1,7 @@
 package com.lauzy.freedom.librarys.imageload;
 
 import android.content.Context;
+import android.widget.ImageView;
 
 import com.lauzy.freedom.librarys.imageload.glide.GlideImageLoaderStrategy;
 
@@ -27,7 +28,7 @@ public enum ImageLoader implements IBaseImageStrategy {
     }
 
     @Override
-    public void clean(Context context, ImageConfig imageConfig) {
-        mImageStrategy.clean(context, imageConfig);
+    public void clean(Context context, ImageView imageView) {
+        mImageStrategy.clean(context, imageView);
     }
 }

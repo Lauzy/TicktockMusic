@@ -171,12 +171,11 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     private void setUpViewPager() {
         mImageViewBg.setVisibility(View.INVISIBLE);
-
-        List<SongEntity> songData = MusicManager.getInstance().getMusicService().getSongData();
-        mPagerAdapter = new PlayViewAdapter(songData);
+        List<SongEntity> songEntities = MusicManager.getInstance().getSongData();
+        mPagerAdapter = new PlayViewAdapter(songEntities);
         mVpPlayView.setPageTransformer(false, new PlayPagerTransformer());
         mVpPlayView.setAdapter(mPagerAdapter);
-//        mVpPlayView.setOffscreenPageLimit(songData.size());
+        mVpPlayView.setOffscreenPageLimit(songEntities.size());
         int curPosition = MusicManager.getInstance().getCurPosition();
         mVpPlayView.setCurrentItem(curPosition);
         mPagerAdapter.setOnPaletteCompleteListener(() ->
@@ -185,8 +184,9 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         mVpPlayView.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                int color = mPagerAdapter.getColorArr().get(position % songData.size());
-                int nextColor = mPagerAdapter.getColorArr().get((position + 1) % songData.size());
+                List<SongEntity> songData = MusicManager.getInstance().getSongData();
+                int color = mPagerAdapter.getColorArr().get(position % songEntities.size());
+                int nextColor = mPagerAdapter.getColorArr().get((position + 1) % songEntities.size());
                 int evaluateColor = (int) argbEvaluator.evaluate(positionOffset, color, nextColor);
                 mClPlay.setBackgroundColor(evaluateColor);
             }
@@ -223,8 +223,8 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         }
 
         int curPosition = MusicManager.getInstance().getCurPosition();
-        LogUtil.e("TAG", " --- " + curPosition);
-        mVpPlayView.setCurrentItem(curPosition);
+        LogUtil.e("TAG", " --- " + curPosition + " ---- count is --- " + mPagerAdapter.getCount());
+        mVpPlayView.setCurrentItem(curPosition, false);
     }
 
     @Override
@@ -252,6 +252,9 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         if (songData == null || songData.isEmpty()) {
             return;
         }
+        mPagerAdapter.setSongEntities(songData);
+        mPagerAdapter.notifyDataSetChanged();
+        mVpPlayView.setCurrentItem(MusicManager.getInstance().getCurPosition(), false);
     }
 
     private void setCurProgress(int progress, int duration) {

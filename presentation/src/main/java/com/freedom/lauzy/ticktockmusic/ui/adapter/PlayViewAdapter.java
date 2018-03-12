@@ -16,6 +16,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
+import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
@@ -62,6 +63,7 @@ public class PlayViewAdapter extends PagerAdapter {
         FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.fl_play);
         ImageLoader.INSTANCE.display(context, new ImageConfig.Builder()
                 .asBitmap(true)
+//                .url(MusicManager.getInstance().getSongData().get(position).albumCover)
                 .url(mSongEntities.get(position).albumCover)
                 .isRound(false)
                 .placeholder(R.drawable.ic_default)
@@ -71,7 +73,7 @@ public class PlayViewAdapter extends PagerAdapter {
                         PaletteColor.mainColorObservable(ThemeHelper.getThemeColorResId(context), resource)
                                 .subscribe(integer -> {
                                     mColorArr.put(position, integer);
-                                    if (mOnPaletteCompleteListener!=null) {
+                                    if (mOnPaletteCompleteListener != null) {
                                         mOnPaletteCompleteListener.onPaletteComplete();
                                     }
                                     //过渡效果比 LinearGradient 好
@@ -83,6 +85,7 @@ public class PlayViewAdapter extends PagerAdapter {
                     }
                 })
                 .build());
+        view.setTag(position);
         container.addView(view);
         return view;
     }
@@ -92,13 +95,27 @@ public class PlayViewAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
+    @Override
+    public int getItemPosition(Object object) {
+        int tagPosition = (int) ((View) object).getTag();
+        if (tagPosition == MusicManager.getInstance().getCurPosition()) {
+            return POSITION_NONE;
+        } else {
+            return super.getItemPosition(object);
+        }
+    }
+
+    public void setSongEntities(List<SongEntity> songEntities) {
+        mSongEntities = songEntities;
+    }
+
     private OnPaletteCompleteListener mOnPaletteCompleteListener;
 
     public void setOnPaletteCompleteListener(OnPaletteCompleteListener onPaletteCompleteListener) {
         mOnPaletteCompleteListener = onPaletteCompleteListener;
     }
 
-    public interface OnPaletteCompleteListener{
+    public interface OnPaletteCompleteListener {
         void onPaletteComplete();
     }
 }

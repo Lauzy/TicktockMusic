@@ -1,6 +1,7 @@
 package com.lauzy.freedom.librarys.imageload;
 
 import android.content.Context;
+import android.widget.ImageView;
 
 /**
  * Desc : 基础策略接口，此处也可可采用泛型，子类继承ImageConfig来实现，此处暂不使用。
@@ -17,5 +18,5 @@ public interface IBaseImageStrategy {
 
     void display(Context context, ImageConfig imageConfig);
 
-    void clean(Context context, ImageConfig imageConfig);
+    void clean(Context context, ImageView imageView);
 }

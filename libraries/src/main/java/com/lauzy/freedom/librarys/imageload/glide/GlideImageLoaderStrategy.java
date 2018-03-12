@@ -3,6 +3,7 @@ package com.lauzy.freedom.librarys.imageload.glide;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
@@ -100,7 +101,7 @@ public class GlideImageLoaderStrategy implements IBaseImageStrategy {
     }
 
     @Override
-    public void clean(Context context, ImageConfig imageConfig) {
-        Glide.with(context).clear(imageConfig.getImageView());
+    public void clean(Context context, ImageView imageView) {
+        Glide.with(context).clear(imageView);
     }
 }

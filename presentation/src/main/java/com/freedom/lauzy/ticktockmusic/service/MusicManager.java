@@ -234,29 +234,30 @@ public class MusicManager {
      * @param position 当前位置
      */
     private void open(int position, SongEntity entity, @QueueMode int mode) {
-        if (mMusicService != null) {
-            switch (mode) {
-                case NEW_DATA:
-                    mMusicService.setCurrentPosition(position);
-                    play();
-                    break;
-                case DATA_EXITS:
-                    if (position == 0
-                            || position != mMusicService.getCurrentPosition()
-                            || !entity.equals(mMusicService.getCurrentSong())
-                            || getMusicState() == PlaybackState.STATE_STOPPED) {
-                        if (!entity.equals(mMusicService.getCurrentSong())) {
-                            mMusicService.setCurrentPosition(position);
-                            play();
-                        } else {
-                            resume();
-                        }
-                    } else if (getMusicState() == PlaybackState.STATE_PAUSED) {
-                        //当前为同一首歌曲，并且为暂停状态时继续播放
+        if (mMusicService == null) {
+            return;
+        }
+        switch (mode) {
+            case NEW_DATA:
+                mMusicService.setCurrentPosition(position);
+                play();
+                break;
+            case DATA_EXITS:
+                if (position == 0
+                        || position != mMusicService.getCurrentPosition()
+                        || !entity.equals(mMusicService.getCurrentSong())
+                        || getMusicState() == PlaybackState.STATE_STOPPED) {
+                    if (!entity.equals(mMusicService.getCurrentSong())) {
+                        mMusicService.setCurrentPosition(position);
+                        play();
+                    } else {
                         resume();
                     }
-                    break;
-            }
+                } else if (getMusicState() == PlaybackState.STATE_PAUSED) {
+                    //当前为同一首歌曲，并且为暂停状态时继续播放
+                    resume();
+                }
+                break;
         }
     }
 
