@@ -11,7 +11,7 @@ import android.view.View;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class HorizontalPagerScrollListener extends RecyclerView.OnScrollListener {
+public abstract class HorizontalPagerScrollListener extends RecyclerView.OnScrollListener {
     private OrientationHelper mOrientationHelper;
     private int mLastPosition = -1;
 
@@ -60,23 +60,11 @@ public class HorizontalPagerScrollListener extends RecyclerView.OnScrollListener
             }
 
             if (mLastPosition != position) {
-                if (mOnPageChangeListener != null) {
-                    mOnPageChangeListener.onPageChange(mLastPosition, position);
-                }
-//                LogUtil.d("POS","currentPos is " + position);
+                onPageChange(position);
                 mLastPosition = position;
             }
         }
     }
 
-
-    private OnPageChangeListener mOnPageChangeListener;
-
-    public void setOnPageChangeListener(OnPageChangeListener onPageChangeListener) {
-        mOnPageChangeListener = onPageChangeListener;
-    }
-
-    public interface OnPageChangeListener {
-        void onPageChange(int lastPos, int currentPos);
-    }
+    protected abstract void onPageChange(int position);
 }

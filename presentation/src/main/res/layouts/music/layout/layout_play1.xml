@@ -17,12 +17,11 @@
 
         <include layout="@layout/layout_toolbar"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_play_view"
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_play_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_300">
-        </android.support.v7.widget.RecyclerView>
-
+        </android.support.v4.view.ViewPager>
     </FrameLayout>
 
     <ImageView
