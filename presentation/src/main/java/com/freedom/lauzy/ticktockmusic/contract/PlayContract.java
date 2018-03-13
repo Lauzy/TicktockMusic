@@ -18,8 +18,6 @@ public interface PlayContract {
     interface View extends IBaseView {
         Context getContext();
 
-//        void setCoverBitmap(Bitmap bitmap);
-
         void setCoverBackground(Bitmap background);
 
         void addFavoriteSong();
@@ -29,6 +27,12 @@ public interface PlayContract {
         void isFavoriteSong(boolean isFavorite);
 
         void setViewBgColor(int paletteColor);
+
+        void setPlayView(Bitmap resource);
+
+        void showLightViews();
+
+        void showDarkViews();
     }
 
     interface Presenter {

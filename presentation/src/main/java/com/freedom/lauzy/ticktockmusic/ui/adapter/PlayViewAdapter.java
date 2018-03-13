@@ -32,11 +32,11 @@ import java.util.List;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
+@Deprecated
 public class PlayViewAdapter extends PagerAdapter {
 
     private List<SongEntity> mSongEntities;
     private SparseIntArray mColorArr = new SparseIntArray();
-    private int mUpdatePosition;
 
     public PlayViewAdapter(List<SongEntity> songEntities) {
         mSongEntities = songEntities;
@@ -59,7 +59,7 @@ public class PlayViewAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         Context context = container.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.item_play_view, container, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.play_view, container, false);
         ImageView ivPlay = (ImageView) view.findViewById(R.id.iv_play);
         FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.fl_play);
         frameLayout.setTag(mSongEntities.get(position).id);
@@ -115,10 +115,6 @@ public class PlayViewAdapter extends PagerAdapter {
 
     public void setOnPaletteCompleteListener(OnPaletteCompleteListener onPaletteCompleteListener) {
         mOnPaletteCompleteListener = onPaletteCompleteListener;
-    }
-
-    public void setUpdatePosition(int updatePosition) {
-        mUpdatePosition = updatePosition;
     }
 
     public interface OnPaletteCompleteListener {

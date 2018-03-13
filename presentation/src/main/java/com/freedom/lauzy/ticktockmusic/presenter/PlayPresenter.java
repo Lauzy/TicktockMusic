@@ -1,6 +1,9 @@
 package com.freedom.lauzy.ticktockmusic.presenter;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.support.v4.graphics.ColorUtils;
+import android.view.Gravity;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -15,7 +18,9 @@ import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.view.blur.ImageBlur;
+import com.lauzy.freedom.librarys.view.util.ColorUtil;
 import com.lauzy.freedom.librarys.view.util.PaletteColor;
+import com.lauzy.freedom.librarys.view.util.ScrimUtil;
 
 import java.util.HashMap;
 
@@ -44,32 +49,42 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
 
     @Override
     public void setCoverImgUrl(Object url) {
-        if (getView() != null && getView().getContext() != null) {
-            String urlString = String.valueOf(url);
-            ImageLoader.INSTANCE.display(getView().getContext(), new ImageConfig.Builder()
-                    .asBitmap(true)
-                    .url(url)
-                    .isRound(false)
-                    .intoTarget(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            Bitmap bg = Bitmap.createBitmap(resource);
-                            if (mColorMap.get(urlString) == null) {
-                                PaletteColor.mainColorObservable(ThemeHelper.getThemeColorResId(getView().getContext()), resource)
-                                        .subscribe(color -> {
-                                            mColorMap.put(urlString, color);
-                                            getView().setViewBgColor(color);
-                                        });
-                            } else {
-                                getView().setViewBgColor(mColorMap.get(urlString));
-                            }
-
-//                        BitmapDrawable drawable = new BitmapDrawable(null, ImageBlur.onStackBlur(bg, 50));
-//                        getView().setCoverBackground(drawable);
-                            getView().setCoverBackground(ImageBlur.onStackBlur(bg, 50));
-                        }
-                    }).build());
+        if (getView() == null) {
+            return;
         }
+        String urlString = String.valueOf(url);
+        ImageLoader.INSTANCE.display(getView().getContext(), new ImageConfig.Builder()
+                .asBitmap(true)
+                .url(url)
+                .isRound(false)
+                .intoTarget(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        getView().setPlayView(resource);
+                        Bitmap bg = Bitmap.createBitmap(resource);
+                        if (mColorMap.get(urlString) == null) {
+                            PaletteColor.mainColorObservable(ThemeHelper.getThemeColorResId(getView().getContext()), resource)
+                                    .subscribe(color -> {
+                                        mColorMap.put(urlString, color);
+                                        getView().setViewBgColor(color);
+                                        judgeColorDepth(color);
+                                    });
+                        } else {
+                            Integer color = mColorMap.get(urlString);
+                            getView().setViewBgColor(color);
+                            judgeColorDepth(color);
+                        }
+                        getView().setCoverBackground(ImageBlur.onStackBlur(bg, 50));
+                    }
+
+                    private void judgeColorDepth(Integer color) {
+                        if (ColorUtil.isDarkColor(color)) {
+                            getView().showLightViews();
+                        }else {
+                            getView().showDarkViews();
+                        }
+                    }
+                }).build());
     }
 
     @Override

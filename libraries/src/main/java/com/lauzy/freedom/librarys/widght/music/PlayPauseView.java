@@ -302,6 +302,7 @@ public class PlayPauseView extends View {
 
     public void setBtnColor(int btnColor) {
         mBtnColor = btnColor;
+        invalidate();
     }
 
     public void setDirection(Direction direction) {

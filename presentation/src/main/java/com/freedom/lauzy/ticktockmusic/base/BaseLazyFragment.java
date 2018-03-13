@@ -83,7 +83,6 @@ public abstract class BaseLazyFragment<T extends IPresenter> extends Fragment im
     protected void setToolbar() {
         if (mToolbar != null) {
             ((AppCompatActivity) mActivity).setSupportActionBar(mToolbar);
-//            mToolbar.setNavigationIcon(R.drawable.ic_draw_menu);
         }
     }
 

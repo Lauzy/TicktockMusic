@@ -89,6 +89,7 @@ dependencies {
     releaseImplementation project(':libraries')
     debugImplementation project(':data')
     debugImplementation project(':libraries')
+    compile 'com.github.lsjwzh.RecyclerViewPager:lib:v1.1.2@aar'
 }
 
 configurations.all {
