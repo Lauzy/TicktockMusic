@@ -3,6 +3,8 @@ package com.freedom.lauzy.ticktockmusic.base;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.os.Bundle;
+import android.support.annotation.IntegerRes;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -68,7 +70,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
         initViews();
     }
 
-    protected abstract int getLayoutRes();
+    protected abstract @LayoutRes int getLayoutRes();
 
     protected void initViews(){
 
@@ -153,7 +155,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorEdgeTransparent));
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorLightTransparent));
     }
 
     @Override

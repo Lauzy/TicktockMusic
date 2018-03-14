@@ -37,18 +37,13 @@ public class TickTextView extends TintTextView {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.RippleValue);
-        rippleEnabled = ta.getBoolean(R.styleable.RippleValue_enable_ripple, false);
-
-        TypedArray fontTa = context.obtainStyledAttributes(attrs, R.styleable.CustomFont);
-        boolean fontEnable = fontTa.getBoolean(R.styleable.CustomFont_enable_font_type, true);
-
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.TickTextView);
+        rippleEnabled = ta.getBoolean(R.styleable.TickTextView_tv_enable_ripple, false);
+        boolean fontEnable = ta.getBoolean(R.styleable.TickTextView_tv_enable_font_type, true);
         if (fontEnable) {
             setTypeface(FontsCache.getTypeface("fonts/fzltzxh.TTF", context));
             setPadding(0, 0, 30, 0);
         }
-        fontTa.recycle();
-
         if (rippleEnabled) setRippleForeground(context);
         ta.recycle();
     }

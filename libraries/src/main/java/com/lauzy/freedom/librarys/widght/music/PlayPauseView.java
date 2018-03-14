@@ -42,6 +42,7 @@ public class PlayPauseView extends View {
     private int mDirection = Direction.POSITIVE.value;
     private float mPadding;
     private int mAnimDuration = 200;//动画时间
+    private boolean isEnable = true;
 
     public PlayPauseView(Context context) {
         super(context);
@@ -238,13 +239,16 @@ public class PlayPauseView extends View {
         getPlayPauseAnim().start();
     }
 
-    private PlayPauseListener mPlayPauseListener;
+    private OnPlayPauseListener mPlayPauseListener;
 
-    public void setPlayPauseListener(PlayPauseListener playPauseListener) {
+    public void setOnPlayPauseListener(OnPlayPauseListener playPauseListener) {
         mPlayPauseListener = playPauseListener;
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!isEnable) {
+                    return;
+                }
                 if (isPlaying()) {
                     pause();
                     if (null != mPlayPauseListener) {
@@ -260,13 +264,21 @@ public class PlayPauseView extends View {
         });
     }
 
-    public interface PlayPauseListener {
+    public interface OnPlayPauseListener {
         void play();
 
         void pause();
     }
 
     /* ------------下方是参数------------- */
+
+    public boolean isEnable() {
+        return isEnable;
+    }
+
+    public void setEnable(boolean enable) {
+        isEnable = enable;
+    }
 
     public boolean isPlaying() {
         return isPlaying;

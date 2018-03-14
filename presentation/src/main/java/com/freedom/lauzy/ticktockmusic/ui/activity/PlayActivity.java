@@ -37,8 +37,6 @@ import com.lauzy.freedom.librarys.view.util.ScrimUtil;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 import com.lauzy.freedom.librarys.widght.music.PlayPauseView;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
@@ -51,15 +49,10 @@ import io.reactivex.disposables.Disposable;
  * Email : freedompaladin@gmail.com
  */
 public class PlayActivity extends BaseActivity<PlayPresenter> implements
-        SeekBar.OnSeekBarChangeListener, PlayPauseView.PlayPauseListener, PlayContract.View,
+        SeekBar.OnSeekBarChangeListener, PlayPauseView.OnPlayPauseListener, PlayContract.View,
         MusicManager.PlayProgressListener {
 
     private static final String TAG = "PlayActivity";
-    private static final int MSG_NEXT = 0X0011;
-    private static final int MSG_PREVIOUS = 0X0012;
-    private static final int MSG_FIRST = 0X0013;
-    private static final int MSG_LAST = 0X0014;
-    private static final int DELAY_PLAY = 500;
 
     @BindView(R.id.img_play_previous)
     ImageView mImgPlayPrevious;
@@ -91,23 +84,6 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     FrameLayout mFlPlay;
     private boolean isDarkStyle = true;
     private boolean isFavorite;
-    private Handler mPlayHandler = new Handler(msg -> {
-        switch (msg.what) {
-            case MSG_NEXT:
-                MusicManager.getInstance().skipToNext();
-                break;
-            case MSG_PREVIOUS:
-                MusicManager.getInstance().skipToPrevious();
-                break;
-            case MSG_FIRST:
-                MusicManager.getInstance().setCurPlayPosition(0);
-                break;
-            case MSG_LAST:
-                MusicManager.getInstance().setCurPlayPosition(MusicManager.getInstance().getSongData().size() - 1);
-                break;
-        }
-        return false;
-    });
 
     public static Intent newInstance(Context context) {
         return new Intent(context, PlayActivity.class);
@@ -139,6 +115,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     @Override
     protected void initViews() {
+        mIvPlay.setTransitionName(getString(R.string.play_view_transition_name));
         showBackIcon();
         setModeView();
         mToolbarCommon.setBackgroundColor(Color.TRANSPARENT);
@@ -171,7 +148,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         mPresenter.isFavoriteSong((int) MusicManager.getInstance().getCurrentSong().id);
         MusicManager.getInstance().setPlayProgressListener(this);
         mSeekPlay.setOnSeekBarChangeListener(this);
-        mPlayPause.setPlayPauseListener(this);
+        mPlayPause.setOnPlayPauseListener(this);
 
         currentPlay(MusicManager.getInstance().getCurrentSong());
     }
@@ -213,10 +190,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     @Override
     public void updateQueue(int position) {
-        List<SongEntity> songData = MusicManager.getInstance().getSongData();
-        if (songData == null || songData.isEmpty()) {
-            return;
-        }
+
     }
 
     private void setCurProgress(int progress, int duration) {
@@ -264,8 +238,8 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     @Override
     public void setCoverBackground(Bitmap background) {
         mImageViewBg.setImageBitmap(background);
-        mImageViewBg.setColorFilter(ContextCompat.getColor(this, R.color.colorDarkerTransparent),
-                PorterDuff.Mode.SRC_OVER);
+//        mImageViewBg.setColorFilter(ContextCompat.getColor(this, R.color.colorDarkerTransparent),
+//                PorterDuff.Mode.SRC_OVER);
     }
 
     @Override

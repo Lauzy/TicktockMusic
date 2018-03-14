@@ -8,14 +8,15 @@
         <attr name="civ_fill_color" format="color"/>
     </declare-styleable>
 
-    <!--波纹效果-->
-    <declare-styleable name="RippleValue">
-        <attr name="enable_ripple" format="boolean"/>
+    <declare-styleable name="TickTextView">
+        <!--波纹效果-->
+        <attr name="tv_enable_ripple" format="boolean"/>
+        <!--字体风格-->
+        <attr name="tv_enable_font_type" format="boolean"/>
     </declare-styleable>
 
-    <!--字体风格-->
-    <declare-styleable name="CustomFont">
-        <attr name="enable_font_type" format="boolean"/>
+    <declare-styleable name="TickLinearLayout">
+        <attr name="ll_enable_ripple" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="PlayPauseView">

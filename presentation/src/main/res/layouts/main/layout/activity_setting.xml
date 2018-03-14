@@ -29,8 +29,8 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:text="@string/setting_theme"
-            app:enable_font_type="false"
-            app:enable_ripple="false"/>
+            app:tv_enable_font_type="false"
+            app:tv_enable_ripple="false"/>
 
         <com.lauzy.freedom.librarys.widght.CircleImageView
             android:id="@+id/img_choose_color"

@@ -3,7 +3,9 @@ package com.lauzy.freedom.librarys.common;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
+import android.support.v4.content.FileProvider;
 
 import com.lauzy.freedom.librarys.R;
 
@@ -33,14 +35,19 @@ public class IntentUtil {
 
     /**
      * 分享文件
-     * @param context context
+     *
+     * @param context  context
      * @param filePath 文件路径
      */
     public static void shareFile(Context context, String filePath) {
         File file = new File(filePath);
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("audio/*");
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+        Uri uri = Uri.fromFile(file);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            uri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", file);
+        }
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
         context.startActivity(Intent.createChooser(intent, context.getResources().getString(R.string.share)));
     }
 }

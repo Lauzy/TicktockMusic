@@ -55,7 +55,7 @@ import io.reactivex.disposables.Disposable;
  * Email : freedompaladin@gmail.com
  */
 public class MainActivity extends BaseActivity<MainPresenter> implements
-        NavigationView.OnNavigationItemSelectedListener, PlayPauseView.PlayPauseListener,
+        NavigationView.OnNavigationItemSelectedListener, PlayPauseView.OnPlayPauseListener,
         MusicManager.MusicManageListener {
 
     private static final String TAG = "MainActivity";
@@ -158,7 +158,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
     }
 
     private void playMusic() {
-        mPlayPauseView.setPlayPauseListener(this);
+        mPlayPauseView.setEnable(MusicManager.getInstance().getCurrentSong() != null);
+        mPlayPauseView.setOnPlayPauseListener(this);
         MusicManager.getInstance().setManageListener(this);
     }
 
@@ -305,10 +306,16 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
                 MusicManager.getInstance().skipToPrevious();
                 break;
             case R.id.layout_music_bar:
-                if (MusicManager.getInstance().getCurrentSong() != null)
-                    mNavigator.navigateToPlayActivity(this);
+                navigateToPlayPage();
                 break;
         }
+    }
+
+    private void navigateToPlayPage() {
+        if (MusicManager.getInstance().getCurrentSong() == null) {
+            return;
+        }
+        mNavigator.navigateToPlayActivity(this, mImgCurSong);
     }
 
     @Override
@@ -334,6 +341,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
 
     @Override
     public void currentPlay(SongEntity songEntity) {
+        mPlayPauseView.setEnable(true);
         if (!mPlayPauseView.isPlaying()) {
             mPlayPauseView.play();
         }

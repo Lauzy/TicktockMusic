@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sp_15"
                 style="@style/MarqueeStyle"
-                app:enable_font_type="false"
+                app:tv_enable_font_type="false"
                 tools:text="@string/app_name"/>
 
             <com.lauzy.freedom.librarys.widght.TickLinearLayout

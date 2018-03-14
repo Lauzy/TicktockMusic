@@ -43,7 +43,7 @@ public class RecentAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolder> 
         helper.getView(R.id.layout_song_item).setOnClickListener(v -> {
             if (item.equals(MusicManager.getInstance().getCurrentSong())) {
                 Navigator navigator = new Navigator();
-                navigator.navigateToPlayActivity(mContext);
+                navigator.navigateToPlayActivity(mContext, helper.getView(R.id.img_song_pic));
             } else {
                 if (mRecentPlayListener != null) {
                     mRecentPlayListener.playRecent(item, helper.getAdapterPosition());

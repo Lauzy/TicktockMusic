@@ -1,7 +1,9 @@
 package com.freedom.lauzy.ticktockmusic.navigation;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -54,6 +56,15 @@ public class Navigator {
         if (context != null) {
             Intent intent = PlayActivity.newInstance(context);
             context.startActivity(intent);
+        }
+    }
+
+    public void navigateToPlayActivity(Context context, ImageView imageView) {
+        if (context != null) {
+            Intent intent = PlayActivity.newInstance(context);
+            ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(((Activity) context),
+                    imageView, context.getString(R.string.play_view_transition_name));
+            context.startActivity(intent, optionsCompat.toBundle());
         }
     }
 

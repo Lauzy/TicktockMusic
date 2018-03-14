@@ -43,8 +43,8 @@ public class TickLinearLayout extends TintLinearLayout {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.RippleValue);
-        rippleEnabled = ta.getBoolean(R.styleable.RippleValue_enable_ripple, false);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.TickLinearLayout);
+        rippleEnabled = ta.getBoolean(R.styleable.TickLinearLayout_ll_enable_ripple, false);
         if (rippleEnabled) setRippleForeground(context);
         ta.recycle();
     }
