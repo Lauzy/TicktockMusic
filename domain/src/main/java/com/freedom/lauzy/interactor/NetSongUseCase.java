@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 
 /**
- * Desc : 获取网络歌曲的播放资源用例
+ * Desc : 获取网络歌曲的播放资源
  * Author : Lauzy
  * Date : 2017/9/17
  * Blog : http://www.jianshu.com/u/e76853f863a9

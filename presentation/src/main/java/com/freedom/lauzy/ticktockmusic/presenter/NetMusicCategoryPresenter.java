@@ -65,6 +65,9 @@ public class NetMusicCategoryPresenter extends BaseRxPresenter<NetMusicCategoryC
 
     @Override
     public void setCategoryColor(String imgUrl) {
+        if (getView() == null) {
+            return;
+        }
         ImageLoader.INSTANCE.display(getView().context(),
                 new ImageConfig.Builder()
                         .url(imgUrl)
@@ -92,6 +95,9 @@ public class NetMusicCategoryPresenter extends BaseRxPresenter<NetMusicCategoryC
     }
 
     private void setCategoryBgColor(Integer color) {
+        if (getView() == null) {
+            return;
+        }
         getView().setCategoryColor(color);
         RxBus.INSTANCE.post(new PaletteEvent(color));
     }

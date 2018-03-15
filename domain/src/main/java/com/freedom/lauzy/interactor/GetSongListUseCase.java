@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 
 /**
- * Desc : 网络音乐数据列表用例
+ * Desc : 网络音乐数据列表
  * Author : Lauzy
  * Date : 2017/7/6
  * Blog : http://www.jianshu.com/u/e76853f863a9

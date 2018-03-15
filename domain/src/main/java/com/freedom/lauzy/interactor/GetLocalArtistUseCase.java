@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 
 /**
- * Desc : 本地歌手数据用例
+ * Desc : 本地歌手数据
  * Author : Lauzy
  * Date : 2017/9/28
  * Blog : http://www.jianshu.com/u/e76853f863a9

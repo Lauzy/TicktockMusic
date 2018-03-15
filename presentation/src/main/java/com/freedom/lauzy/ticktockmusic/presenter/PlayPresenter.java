@@ -1,9 +1,6 @@
 package com.freedom.lauzy.ticktockmusic.presenter;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.support.v4.graphics.ColorUtils;
-import android.view.Gravity;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -20,7 +17,6 @@ import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.view.blur.ImageBlur;
 import com.lauzy.freedom.librarys.view.util.ColorUtil;
 import com.lauzy.freedom.librarys.view.util.PaletteColor;
-import com.lauzy.freedom.librarys.view.util.ScrimUtil;
 
 import java.util.HashMap;
 
@@ -60,6 +56,11 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                 .intoTarget(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+
+                        if (getView() == null) {
+                            return;
+                        }
+
                         getView().setPlayView(resource);
                         Bitmap bg = Bitmap.createBitmap(resource);
                         if (mColorMap.get(urlString) == null) {
@@ -80,7 +81,7 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                     private void judgeColorDepth(Integer color) {
                         if (ColorUtil.isDarkColor(color)) {
                             getView().showLightViews();
-                        }else {
+                        } else {
                             getView().showDarkViews();
                         }
                     }
@@ -103,9 +104,10 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
     public void deleteFavoriteSong(long songId) {
         mFavoriteSongUseCase.deleteFavoriteSong(songId).subscribe(aLong -> {
             LogUtil.i(TAG, "delete value is " + aLong);
-            if (getView() != null) {
-                getView().deleteFavoriteSong();
+            if (getView() == null) {
+                return;
             }
+            getView().deleteFavoriteSong();
         });
     }
 
@@ -113,9 +115,10 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
     public void isFavoriteSong(long songId) {
         mFavoriteSongUseCase.isFavoriteSong(songId)
                 .subscribe(aBoolean -> {
-                    if (getView() != null) {
-                        getView().isFavoriteSong(aBoolean);
+                    if (getView() == null) {
+                        return;
                     }
+                    getView().isFavoriteSong(aBoolean);
                 });
     }
 }

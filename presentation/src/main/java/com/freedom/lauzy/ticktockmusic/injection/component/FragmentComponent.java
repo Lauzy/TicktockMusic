@@ -10,6 +10,8 @@ import com.freedom.lauzy.ticktockmusic.ui.fragment.ArtistAlbumFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.ArtistFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.ArtistSongFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.FavoriteFragment;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.FolderSongsFragment;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.MusicFolderFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongListFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayQueueBottomSheetFragment;
@@ -51,5 +53,9 @@ public interface FragmentComponent {
     void inject(ArtistSongFragment artistSongFragment);
 
     void inject(ArtistAlbumFragment artistAlbumFragment);
+
+    void inject(MusicFolderFragment musicFolderFragment);
+
+    void inject(FolderSongsFragment folderSongsFragment);
 
 }

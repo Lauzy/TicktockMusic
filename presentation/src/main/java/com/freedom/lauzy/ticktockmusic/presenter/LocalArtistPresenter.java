@@ -42,6 +42,10 @@ public class LocalArtistPresenter extends BaseRxPresenter<LocalArtistContract.Vi
             @Override
             public void onNext(@NonNull List<LocalArtistBean> artistBeen) {
                 super.onNext(artistBeen);
+                if (getView() == null) {
+                    return;
+                }
+
                 if (artistBeen != null && artistBeen.size() != 0) {
                     getView().loadArtistResult(artistBeen);
                 } else {
@@ -53,6 +57,9 @@ public class LocalArtistPresenter extends BaseRxPresenter<LocalArtistContract.Vi
             public void onError(@NonNull Throwable e) {
                 super.onError(e);
                 e.printStackTrace();
+                if (getView() == null) {
+                    return;
+                }
                 getView().loadFailed(e);
             }
         }, null);
@@ -60,32 +67,36 @@ public class LocalArtistPresenter extends BaseRxPresenter<LocalArtistContract.Vi
 
     @Override
     public void loadArtistAvatar(String artistName, ImageView imageView) {
-        if (imageView != null && artistName != null) {
-            String avatarUrl = SharePrefHelper.getArtistAvatar(getView().getContext(), artistName);
-            if (!avatarUrl.isEmpty()) {
-                getView().loadAvatarResult(avatarUrl, imageView);
-            } else {
-                mArtistUseCase.getArtistAvatar(NetConstants.Artist.GET_ARTIST_INFO,
-                        NetConstants.Artist.API_KEY_CONTENT, artistName, NetConstants.Artist.FORMAT_JSON)
-                        .compose(RxHelper.ioMain())
-                        .subscribeWith(new DefaultDisposableObserver<ArtistAvatar>() {
-                            @Override
-                            public void onNext(@NonNull ArtistAvatar artistAvatar) {
-                                super.onNext(artistAvatar);
-                                if (getView() != null) {
-                                    getView().loadAvatarResult(artistAvatar.picUrl, imageView);
-                                    SharePrefHelper.setArtistAvatar(getView().getContext(), artistName,
-                                            artistAvatar.picUrl);
-                                }
-                            }
-
-                            @Override
-                            public void onError(@NonNull Throwable e) {
-                                super.onError(e);
-                            }
-                        });
-            }
+        if (artistName == null || imageView == null) {
+            return;
         }
+
+        String avatarUrl = SharePrefHelper.getArtistAvatar(getView().getContext(), artistName);
+        if (!avatarUrl.isEmpty()) {
+            getView().loadAvatarResult(avatarUrl, imageView);
+            return;
+        }
+
+        mArtistUseCase.getArtistAvatar(NetConstants.Artist.GET_ARTIST_INFO,
+                NetConstants.Artist.API_KEY_CONTENT, artistName, NetConstants.Artist.FORMAT_JSON)
+                .compose(RxHelper.ioMain())
+                .subscribeWith(new DefaultDisposableObserver<ArtistAvatar>() {
+                    @Override
+                    public void onNext(@NonNull ArtistAvatar artistAvatar) {
+                        super.onNext(artistAvatar);
+                        if (getView() == null) {
+                            return;
+                        }
+                        getView().loadAvatarResult(artistAvatar.picUrl, imageView);
+                        SharePrefHelper.setArtistAvatar(getView().getContext(), artistName,
+                                artistAvatar.picUrl);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        super.onError(e);
+                    }
+                });
     }
 
  /*   @Override

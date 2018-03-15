@@ -14,6 +14,7 @@ import com.freedom.lauzy.ticktockmusic.ui.activity.PlayActivity;
 import com.freedom.lauzy.ticktockmusic.ui.activity.SettingActivity;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.AlbumDetailFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.ArtistDetailFragment;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.FolderSongsFragment;
 import com.freedom.lauzy.ticktockmusic.utils.anim.FragmentAnimUtil;
 
 import javax.inject.Inject;
@@ -52,20 +53,18 @@ public class Navigator {
                 .commit();
     }
 
-    public void navigateToPlayActivity(Context context) {
-        if (context != null) {
-            Intent intent = PlayActivity.newInstance(context);
-            context.startActivity(intent);
-        }
-    }
-
     public void navigateToPlayActivity(Context context, ImageView imageView) {
-        if (context != null) {
-            Intent intent = PlayActivity.newInstance(context);
-            ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(((Activity) context),
-                    imageView, context.getString(R.string.play_view_transition_name));
-            context.startActivity(intent, optionsCompat.toBundle());
+        if (context == null) {
+            return;
         }
+        Intent intent = PlayActivity.newInstance(context);
+        if (imageView == null) {
+            context.startActivity(intent);
+            return;
+        }
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(((Activity) context),
+                imageView, context.getString(R.string.play_view_transition_name));
+        context.startActivity(intent, optionsCompat.toBundle());
     }
 
     public static void navigateToArtistDetail(Context context, ImageView view, String transName,
@@ -76,6 +75,16 @@ public class Navigator {
         if (transName != null && !"".equals(transName) && view != null) {
             transaction.addSharedElement(view, transName);
         }
+        transaction.hide(((AppCompatActivity) context).getSupportFragmentManager()
+                .findFragmentById(R.id.layout_main))
+                .add(R.id.layout_main, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    public void navigateToFolderSongs(Context context, String folderPath, String folderName) {
+        Fragment fragment = FolderSongsFragment.newInstance(folderPath, folderName);
+        FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
         transaction.hide(((AppCompatActivity) context).getSupportFragmentManager()
                 .findFragmentById(R.id.layout_main))
                 .add(R.id.layout_main, fragment)

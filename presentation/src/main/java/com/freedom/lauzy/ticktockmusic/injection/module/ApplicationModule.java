@@ -5,7 +5,9 @@ import android.content.Context;
 import com.freedom.lauzy.executor.PostExecutionThread;
 import com.freedom.lauzy.executor.ThreadExecutor;
 import com.freedom.lauzy.repository.FavoriteRepository;
+import com.freedom.lauzy.repository.FolderSongsRepository;
 import com.freedom.lauzy.repository.LocalSongRepository;
+import com.freedom.lauzy.repository.MusicFolderRepository;
 import com.freedom.lauzy.repository.QueueRepository;
 import com.freedom.lauzy.repository.RecentRepository;
 import com.freedom.lauzy.repository.SongRepository;
@@ -14,7 +16,9 @@ import com.freedom.lauzy.ticktockmusic.function.UIThread;
 import com.freedom.lauzy.ticktockmusic.injection.scope.ContextLife;
 import com.lauzy.freedom.data.executor.JobExecutor;
 import com.lauzy.freedom.data.repository.FavoriteRepositoryImpl;
+import com.lauzy.freedom.data.repository.FolderSongsRepositoryImpl;
 import com.lauzy.freedom.data.repository.LocalSongRepositoryImpl;
+import com.lauzy.freedom.data.repository.MusicFolderRepositoryImpl;
 import com.lauzy.freedom.data.repository.QueueRepositoryImpl;
 import com.lauzy.freedom.data.repository.RecentRepositoryImpl;
 import com.lauzy.freedom.data.repository.SongRepositoryImpl;
@@ -87,5 +91,17 @@ public class ApplicationModule {
     @Singleton
     RecentRepository providerRecentRepository() {
         return new RecentRepositoryImpl(mApplication);
+    }
+
+    @Provides
+    @Singleton
+    MusicFolderRepository provideFolderRepository() {
+        return new MusicFolderRepositoryImpl(mApplication);
+    }
+
+    @Provides
+    @Singleton
+    FolderSongsRepository provideFolderSongsRepository() {
+        return new FolderSongsRepositoryImpl(mApplication);
     }
 }

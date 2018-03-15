@@ -28,36 +28,54 @@ public class PlayQueuePresenter extends BaseRxPresenter<PlayQueueContract.View>
 
     @Override
     public void loadQueueData(String[] ids) {
-        if (ids != null) {
-            mGetQueueUseCase.buildUseCaseObservable(ids)
-                    .compose(RxHelper.ioMain())
-                    .subscribe(queueSongBeen -> {
-                        if (queueSongBeen != null) {
-                            getView().loadQueueData(SongMapper.transform(queueSongBeen));
-                        } else {
-                            getView().emptyView();
-                        }
-                    });
-        } else {
+        if (ids == null) {
             getView().emptyView();
+            return;
         }
+
+        mGetQueueUseCase.buildUseCaseObservable(ids)
+                .compose(RxHelper.ioMain())
+                .subscribe(queueSongBeen -> {
+                    if (getView() == null) {
+                        return;
+                    }
+                    if (queueSongBeen != null) {
+                        getView().loadQueueData(SongMapper.transform(queueSongBeen));
+                    } else {
+                        getView().emptyView();
+                    }
+                });
     }
 
     @Override
     public void deleteQueueData(String[] ids, int position, SongEntity entity) {
-        if (ids != null) {
-            mGetQueueUseCase.deleteQueueObservable(ids)
-                    .compose(RxHelper.ioMain())
-                    .subscribe(integer -> getView().deleteItem(position));
+        if (ids == null) {
+            return;
         }
+
+        mGetQueueUseCase.deleteQueueObservable(ids)
+                .compose(RxHelper.ioMain())
+                .subscribe(integer -> {
+                    if (getView() == null) {
+                        return;
+                    }
+                    getView().deleteItem(position);
+                });
     }
 
     @Override
     public void deleteAllQueueData(String[] ids) {
-        if (ids != null) {
-            mGetQueueUseCase.deleteQueueObservable(ids)
-                    .compose(RxHelper.ioMain())
-                    .subscribe(integer -> getView().deleteAllQueueData());
+        if (ids == null) {
+            return;
         }
+
+        mGetQueueUseCase.deleteQueueObservable(ids)
+                .compose(RxHelper.ioMain())
+                .subscribe(integer -> {
+                    if (getView() == null) {
+                        return;
+                    }
+                    getView().deleteAllQueueData();
+                });
     }
 }

@@ -5,7 +5,9 @@ import android.content.Context;
 import com.freedom.lauzy.executor.PostExecutionThread;
 import com.freedom.lauzy.executor.ThreadExecutor;
 import com.freedom.lauzy.repository.FavoriteRepository;
+import com.freedom.lauzy.repository.FolderSongsRepository;
 import com.freedom.lauzy.repository.LocalSongRepository;
+import com.freedom.lauzy.repository.MusicFolderRepository;
 import com.freedom.lauzy.repository.QueueRepository;
 import com.freedom.lauzy.repository.RecentRepository;
 import com.freedom.lauzy.repository.SongRepository;
@@ -44,4 +46,8 @@ public interface ApplicationComponent {
     FavoriteRepository favoriteRepository();
 
     RecentRepository recentRepository();
+
+    MusicFolderRepository musicFolderRepository();
+
+    FolderSongsRepository folderSongsRepository();
 }

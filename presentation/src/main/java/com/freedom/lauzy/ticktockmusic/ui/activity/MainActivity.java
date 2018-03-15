@@ -32,7 +32,7 @@ import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.AlbumDetailFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.ArtistDetailFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.FavoriteFragment;
-import com.freedom.lauzy.ticktockmusic.ui.fragment.FileFolderFragment;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.MusicFolderFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.LocalMusicFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.RecentFragment;
@@ -173,7 +173,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
 
     private Runnable mFolderRunnable = () ->
             getSupportFragmentManager().beginTransaction().replace(R.id.layout_main,
-                    FileFolderFragment.newInstance()).commit();
+                    MusicFolderFragment.newInstance()).commit();
 
     private Runnable mFavoriteRunnable = () ->
             getSupportFragmentManager().beginTransaction().replace(R.id.layout_main,
@@ -200,7 +200,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
                 }
                 break;
             case R.id.nav_file_folder:
-                if (!(fragment instanceof FileFolderFragment)) {
+                if (!(fragment instanceof MusicFolderFragment)) {
                     drawerRunnable = mFolderRunnable;
                 }
                 break;
@@ -239,7 +239,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.layout_main);
         getMenuInflater().inflate(!(fragment instanceof FavoriteFragment || fragment instanceof RecentFragment)
                 ? R.menu.menu_search : R.menu.menu_delete, menu);
-        return !(fragment instanceof FileFolderFragment);
+        return !(fragment instanceof MusicFolderFragment);
     }
 
     @Override
@@ -284,7 +284,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.layout_main);
         return (fragment instanceof LocalMusicFragment || fragment instanceof NetSongFragment
                 || fragment instanceof FavoriteFragment || fragment instanceof RecentFragment
-                || fragment instanceof FileFolderFragment);
+                || fragment instanceof MusicFolderFragment);
     }
 
     @Override

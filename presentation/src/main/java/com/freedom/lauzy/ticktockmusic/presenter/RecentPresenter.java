@@ -3,8 +3,8 @@ package com.freedom.lauzy.ticktockmusic.presenter;
 import com.freedom.lauzy.interactor.RecentSongUseCase;
 import com.freedom.lauzy.model.RecentSongBean;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
-import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.contract.RecentContract;
+import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.model.mapper.RecentMapper;
@@ -42,6 +42,9 @@ public class RecentPresenter extends BaseRxPresenter<RecentContract.View>
                     @Override
                     public void onNext(@NonNull List<RecentSongBean> recentSongBeen) {
                         super.onNext(recentSongBeen);
+                        if (getView() == null) {
+                            return;
+                        }
                         List<SongEntity> songEntities = mRecentMapper.transform(recentSongBeen);
                         if (songEntities != null && songEntities.size() != 0) {
                             if (getView() != null) getView().getRecentSongs(songEntities);
@@ -53,6 +56,9 @@ public class RecentPresenter extends BaseRxPresenter<RecentContract.View>
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
+                        if (getView() == null) {
+                            return;
+                        }
                         getView().emptyView();
                     }
                 });
@@ -62,6 +68,11 @@ public class RecentPresenter extends BaseRxPresenter<RecentContract.View>
     public void clearRecentSongs() {
         mRecentSongUseCase.clearRecentSongs()
                 .compose(RxHelper.ioMain())
-                .subscribe(integer -> getView().clearAllRecentSongs());
+                .subscribe(integer -> {
+                    if (getView() == null) {
+                        return;
+                    }
+                    getView().clearAllRecentSongs();
+                });
     }
 }

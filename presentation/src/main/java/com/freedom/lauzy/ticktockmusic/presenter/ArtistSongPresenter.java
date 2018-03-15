@@ -28,7 +28,7 @@ public class ArtistSongPresenter extends BaseRxPresenter<ArtistSongContract.View
     private LocalSongMapper mLocalSongMapper;
 
     @Inject
-    public ArtistSongPresenter(GetLocalArtistUseCase artistUseCase, LocalSongMapper localSongMapper) {
+    ArtistSongPresenter(GetLocalArtistUseCase artistUseCase, LocalSongMapper localSongMapper) {
         mArtistUseCase = artistUseCase;
         mLocalSongMapper = localSongMapper;
     }
@@ -41,6 +41,9 @@ public class ArtistSongPresenter extends BaseRxPresenter<ArtistSongContract.View
                     @Override
                     public void onNext(@NonNull List<LocalSongBean> localSongBeen) {
                         super.onNext(localSongBeen);
+                        if (getView()==null) {
+                            return;
+                        }
                         if (localSongBeen != null && localSongBeen.size() != 0) {
                             getView().loadArtistSongsResult(mLocalSongMapper.transform(localSongBeen));
                         } else {
@@ -51,6 +54,9 @@ public class ArtistSongPresenter extends BaseRxPresenter<ArtistSongContract.View
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
+                        if (getView()==null) {
+                            return;
+                        }
                         getView().loadFailed(e);
                     }
                 });

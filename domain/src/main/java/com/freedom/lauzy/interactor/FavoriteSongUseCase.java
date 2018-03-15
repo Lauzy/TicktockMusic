@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 
 /**
- * Desc : 我的喜欢逻辑用例
+ * Desc : 我的喜欢
  * Author : Lauzy
  * Date : 2017/9/12
  * Blog : http://www.jianshu.com/u/e76853f863a9

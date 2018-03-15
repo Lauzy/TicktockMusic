@@ -3,8 +3,8 @@ package com.freedom.lauzy.ticktockmusic.presenter;
 import com.freedom.lauzy.interactor.FavoriteSongUseCase;
 import com.freedom.lauzy.model.FavoriteSongBean;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
-import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.contract.FavoriteContract;
+import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.model.mapper.FavoriteMapper;
@@ -42,8 +42,11 @@ public class FavoritePresenter extends BaseRxPresenter<FavoriteContract.View>
                     @Override
                     public void onNext(@NonNull List<FavoriteSongBean> favoriteSongBeen) {
                         super.onNext(favoriteSongBeen);
+                        if (getView() == null) {
+                            return;
+                        }
                         List<SongEntity> songEntities = mFavoriteMapper.transform(favoriteSongBeen);
-                        if (!songEntities.isEmpty()) {
+                        if (songEntities != null && !songEntities.isEmpty()) {
                             getView().getFavoriteSongs(songEntities);
                         } else {
                             getView().emptyView();
@@ -53,6 +56,9 @@ public class FavoritePresenter extends BaseRxPresenter<FavoriteContract.View>
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
+                        if (getView() == null) {
+                            return;
+                        }
                         getView().emptyView();
                     }
                 });
@@ -61,6 +67,11 @@ public class FavoritePresenter extends BaseRxPresenter<FavoriteContract.View>
     @Override
     public void clearFavoriteSongs() {
         mFavoriteSongUseCase.clearFavoriteSongs().compose(RxHelper.ioMain())
-                .subscribe(integer -> getView().clearSongs());
+                .subscribe(integer -> {
+                    if (getView()==null) {
+                        return;
+                    }
+                    getView().clearSongs();
+                });
     }
 }

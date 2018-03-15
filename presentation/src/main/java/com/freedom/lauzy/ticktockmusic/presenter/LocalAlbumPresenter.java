@@ -39,6 +39,9 @@ public class LocalAlbumPresenter extends BaseRxPresenter<LocalAlbumContract.View
         mGetLocalAlbumUseCase.execute(new DisposableObserver<List<LocalAlbumBean>>() {
             @Override
             public void onNext(@NonNull List<LocalAlbumBean> localAlbumBeen) {
+                if (getView()==null) {
+                    return;
+                }
                 if (localAlbumBeen != null && localAlbumBeen.size() != 0) {
                     getView().loadLocalAlbum(localAlbumBeen);
                 } else {
@@ -48,6 +51,9 @@ public class LocalAlbumPresenter extends BaseRxPresenter<LocalAlbumContract.View
 
             @Override
             public void onError(@NonNull Throwable e) {
+                if (getView()==null) {
+                    return;
+                }
                 getView().loadFailed(e);
             }
 

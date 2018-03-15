@@ -17,7 +17,6 @@ import javax.inject.Inject;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-@SuppressWarnings("unused")
 public class LocalSongMapper {
     @Inject
     public LocalSongMapper() {
@@ -43,7 +42,6 @@ public class LocalSongMapper {
         return songEntity;
     }
 
-    @SuppressWarnings("all")
     public List<SongEntity> transform(List<LocalSongBean> localSongBeen) {
         List<SongEntity> localSongEntities;
         if (localSongBeen != null && !localSongBeen.isEmpty()) {
@@ -82,6 +80,11 @@ public class LocalSongMapper {
         return songEntity;
     }
 
+    /**
+     * 转换为本地播放音乐（由于前期设计有所缺陷，所以播放本地音乐时都用此方法转换对象）
+     * @param localSongBeen 音乐数据
+     * @return 音乐
+     */
     public static List<SongEntity> transformLocal(List<SongEntity> localSongBeen) {
         List<SongEntity> localSongEntities;
         if (localSongBeen != null && !localSongBeen.isEmpty()) {

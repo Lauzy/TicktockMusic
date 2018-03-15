@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 
 /**
- * Desc : 本地专辑用例
+ * Desc : 本地专辑
  * Author : Lauzy
  * Date : 2017/8/9
  * Blog : http://www.jianshu.com/u/e76853f863a9

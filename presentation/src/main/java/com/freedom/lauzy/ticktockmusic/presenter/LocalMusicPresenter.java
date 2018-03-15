@@ -43,6 +43,9 @@ public class LocalMusicPresenter extends BaseRxPresenter<LocalMusicContract.View
         mGetLocalSongUseCase.execute(new DisposableObserver<List<LocalSongBean>>() {
             @Override
             public void onNext(@NonNull List<LocalSongBean> localSongBeen) {
+                if (getView() == null) {
+                    return;
+                }
                 if (localSongBeen != null && localSongBeen.size() != 0) {
                     List<SongEntity> songEntities = mLocalSongMapper.transform(localSongBeen);
                     getView().loadLocalMusic(songEntities);
@@ -54,6 +57,9 @@ public class LocalMusicPresenter extends BaseRxPresenter<LocalMusicContract.View
             @Override
             public void onError(@NonNull Throwable e) {
                 e.printStackTrace();
+                if (getView() == null) {
+                    return;
+                }
                 getView().loadFailed(e);
             }
 

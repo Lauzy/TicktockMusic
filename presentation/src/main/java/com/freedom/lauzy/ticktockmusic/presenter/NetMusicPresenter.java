@@ -1,11 +1,11 @@
 package com.freedom.lauzy.ticktockmusic.presenter;
 
-import com.freedom.lauzy.ticktockmusic.function.DConstants;
 import com.freedom.lauzy.interactor.GetSongListUseCase;
 import com.freedom.lauzy.model.NetSongBean;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
-import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.contract.NetMusicContract;
+import com.freedom.lauzy.ticktockmusic.function.DConstants;
+import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.lauzy.freedom.data.net.constants.NetConstants;
 
@@ -36,9 +36,8 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View>
     private int mType = 1;
     private int mPage = 20;
 
-
     @Inject
-    public NetMusicPresenter(GetSongListUseCase songListUseCase) {
+    NetMusicPresenter(GetSongListUseCase songListUseCase) {
         mSongListUseCase = songListUseCase;
     }
 
@@ -52,7 +51,12 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View>
     @Override
     public void loadCacheMusicList() {
         Observable<List<NetSongBean>> observable = mSongListUseCase.buildCacheObservable(mType);
-        observable.subscribe(songListBeen -> getView().loadCacheData(songListBeen));
+        observable.subscribe(songListBeen -> {
+            if (getView() == null) {
+                return;
+            }
+            getView().loadCacheData(songListBeen);
+        });
     }
 
     /**
@@ -92,6 +96,9 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View>
         @Override
         public void onNext(@NonNull List<NetSongBean> songListBeen) {
             super.onNext(songListBeen);
+            if (getView() == null) {
+                return;
+            }
             if (mStatus == DConstants.Status.INIT_STATUS) {
                 mPage = SIZE;
                 if (null != songListBeen && songListBeen.size() != 0) {
@@ -113,6 +120,9 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View>
         public void onError(@NonNull Throwable e) {
             super.onError(e);
             e.printStackTrace();
+            if (getView() == null) {
+                return;
+            }
             if (mStatus == DConstants.Status.INIT_STATUS) {
                 getView().loadFail(e);
             } else if (mStatus == DConstants.Status.LOAD_MORE_STATUS) {

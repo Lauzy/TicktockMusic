@@ -13,7 +13,7 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 
 /**
- * Desc : 播放队列UseCase
+ * Desc : 播放队列
  * Author : Lauzy
  * Date : 2017/9/8
  * Blog : http://www.jianshu.com/u/e76853f863a9

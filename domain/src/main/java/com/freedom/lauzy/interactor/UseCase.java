@@ -11,6 +11,7 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * Desc : 不同用例的抽象类，可指定业务逻辑
+ * (此类实际有缺陷，仅适用简单逻辑，复杂业务不便在此抽象类中定义各种方法，实际使用可根据具体业务定义具体的接口)
  * Author : Lauzy
  * Date : 2017/7/6
  * Blog : http://www.jianshu.com/u/e76853f863a9
