@@ -10,8 +10,11 @@ import android.media.session.MediaController;
 import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
 import android.support.v7.app.NotificationCompat;
+import android.support.v7.graphics.Palette;
 
 import com.freedom.lauzy.ticktockmusic.R;
+import com.freedom.lauzy.ticktockmusic.ui.activity.MainActivity;
+import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;
 
 /**
  * Desc : 通知
@@ -53,7 +56,8 @@ public class TickNotification {
         PendingIntent pauseIntent = createAction(musicService, MusicService.ACTION_PAUSE);
         PendingIntent previousIntent = createAction(musicService, MusicService.ACTION_LAST);
         PendingIntent nextIntent = createAction(musicService, MusicService.ACTION_NEXT);
-//        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, new Intent(context, PlayDetailActivity.class), 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(musicService,
+                0, new Intent(musicService, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
         boolean isPlaying = musicService.getPlaybackState().getState() == PlaybackState.STATE_PLAYING;
         MediaSession session = musicService.getMediaSession();
@@ -65,7 +69,9 @@ public class TickNotification {
                     .setSmallIcon(R.drawable.ic_notification)
                     .setShowWhen(false)
                     .setOngoing(isPlaying)
+                    .setContentIntent(contentIntent)
                     .setLargeIcon(description.getIconBitmap())
+                    .setContentTitle(description.getTitle())
                     .setContentText(description.getSubtitle())
                     .addAction(R.drawable.ic_skip_previous_notify, "", previousIntent)
                     .addAction(isPlaying ? R.drawable.ic_pause : R.drawable.ic_play, "",
@@ -74,11 +80,11 @@ public class TickNotification {
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setStyle(new NotificationCompat.MediaStyle()
                             .setShowActionsInCompactView(0, 1, 2));
-           /* if (description.getIconBitmap() != null) {
+            if (description.getIconBitmap() != null) {
                 Palette palette = Palette.from(description.getIconBitmap()).generate();
-                int color = palette.getMutedColor(ThemeHelper.getThemeColorResId(musicService.getApplicationContext()));
+                int color = palette.getDominantColor(ThemeHelper.getThemeColorResId(musicService.getApplicationContext()));
                 builder.setColor(color);
-            }*/
+            }
             return builder.build();
         }
         return null;

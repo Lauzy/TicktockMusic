@@ -34,7 +34,7 @@ import io.reactivex.disposables.Disposable;
  * Email : freedompaladin@gmail.com
  */
 public class RecentFragment extends BaseFragment<RecentPresenter> implements RecentContract.View,
-        RecentAdapter.RecentPlayListener {
+        RecentAdapter.OnRecentListener {
 
     @BindView(R.id.toolbar_common)
     TickToolbar mToolbarCommon;
@@ -100,7 +100,7 @@ public class RecentFragment extends BaseFragment<RecentPresenter> implements Rec
         mRvRecent.setLayoutManager(new LinearLayoutManager(mActivity));
         mAdapter = new RecentAdapter(R.layout.layout_song_item, mSongEntities);
         mRvRecent.setAdapter(mAdapter);
-        mAdapter.setRecentPlayListener(this);
+        mAdapter.setOnRecentListener(this);
     }
 
     /**
@@ -114,6 +114,11 @@ public class RecentFragment extends BaseFragment<RecentPresenter> implements Rec
         MusicManager.getInstance().playMusic(mSongEntities,
                 MusicUtil.getSongIds(mSongEntities), position);
         MusicManager.getInstance().setRecentUpdateListener(() -> mPresenter.loadRecentSongs());
+    }
+
+    @Override
+    public void deleteSong(SongEntity songEntity, int position) {
+        mPresenter.deleteRecentSong(songEntity.id, position);
     }
 
     @Override
@@ -137,6 +142,12 @@ public class RecentFragment extends BaseFragment<RecentPresenter> implements Rec
     @Override
     public void emptyView() {
         setEmptyView();
+    }
+
+    @Override
+    public void deleteSongSuccess(int position) {
+        mSongEntities.remove(position);
+        mAdapter.notifyItemRemoved(position);
     }
 
     @Override

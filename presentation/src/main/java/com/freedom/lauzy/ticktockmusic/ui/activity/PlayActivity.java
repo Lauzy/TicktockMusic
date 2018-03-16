@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -270,15 +269,20 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     }
 
     @Override
-    public void setPlayView(Bitmap resource) {
-        mIvPlay.setImageBitmap(resource);
-    }
-
-    @Override
     public void showLightViews() {
         isDarkStyle = true;
         setViewsColor(Color.WHITE);
-        mImgFavorite.setImageResource(R.drawable.ic_favorite_border_white);
+    }
+
+    @Override
+    public void showDarkViews() {
+        isDarkStyle = false;
+        setViewsColor(Color.BLACK);
+    }
+
+    @Override
+    public void setPlayView(Bitmap resource) {
+        mIvPlay.setImageBitmap(resource);
     }
 
     private void setViewsColor(int color) {
@@ -297,13 +301,6 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         if (navigationIcon != null) {
             navigationIcon.setTint(color);
         }
-    }
-
-    @Override
-    public void showDarkViews() {
-        isDarkStyle = false;
-        setViewsColor(Color.BLACK);
-        mImgFavorite.setImageResource(R.drawable.ic_favorite_border_black);
     }
 
     /**

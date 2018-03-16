@@ -57,6 +57,10 @@ public class FolderSongsAdapter extends BaseQuickAdapter<SongEntity, BaseViewHol
             PopupMenu popupMenu = new PopupMenu(mContext, v);
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
+                    case R.id.menu_item_play:
+                        MusicManager.getInstance().playMusic(LocalSongMapper.transformLocal(mData),
+                                MusicUtil.getSongIds(mData), helper.getAdapterPosition());
+                        break;
                     case R.id.menu_item_singer:
                         gotoSingerDetail(songEntity);
                         break;

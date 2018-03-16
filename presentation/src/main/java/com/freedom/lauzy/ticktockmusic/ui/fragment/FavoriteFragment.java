@@ -18,7 +18,6 @@ import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.FavoritePresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.FavoriteAdapter;
-import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 
 import java.util.ArrayList;
@@ -96,6 +95,8 @@ public class FavoriteFragment extends BaseFragment<FavoritePresenter> implements
         mRvFavorite.setLayoutManager(new LinearLayoutManager(mActivity));
         mAdapter = new FavoriteAdapter(R.layout.layout_song_item, mSongEntities);
         mRvFavorite.setAdapter(mAdapter);
+        mAdapter.setOnDeleteListener((songEntity, position) ->
+                mPresenter.deleteFavoriteSong(songEntity.id, position));
     }
 
     @Override
@@ -122,6 +123,12 @@ public class FavoriteFragment extends BaseFragment<FavoritePresenter> implements
         mSongEntities.clear();
         mAdapter.notifyDataSetChanged();
         mAdapter.setEmptyView(R.layout.layout_empty, mRvFavorite);
+    }
+
+    @Override
+    public void deleteFavoriteSong(int position) {
+        mSongEntities.remove(position);
+        mAdapter.notifyItemRemoved(position);
     }
 
     @Override

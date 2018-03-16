@@ -21,10 +21,10 @@ public class LocalUtil {
 
     public static String getCoverUri(Context context, long albumId) {
         String albumCoverUri = null;
-        String mUriAlbums = "content://media/external/audio/albums";
+        String uriAlbums = "content://media/external/audio/albums";
         String[] projection = new String[]{MediaStore.Audio.AlbumColumns.ALBUM_ART};
         Cursor cursor = context.getContentResolver().query(
-                Uri.parse(mUriAlbums + "/" + albumId),
+                Uri.parse(uriAlbums + "/" + albumId),
                 projection, null, null, null);
         if (cursor != null && cursor.getCount() > 0 && cursor.getColumnCount() > 0) {
             cursor.moveToNext();

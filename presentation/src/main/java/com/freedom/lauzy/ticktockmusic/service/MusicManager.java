@@ -93,6 +93,13 @@ public class MusicManager {
                 mPlayQueueListener.playSuccess();
             }
         }
+
+        @Override
+        public void currentPauseSong(SongEntity songEntity) {
+            if (mMusicManageListener != null) {
+                mMusicManageListener.currentPauseSong(songEntity);
+            }
+        }
     };
 
     // MediaController 的回调接口，可根据状态处理逻辑
@@ -313,6 +320,7 @@ public class MusicManager {
     }
 
     public void quit() {
+        mProgressHandler.removeCallbacks(mProgressRunnable);
         mMusicService.getMediaPlayer().reset();
         mMusicService.getMediaPlayer().release();
         mMusicService.stopSelf();
@@ -512,6 +520,8 @@ public class MusicManager {
         void onPlayerPause();
 
         void onPlayerResume();//继续播放
+
+        void currentPauseSong(SongEntity songEntity);
     }
 
     /**

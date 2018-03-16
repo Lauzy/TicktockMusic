@@ -17,6 +17,8 @@ import java.util.List;
  * Email : freedompaladin@gmail.com
  */
 public class LocalSongLoader {
+
+
     public static List<LocalSongBean> getLocalSongList(Context context) {
         Cursor cursor = getSongCursor(context, null, null);
         return queryLocalSongs(cursor);

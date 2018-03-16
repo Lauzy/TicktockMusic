@@ -220,6 +220,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
             case R.id.nav_about:
                 break;
             case R.id.nav_exit:
+                MusicManager.getInstance().quit();
+                finish();
                 break;
 
         }
@@ -395,6 +397,15 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
         if (!mPlayPauseView.isPlaying()) {
             mPlayPauseView.play();
         }
+    }
+
+    @Override
+    public void currentPauseSong(SongEntity songEntity) {
+        mPbCurSong.setMax(MusicManager.getInstance().getDuration());
+        mPbCurSong.setProgress((int) MusicManager.getInstance().getCurrentProgress());
+        mPlayPauseView.pause();
+        setMusicBarView(songEntity);
+        setNavHeadView(songEntity);
     }
 
     @Override

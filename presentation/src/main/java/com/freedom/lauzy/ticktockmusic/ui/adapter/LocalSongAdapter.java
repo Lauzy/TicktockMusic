@@ -57,6 +57,10 @@ public class LocalSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
             PopupMenu popupMenu = new PopupMenu(mContext, v);
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
+                    case R.id.menu_item_play:
+                        MusicManager.getInstance().playMusic(LocalSongMapper.transformLocal(mData),
+                                MusicUtil.getSongIds(mData), helper.getAdapterPosition());
+                        break;
                     case R.id.menu_item_singer:
                         gotoSingerDetail(songEntity);
                         break;
@@ -91,8 +95,6 @@ public class LocalSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
     }
 
     private void gotoSingerDetail(SongEntity songEntity) {
-//        String transName = mContext.getString(R.string.img_singer_transition) + songEntity.albumId;
-//        helper.getView(R.id.img_song_pic).setTransitionName(transName);
         Navigator.navigateToArtistDetail(mContext, null, null,
                 songEntity.artistName, songEntity.artistId, 0, 0);
     }

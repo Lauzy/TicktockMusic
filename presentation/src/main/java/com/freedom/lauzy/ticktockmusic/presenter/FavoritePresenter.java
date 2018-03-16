@@ -8,6 +8,7 @@ import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.model.mapper.FavoriteMapper;
+import com.lauzy.freedom.librarys.common.LogUtil;
 
 import java.util.List;
 
@@ -73,5 +74,14 @@ public class FavoritePresenter extends BaseRxPresenter<FavoriteContract.View>
                     }
                     getView().clearSongs();
                 });
+    }
+    @Override
+    public void deleteFavoriteSong(long songId, int position) {
+        mFavoriteSongUseCase.deleteFavoriteSong(songId).subscribe(aLong -> {
+            if (getView() == null) {
+                return;
+            }
+            getView().deleteFavoriteSong(position);
+        });
     }
 }

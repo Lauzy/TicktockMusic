@@ -97,6 +97,10 @@ public class MusicService extends Service {
                         if (mUpdateListener != null) {
                             mUpdateListener.currentPlay(mSongData.get(mCurrentPosition));
                         }
+                    } else {
+                        if (mUpdateListener != null) {
+                            mUpdateListener.currentPauseSong(mSongData.get(mCurrentPosition));
+                        }
                     }
                     break;
                 case ACTION_PLAY:
@@ -458,5 +462,6 @@ public class MusicService extends Service {
 
         void startPlay();
 
+        void currentPauseSong(SongEntity songEntity);
     }
 }

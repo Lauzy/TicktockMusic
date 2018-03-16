@@ -14,6 +14,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 
 /**
  * Desc : 最近播放Presenter
@@ -73,6 +74,21 @@ public class RecentPresenter extends BaseRxPresenter<RecentContract.View>
                         return;
                     }
                     getView().clearAllRecentSongs();
+                });
+    }
+
+    @Override
+    public void deleteRecentSong(long songId,int position) {
+        mRecentSongUseCase.deleteRecentSong(songId)
+                .compose(RxHelper.ioMain())
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        if (getView()==null) {
+                            return;
+                        }
+                        getView().deleteSongSuccess(position);
+                    }
                 });
     }
 }

@@ -17,6 +17,9 @@ public interface FavoriteContract {
         void loadFavoriteSongs();
 
         void clearFavoriteSongs();
+
+        void deleteFavoriteSong(long songId, int position);
+
     }
 
     interface View extends IBaseView {
@@ -25,5 +28,7 @@ public interface FavoriteContract {
         void emptyView();
 
         void clearSongs();
+
+        void deleteFavoriteSong(int position);
     }
 }

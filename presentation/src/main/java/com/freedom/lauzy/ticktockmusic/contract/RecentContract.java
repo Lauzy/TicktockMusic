@@ -17,13 +17,17 @@ public interface RecentContract {
         void loadRecentSongs();
 
         void clearRecentSongs();
+
+        void deleteRecentSong(long songId, int position);
     }
 
-    interface View extends IBaseView{
+    interface View extends IBaseView {
         void getRecentSongs(List<SongEntity> songEntities);
 
         void clearAllRecentSongs();
 
         void emptyView();
+
+        void deleteSongSuccess(int position);
     }
 }
