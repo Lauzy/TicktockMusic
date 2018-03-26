@@ -24,13 +24,17 @@ package com.lauzy.freedom.data.net.constants;
 @SuppressWarnings("unused")
 public class NetConstants {
     //http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=baidu.ting.billboard.billList&type=2&size=10&offset=0
-    public static final String BASE_API = "http://tingapi.ting.baidu.com/";
+    public static final String BASE_URL = "http://tingapi.ting.baidu.com/";
     public static final String URL_PARAM = "v1/restserver/ting";
 
     //    public static final String BASE_ARTIST_URL = "https://rest.bandsintown.com/";
     //    public static final String ARTIST_URL_PARAM = "artists";
     public static final String BASE_ARTIST_URL = "http://ws.audioscrobbler.com/";
     public static final String ARTIST_URL_PARAM = "2.0";
+
+    //http://gecimi.com/api/lyric/海阔天空/Beyond
+    public static final String BASE_LRC_URL = "http://gecimi.com/";
+    public static final String LRC_PARAM = "api/lyric";
 
     //    http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=488ab9cda4285fbb1bb7dfde5a1b010f&artist=%E5%BC%A0%E5%AD%A6%E5%8F%8B&format=json
     public static class Artist {
@@ -49,6 +53,7 @@ public class NetConstants {
         public static final String BASE_URL_HEAD = "BaseUrlHead";
         public static final String BAIDU_HEAD_CONTENT = "BaiduApi";
         public static final String BANDSINTOWN_HEAD_CONTENT = "LastFmApi";
+        public static final String GECIMI_HEAD_CONTENT = "GeCiMiApi";
         public static final String USER_AGENT = "User-Agent";
         public static final String USER_AGENT_CONTENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) " +
                 "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36";

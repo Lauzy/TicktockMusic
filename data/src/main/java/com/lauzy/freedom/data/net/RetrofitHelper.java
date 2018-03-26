@@ -28,7 +28,7 @@ public enum RetrofitHelper {
     RetrofitHelper() {
         mRetrofit = new Retrofit.Builder()
                 .client(initOkHttp())
-                .baseUrl(NetConstants.BASE_API)
+                .baseUrl(NetConstants.BASE_URL)
 //                .addConverterFactory(TickJsonConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

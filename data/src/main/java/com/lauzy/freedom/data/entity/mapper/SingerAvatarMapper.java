@@ -16,7 +16,7 @@ public class SingerAvatarMapper {
 
     public static ArtistAvatar transform(SingerAvatarEntity avatarEntity) {
         if (null == avatarEntity) {
-            throw new IllegalArgumentException("avatarEntity cannot be null");
+            return null;
         }
         ArtistAvatar artistAvatar = new ArtistAvatar();
         if (avatarEntity.artist != null && avatarEntity.artist.image != null

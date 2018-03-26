@@ -1,6 +1,7 @@
 package com.lauzy.freedom.data.net.api;
 
 import com.lauzy.freedom.data.entity.MusicEntity;
+import com.lauzy.freedom.data.entity.OnLineLrcEntity;
 import com.lauzy.freedom.data.entity.OnlineSongEntity;
 import com.lauzy.freedom.data.entity.SingerAvatarEntity;
 import com.lauzy.freedom.data.net.constants.NetConstants;
@@ -8,6 +9,7 @@ import com.lauzy.freedom.data.net.constants.NetConstants;
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -19,7 +21,7 @@ import retrofit2.http.Query;
  */
 public interface SongService {
 
-//    @Headers({"BaseUrlHead:BaiduApi",
+    //    @Headers({"BaseUrlHead:BaiduApi",
 //            "User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML,like Gecko) Chrome/59.0.3071.115 Safari/537.36"})
     @Headers("BaseUrlHead:BaiduApi")
     @GET(NetConstants.URL_PARAM)
@@ -29,7 +31,7 @@ public interface SongService {
                                          @Query(NetConstants.Param.SIZE) int size);
 
 
-//    @Headers({"BaseUrlHead:BaiduApi",
+    //    @Headers({"BaseUrlHead:BaiduApi",
 //            "User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML,like Gecko) Chrome/59.0.3071.115 Safari/537.36"})
     @Headers("BaseUrlHead:BaiduApi")
     @GET(NetConstants.URL_PARAM)
@@ -42,4 +44,9 @@ public interface SongService {
                                                    @Query(NetConstants.Artist.API_KEY) String apiKey,
                                                    @Query(NetConstants.Artist.ARTIST_NAME) String artistName,
                                                    @Query(NetConstants.Artist.FORMAT) String format);
+
+    @Headers("BaseUrlHead:GeCiMiApi")
+    @GET(NetConstants.LRC_PARAM + "/{songName}/{singer}")
+    Observable<OnLineLrcEntity> getOnLrcData(@Path("songName") String songName,
+                                             @Path("singer") String singer);
 }

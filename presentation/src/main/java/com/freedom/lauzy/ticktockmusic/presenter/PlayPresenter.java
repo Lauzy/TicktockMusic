@@ -5,8 +5,11 @@ import android.graphics.Bitmap;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.freedom.lauzy.interactor.FavoriteSongUseCase;
+import com.freedom.lauzy.interactor.LrcUseCase;
+import com.freedom.lauzy.model.LrcBean;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
 import com.freedom.lauzy.ticktockmusic.contract.PlayContract;
+import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.model.mapper.FavoriteMapper;
@@ -19,6 +22,7 @@ import com.lauzy.freedom.librarys.view.util.ColorUtil;
 import com.lauzy.freedom.librarys.view.util.PaletteColor;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -33,13 +37,16 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
         implements PlayContract.Presenter {
 
     private FavoriteSongUseCase mFavoriteSongUseCase;
+    private LrcUseCase mLrcUseCase;
     private FavoriteMapper mFavoriteMapper;
     private static final String TAG = "PlayPresenter";
     private HashMap<String, Integer> mColorMap = new HashMap<>();
 
     @Inject
-    PlayPresenter(FavoriteSongUseCase favoriteSongUseCase, FavoriteMapper favoriteMapper) {
+    PlayPresenter(FavoriteSongUseCase favoriteSongUseCase, LrcUseCase lrcUseCase,
+                  FavoriteMapper favoriteMapper) {
         mFavoriteSongUseCase = favoriteSongUseCase;
+        mLrcUseCase = lrcUseCase;
         mFavoriteMapper = favoriteMapper;
     }
 
@@ -120,5 +127,29 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                     }
                     getView().isFavoriteSong(aBoolean);
                 });
+    }
+
+    @Override
+    public void loadLrc(SongEntity entity) {
+        LrcUseCase.Param param = new LrcUseCase.Param(entity.title, entity.artistName);
+        mLrcUseCase.execute(new DefaultDisposableObserver<List<LrcBean>>() {
+
+            @Override
+            protected void onStart() {
+                super.onStart();
+
+            }
+
+            @Override
+            public void onNext(List<LrcBean> lrcBeans) {
+                super.onNext(lrcBeans);
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+            }
+        }, param);
     }
 }

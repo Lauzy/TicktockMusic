@@ -30,12 +30,15 @@ public class BaseUrlInterceptor implements Interceptor {
             Request.Builder builder;
 //            builder.removeHeader(NetConstants.Header.BASE_URL_HEAD);
             if (NetConstants.Header.BAIDU_HEAD_CONTENT.equals(urlHead)) {
-                newBaseUrl = HttpUrl.parse(NetConstants.BASE_API);
+                newBaseUrl = HttpUrl.parse(NetConstants.BASE_URL);
                 builder = originalRequest
                         .newBuilder()
                         .addHeader(NetConstants.Header.USER_AGENT, NetConstants.Header.USER_AGENT_CONTENT);
             } else if (NetConstants.Header.BANDSINTOWN_HEAD_CONTENT.equals(urlHead)) {
                 newBaseUrl = HttpUrl.parse(NetConstants.BASE_ARTIST_URL);
+                builder = originalRequest.newBuilder();
+            } else if (NetConstants.Header.GECIMI_HEAD_CONTENT.equals(urlHead)) {
+                newBaseUrl = HttpUrl.parse(NetConstants.BASE_LRC_URL);
                 builder = originalRequest.newBuilder();
             } else {
                 newBaseUrl = oldHttpUrl;

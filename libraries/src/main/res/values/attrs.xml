@@ -31,4 +31,16 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="LrcView">
+        <attr name="lrcTextSize" format="dimension"/>
+        <attr name="lrcLineSpaceSize" format="dimension"/>
+        <attr name="lrcNormalTextColor" format="reference|color"/>
+        <attr name="lrcCurrentTextColor" format="reference|color"/>
+        <attr name="lrcHorizontalPadding" format="dimension"/>
+        <attr name="lrcVerticalPadding" format="dimension"/>
+        <attr name="lrcTouchDelay" format="integer"/>
+        <attr name="noLrcTextSize" format="dimension"/>
+        <attr name="noLrcTextColor" format="reference|color"/>
+    </declare-styleable>
+
 </resources>
