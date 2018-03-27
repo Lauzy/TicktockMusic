@@ -31,7 +31,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 
 /**
@@ -148,9 +147,9 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                         return Observable.just(file);
                     }
                     return mLrcUseCase.buildObservable(param)
-                            .flatMap(body -> {
-                                boolean saveFile = FileManager.getInstance().saveFile(body.byteStream(), fileName);
-                                return saveFile ? Observable.just(file) : Observable.empty();
+                            .flatMap(responseBody -> {
+                                boolean saveFile = FileManager.getInstance().saveFile(responseBody.byteStream(), fileName);
+                                return saveFile ? Observable.just(file) : null;
                             });
                 })
                 .map((Function<File, List<Lrc>>) file -> {

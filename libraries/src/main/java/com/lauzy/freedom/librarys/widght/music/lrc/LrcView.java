@@ -109,11 +109,11 @@ public class LrcView extends View {
     }
 
     private int getLrcWidth() {
-        return (int) (getMeasuredWidth() - mHorizontalPadding * 2);
+        return (int) (getWidth() - mHorizontalPadding * 2);
     }
 
     private int getLrcHeight() {
-        return (int) (getMeasuredHeight() - mVerticalPadding * 2);
+        return (int) (getHeight() - mVerticalPadding * 2);
     }
 
     private boolean isLrcEmpty() {
@@ -125,7 +125,7 @@ public class LrcView extends View {
     }
 
     public void setLrcData(List<Lrc> lrcData) {
-        resetView();
+        resetView(DEFAULT_CONTENT);
         mLrcData = lrcData;
         invalidate();
     }
@@ -137,8 +137,11 @@ public class LrcView extends View {
             drawEmptyText(canvas);
             return;
         }
+        mTextPaint.setTextSize(mLrcTextSize);
+        mTextPaint.setTextAlign(Paint.Align.CENTER);
         float y = getLrcHeight() / 2;
         float x = getLrcWidth() * 0.5f + mHorizontalPadding;
+        canvas.translate(0, -mOffset);
         for (int i = 0; i < getLrcCount(); i++) {
             if (i > 0) {
                 y += (getTextHeight(i - 1) + getTextHeight(i)) / 2 + mLrcLineSpaceHeight;
@@ -152,9 +155,10 @@ public class LrcView extends View {
             StaticLayout staticLayout = new StaticLayout(mLrcData.get(i).getText(), mTextPaint,
                     getLrcWidth(), Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false);
             canvas.save();
-            canvas.translate(x, y + mVerticalPadding - staticLayout.getHeight() / 2 - mOffset);
+            canvas.translate(x, y + mVerticalPadding - staticLayout.getHeight() / 2);
             staticLayout.draw(canvas);
             canvas.restore();
+//            canvas.drawText(mLrcData.get(i).getText(), x, y, mTextPaint);
         }
     }
 
@@ -267,8 +271,8 @@ public class LrcView extends View {
         mVelocityTracker.addMovement(event);
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                removeCallbacks(mScrollRunnable);
                 performClick();
+                removeCallbacks(mScrollRunnable);
                 if (!mOverScroller.isFinished()) {
                     mOverScroller.abortAnimation();
                 }
@@ -289,8 +293,8 @@ public class LrcView extends View {
                     if (mOffset > maxHeight) {
                         mOffset = Math.min(mOffset, maxHeight + getTextHeight(0) + mLrcLineSpaceHeight);
                     }
-                    invalidate();
                     mLastMotionY = event.getY();
+                    postInvalidate();
                 }
                 break;
             case MotionEvent.ACTION_CANCEL:
@@ -343,13 +347,14 @@ public class LrcView extends View {
         }
     }
 
-    private void resetView() {
+    public void resetView(String defaultContent) {
         if (mLrcData != null) {
             mLrcData.clear();
         }
         mCurrentLine = 0;
         mOffset = 0;
         isUserScroll = false;
+        mDefaultContent = defaultContent;
         removeCallbacks(mScrollRunnable);
         invalidate();
     }

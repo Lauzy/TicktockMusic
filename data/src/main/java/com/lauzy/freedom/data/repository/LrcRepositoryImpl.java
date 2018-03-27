@@ -43,11 +43,11 @@ public class LrcRepositoryImpl implements LrcRepository {
                     @Override
                     public ObservableSource<ResponseBody> apply(List<LrcBean> lrcBeans) throws Exception {
                         if (lrcBeans == null || lrcBeans.isEmpty()) {
-                            return Observable.empty();
+                            return null;
                         }
                         LrcBean lrcBean = lrcBeans.get(0);
                         if (lrcBean == null) {
-                            return Observable.empty();
+                            return null;
                         }
                         return RetrofitHelper.INSTANCE.createApi(SongService.class)
                                 .downloadLrcFile(lrcBean.lrc);

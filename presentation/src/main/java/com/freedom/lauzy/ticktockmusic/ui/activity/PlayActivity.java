@@ -35,6 +35,7 @@ import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayQueueBottomSheetFragment;
 import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;
 import com.lauzy.freedom.data.local.LocalUtil;
+import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.view.util.ScrimUtil;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 import com.lauzy.freedom.librarys.widght.music.PlayPauseView;
@@ -129,6 +130,26 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         showBackIcon();
         setModeView();
         mToolbarCommon.setBackgroundColor(Color.TRANSPARENT);
+        mLvSimple.setVisibility(View.VISIBLE);
+        mLvFull.setVisibility(View.GONE);
+        mLvSimple.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFlPlay.setVisibility(View.GONE);
+                mLvFull.setVisibility(View.VISIBLE);
+                mLvSimple.setVisibility(View.GONE);
+                mImageViewBg.setVisibility(View.VISIBLE);
+            }
+        });
+//        mLvFull.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mFlPlay.setVisibility(View.VISIBLE);
+//                mLvFull.setVisibility(View.GONE);
+//                mImageViewBg.setVisibility(View.GONE);
+//                mLvSimple.setVisibility(View.VISIBLE);
+//            }
+//        });
     }
 
     /**
@@ -208,6 +229,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         mSeekPlay.setMax(duration);
         mSeekPlay.setProgress(progress);
         mLvSimple.updateTime(progress);
+        mLvFull.updateTime(progress);
     }
 
     @Override
@@ -295,22 +317,30 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     @Override
     public void startDownloadLrc() {
-        mLvSimple.setDefaultContent("start loading");
+        mLvSimple.resetView("加载中");
+        mLvFull.resetView("加载中");
+        mLvSimple.setDefaultContent("加载中");
+        mLvFull.setDefaultContent("加载中");
     }
 
     @Override
     public void downloadLrcSuccess(List<Lrc> lrcs) {
         if (lrcs == null || lrcs.isEmpty()) {
-            mLvSimple.setDefaultContent("no lrc for now");
+            mLvSimple.setDefaultContent("暂无歌词");
             return;
         }
         mLvSimple.setCurrentPlayLineColor(ThemeHelper.getThemeColorResId(this));
         mLvSimple.setLrcData(lrcs);
+        mLvSimple.updateTime(MusicManager.getInstance().getCurrentProgress());
+
+        mLvFull.setLrcData(lrcs);
+        mLvFull.updateTime(MusicManager.getInstance().getCurrentProgress());
     }
 
     @Override
     public void downloadFailed(Throwable e) {
-        mLvSimple.setDefaultContent("loading failed");
+        mLvSimple.setDefaultContent("暂无歌词");
+        mLvFull.setDefaultContent("暂无歌词");
     }
 
     @Override

@@ -16,6 +16,8 @@
 
         <com.lauzy.freedom.librarys.widght.music.lrc.LrcView
             android:id="@+id/lv_full"
+            android:layout_marginTop="@dimen/dp_72"
+            android:layout_marginBottom="@dimen/dp_30"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
