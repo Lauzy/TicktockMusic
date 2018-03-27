@@ -7,6 +7,7 @@ import com.freedom.lauzy.executor.ThreadExecutor;
 import com.freedom.lauzy.repository.FavoriteRepository;
 import com.freedom.lauzy.repository.FolderSongsRepository;
 import com.freedom.lauzy.repository.LocalSongRepository;
+import com.freedom.lauzy.repository.LrcRepository;
 import com.freedom.lauzy.repository.MusicFolderRepository;
 import com.freedom.lauzy.repository.QueueRepository;
 import com.freedom.lauzy.repository.RecentRepository;
@@ -50,4 +51,6 @@ public interface ApplicationComponent {
     MusicFolderRepository musicFolderRepository();
 
     FolderSongsRepository folderSongsRepository();
+
+    LrcRepository lrcRepository();
 }

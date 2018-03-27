@@ -3,8 +3,13 @@ package com.freedom.lauzy.ticktockmusic.utils;
 import android.os.Environment;
 
 import com.freedom.lauzy.ticktockmusic.TicktockApplication;
+import com.lauzy.freedom.librarys.common.LogUtil;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Desc : 文件管理
@@ -15,6 +20,7 @@ import java.io.File;
  */
 public class FileManager {
 
+    private static final String TAG = "FileManager";
     //临时文件目录名称
     private static final String TEMP_DIR_NAME = "temp";
     //缓存文件目录名称
@@ -95,4 +101,40 @@ public class FileManager {
         return file;
     }
 
+    public boolean saveFile(InputStream inputStream, String fileName) {
+        OutputStream os = null;
+        try {
+            File file = new File(getLrcDir(), fileName.trim());
+            if (!file.exists()) {
+                boolean createNewFile = file.createNewFile();
+                if (!createNewFile) {
+                    LogUtil.d(TAG, "createNewFile failed");
+                    return false;
+                }
+            }
+            os = new FileOutputStream(file);
+            byte[] bs = new byte[1024];
+            int len;
+
+            while ((len = inputStream.read(bs)) != -1) {
+                os.write(bs, 0, len);
+            }
+            os.flush();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (os != null) {
+                    os.close();
+                }
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return false;
+    }
 }

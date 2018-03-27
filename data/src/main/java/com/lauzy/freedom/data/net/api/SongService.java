@@ -7,10 +7,13 @@ import com.lauzy.freedom.data.entity.SingerAvatarEntity;
 import com.lauzy.freedom.data.net.constants.NetConstants;
 
 import io.reactivex.Observable;
+import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Streaming;
+import retrofit2.http.Url;
 
 /**
  * Desc : 网络音乐Api
@@ -49,4 +52,8 @@ public interface SongService {
     @GET(NetConstants.LRC_PARAM + "/{songName}/{singer}")
     Observable<OnLineLrcEntity> getOnLrcData(@Path("songName") String songName,
                                              @Path("singer") String singer);
+
+    @Streaming
+    @GET
+    Observable<ResponseBody> downloadLrcFile(@Url String lrcUrl);
 }

@@ -67,6 +67,8 @@ public class LrcParser {
             sortLrcs(lrcs);
             return lrcs;
         } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
             try {
                 if (isr != null) {
                     isr.close();
@@ -77,7 +79,6 @@ public class LrcParser {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-            e.printStackTrace();
         }
         return lrcs;
     }

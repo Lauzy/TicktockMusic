@@ -1,10 +1,7 @@
 package com.freedom.lauzy.repository;
 
-import com.freedom.lauzy.model.LrcBean;
-
-import java.util.List;
-
 import io.reactivex.Observable;
+import okhttp3.ResponseBody;
 
 /**
  * Desc : 歌词
@@ -21,5 +18,5 @@ public interface LrcRepository {
      * @param singer   歌手
      * @return ob
      */
-    Observable<List<LrcBean>> getLrcData(String songName, String singer);
+    Observable<ResponseBody> getLrcData(String songName, String singer);
 }

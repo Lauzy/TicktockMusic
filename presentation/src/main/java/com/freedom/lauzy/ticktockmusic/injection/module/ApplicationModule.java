@@ -7,6 +7,7 @@ import com.freedom.lauzy.executor.ThreadExecutor;
 import com.freedom.lauzy.repository.FavoriteRepository;
 import com.freedom.lauzy.repository.FolderSongsRepository;
 import com.freedom.lauzy.repository.LocalSongRepository;
+import com.freedom.lauzy.repository.LrcRepository;
 import com.freedom.lauzy.repository.MusicFolderRepository;
 import com.freedom.lauzy.repository.QueueRepository;
 import com.freedom.lauzy.repository.RecentRepository;
@@ -18,6 +19,7 @@ import com.lauzy.freedom.data.executor.JobExecutor;
 import com.lauzy.freedom.data.repository.FavoriteRepositoryImpl;
 import com.lauzy.freedom.data.repository.FolderSongsRepositoryImpl;
 import com.lauzy.freedom.data.repository.LocalSongRepositoryImpl;
+import com.lauzy.freedom.data.repository.LrcRepositoryImpl;
 import com.lauzy.freedom.data.repository.MusicFolderRepositoryImpl;
 import com.lauzy.freedom.data.repository.QueueRepositoryImpl;
 import com.lauzy.freedom.data.repository.RecentRepositoryImpl;
@@ -103,5 +105,11 @@ public class ApplicationModule {
     @Singleton
     FolderSongsRepository provideFolderSongsRepository() {
         return new FolderSongsRepositoryImpl(mApplication);
+    }
+
+    @Provides
+    @Singleton
+    LrcRepository provideLrcRepository() {
+        return new LrcRepositoryImpl();
     }
 }

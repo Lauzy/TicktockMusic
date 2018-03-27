@@ -11,7 +11,9 @@ import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.functions.Function;
+import okhttp3.ResponseBody;
 
 /**
  * Desc : 歌词
@@ -22,7 +24,7 @@ import io.reactivex.functions.Function;
  */
 public class LrcRepositoryImpl implements LrcRepository {
     @Override
-    public Observable<List<LrcBean>> getLrcData(String songName, String singer) {
+    public Observable<ResponseBody> getLrcData(String songName, String singer) {
         return RetrofitHelper.INSTANCE.createApi(SongService.class)
                 .getOnLrcData(songName, singer)
                 .map(new Function<OnLineLrcEntity, List<LrcBean>>() {
@@ -36,6 +38,19 @@ public class LrcRepositoryImpl implements LrcRepository {
                             return Collections.emptyList();
                         }
                         return LrcMapper.transform(result);
+                    }
+                }).flatMap(new Function<List<LrcBean>, ObservableSource<ResponseBody>>() {
+                    @Override
+                    public ObservableSource<ResponseBody> apply(List<LrcBean> lrcBeans) throws Exception {
+                        if (lrcBeans == null || lrcBeans.isEmpty()) {
+                            return Observable.empty();
+                        }
+                        LrcBean lrcBean = lrcBeans.get(0);
+                        if (lrcBean == null) {
+                            return Observable.empty();
+                        }
+                        return RetrofitHelper.INSTANCE.createApi(SongService.class)
+                                .downloadLrcFile(lrcBean.lrc);
                     }
                 });
     }

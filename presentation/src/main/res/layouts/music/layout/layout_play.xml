@@ -9,15 +9,26 @@
     android:orientation="vertical"
     tools:context="com.freedom.lauzy.ticktockmusic.ui.activity.PlayActivity">
 
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <include layout="@layout/layout_toolbar"/>
+        <com.lauzy.freedom.librarys.widght.music.lrc.LrcView
+            android:id="@+id/lv_full"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
-        <include layout="@layout/play_view"/>
+        <FrameLayout
+            android:id="@+id/fl_play_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include layout="@layout/layout_toolbar"/>
+
+            <include layout="@layout/play_view"/>
+
+        </FrameLayout>
 
     </FrameLayout>
 

@@ -2,14 +2,12 @@ package com.freedom.lauzy.interactor;
 
 import com.freedom.lauzy.executor.PostExecutionThread;
 import com.freedom.lauzy.executor.ThreadExecutor;
-import com.freedom.lauzy.model.LrcBean;
 import com.freedom.lauzy.repository.LrcRepository;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import okhttp3.ResponseBody;
 
 /**
  * Desc : 歌词
@@ -18,7 +16,7 @@ import io.reactivex.Observable;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class LrcUseCase extends UseCase<List<LrcBean>, LrcUseCase.Param> {
+public class LrcUseCase extends UseCase<ResponseBody, LrcUseCase.Param> {
 
     private final LrcRepository mLrcRepository;
 
@@ -30,7 +28,7 @@ public class LrcUseCase extends UseCase<List<LrcBean>, LrcUseCase.Param> {
     }
 
     @Override
-    Observable<List<LrcBean>> buildUseCaseObservable(Param param) {
+    Observable<ResponseBody> buildUseCaseObservable(Param param) {
         return mLrcRepository.getLrcData(param.getSongName(), param.getSinger());
     }
 

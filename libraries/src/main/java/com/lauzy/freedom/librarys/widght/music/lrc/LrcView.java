@@ -111,15 +111,16 @@ public class LrcView extends View {
 
     private void measureLineHeight() {
         Rect lineBound = new Rect();
-        mTextPaint.getTextBounds(mDefaultContent, 0, mDefaultContent.length(), lineBound);
-        mSingleTextHeight = lineBound.height();
+        mTextPaint.measureText(mDefaultContent);
+//        mTextPaint.getTextBounds(mDefaultContent, 0, mDefaultContent.length(), lineBound);
+//        mSingleTextHeight = lineBound.height();
+        mSingleTextHeight = (int) (mTextPaint.descent() - mTextPaint.ascent());
         mLineHeight = mSingleTextHeight + mLrcLineSpaceHeight;
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        setupLrcLineHeight();
     }
 
     private void setupLrcLineHeight() {
@@ -130,10 +131,11 @@ public class LrcView extends View {
             StaticLayout staticLayout = new StaticLayout(lrcDatum.getText(), mTextPaint,
                     getLrcWidth(), Layout.Alignment.ALIGN_NORMAL, 1f,
                     0f, false);
-            if (staticLayout.getLineCount() > 1) {
-                mMultiLineTextExtraHeight = mMultiLineTextExtraHeight + (staticLayout.getLineCount() - 1) * mSingleTextHeight;
-            }
-            mMultiLineTextExtraHeights.add(mMultiLineTextExtraHeight);
+//            if (staticLayout.getLineCount() > 1) {
+//                mMultiLineTextExtraHeight = mMultiLineTextExtraHeight + (staticLayout.getLineCount() - 1) * mSingleTextHeight;
+//            }
+//            mMultiLineTextExtraHeights.add(mMultiLineTextExtraHeight);
+            mMultiLineTextExtraHeights.add(staticLayout.getHeight());
         }
     }
 
@@ -156,6 +158,7 @@ public class LrcView extends View {
     public void setLrcData(List<Lrc> lrcData) {
         resetView();
         mLrcData = lrcData;
+        setupLrcLineHeight();
         invalidate();
     }
 
@@ -166,13 +169,33 @@ public class LrcView extends View {
             drawEmptyText(canvas);
             return;
         }
+        float y = 0;
+        float x = getLrcWidth() * 0.5f + mHorizontalPadding;
         for (int i = 0; i < getLrcCount(); i++) {
+            if (i > 0) {
+                y += (mMultiLineTextExtraHeights.get(i - 1) + mMultiLineTextExtraHeights.get(i)) / 2 + mLrcLineSpaceHeight;
+            }
+            if (mCurrentLine == i) {
+                mTextPaint.setColor(mCurrentPlayLineColor);
+            } else {
+                mTextPaint.setColor(mNormalColor);
+            }
+            @SuppressLint("DrawAllocation")
+            StaticLayout staticLayout = new StaticLayout(mLrcData.get(i).getText(), mTextPaint,
+                    getLrcWidth(), Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false);
+            canvas.save();
+            canvas.translate(x, y + mVerticalPadding - staticLayout.getHeight() / 2 - mOffset);
+            staticLayout.draw(canvas);
+            canvas.restore();
+        }
+
+      /*  for (int i = 0; i < getLrcCount(); i++) {
             float x = getLrcWidth() * 0.5f + mHorizontalPadding;
             float y;
             if (i > 0) {
-                y = getLrcHeight() * 0.5f + (i - 0.5f) * mLineHeight - mOffset + mMultiLineTextExtraHeights.get(i - 1);
+                y = getLrcHeight() * 0.5f + i * mLineHeight - mOffset + mMultiLineTextExtraHeights.get(i - 1);
             } else {
-                y = getLrcHeight() * 0.5f + (i - 0.5f) * mLineHeight - mOffset;
+                y = getLrcHeight() * 0.5f + i * mLineHeight - mOffset;
             }
             if (y < 0) {
                 continue;
@@ -187,13 +210,13 @@ public class LrcView extends View {
             }
             @SuppressLint("DrawAllocation")
             StaticLayout staticLayout = new StaticLayout(mLrcData.get(i).getText(), mTextPaint,
-                    getLrcWidth(), Layout.Alignment.ALIGN_NORMAL, 1f, 0f, true);
+                    getLrcWidth(), Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false);
             canvas.save();
-            canvas.translate(x, y + mVerticalPadding);
+            canvas.translate(x, y + mVerticalPadding - staticLayout.getHeight() / 2);
             staticLayout.draw(canvas);
             canvas.restore();
 //            canvas.drawText(mLrcData.get(i).getText(), x, y, mTextPaint);
-        }
+        }*/
     }
 
     //中间空文字

@@ -6,13 +6,13 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.freedom.lauzy.interactor.FavoriteSongUseCase;
 import com.freedom.lauzy.interactor.LrcUseCase;
-import com.freedom.lauzy.model.LrcBean;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
 import com.freedom.lauzy.ticktockmusic.contract.PlayContract;
 import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.model.mapper.FavoriteMapper;
+import com.freedom.lauzy.ticktockmusic.utils.FileManager;
 import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;
 import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
@@ -20,11 +20,19 @@ import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.view.blur.ImageBlur;
 import com.lauzy.freedom.librarys.view.util.ColorUtil;
 import com.lauzy.freedom.librarys.view.util.PaletteColor;
+import com.lauzy.freedom.librarys.widght.music.lrc.Lrc;
+import com.lauzy.freedom.librarys.widght.music.lrc.LrcParser;
 
+import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 
 /**
  * Desc : 播放Presenter
@@ -131,25 +139,54 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
 
     @Override
     public void loadLrc(SongEntity entity) {
-        LrcUseCase.Param param = new LrcUseCase.Param(entity.title, entity.artistName);
-        mLrcUseCase.execute(new DefaultDisposableObserver<List<LrcBean>>() {
+        LrcUseCase.Param param = new LrcUseCase.Param(entity.title, "");
+        String fileName = entity.title + "-" + entity.artistName + ".lrc";
+        File lrcFile = new File(FileManager.getInstance().getLrcDir().getAbsolutePath(), fileName);
+        Observable.just(lrcFile)
+                .flatMap(file -> {
+                    if (file.exists() && file.canRead()) {
+                        return Observable.just(file);
+                    }
+                    return mLrcUseCase.buildObservable(param)
+                            .flatMap(body -> {
+                                boolean saveFile = FileManager.getInstance().saveFile(body.byteStream(), fileName);
+                                return saveFile ? Observable.just(file) : Observable.empty();
+                            });
+                })
+                .map((Function<File, List<Lrc>>) file -> {
+                    if (file == null || !file.exists()) {
+                        return Collections.emptyList();
+                    }
+                    return LrcParser.parseLrcFromFile(file);
+                })
+                .compose(RxHelper.ioMain())
+                .subscribeWith(new DefaultDisposableObserver<List<Lrc>>() {
+                    @Override
+                    protected void onStart() {
+                        super.onStart();
+                        if (getView() == null) {
+                            return;
+                        }
+                        getView().startDownloadLrc();
+                    }
 
-            @Override
-            protected void onStart() {
-                super.onStart();
+                    @Override
+                    public void onNext(List<Lrc> lrcs) {
+                        super.onNext(lrcs);
+                        if (getView() == null) {
+                            return;
+                        }
+                        getView().downloadLrcSuccess(lrcs);
+                    }
 
-            }
-
-            @Override
-            public void onNext(List<LrcBean> lrcBeans) {
-                super.onNext(lrcBeans);
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-            }
-        }, param);
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        if (getView() == null) {
+                            return;
+                        }
+                        getView().downloadFailed(e);
+                    }
+                });
     }
 }

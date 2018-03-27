@@ -16,6 +16,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -31,10 +32,15 @@ import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.service.MusicService;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayQueueBottomSheetFragment;
 import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
+import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;
 import com.lauzy.freedom.data.local.LocalUtil;
 import com.lauzy.freedom.librarys.view.util.ScrimUtil;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 import com.lauzy.freedom.librarys.widght.music.PlayPauseView;
+import com.lauzy.freedom.librarys.widght.music.lrc.Lrc;
+import com.lauzy.freedom.librarys.widght.music.lrc.LrcView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -81,6 +87,10 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     ImageView mIvPlay;
     @BindView(R.id.fl_play)
     FrameLayout mFlPlay;
+    @BindView(R.id.lv_simple)
+    LrcView mLvSimple;
+    @BindView(R.id.lv_full)
+    LrcView mLvFull;
     private boolean isDarkStyle = true;
     private boolean isFavorite;
 
@@ -150,6 +160,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         mPlayPause.setOnPlayPauseListener(this);
 
         currentPlay(MusicManager.getInstance().getCurrentSong());
+        mPresenter.loadLrc(MusicManager.getInstance().getCurrentSong());
     }
 
     @Override
@@ -195,6 +206,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     private void setCurProgress(int progress, int duration) {
         mSeekPlay.setMax(duration);
         mSeekPlay.setProgress(progress);
+        mLvSimple.updateTime(progress);
     }
 
     @Override
@@ -281,6 +293,26 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     }
 
     @Override
+    public void startDownloadLrc() {
+        mLvSimple.setDefaultContent("start loading");
+    }
+
+    @Override
+    public void downloadLrcSuccess(List<Lrc> lrcs) {
+        if (lrcs == null || lrcs.isEmpty()) {
+            mLvSimple.setDefaultContent("no lrc for now");
+            return;
+        }
+        mLvSimple.setCurrentPlayLineColor(ThemeHelper.getThemeColorResId(this));
+        mLvSimple.setLrcData(lrcs);
+    }
+
+    @Override
+    public void downloadFailed(Throwable e) {
+        mLvSimple.setDefaultContent("loading failed");
+    }
+
+    @Override
     public void setPlayView(Bitmap resource) {
         mIvPlay.setImageBitmap(resource);
     }
@@ -337,20 +369,22 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     private void playNext() {
         MusicManager.getInstance().skipToNext();
-        refreshFavoriteIcon();
+        refreshSongData();
     }
 
     private void playPrevious() {
         MusicManager.getInstance().skipToPrevious();
-        refreshFavoriteIcon();
+        refreshSongData();
     }
 
     /**
      * 切换歌曲时刷新喜欢图标
      */
-    private void refreshFavoriteIcon() {
-        new Handler().postDelayed(() -> mPresenter.isFavoriteSong(MusicManager.getInstance()
-                .getCurrentSong().id), 50);
+    private void refreshSongData() {
+        new Handler().postDelayed(() -> {
+            mPresenter.isFavoriteSong(MusicManager.getInstance().getCurrentSong().id);
+            mPresenter.loadLrc(MusicManager.getInstance().getCurrentSong());
+        }, 50);
     }
 
     /**

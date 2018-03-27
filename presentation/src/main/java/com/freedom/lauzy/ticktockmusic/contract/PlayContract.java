@@ -5,6 +5,9 @@ import android.graphics.Bitmap;
 
 import com.freedom.lauzy.ticktockmusic.base.IBaseView;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
+import com.lauzy.freedom.librarys.widght.music.lrc.Lrc;
+
+import java.util.List;
 
 /**
  * Desc :
@@ -32,6 +35,12 @@ public interface PlayContract {
         void showLightViews();
 
         void showDarkViews();
+
+        void startDownloadLrc();
+
+        void downloadLrcSuccess(List<Lrc> lrcs);
+
+        void downloadFailed(Throwable e);
     }
 
     interface Presenter {
