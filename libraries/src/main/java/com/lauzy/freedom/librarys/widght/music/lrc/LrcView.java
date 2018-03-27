@@ -24,7 +24,6 @@ import android.widget.OverScroller;
 
 import com.lauzy.freedom.librarys.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,7 +40,6 @@ public class LrcView extends View {
     private TextPaint mTextPaint;
     private Rect mBounds;
     private String mDefaultContent;
-    private float mLineHeight;
     private int mCurrentLine;
     private float mOffset;
     private float mLastMotionY;
@@ -51,9 +49,6 @@ public class LrcView extends View {
     private int mMaximumFlingVelocity;
     private int mMinimumFlingVelocity;
     private boolean isUserScroll;
-    private List<Integer> mMultiLineTextExtraHeights = new ArrayList<>();
-    private int mSingleTextHeight;
-    private int mMultiLineTextExtraHeight;
     private float mLrcTextSize;
     private float mLrcLineSpaceHeight;
     private int mTouchDelay;
@@ -92,7 +87,6 @@ public class LrcView extends View {
         typedArray.recycle();
 
         setupConfigs(context);
-        measureLineHeight();
     }
 
     private void setupConfigs(Context context) {
@@ -109,34 +103,9 @@ public class LrcView extends View {
         mDefaultContent = DEFAULT_CONTENT;
     }
 
-    private void measureLineHeight() {
-        Rect lineBound = new Rect();
-        mTextPaint.measureText(mDefaultContent);
-//        mTextPaint.getTextBounds(mDefaultContent, 0, mDefaultContent.length(), lineBound);
-//        mSingleTextHeight = lineBound.height();
-        mSingleTextHeight = (int) (mTextPaint.descent() - mTextPaint.ascent());
-        mLineHeight = mSingleTextHeight + mLrcLineSpaceHeight;
-    }
-
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-    }
-
-    private void setupLrcLineHeight() {
-        if (mLrcData == null || mLrcData.size() == 0) {
-            return;
-        }
-        for (Lrc lrcDatum : mLrcData) {
-            StaticLayout staticLayout = new StaticLayout(lrcDatum.getText(), mTextPaint,
-                    getLrcWidth(), Layout.Alignment.ALIGN_NORMAL, 1f,
-                    0f, false);
-//            if (staticLayout.getLineCount() > 1) {
-//                mMultiLineTextExtraHeight = mMultiLineTextExtraHeight + (staticLayout.getLineCount() - 1) * mSingleTextHeight;
-//            }
-//            mMultiLineTextExtraHeights.add(mMultiLineTextExtraHeight);
-            mMultiLineTextExtraHeights.add(staticLayout.getHeight());
-        }
     }
 
     private int getLrcWidth() {
@@ -158,7 +127,6 @@ public class LrcView extends View {
     public void setLrcData(List<Lrc> lrcData) {
         resetView();
         mLrcData = lrcData;
-        setupLrcLineHeight();
         invalidate();
     }
 
@@ -169,11 +137,11 @@ public class LrcView extends View {
             drawEmptyText(canvas);
             return;
         }
-        float y = 0;
+        float y = getLrcHeight() / 2;
         float x = getLrcWidth() * 0.5f + mHorizontalPadding;
         for (int i = 0; i < getLrcCount(); i++) {
             if (i > 0) {
-                y += (mMultiLineTextExtraHeights.get(i - 1) + mMultiLineTextExtraHeights.get(i)) / 2 + mLrcLineSpaceHeight;
+                y += (getTextHeight(i - 1) + getTextHeight(i)) / 2 + mLrcLineSpaceHeight;
             }
             if (mCurrentLine == i) {
                 mTextPaint.setColor(mCurrentPlayLineColor);
@@ -188,35 +156,6 @@ public class LrcView extends View {
             staticLayout.draw(canvas);
             canvas.restore();
         }
-
-      /*  for (int i = 0; i < getLrcCount(); i++) {
-            float x = getLrcWidth() * 0.5f + mHorizontalPadding;
-            float y;
-            if (i > 0) {
-                y = getLrcHeight() * 0.5f + i * mLineHeight - mOffset + mMultiLineTextExtraHeights.get(i - 1);
-            } else {
-                y = getLrcHeight() * 0.5f + i * mLineHeight - mOffset;
-            }
-            if (y < 0) {
-                continue;
-            }
-            if (y > getLrcHeight()) {
-                break;
-            }
-            if (mCurrentLine == i) {
-                mTextPaint.setColor(mCurrentPlayLineColor);
-            } else {
-                mTextPaint.setColor(mNormalColor);
-            }
-            @SuppressLint("DrawAllocation")
-            StaticLayout staticLayout = new StaticLayout(mLrcData.get(i).getText(), mTextPaint,
-                    getLrcWidth(), Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false);
-            canvas.save();
-            canvas.translate(x, y + mVerticalPadding - staticLayout.getHeight() / 2);
-            staticLayout.draw(canvas);
-            canvas.restore();
-//            canvas.drawText(mLrcData.get(i).getText(), x, y, mTextPaint);
-        }*/
     }
 
     //中间空文字
@@ -272,9 +211,8 @@ public class LrcView extends View {
     };
 
     private void scrollToPosition(int linePosition) {
-
-        float scrollY = linePosition != getLrcCount() ? linePosition * mLineHeight
-                + mMultiLineTextExtraHeights.get(linePosition) : getTotalLrcHeight();
+//        float scrollY = linePosition != getLrcCount() - 1 ? getItemOffsetY(linePosition) : getTotalLrcHeight();
+        float scrollY = getItemOffsetY(linePosition);
         final ValueAnimator animator = ValueAnimator.ofFloat(mOffset, scrollY);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
@@ -288,12 +226,34 @@ public class LrcView extends View {
         animator.start();
     }
 
+    private float getItemOffsetY(int linePosition) {
+        float tempY = 0;
+        for (int i = 0; i < linePosition; i++) {
+            if (i > 0) {
+                tempY += (getTextHeight(i - 1) + getTextHeight(i)) / 2 + mLrcLineSpaceHeight;
+            } else {
+                tempY = getTextHeight(0) + mLrcLineSpaceHeight;
+            }
+        }
+        return tempY;
+    }
+
+    private float getTextHeight(int linePosition) {
+        StaticLayout staticLayout = new StaticLayout(mLrcData.get(linePosition).getText(), mTextPaint,
+                getLrcWidth(), Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false);
+        return staticLayout.getHeight();
+    }
+
     public float getTotalLrcHeight() {
-        return getLrcCount() * mLineHeight + mMultiLineTextExtraHeights.get(getLrcCount() - 1) - mLrcLineSpaceHeight;
+        float totalHeight = 0;
+        for (int i = 0; i < getLrcCount(); i++) {
+            totalHeight += getTextHeight(i) + mLrcLineSpaceHeight;
+        }
+        return totalHeight - mLrcLineSpaceHeight;
     }
 
     private boolean overScrolled() {
-        return mOffset > getTotalLrcHeight() || mOffset < 0;
+        return mOffset > getItemOffsetY(getLrcCount() - 1) || mOffset < 0;
     }
 
     @Override
@@ -323,11 +283,11 @@ public class LrcView extends View {
 //                    moveY = (float) (exp * moveY);
                     mOffset -= moveY;
                     if (mOffset < 0) {
-                        mOffset = Math.max(mOffset, -mLineHeight);
+                        mOffset = Math.max(mOffset, -getTextHeight(0) - mLrcLineSpaceHeight);
                     }
-                    float maxHeight = getTotalLrcHeight();
+                    float maxHeight = getItemOffsetY(getLrcCount() - 1);
                     if (mOffset > maxHeight) {
-                        mOffset = Math.min(mOffset, maxHeight + mLineHeight);
+                        mOffset = Math.min(mOffset, maxHeight + getTextHeight(0) + mLrcLineSpaceHeight);
                     }
                     invalidate();
                     mLastMotionY = event.getY();
@@ -348,8 +308,8 @@ public class LrcView extends View {
             return;
         }
 
-        if (overScrolled() && mOffset > getTotalLrcHeight()) {
-            scrollToPosition(getLrcCount());
+        if (overScrolled() && mOffset > getItemOffsetY(getLrcCount() - 1)) {
+            scrollToPosition(getLrcCount() - 1);
             ViewCompat.postOnAnimationDelayed(LrcView.this, mScrollRunnable, mTouchDelay);
             return;
         }
@@ -359,7 +319,7 @@ public class LrcView extends View {
         float absYVelocity = Math.abs(YVelocity);
         if (absYVelocity > mMinimumFlingVelocity) {
             mOverScroller.fling(0, (int) mOffset, 0, (int) (-YVelocity), 0,
-                    0, 0, (int) getTotalLrcHeight(), 0, (int) mLineHeight);
+                    0, 0, (int) getItemOffsetY(getLrcCount() - 1), 0, (int) getTextHeight(0));
             invalidate();
         }
         releaseVelocityTracker();
@@ -386,9 +346,6 @@ public class LrcView extends View {
     private void resetView() {
         if (mLrcData != null) {
             mLrcData.clear();
-        }
-        if (mMultiLineTextExtraHeights != null) {
-            mMultiLineTextExtraHeights.clear();
         }
         mCurrentLine = 0;
         mOffset = 0;
