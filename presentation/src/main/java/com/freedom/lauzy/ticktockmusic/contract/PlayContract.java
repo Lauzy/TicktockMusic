@@ -18,6 +18,7 @@ import java.util.List;
  */
 public interface PlayContract {
     interface View extends IBaseView {
+
         Context getContext();
 
         void setCoverBackground(Bitmap background);
@@ -26,15 +27,13 @@ public interface PlayContract {
 
         void deleteFavoriteSong();
 
-        void isFavoriteSong(boolean isFavorite);
-
         void setViewBgColor(int paletteColor);
 
         void setPlayView(Bitmap resource);
 
-        void showLightViews();
+        void showLightViews(boolean isFavorite);
 
-        void showDarkViews();
+        void showDarkViews(boolean isFavorite);
 
         void startDownloadLrc();
 
@@ -44,13 +43,11 @@ public interface PlayContract {
     }
 
     interface Presenter {
-        void setCoverImgUrl(Object url);
+        void setCoverImgUrl(long songId, Object url);
 
         void addFavoriteSong(SongEntity entity);
 
         void deleteFavoriteSong(long songId);
-
-        void isFavoriteSong(long songId);
 
         void loadLrc(SongEntity entity);
     }

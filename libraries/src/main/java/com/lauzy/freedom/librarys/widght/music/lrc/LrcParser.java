@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
  */
 public class LrcParser {
 
+    private static final String CHARSET = "utf-8";
     //[03:56.00][03:18.00][02:06.00][01:07.00]原谅我这一生不羁放纵爱自由
     private static final String LINE_REGEX = "((\\[\\d{2}:\\d{2}\\.\\d{2}])+)(.*)";
     private static final String TIME_REGEX = "\\[(\\d{2}):(\\d{2})\\.(\\d{2})]";
@@ -52,7 +53,7 @@ public class LrcParser {
         InputStreamReader isr = null;
         BufferedReader br = null;
         try {
-            isr = new InputStreamReader(inputStream);
+            isr = new InputStreamReader(inputStream, CHARSET);
             br = new BufferedReader(isr);
             String line;
             while ((line = br.readLine()) != null) {
@@ -68,7 +69,7 @@ public class LrcParser {
             return lrcs;
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 if (isr != null) {
                     isr.close();
@@ -93,6 +94,9 @@ public class LrcParser {
     }
 
     private static List<Lrc> parseLrc(String lrcLine) {
+        if (lrcLine.trim().isEmpty()) {
+            return null;
+        }
         List<Lrc> lrcs = new ArrayList<>();
         Matcher matcher = Pattern.compile(LINE_REGEX).matcher(lrcLine);
         if (!matcher.matches()) {

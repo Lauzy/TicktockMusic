@@ -19,4 +19,12 @@ public interface LrcRepository {
      * @return ob
      */
     Observable<ResponseBody> getLrcData(String songName, String singer);
+
+    /**
+     * 获取百度音乐歌词
+     *
+     * @param songId 歌曲ID
+     * @return ob
+     */
+    Observable<String> getBaiduLrcData(String method, long songId);
 }

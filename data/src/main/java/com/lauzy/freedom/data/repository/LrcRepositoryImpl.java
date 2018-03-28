@@ -2,6 +2,7 @@ package com.lauzy.freedom.data.repository;
 
 import com.freedom.lauzy.model.LrcBean;
 import com.freedom.lauzy.repository.LrcRepository;
+import com.lauzy.freedom.data.entity.BaiduLrcEntity;
 import com.lauzy.freedom.data.entity.OnLineLrcEntity;
 import com.lauzy.freedom.data.entity.mapper.LrcMapper;
 import com.lauzy.freedom.data.net.RetrofitHelper;
@@ -51,6 +52,21 @@ public class LrcRepositoryImpl implements LrcRepository {
                         }
                         return RetrofitHelper.INSTANCE.createApi(SongService.class)
                                 .downloadLrcFile(lrcBean.lrc);
+                    }
+                });
+    }
+
+    @Override
+    public Observable<String> getBaiduLrcData(String method, long songId) {
+        return RetrofitHelper.INSTANCE.createApi(SongService.class)
+                .getBaiduLrcData(method, songId)
+                .map(new Function<BaiduLrcEntity, String>() {
+                    @Override
+                    public String apply(BaiduLrcEntity baiduLrcEntity) throws Exception {
+                        if (baiduLrcEntity == null || baiduLrcEntity.lrcContent == null) {
+                            return "";
+                        }
+                        return baiduLrcEntity.lrcContent;
                     }
                 });
     }

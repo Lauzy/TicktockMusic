@@ -1,6 +1,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_play_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -28,8 +29,9 @@
         android:layout_marginBottom="@dimen/dp_20"
         android:layout_marginTop="@dimen/dp_40"
         app:lrcHorizontalPadding="@dimen/dp_20"
-        app:lrcLineSpaceSize="@dimen/dp_10"
-        app:lrcTextSize="@dimen/sp_16"/>
+        app:lrcLineSpaceSize="@dimen/dp_13"
+        app:lrcNormalTextColor="@color/gray_light"
+        app:lrcTextSize="@dimen/sp_17"/>
 
 </LinearLayout>
 

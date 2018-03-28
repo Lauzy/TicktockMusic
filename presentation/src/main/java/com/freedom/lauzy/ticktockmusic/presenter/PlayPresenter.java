@@ -14,6 +14,8 @@ import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.model.mapper.FavoriteMapper;
 import com.freedom.lauzy.ticktockmusic.utils.FileManager;
 import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;
+import com.lauzy.freedom.data.database.BaseDb;
+import com.lauzy.freedom.data.net.constants.NetConstants;
 import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
@@ -23,6 +25,7 @@ import com.lauzy.freedom.librarys.view.util.PaletteColor;
 import com.lauzy.freedom.librarys.widght.music.lrc.Lrc;
 import com.lauzy.freedom.librarys.widght.music.lrc.LrcParser;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
@@ -58,48 +61,55 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
     }
 
     @Override
-    public void setCoverImgUrl(Object url) {
+    public void setCoverImgUrl(long songId, Object url) {
         if (getView() == null) {
             return;
         }
+
         String urlString = String.valueOf(url);
-        ImageLoader.INSTANCE.display(getView().getContext(), new ImageConfig.Builder()
-                .asBitmap(true)
-                .url(url)
-                .isRound(false)
-                .intoTarget(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+        mFavoriteSongUseCase.isFavoriteSong(songId)
+                .subscribe(isFavorite -> {
+                    if (getView() == null) {
+                        return;
+                    }
+                    ImageLoader.INSTANCE.display(getView().getContext(), new ImageConfig.Builder()
+                            .asBitmap(true)
+                            .url(url)
+                            .isRound(false)
+                            .intoTarget(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
 
-                        if (getView() == null) {
-                            return;
-                        }
+                                    if (getView() == null) {
+                                        return;
+                                    }
 
-                        getView().setPlayView(resource);
-                        Bitmap bg = Bitmap.createBitmap(resource);
-                        if (mColorMap.get(urlString) == null) {
-                            PaletteColor.mainColorObservable(ThemeHelper.getThemeColorResId(getView().getContext()), resource)
-                                    .subscribe(color -> {
-                                        mColorMap.put(urlString, color);
+                                    getView().setPlayView(resource);
+                                    Bitmap bg = Bitmap.createBitmap(resource);
+                                    if (mColorMap.get(urlString) == null) {
+                                        PaletteColor.mainColorObservable(ThemeHelper.getThemeColorResId(getView().getContext()), resource)
+                                                .subscribe(color -> {
+                                                    mColorMap.put(urlString, color);
+                                                    getView().setViewBgColor(color);
+                                                    judgeColorDepth(color);
+                                                });
+                                    } else {
+                                        Integer color = mColorMap.get(urlString);
                                         getView().setViewBgColor(color);
                                         judgeColorDepth(color);
-                                    });
-                        } else {
-                            Integer color = mColorMap.get(urlString);
-                            getView().setViewBgColor(color);
-                            judgeColorDepth(color);
-                        }
-                        getView().setCoverBackground(ImageBlur.onStackBlur(bg, 50));
-                    }
+                                    }
+                                    getView().setCoverBackground(ImageBlur.onStackBlur(bg, 50));
+                                }
 
-                    private void judgeColorDepth(Integer color) {
-                        if (ColorUtil.isDarkColor(color)) {
-                            getView().showLightViews();
-                        } else {
-                            getView().showDarkViews();
-                        }
-                    }
-                }).build());
+                                private void judgeColorDepth(Integer color) {
+                                    if (ColorUtil.isDarkColor(color)) {
+                                        getView().showLightViews(isFavorite);
+                                    } else {
+                                        getView().showDarkViews(isFavorite);
+                                    }
+                                }
+                            }).build());
+                });
     }
 
     @Override
@@ -126,17 +136,6 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
     }
 
     @Override
-    public void isFavoriteSong(long songId) {
-        mFavoriteSongUseCase.isFavoriteSong(songId)
-                .subscribe(aBoolean -> {
-                    if (getView() == null) {
-                        return;
-                    }
-                    getView().isFavoriteSong(aBoolean);
-                });
-    }
-
-    @Override
     public void loadLrc(SongEntity entity) {
         LrcUseCase.Param param = new LrcUseCase.Param(entity.title, "");
         String fileName = entity.title + "-" + entity.artistName + ".lrc";
@@ -146,11 +145,21 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                     if (file.exists() && file.canRead()) {
                         return Observable.just(file);
                     }
-                    return mLrcUseCase.buildObservable(param)
-                            .flatMap(responseBody -> {
-                                boolean saveFile = FileManager.getInstance().saveFile(responseBody.byteStream(), fileName);
-                                return saveFile ? Observable.just(file) : null;
-                            });
+                    if (entity.type.equals(BaseDb.QueueParam.LOCAL)) {
+                        return mLrcUseCase.buildObservable(param)
+                                .flatMap(responseBody -> {
+                                    boolean saveFile = FileManager.getInstance().saveFile
+                                            (responseBody.byteStream(), fileName);
+                                    return saveFile ? Observable.just(file) : null;
+                                });
+                    } else {
+                        return mLrcUseCase.getBaiduLrcData(NetConstants.Value.METHOD_LRC, entity.id)
+                                .flatMap(s -> {
+                                    boolean saveFile = FileManager.getInstance().saveFile(new
+                                            ByteArrayInputStream(s.getBytes("utf-8")), fileName);
+                                    return saveFile ? Observable.just(file) : null;
+                                });
+                    }
                 })
                 .map((Function<File, List<Lrc>>) file -> {
                     if (file == null || !file.exists()) {

@@ -32,6 +32,10 @@ public class LrcUseCase extends UseCase<ResponseBody, LrcUseCase.Param> {
         return mLrcRepository.getLrcData(param.getSongName(), param.getSinger());
     }
 
+    public Observable<String> getBaiduLrcData(String method, long songId) {
+        return mLrcRepository.getBaiduLrcData(method, songId);
+    }
+
     public static final class Param {
 
         private String songName;

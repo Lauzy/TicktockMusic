@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -35,7 +34,6 @@ import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayQueueBottomSheetFragment;
 import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;
 import com.lauzy.freedom.data.local.LocalUtil;
-import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.view.util.ScrimUtil;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 import com.lauzy.freedom.librarys.widght.music.PlayPauseView;
@@ -93,6 +91,8 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     LrcView mLvSimple;
     @BindView(R.id.lv_full)
     LrcView mLvFull;
+    @BindView(R.id.ll_play_view)
+    LinearLayout mLlPlayView;
     private boolean isDarkStyle = true;
     private boolean isFavorite;
 
@@ -131,25 +131,9 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         setModeView();
         mToolbarCommon.setBackgroundColor(Color.TRANSPARENT);
         mLvSimple.setVisibility(View.VISIBLE);
-        mLvFull.setVisibility(View.GONE);
-        mLvSimple.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mFlPlay.setVisibility(View.GONE);
-                mLvFull.setVisibility(View.VISIBLE);
-                mLvSimple.setVisibility(View.GONE);
-                mImageViewBg.setVisibility(View.VISIBLE);
-            }
-        });
-//        mLvFull.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mFlPlay.setVisibility(View.VISIBLE);
-//                mLvFull.setVisibility(View.GONE);
-//                mImageViewBg.setVisibility(View.GONE);
-//                mLvSimple.setVisibility(View.VISIBLE);
-//            }
-//        });
+        mLvFull.setVisibility(View.INVISIBLE);
+        mLvSimple.setNoLrcTextColor(ThemeHelper.getThemeColorResId(this));
+        mLvFull.setNoLrcTextColor(ThemeHelper.getThemeColorResId(this));
     }
 
     /**
@@ -176,7 +160,6 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         mTxtCurrentProgress.setText(LocalUtil.formatTime(MusicManager.getInstance().getCurrentProgress()));
         mImageViewBg.setVisibility(View.INVISIBLE);
 
-        mPresenter.isFavoriteSong((int) MusicManager.getInstance().getCurrentSong().id);
         MusicManager.getInstance().setPlayProgressListener(this);
         mSeekPlay.setOnSeekBarChangeListener(this);
         mPlayPause.setOnPlayPauseListener(this);
@@ -193,8 +176,8 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         mToolbarCommon.setTitle(songEntity.title);
         mToolbarCommon.setSubtitle(songEntity.artistName);
         mTxtTotalLength.setText(songEntity.songLength);
-        mPresenter.setCoverImgUrl(songEntity.albumCover);
-        mPresenter.isFavoriteSong(songEntity.id);
+        mPresenter.setCoverImgUrl(songEntity.id, songEntity.albumCover);
+        mPresenter.loadLrc(songEntity);
 
         if (MusicManager.getInstance().isPlaying() && !mPlayPause.isPlaying()) {
             mPlayPause.playWithoutAnim();
@@ -258,6 +241,8 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     public void play() {
         if (MusicManager.getInstance().getCurrentSong() != null) {
             MusicManager.getInstance().start();
+            mLvFull.resume();
+            mLvSimple.resume();
         }
     }
 
@@ -265,6 +250,8 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     public void pause() {
         if (MusicManager.getInstance().getCurrentSong() != null) {
             MusicManager.getInstance().pause();
+            mLvSimple.pause();
+            mLvFull.pause();
         }
     }
 
@@ -287,16 +274,6 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     }
 
     @Override
-    public void isFavoriteSong(boolean favorite) {
-        isFavorite = favorite;
-        mImgFavorite.setImageResource(favorite ? R.drawable.ic_favorite_white : (isDarkStyle
-                ? R.drawable.ic_favorite_border_white : R.drawable.ic_favorite_border_black));
-        if (favorite) {
-            setImageTint();
-        }
-    }
-
-    @Override
     public void setViewBgColor(int paletteColor) {
         mClPlay.setBackgroundColor(paletteColor);
         Drawable drawable = ScrimUtil.makeCubicGradientScrimDrawable(paletteColor, 8, Gravity.BOTTOM);
@@ -304,35 +281,49 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     }
 
     @Override
-    public void showLightViews() {
+    public void showLightViews(boolean favorite) {
+        isFavorite = favorite;
         isDarkStyle = true;
         setViewsColor(Color.WHITE);
+        mImgFavorite.setImageResource(favorite ? R.drawable.ic_favorite_white : R.drawable.ic_favorite_border_white);
+        if (favorite) {
+            setImageTint();
+        }
+        mLvSimple.setNormalColor(ContextCompat.getColor(this, R.color.gray_light));
+        mLvFull.setNormalColor(ContextCompat.getColor(this, R.color.gray_light));
     }
 
     @Override
-    public void showDarkViews() {
+    public void showDarkViews(boolean favorite) {
+        isFavorite = favorite;
         isDarkStyle = false;
         setViewsColor(Color.BLACK);
+        mImgFavorite.setImageResource(favorite ? R.drawable.ic_favorite_white : R.drawable.ic_favorite_border_black);
+        if (favorite) {
+            setImageTint();
+        }
+        mLvSimple.setNormalColor(ContextCompat.getColor(this, R.color.txt_black));
+        mLvFull.setNormalColor(ContextCompat.getColor(this, R.color.txt_black));
     }
 
     @Override
     public void startDownloadLrc() {
         mLvSimple.resetView("加载中");
         mLvFull.resetView("加载中");
-        mLvSimple.setDefaultContent("加载中");
-        mLvFull.setDefaultContent("加载中");
     }
 
     @Override
     public void downloadLrcSuccess(List<Lrc> lrcs) {
         if (lrcs == null || lrcs.isEmpty()) {
             mLvSimple.setDefaultContent("暂无歌词");
+            mLvFull.setDefaultContent("暂无歌词");
             return;
         }
         mLvSimple.setCurrentPlayLineColor(ThemeHelper.getThemeColorResId(this));
         mLvSimple.setLrcData(lrcs);
         mLvSimple.updateTime(MusicManager.getInstance().getCurrentProgress());
 
+        mLvFull.setCurrentPlayLineColor(ThemeHelper.getThemeColorResId(this));
         mLvFull.setLrcData(lrcs);
         mLvFull.updateTime(MusicManager.getInstance().getCurrentProgress());
     }
@@ -376,7 +367,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     }
 
     @OnClick({R.id.img_play_mode, R.id.img_play_previous, R.id.img_play_next, R.id.img_play_queue,
-            R.id.img_favorite})
+            R.id.img_favorite, R.id.lv_simple, R.id.lv_full})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.img_play_mode:
@@ -389,33 +380,43 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
                 playNext();
                 break;
             case R.id.img_play_queue:
-                PlayQueueBottomSheetFragment sheetFragment = new PlayQueueBottomSheetFragment();
-                sheetFragment.show(getSupportFragmentManager(), sheetFragment.getTag());
+                showPlayQueue();
                 break;
             case R.id.img_favorite:
                 addOrDeleteFavoriteSong();
                 break;
+            case R.id.lv_simple:
+                showFullLrcView();
+                break;
+            case R.id.lv_full:
+                showPlayView();
+                break;
         }
     }
 
+    private void showPlayQueue() {
+        PlayQueueBottomSheetFragment sheetFragment = new PlayQueueBottomSheetFragment();
+        sheetFragment.show(getSupportFragmentManager(), sheetFragment.getTag());
+    }
+
+    private void showPlayView() {
+        mLlPlayView.setVisibility(View.VISIBLE);
+        mLvFull.setVisibility(View.INVISIBLE);
+        mImageViewBg.setVisibility(View.INVISIBLE);
+    }
+
+    private void showFullLrcView() {
+        mLlPlayView.setVisibility(View.INVISIBLE);
+        mLvFull.setVisibility(View.VISIBLE);
+        mImageViewBg.setVisibility(View.VISIBLE);
+    }
+
     private void playNext() {
-        MusicManager.getInstance().skipToNext();
-        refreshSongData();
+        new Handler().postDelayed(() -> MusicManager.getInstance().skipToNext(), 50);
     }
 
     private void playPrevious() {
-        MusicManager.getInstance().skipToPrevious();
-        refreshSongData();
-    }
-
-    /**
-     * 切换歌曲时刷新喜欢图标
-     */
-    private void refreshSongData() {
-        new Handler().postDelayed(() -> {
-            mPresenter.isFavoriteSong(MusicManager.getInstance().getCurrentSong().id);
-            mPresenter.loadLrc(MusicManager.getInstance().getCurrentSong());
-        }, 50);
+        new Handler().postDelayed(() -> MusicManager.getInstance().skipToPrevious(), 50);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.lauzy.freedom.data.net.api;
 
+import com.lauzy.freedom.data.entity.BaiduLrcEntity;
 import com.lauzy.freedom.data.entity.MusicEntity;
 import com.lauzy.freedom.data.entity.OnLineLrcEntity;
 import com.lauzy.freedom.data.entity.OnlineSongEntity;
@@ -52,6 +53,11 @@ public interface SongService {
     @GET(NetConstants.LRC_PARAM + "/{songName}/{singer}")
     Observable<OnLineLrcEntity> getOnLrcData(@Path("songName") String songName,
                                              @Path("singer") String singer);
+
+    @Headers("BaseUrlHead:BaiduApi")
+    @GET(NetConstants.URL_PARAM)
+    Observable<BaiduLrcEntity> getBaiduLrcData(@Query(NetConstants.Param.METHOD) String method,
+                                               @Query(NetConstants.Param.SONG_ID) long songId);
 
     @Streaming
     @GET

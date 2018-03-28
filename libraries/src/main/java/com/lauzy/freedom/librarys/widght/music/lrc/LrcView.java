@@ -7,7 +7,6 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
@@ -38,7 +37,7 @@ public class LrcView extends View {
     private static final String DEFAULT_CONTENT = "Empty";
     private List<Lrc> mLrcData;
     private TextPaint mTextPaint;
-    private Rect mBounds;
+    //    private Rect mBounds;
     private String mDefaultContent;
     private int mCurrentLine;
     private float mOffset;
@@ -48,7 +47,6 @@ public class LrcView extends View {
     private VelocityTracker mVelocityTracker;
     private int mMaximumFlingVelocity;
     private int mMinimumFlingVelocity;
-    private boolean isUserScroll;
     private float mLrcTextSize;
     private float mLrcLineSpaceHeight;
     private int mTouchDelay;
@@ -58,6 +56,11 @@ public class LrcView extends View {
     private float mVerticalPadding;
     private float mNoLrcTextSize;
     private int mNoLrcTextColor;
+    //是否拖拽中，否的话响应onClick事件
+    private boolean isDragging;
+    //用户开始操作
+    private boolean isUserScroll;
+    private boolean isAutoAdjustPosition = true;
 
     public LrcView(Context context) {
         this(context, null);
@@ -99,7 +102,6 @@ public class LrcView extends View {
         mTextPaint.setAntiAlias(true);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
         mTextPaint.setTextSize(mLrcTextSize);
-        mBounds = new Rect();
         mDefaultContent = DEFAULT_CONTENT;
     }
 
@@ -141,7 +143,6 @@ public class LrcView extends View {
         mTextPaint.setTextAlign(Paint.Align.CENTER);
         float y = getLrcHeight() / 2;
         float x = getLrcWidth() * 0.5f + mHorizontalPadding;
-        canvas.translate(0, -mOffset);
         for (int i = 0; i < getLrcCount(); i++) {
             if (i > 0) {
                 y += (getTextHeight(i - 1) + getTextHeight(i)) / 2 + mLrcLineSpaceHeight;
@@ -155,7 +156,7 @@ public class LrcView extends View {
             StaticLayout staticLayout = new StaticLayout(mLrcData.get(i).getText(), mTextPaint,
                     getLrcWidth(), Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false);
             canvas.save();
-            canvas.translate(x, y + mVerticalPadding - staticLayout.getHeight() / 2);
+            canvas.translate(x, y + mVerticalPadding - staticLayout.getHeight() / 2 - mOffset);
             staticLayout.draw(canvas);
             canvas.restore();
 //            canvas.drawText(mLrcData.get(i).getText(), x, y, mTextPaint);
@@ -164,14 +165,19 @@ public class LrcView extends View {
 
     //中间空文字
     private void drawEmptyText(Canvas canvas) {
-        mTextPaint.setTextAlign(Paint.Align.LEFT);
+        mTextPaint.setTextAlign(Paint.Align.CENTER);
         mTextPaint.setColor(mNoLrcTextColor);
         mTextPaint.setTextSize(mNoLrcTextSize);
-        mTextPaint.getTextBounds(mDefaultContent, 0, mDefaultContent.length(), mBounds);
-        Paint.FontMetricsInt fontMetrics = mTextPaint.getFontMetricsInt();
-        int baseline = (int) ((getLrcHeight() - fontMetrics.bottom + fontMetrics.top) / 2 - fontMetrics.top + mVerticalPadding);
-        int baseX = (int) ((getLrcWidth() - mBounds.width()) / 2 + mHorizontalPadding);
-        canvas.drawText(mDefaultContent, baseX, baseline, mTextPaint);
+//        Paint.FontMetricsInt fontMetrics = mTextPaint.getFontMetricsInt();
+//        int baseline = (int) ((getLrcHeight() - fontMetrics.bottom + fontMetrics.top) / 2 - fontMetrics.top + mVerticalPadding);
+//        int baseX = (int) ((getLrcWidth() - mBounds.width()) / 2 + mHorizontalPadding);
+//        canvas.drawText(mDefaultContent, baseX, baseline, mTextPaint);
+        canvas.save();
+        StaticLayout staticLayout = new StaticLayout(mDefaultContent, mTextPaint,
+                getLrcWidth(), Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false);
+        canvas.translate(getLrcWidth() / 2 + mHorizontalPadding, getLrcHeight() / 2 + mVerticalPadding);
+        staticLayout.draw(canvas);
+        canvas.restore();
     }
 
     public void updateTime(long time) {
@@ -248,14 +254,6 @@ public class LrcView extends View {
         return staticLayout.getHeight();
     }
 
-    public float getTotalLrcHeight() {
-        float totalHeight = 0;
-        for (int i = 0; i < getLrcCount(); i++) {
-            totalHeight += getTextHeight(i) + mLrcLineSpaceHeight;
-        }
-        return totalHeight - mLrcLineSpaceHeight;
-    }
-
     private boolean overScrolled() {
         return mOffset > getItemOffsetY(getLrcCount() - 1) || mOffset < 0;
     }
@@ -271,18 +269,21 @@ public class LrcView extends View {
         mVelocityTracker.addMovement(event);
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                performClick();
                 removeCallbacks(mScrollRunnable);
                 if (!mOverScroller.isFinished()) {
                     mOverScroller.abortAnimation();
                 }
                 mLastMotionY = event.getY();
                 isUserScroll = true;
+                isDragging = false;
                 break;
 
             case MotionEvent.ACTION_MOVE:
                 float moveY = event.getY() - mLastMotionY;
                 if (Math.abs(moveY) > mScaledTouchSlop) {
+                    isDragging = true;
+                }
+                if (isDragging) {
 //                    double exp = Math.exp(-event.getY() / mLastMotionY);
 //                    moveY = (float) (exp * moveY);
                     mOffset -= moveY;
@@ -294,7 +295,7 @@ public class LrcView extends View {
                         mOffset = Math.min(mOffset, maxHeight + getTextHeight(0) + mLrcLineSpaceHeight);
                     }
                     mLastMotionY = event.getY();
-                    postInvalidate();
+                    invalidate();
                 }
                 break;
             case MotionEvent.ACTION_CANCEL:
@@ -302,7 +303,8 @@ public class LrcView extends View {
                 handleActionUp();
                 break;
         }
-        return true;
+        return isDragging || super.onTouchEvent(event);
+//        return true;
     }
 
     private void handleActionUp() {
@@ -327,7 +329,9 @@ public class LrcView extends View {
             invalidate();
         }
         releaseVelocityTracker();
-        ViewCompat.postOnAnimationDelayed(LrcView.this, mScrollRunnable, mTouchDelay);
+        if (isAutoAdjustPosition) {
+            ViewCompat.postOnAnimationDelayed(LrcView.this, mScrollRunnable, mTouchDelay);
+        }
     }
 
     @Override
@@ -372,6 +376,17 @@ public class LrcView extends View {
     public int sp2px(Context context, float spVal) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
                 spVal, context.getResources().getDisplayMetrics());
+    }
+
+    public void pause() {
+        isAutoAdjustPosition = false;
+        invalidate();
+    }
+
+    public void resume() {
+        isAutoAdjustPosition = true;
+        ViewCompat.postOnAnimationDelayed(LrcView.this, mScrollRunnable, mTouchDelay);
+        invalidate();
     }
 
 
