@@ -1,7 +1,9 @@
 package com.lauzy.freedom.data.local;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.freedom.lauzy.model.LocalSongBean;
@@ -88,5 +90,11 @@ public class LocalSongLoader {
     private static Cursor getSongCursor(Context context, String selection, String[] paramArr) {
         return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
                 selection, paramArr, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+    }
+
+    public static int deleteSong(Context context, long id) {
+        ContentResolver resolver = context.getContentResolver();
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        return resolver.delete(uri, MediaStore.Audio.Media._ID + " = ? ", new String[]{String.valueOf(id)});
     }
 }

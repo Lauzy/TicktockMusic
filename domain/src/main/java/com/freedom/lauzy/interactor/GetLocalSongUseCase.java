@@ -33,4 +33,8 @@ public class GetLocalSongUseCase extends UseCase<List<LocalSongBean>, Long> {
     Observable<List<LocalSongBean>> buildUseCaseObservable(Long id) {
         return mLocalSongRepository.getLocalSongList(id);
     }
+
+    public Observable<Integer> deleteSong(long id) {
+        return mLocalSongRepository.deleteSong(id);
+    }
 }

@@ -48,7 +48,7 @@ import io.reactivex.disposables.Disposable;
 public class AlbumDetailFragment extends BaseFragment<LocalMusicPresenter>
         implements LocalMusicContract.View {
 
-    private static final String LTAG = "AlbumDetailFragment";
+    private static final String TAG = "AlbumDetailFragment";
     @BindView(R.id.ctl_album)
     CollapsingToolbarLayout mCtlAlbum;
     @BindView(R.id.toolbar_common)
@@ -167,6 +167,11 @@ public class AlbumDetailFragment extends BaseFragment<LocalMusicPresenter>
 
     @Override
     public void loadFailed(Throwable throwable) {
+
+    }
+
+    @Override
+    public void deleteSongSuccess(int position, SongEntity songEntity) {
 
     }
 

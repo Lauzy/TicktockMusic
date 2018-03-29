@@ -15,6 +15,8 @@ import java.util.List;
 public interface LocalMusicContract {
     interface SongPresenter {
         void loadLocalSong();
+
+        void deleteSong(int position, SongEntity songEntity);
     }
 
     interface View extends IBaseView {
@@ -24,5 +26,7 @@ public interface LocalMusicContract {
         void setEmptyView();
 
         void loadFailed(Throwable throwable);
+
+        void deleteSongSuccess(int position, SongEntity songEntity);
     }
 }

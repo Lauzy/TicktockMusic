@@ -14,10 +14,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 
 
 /**
@@ -65,13 +63,9 @@ public class NetMusicPresenter extends BaseRxPresenter<NetMusicContract.View>
     @Override
     public void loadNetMusicList() {
         GetSongListUseCase.Params params = GetSongListUseCase.Params.forSongList(METHOD, mType, 0, SIZE);
-        mSongListUseCase.buildCacheObservable(mType).flatMap(new Function<List<NetSongBean>,
-                ObservableSource<List<NetSongBean>>>() {
-            @Override
-            public ObservableSource<List<NetSongBean>> apply(@NonNull List<NetSongBean> songListBeen) throws Exception {
-                return mSongListUseCase.buildObservable(params);
-            }
-        }).compose(RxHelper.ioMain())
+        mSongListUseCase.buildCacheObservable(mType)
+                .flatMap(songListBeen -> mSongListUseCase.buildObservable(params))
+                .compose(RxHelper.ioMain())
                 .subscribeWith(new NetSongObserver(DConstants.Status.INIT_STATUS));
     }
 

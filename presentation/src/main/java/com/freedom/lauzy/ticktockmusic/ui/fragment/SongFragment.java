@@ -13,6 +13,8 @@ import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.LocalMusicPresenter;
+import com.freedom.lauzy.ticktockmusic.service.MusicManager;
+import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.LocalSongAdapter;
 import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;
 import com.lauzy.freedom.librarys.widght.TickSwipeRefreshLayout;
@@ -85,6 +87,7 @@ public class SongFragment extends BaseFragment<LocalMusicPresenter> implements L
         mPresenter.loadLocalSong();
         mAdapter = new LocalSongAdapter(R.layout.layout_song_item, mLocalSongBeen);
         mRvLocalSong.setAdapter(mAdapter);
+        mAdapter.setOnDeleteSongListener((position, songEntity) -> mPresenter.deleteSong(position, songEntity));
     }
 
     @Override
@@ -103,6 +106,20 @@ public class SongFragment extends BaseFragment<LocalMusicPresenter> implements L
     @Override
     public void loadFailed(Throwable throwable) {
         mSrlLocalSong.setRefreshing(false);
+    }
+
+    @Override
+    public void deleteSongSuccess(int position, SongEntity songEntity) {
+        List<SongEntity> songData = MusicManager.getInstance().getSongData();
+        mLocalSongBeen.remove(position);
+        int deletePos = songData.indexOf(songEntity);
+        songData.remove(songEntity);
+        if (MusicManager.getInstance().getCurrentSong().equals(songEntity)) {
+            MusicManager.getInstance().setMusicServiceData(MusicUtil.getSongIds(songData), MusicManager.getInstance().getCurPosition());
+        } else {
+            MusicManager.getInstance().setMusicServiceData(MusicUtil.getSongIds(songData), deletePos);
+        }
+        mAdapter.notifyItemRemoved(position);
     }
 
     @Override

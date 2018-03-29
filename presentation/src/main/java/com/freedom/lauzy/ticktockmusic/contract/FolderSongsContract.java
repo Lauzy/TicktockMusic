@@ -15,6 +15,8 @@ import java.util.List;
 public interface FolderSongsContract {
     interface Presenter {
         void loadFolderSongs(String folderPath);
+
+        void deleteSong(int position, SongEntity songEntity);
     }
 
     interface View extends IBaseView {
@@ -24,5 +26,7 @@ public interface FolderSongsContract {
         void setEmptyView();
 
         void loadFail(Throwable throwable);
+
+        void deleteSongSuccess(int position, SongEntity songEntity);
     }
 }

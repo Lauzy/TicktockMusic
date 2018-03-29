@@ -13,6 +13,8 @@ import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
 import com.freedom.lauzy.ticktockmusic.contract.FolderSongsContract;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.presenter.FolderSongsPresenter;
+import com.freedom.lauzy.ticktockmusic.service.MusicManager;
+import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.FolderSongsAdapter;
 
 import java.util.ArrayList;
@@ -27,7 +29,8 @@ import butterknife.BindView;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class FolderSongsFragment extends BaseFragment<FolderSongsPresenter> implements FolderSongsContract.View {
+public class FolderSongsFragment extends BaseFragment<FolderSongsPresenter>
+        implements FolderSongsContract.View {
 
     private static final String FOLDER_PATH = "folder_path";
     private static final String FOLDER_NAME = "folder_name";
@@ -83,6 +86,7 @@ public class FolderSongsFragment extends BaseFragment<FolderSongsPresenter> impl
         mRvFolderSongs.setLayoutManager(new LinearLayoutManager(mActivity));
         mAdapter = new FolderSongsAdapter(R.layout.layout_song_item, mSongEntities);
         mRvFolderSongs.setAdapter(mAdapter);
+        mAdapter.setOnDeleteSongListener((position, songEntity) -> mPresenter.deleteSong(position, songEntity));
     }
 
     @Override
@@ -106,5 +110,19 @@ public class FolderSongsFragment extends BaseFragment<FolderSongsPresenter> impl
     @Override
     public void loadFail(Throwable throwable) {
 
+    }
+
+    @Override
+    public void deleteSongSuccess(int position, SongEntity songEntity) {
+        List<SongEntity> songData = MusicManager.getInstance().getSongData();
+        mSongEntities.remove(position);
+        int deletePos = songData.indexOf(songEntity);
+        songData.remove(songEntity);
+        if (MusicManager.getInstance().getCurrentSong().equals(songEntity)) {
+            MusicManager.getInstance().setMusicServiceData(MusicUtil.getSongIds(songData), MusicManager.getInstance().getCurPosition());
+        } else {
+            MusicManager.getInstance().setMusicServiceData(MusicUtil.getSongIds(songData), deletePos);
+        }
+        mAdapter.notifyItemRemoved(position);
     }
 }

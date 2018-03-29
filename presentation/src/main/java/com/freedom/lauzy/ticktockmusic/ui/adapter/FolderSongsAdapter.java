@@ -86,10 +86,9 @@ public class FolderSongsAdapter extends BaseQuickAdapter<SongEntity, BaseViewHol
                 .content(R.string.delete_song)
                 .positiveText(android.R.string.yes)
                 .negativeText(android.R.string.cancel)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
+                .onPositive((dialog, which) -> {
+                    if (mOnDeleteSongListener != null) {
+                        mOnDeleteSongListener.onDelete(helper.getAdapterPosition(), songEntity);
                     }
                 }).build().show();
     }
@@ -104,5 +103,15 @@ public class FolderSongsAdapter extends BaseQuickAdapter<SongEntity, BaseViewHol
         helper.getView(R.id.img_song_pic).setTransitionName(transName);
         Navigator.navigateToAlbumDetail(mContext, helper.getView(R.id.img_song_pic),
                 transName, songEntity.albumName, songEntity.albumId);
+    }
+
+    private OnDeleteSongListener mOnDeleteSongListener;
+
+    public void setOnDeleteSongListener(OnDeleteSongListener onDeleteSongListener) {
+        mOnDeleteSongListener = onDeleteSongListener;
+    }
+
+    public interface OnDeleteSongListener {
+        void onDelete(int position, SongEntity songEntity);
     }
 }

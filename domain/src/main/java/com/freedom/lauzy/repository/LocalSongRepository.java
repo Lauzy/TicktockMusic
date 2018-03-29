@@ -50,9 +50,16 @@ public interface LocalSongRepository {
 
     /**
      * 获取本地歌手的音乐
+     *
      * @param artistId 歌手ID
      * @return Observable
      */
     Observable<List<LocalSongBean>> getLocalArtistSongList(long artistId);
 
+    /**
+     * 删除歌曲
+     * @param songId ID
+     * @return ob
+     */
+    Observable<Integer> deleteSong(long songId);
 }

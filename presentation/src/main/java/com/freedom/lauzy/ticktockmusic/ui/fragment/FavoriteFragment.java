@@ -129,6 +129,9 @@ public class FavoriteFragment extends BaseFragment<FavoritePresenter> implements
     public void deleteFavoriteSong(int position) {
         mSongEntities.remove(position);
         mAdapter.notifyItemRemoved(position);
+        if (mSongEntities.isEmpty()) {
+            mAdapter.setEmptyView(R.layout.layout_empty, mRvFavorite);
+        }
     }
 
     @Override

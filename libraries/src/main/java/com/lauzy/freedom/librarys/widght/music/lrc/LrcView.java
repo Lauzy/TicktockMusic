@@ -300,11 +300,14 @@ public class LrcView extends View {
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
+                if (!isDragging) {
+                    performClick();
+                }
                 handleActionUp();
                 break;
         }
-        return isDragging || super.onTouchEvent(event);
-//        return true;
+//        return isDragging || super.onTouchEvent(event);
+        return true;
     }
 
     private void handleActionUp() {

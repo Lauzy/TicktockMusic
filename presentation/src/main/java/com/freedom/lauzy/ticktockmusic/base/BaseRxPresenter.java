@@ -15,6 +15,9 @@ public class BaseRxPresenter<T extends IBaseView> implements IPresenter<T> {
     private T mView;
     private CompositeDisposable mCompositeDisposable;
 
+    public BaseRxPresenter() {
+    }
+
     protected void addDisposable(Disposable disposable) {
         if (mCompositeDisposable == null) {
             mCompositeDisposable = new CompositeDisposable();

@@ -76,7 +76,7 @@ public class SongEntity extends QueueSongBean implements Parcelable {
                 && this.albumName.equals(obj1.albumName)
                 && this.albumId == obj1.albumId
                 && this.duration == obj1.duration
-                && this.type.equals(obj1.type)
+//                && (this.type != null && this.type.equals(obj1.type))
                 || super.equals(obj);
     }
 }

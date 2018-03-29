@@ -2,6 +2,7 @@ package com.freedom.lauzy.ticktockmusic.ui.adapter;
 
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -45,6 +46,6 @@ public class NetSongAdapter extends BaseQuickAdapter<NetSongBean, BaseViewHolder
                 .playMusic(NetEntityMapper.transform(mData),
                         MusicUtil.getSongIds(NetEntityMapper.transform(mData)),
                         helper.getAdapterPosition()));
+        helper.getView(R.id.img_item_menu).setVisibility(View.GONE);
     }
-
 }

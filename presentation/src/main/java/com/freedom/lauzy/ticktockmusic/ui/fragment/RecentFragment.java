@@ -148,6 +148,9 @@ public class RecentFragment extends BaseFragment<RecentPresenter> implements Rec
     public void deleteSongSuccess(int position) {
         mSongEntities.remove(position);
         mAdapter.notifyItemRemoved(position);
+        if (mSongEntities.isEmpty()) {
+            mAdapter.setEmptyView(R.layout.layout_empty, mRvRecent);
+        }
     }
 
     @Override

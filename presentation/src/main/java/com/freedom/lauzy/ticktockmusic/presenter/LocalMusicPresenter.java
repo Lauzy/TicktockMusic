@@ -1,6 +1,7 @@
 package com.freedom.lauzy.ticktockmusic.presenter;
 
 import com.freedom.lauzy.interactor.GetLocalSongUseCase;
+import com.freedom.lauzy.interactor.GetQueueUseCase;
 import com.freedom.lauzy.model.LocalSongBean;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
 import com.freedom.lauzy.ticktockmusic.contract.LocalMusicContract;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.observers.DisposableObserver;
 
@@ -25,12 +27,15 @@ public class LocalMusicPresenter extends BaseRxPresenter<LocalMusicContract.View
         implements LocalMusicContract.SongPresenter {
 
     private GetLocalSongUseCase mGetLocalSongUseCase;
+    private GetQueueUseCase mGetQueueUseCase;
     private LocalSongMapper mLocalSongMapper;
     private long mId;//专辑ID
 
     @Inject
-    LocalMusicPresenter(GetLocalSongUseCase getLocalSongUseCase, LocalSongMapper localSongMapper) {
+    LocalMusicPresenter(GetLocalSongUseCase getLocalSongUseCase, GetQueueUseCase getQueueUseCase,
+                        LocalSongMapper localSongMapper) {
         mGetLocalSongUseCase = getLocalSongUseCase;
+        mGetQueueUseCase = getQueueUseCase;
         mLocalSongMapper = localSongMapper;
     }
 
@@ -68,5 +73,22 @@ public class LocalMusicPresenter extends BaseRxPresenter<LocalMusicContract.View
 
             }
         }, mId);
+    }
+
+    @Override
+    public void deleteSong(int position, SongEntity songEntity) {
+        mGetLocalSongUseCase.deleteSong(songEntity.id)
+                .flatMap(integer -> {
+                    if (integer < 0) {
+                        return Observable.error(new RuntimeException("delete failed"));
+                    }
+                    return mGetQueueUseCase.deleteQueueObservable(new String[]{String.valueOf(songEntity.id)});
+                })
+                .subscribe(integer -> {
+                    if (getView() == null) {
+                        return;
+                    }
+                    getView().deleteSongSuccess(position, songEntity);
+                });
     }
 }

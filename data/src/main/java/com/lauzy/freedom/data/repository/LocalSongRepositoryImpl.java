@@ -95,7 +95,18 @@ public class LocalSongRepositoryImpl implements LocalSongRepository {
         return Observable.create(new ObservableOnSubscribe<List<LocalSongBean>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<LocalSongBean>> e) throws Exception {
-                e.onNext(LocalSongLoader.getLocalArtistSongList(mContext,artistId));
+                e.onNext(LocalSongLoader.getLocalArtistSongList(mContext, artistId));
+                e.onComplete();
+            }
+        });
+    }
+
+    @Override
+    public Observable<Integer> deleteSong(final long songId) {
+        return Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                e.onNext(LocalSongLoader.deleteSong(mContext, songId));
                 e.onComplete();
             }
         });
