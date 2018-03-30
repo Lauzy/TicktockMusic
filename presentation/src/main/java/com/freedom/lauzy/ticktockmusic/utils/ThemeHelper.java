@@ -103,6 +103,29 @@ public class ThemeHelper {
         }
     }
 
+    public static int getThemeTransColorResId(Context context) {
+        switch (ThemeHelper.getTheme(context)) {
+            case ThemeHelper.CARD_SAKURA:
+                return ContextCompat.getColor(context, R.color.blue_trans);
+            case ThemeHelper.CARD_FIREY:
+                return ContextCompat.getColor(context, R.color.red_trans);
+            case ThemeHelper.CARD_HOPE:
+                return ContextCompat.getColor(context, R.color.purple_trans);
+            case ThemeHelper.CARD_LIGHT:
+                return ContextCompat.getColor(context, R.color.green_light_trans);
+            case ThemeHelper.CARD_SAND:
+                return ContextCompat.getColor(context, R.color.orange_trans);
+            case ThemeHelper.CARD_STORM:
+                return ContextCompat.getColor(context, R.color.pink_trans);
+            case ThemeHelper.CARD_THUNDER:
+                return ContextCompat.getColor(context, R.color.yellow_trans);
+            case ThemeHelper.CARD_WOOD:
+                return ContextCompat.getColor(context, R.color.green_trans);
+            default:
+                return -1;
+        }
+    }
+
     public static void setSelectedTheme(Context context, int colorRes) {
         int currentTheme = CARD_SAKURA;
         if (colorRes == ContextCompat.getColor(context, R.color.blue)) {

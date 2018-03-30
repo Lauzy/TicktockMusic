@@ -23,7 +23,7 @@ import com.lauzy.freedom.librarys.view.blur.ImageBlur;
 import com.lauzy.freedom.librarys.view.util.ColorUtil;
 import com.lauzy.freedom.librarys.view.util.PaletteColor;
 import com.lauzy.freedom.librarys.widght.music.lrc.Lrc;
-import com.lauzy.freedom.librarys.widght.music.lrc.LrcParser;
+import com.lauzy.freedom.librarys.widght.music.lrc.LrcHelper;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -165,7 +165,7 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                     if (file == null || !file.exists()) {
                         return Collections.emptyList();
                     }
-                    return LrcParser.parseLrcFromFile(file);
+                    return LrcHelper.parseLrcFromFile(file);
                 })
                 .compose(RxHelper.ioMain())
                 .subscribeWith(new DefaultDisposableObserver<List<Lrc>>() {

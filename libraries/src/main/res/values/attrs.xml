@@ -41,6 +41,16 @@
         <attr name="lrcTouchDelay" format="integer"/>
         <attr name="noLrcTextSize" format="dimension"/>
         <attr name="noLrcTextColor" format="reference|color"/>
+        <attr name="indicatorLineHeight" format="dimension"/>
+        <attr name="indicatorTextSize" format="dimension"/>
+        <attr name="indicatorTextColor" format="reference|color"/>
+        <attr name="currentIndicateLrcColor" format="reference|color"/>
+        <attr name="indicatorLineColor" format="reference|color"/>
+        <attr name="indicatorStartEndMargin" format="dimension"/>
+        <attr name="iconLineGap" format="dimension"/>
+        <attr name="playIconWidth" format="dimension"/>
+        <attr name="playIconHeight" format="dimension"/>
+        <attr name="playIcon" format="reference"/>
     </declare-styleable>
 
 </resources>

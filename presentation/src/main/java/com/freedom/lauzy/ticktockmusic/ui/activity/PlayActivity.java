@@ -134,6 +134,8 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         mLvFull.setVisibility(View.INVISIBLE);
         mLvSimple.setNoLrcTextColor(ThemeHelper.getThemeColorResId(this));
         mLvFull.setNoLrcTextColor(ThemeHelper.getThemeColorResId(this));
+        mLvSimple.setEnableShowIndicator(false);
+        mLvFull.setOnPlayIndicatorLineListener((time, content) -> MusicManager.getInstance().seekTo(time));
     }
 
     /**
@@ -291,6 +293,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         }
         mLvSimple.setNormalColor(ContextCompat.getColor(this, R.color.gray_light));
         mLvFull.setNormalColor(ContextCompat.getColor(this, R.color.gray_light));
+        mLvFull.setPlayDrawable(ContextCompat.getDrawable(this,R.drawable.play_white));
     }
 
     @Override
@@ -304,6 +307,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         }
         mLvSimple.setNormalColor(ContextCompat.getColor(this, R.color.txt_black));
         mLvFull.setNormalColor(ContextCompat.getColor(this, R.color.txt_black));
+        mLvFull.setPlayDrawable(ContextCompat.getDrawable(this,R.drawable.play_black));
     }
 
     @Override
@@ -326,6 +330,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         mLvFull.setCurrentPlayLineColor(ThemeHelper.getThemeColorResId(this));
         mLvFull.setLrcData(lrcs);
         mLvFull.updateTime(MusicManager.getInstance().getCurrentProgress());
+        mLvFull.setCurrentIndicateLineTextColor(ThemeHelper.getThemeTransColorResId(this));
     }
 
     @Override
