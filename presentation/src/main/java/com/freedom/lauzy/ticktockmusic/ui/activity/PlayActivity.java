@@ -293,7 +293,9 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         }
         mLvSimple.setNormalColor(ContextCompat.getColor(this, R.color.gray_light));
         mLvFull.setNormalColor(ContextCompat.getColor(this, R.color.gray_light));
-        mLvFull.setPlayDrawable(ContextCompat.getDrawable(this,R.drawable.play_white));
+        mLvFull.setPlayDrawable(ContextCompat.getDrawable(this, R.drawable.play_white));
+        mLvFull.setIndicatorLineColor(ContextCompat.getColor(this, R.color.gray_light));
+        mLvFull.setIndicatorTextColor(ContextCompat.getColor(this, R.color.gray_light));
     }
 
     @Override
@@ -307,7 +309,9 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         }
         mLvSimple.setNormalColor(ContextCompat.getColor(this, R.color.txt_black));
         mLvFull.setNormalColor(ContextCompat.getColor(this, R.color.txt_black));
-        mLvFull.setPlayDrawable(ContextCompat.getDrawable(this,R.drawable.play_black));
+        mLvFull.setPlayDrawable(ContextCompat.getDrawable(this, R.drawable.play_black));
+        mLvFull.setIndicatorLineColor(ContextCompat.getColor(this, R.color.txt_black));
+        mLvFull.setIndicatorTextColor(ContextCompat.getColor(this, R.color.txt_black));
     }
 
     @Override
@@ -454,6 +458,15 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
                 break;
         }
         mImgPlayMode.getDrawable().setTint(isDarkStyle ? Color.WHITE : Color.BLACK);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mLvFull.getVisibility() == View.VISIBLE) {
+            showPlayView();
+            return;
+        }
+        super.onBackPressed();
     }
 
     @Override
