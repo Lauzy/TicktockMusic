@@ -13,8 +13,8 @@ import android.content.SharedPreferences;
 public class SharePrefHelper {
     private static final String CONFIG_NAME = "ticktock_shared_prefs";
     private static final String REPEAT_MODE = "repeat_mode";
-    private static final String SONG_ID = "song_id";
     private static final String ARTIST_SHARED_PREFS = "artist_avatar_prefs";
+    private static final String ENABLE_NETWORK_PLAY_KEY = "enable_play_key";
 
     private static SharedPreferences getSharePrefs(Context context) {
         return context.getSharedPreferences(CONFIG_NAME, Context.MODE_PRIVATE);
@@ -32,19 +32,19 @@ public class SharePrefHelper {
         return getSharePrefs(context).getInt(REPEAT_MODE, 0);
     }
 
-    public static void setCurrentSongId(Context context, long songId) {
-        getSharePrefs(context).edit().putLong(SONG_ID, songId).apply();
-    }
-
-    public static long getCurrentSongId(Context context) {
-        return getSharePrefs(context).getLong(SONG_ID, 0);
-    }
-
     public static void setArtistAvatar(Context context, String artistName, String avatarUrl) {
         getArtistSharePrefs(context).edit().putString(artistName, avatarUrl).apply();
     }
 
     public static String getArtistAvatar(Context context, String artistName) {
         return getArtistSharePrefs(context).getString(artistName, "");
+    }
+
+    public static void enablePlayByNetwork(Context context, boolean isEnable) {
+        getSharePrefs(context).edit().putBoolean(ENABLE_NETWORK_PLAY_KEY, isEnable).apply();
+    }
+
+    public static boolean isEnablePlayByNetwork(Context context) {
+        return getSharePrefs(context).getBoolean(ENABLE_NETWORK_PLAY_KEY, false);
     }
 }

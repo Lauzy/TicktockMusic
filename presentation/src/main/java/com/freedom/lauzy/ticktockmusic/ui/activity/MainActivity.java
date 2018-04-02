@@ -357,6 +357,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
      * @param songEntity 当前播放音乐
      */
     private void setNavHeadView(SongEntity songEntity) {
+        if (songEntity==null) {
+            return;
+        }
         mNavTitle.setText(songEntity.title);
         mNavSinger.setText(songEntity.artistName);
         ImageLoader.INSTANCE.display(MainActivity.this, new ImageConfig.Builder()

@@ -11,6 +11,7 @@ import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.model.mapper.NetEntityMapper;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
+import com.freedom.lauzy.ticktockmusic.utils.CheckNetwork;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 
@@ -42,10 +43,15 @@ public class NetSongAdapter extends BaseQuickAdapter<NetSongBean, BaseViewHolder
                         .into(helper.getView(R.id.img_song_pic))
                         .build());
 
-        helper.getView(R.id.layout_song_item).setOnClickListener(v -> MusicManager.getInstance()
-                .playMusic(NetEntityMapper.transform(mData),
-                        MusicUtil.getSongIds(NetEntityMapper.transform(mData)),
-                        helper.getAdapterPosition()));
+        helper.getView(R.id.layout_song_item).setOnClickListener(v ->
+                CheckNetwork.checkNetwork(mContext, new CheckNetwork.OnPositiveListener() {
+                    @Override
+                    public void onPositive() {
+                        MusicManager.getInstance().playMusic(NetEntityMapper.transform(mData),
+                                MusicUtil.getSongIds(NetEntityMapper.transform(mData)), helper.getAdapterPosition());
+                    }
+                })
+        );
         helper.getView(R.id.img_item_menu).setVisibility(View.GONE);
     }
 }

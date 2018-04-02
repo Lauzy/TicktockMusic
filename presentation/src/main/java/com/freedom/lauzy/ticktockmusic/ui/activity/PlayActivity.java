@@ -135,7 +135,12 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
         mLvSimple.setNoLrcTextColor(ThemeHelper.getThemeColorResId(this));
         mLvFull.setNoLrcTextColor(ThemeHelper.getThemeColorResId(this));
         mLvSimple.setEnableShowIndicator(false);
-        mLvFull.setOnPlayIndicatorLineListener((time, content) -> MusicManager.getInstance().seekTo(time));
+        mLvFull.setOnPlayIndicatorLineListener((time, content) -> {
+            mLvFull.resume();
+            mLvSimple.resume();
+            MusicManager.getInstance().resumeProgress();
+            MusicManager.getInstance().seekTo(time);
+        });
     }
 
     /**

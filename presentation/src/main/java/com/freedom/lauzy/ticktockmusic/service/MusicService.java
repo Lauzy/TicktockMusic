@@ -1,5 +1,6 @@
 package com.freedom.lauzy.ticktockmusic.service;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,6 +14,7 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
@@ -37,6 +39,7 @@ import static android.media.session.PlaybackState.STATE_PLAYING;
  * Email : freedompaladin@gmail.com
  */
 @SuppressWarnings("WeakerAccess")
+@SuppressLint("CheckResult")
 public class MusicService extends Service {
 
     private static final String TAG = "MusicService";
@@ -94,11 +97,11 @@ public class MusicService extends Service {
                 case ACTION_START:
                     if (mPlaybackState.getState() == STATE_PLAYING) {
                         start();
-                        if (mUpdateListener != null) {
+                        if (mUpdateListener != null && mSongData != null && !mSongData.isEmpty()) {
                             mUpdateListener.currentPlay(mSongData.get(mCurrentPosition));
                         }
                     } else {
-                        if (mUpdateListener != null) {
+                        if (mUpdateListener != null && mSongData != null && !mSongData.isEmpty()) {
                             mUpdateListener.currentPauseSong(mSongData.get(mCurrentPosition));
                         }
                     }
@@ -152,32 +155,38 @@ public class MusicService extends Service {
      *
      * @param entity 当前音乐
      */
+    @SuppressLint("CheckResult")
     private void play(SongEntity entity) {
         if (entity.type.equals(BaseDb.QueueParam.LOCAL)) {//本地音乐
             //直接获取到音乐专辑图片的bitmap，便于更新通知
             MusicUtil.albumCoverObservable(this, entity)
                     .subscribe(bitmap -> playMusic(entity, bitmap));
         } else if (entity.type.equals(BaseDb.QueueParam.NET)) {//网络音乐
-            //根据ID查询播放队列的数据获取当前SongEntity，根据此entity的url获取音乐图片的bitmap对象，
-            //将entity和bitmap转化为NetMusicData对象，直接获取此对象的entity和bitmap即可，简化代码
-            mQueueManager.netSongEntityObservable(entity.id)
-                    .compose(RxHelper.ioMain())
-                    .compose(MusicUtil.transformNetData(this))
-                    .subscribeWith(new DefaultDisposableObserver<MusicUtil.NetMusicData>() {
-                        @Override
-                        public void onNext(@io.reactivex.annotations.NonNull MusicUtil.NetMusicData netMusicData) {
-                            super.onNext(netMusicData);
-                            playMusic(netMusicData.getSongEntity(), netMusicData.getBitmap());
-                        }
-
-                        @Override
-                        public void onError(@io.reactivex.annotations.NonNull Throwable e) {
-                            super.onError(e);
-                            ToastUtils.showSingle(MusicService.this, "No Network");
-                        }
-                    });
+            playNetSong(entity);
         }
     }
+
+    private void playNetSong(SongEntity entity) {
+        //根据ID查询播放队列的数据获取当前SongEntity，根据此entity的url获取音乐图片的bitmap对象，
+        //将entity和bitmap转化为NetMusicData对象，直接获取此对象的entity和bitmap即可，简化代码
+        mQueueManager.netSongEntityObservable(entity.id)
+                .compose(RxHelper.ioMain())
+                .compose(MusicUtil.transformNetData(this))
+                .subscribeWith(new DefaultDisposableObserver<MusicUtil.NetMusicData>() {
+                    @Override
+                    public void onNext(@io.reactivex.annotations.NonNull MusicUtil.NetMusicData netMusicData) {
+                        super.onNext(netMusicData);
+                        playMusic(netMusicData.getSongEntity(), netMusicData.getBitmap());
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                        super.onError(e);
+                        ToastUtils.showSingle(MusicService.this, getString(R.string.network_error));
+                    }
+                });
+    }
+
 
     /**
      * 播放音乐

@@ -18,6 +18,8 @@ import com.freedom.lauzy.ticktockmusic.presenter.RecentPresenter;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.RecentAdapter;
+import com.freedom.lauzy.ticktockmusic.utils.CheckNetwork;
+import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 
 import java.util.ArrayList;
@@ -111,9 +113,12 @@ public class RecentFragment extends BaseFragment<RecentPresenter> implements Rec
      */
     @Override
     public void playRecent(SongEntity entity, int position) {
-        MusicManager.getInstance().playMusic(mSongEntities,
-                MusicUtil.getSongIds(mSongEntities), position);
-        MusicManager.getInstance().setRecentUpdateListener(() -> mPresenter.loadRecentSongs());
+        CheckNetwork.checkNetwork(mActivity, () -> {
+            MusicManager.getInstance().playMusic(mSongEntities,
+                    MusicUtil.getSongIds(mSongEntities), position);
+            MusicManager.getInstance().setRecentUpdateListener(() -> mPresenter.loadRecentSongs());
+            SharePrefHelper.enablePlayByNetwork(mActivity, true);
+        });
     }
 
     @Override

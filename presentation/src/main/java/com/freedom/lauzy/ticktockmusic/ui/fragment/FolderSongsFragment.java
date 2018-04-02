@@ -118,7 +118,7 @@ public class FolderSongsFragment extends BaseFragment<FolderSongsPresenter>
         mSongEntities.remove(position);
         int deletePos = songData.indexOf(songEntity);
         songData.remove(songEntity);
-        if (MusicManager.getInstance().getCurrentSong().equals(songEntity)) {
+        if (MusicManager.getInstance().getCurrentSong() != null && MusicManager.getInstance().getCurrentSong().equals(songEntity)) {
             MusicManager.getInstance().setMusicServiceData(MusicUtil.getSongIds(songData), MusicManager.getInstance().getCurPosition());
         } else {
             MusicManager.getInstance().setMusicServiceData(MusicUtil.getSongIds(songData), deletePos);

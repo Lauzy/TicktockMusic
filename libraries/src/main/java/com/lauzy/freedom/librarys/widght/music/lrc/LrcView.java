@@ -16,7 +16,6 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -381,8 +380,6 @@ public class LrcView extends View {
                     isShowTimeIndicator = isEnableShowIndicator;
                 }
                 if (isDragging) {
-//                    double exp = Math.exp(-event.getY() / mLastMotionY);
-//                    moveY = (float) (exp * moveY);
                     mOffset -= moveY;
                     if (mOffset < 0) {
                         mOffset = Math.max(mOffset, -getTextHeight(0) - mLrcLineSpaceHeight);
@@ -398,6 +395,8 @@ public class LrcView extends View {
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
                 if (!isDragging && (!isShowTimeIndicator || !onClickPlayButton(event))) {
+                    isShowTimeIndicator = false;
+                    postInvalidate();
                     performClick();
                 }
                 handleActionUp(event);

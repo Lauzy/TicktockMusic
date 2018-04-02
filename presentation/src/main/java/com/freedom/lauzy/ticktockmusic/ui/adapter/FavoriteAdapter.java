@@ -13,6 +13,7 @@ import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.navigation.Navigator;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
+import com.freedom.lauzy.ticktockmusic.utils.CheckNetwork;
 import com.lauzy.freedom.librarys.common.IntentUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
@@ -47,7 +48,8 @@ public class FavoriteAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolder
                 Navigator navigator = new Navigator();
                 navigator.navigateToPlayActivity(mContext, helper.getView(R.id.img_song_pic));
             } else {
-                MusicManager.getInstance().playMusic(mData, MusicUtil.getSongIds(mData), helper.getAdapterPosition());
+                CheckNetwork.checkNetwork(mContext, () -> MusicManager.getInstance()
+                        .playMusic(mData, MusicUtil.getSongIds(mData), helper.getAdapterPosition()));
             }
         });
         helper.getView(R.id.img_item_menu).setOnClickListener(menuListener(helper, item));
@@ -59,7 +61,8 @@ public class FavoriteAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolder
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.menu_item_play:
-                        MusicManager.getInstance().playMusic(mData, MusicUtil.getSongIds(mData), helper.getAdapterPosition());
+                        CheckNetwork.checkNetwork(mContext, () -> MusicManager.getInstance()
+                                .playMusic(mData, MusicUtil.getSongIds(mData), helper.getAdapterPosition()));
                         break;
                     case R.id.menu_item_singer:
                         gotoSingerDetail(songEntity);

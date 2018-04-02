@@ -33,6 +33,7 @@ import java.util.List;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
+@SuppressWarnings("checkresult")
 public class MusicManager {
 
     private static final String TAG = "MusicManager";
