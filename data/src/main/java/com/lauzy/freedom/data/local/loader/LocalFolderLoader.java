@@ -1,4 +1,4 @@
-package com.lauzy.freedom.data.local;
+package com.lauzy.freedom.data.local.loader;
 
 import android.content.Context;
 import android.database.Cursor;

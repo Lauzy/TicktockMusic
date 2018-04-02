@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
+import android.widget.CompoundButton;
 
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
+import com.bilibili.magicasakura.widgets.TintSwitchCompat;
 import com.freedom.lauzy.ticktockmusic.R;
-import com.freedom.lauzy.ticktockmusic.function.RxBus;
-import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
+import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
+import com.freedom.lauzy.ticktockmusic.function.RxBus;
+import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;
 import com.lauzy.freedom.librarys.widght.CircleImageView;
 
@@ -27,6 +30,8 @@ public class SettingActivity extends BaseActivity implements ColorChooserDialog.
 
     @BindView(R.id.img_choose_color)
     CircleImageView mImgChooseColor;
+    @BindView(R.id.switch_network)
+    TintSwitchCompat mSwitchCompat;
 
     public static Intent newInstance(Context context) {
         return new Intent(context, SettingActivity.class);
@@ -41,6 +46,9 @@ public class SettingActivity extends BaseActivity implements ColorChooserDialog.
     protected void initViews() {
         showBackIcon();
         setToolbarTitle(getResources().getString(R.string.drawer_setting));
+        mSwitchCompat.setChecked(SharePrefHelper.isEnablePlayByNetwork(this));
+        mSwitchCompat.setOnCheckedChangeListener((buttonView, isChecked) ->
+                SharePrefHelper.enablePlayByNetwork(SettingActivity.this, isChecked));
     }
 
     @OnClick(R.id.layout_choose_theme)

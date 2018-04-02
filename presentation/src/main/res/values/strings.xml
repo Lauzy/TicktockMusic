@@ -68,4 +68,5 @@
     <string name="delete_song">Are you sure to delete it?</string>
     <string name="network_error">Connected failed, please check your network</string>
     <string name="mobile_network_tip">You are using the mobile network, are you sure you want to continue?</string>
+    <string name="mobile_network_enable_switch">Allow playing with mobile network</string>
 </resources>

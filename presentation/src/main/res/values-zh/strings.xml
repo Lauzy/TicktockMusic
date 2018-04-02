@@ -66,4 +66,5 @@
     <string name="delete_song">你确定要删除这首歌曲吗？</string>
     <string name="network_error">连接失败，请检查您的网络</string>
     <string name="mobile_network_tip">你正在使用移动网络，确定要继续吗？</string>
+    <string name="mobile_network_enable_switch">允许使用移动网络播放</string>
 </resources>

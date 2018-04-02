@@ -1,4 +1,4 @@
-package com.lauzy.freedom.data.local;
+package com.lauzy.freedom.data.local.loader;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.freedom.lauzy.model.LocalSongBean;
+import com.lauzy.freedom.data.local.LocalUtil;
 
 import java.util.ArrayList;
 import java.util.List;

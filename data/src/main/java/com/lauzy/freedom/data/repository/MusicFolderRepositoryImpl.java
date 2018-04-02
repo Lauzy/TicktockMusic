@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.freedom.lauzy.model.Folder;
 import com.freedom.lauzy.repository.MusicFolderRepository;
-import com.lauzy.freedom.data.local.LocalFolderLoader;
+import com.lauzy.freedom.data.local.loader.LocalFolderLoader;
 
 import java.util.List;
 

@@ -117,7 +117,6 @@ public class RecentFragment extends BaseFragment<RecentPresenter> implements Rec
             MusicManager.getInstance().playMusic(mSongEntities,
                     MusicUtil.getSongIds(mSongEntities), position);
             MusicManager.getInstance().setRecentUpdateListener(() -> mPresenter.loadRecentSongs());
-            SharePrefHelper.enablePlayByNetwork(mActivity, true);
         });
     }
 

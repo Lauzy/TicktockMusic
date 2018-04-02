@@ -28,6 +28,7 @@ public class CheckNetwork {
                     .negativeText(android.R.string.cancel)
                     .onPositive((dialog, which) -> {
                         if (listener != null) {
+                            SharePrefHelper.enablePlayByNetwork(context, true);
                             listener.onPositive();
                         }
                     })

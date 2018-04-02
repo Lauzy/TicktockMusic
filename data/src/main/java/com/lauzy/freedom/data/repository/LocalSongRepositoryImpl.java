@@ -9,9 +9,9 @@ import com.freedom.lauzy.model.LocalSongBean;
 import com.freedom.lauzy.repository.LocalSongRepository;
 import com.lauzy.freedom.data.entity.SingerAvatarEntity;
 import com.lauzy.freedom.data.entity.mapper.SingerAvatarMapper;
-import com.lauzy.freedom.data.local.LocalAlbumLoader;
-import com.lauzy.freedom.data.local.LocalArtistLoader;
-import com.lauzy.freedom.data.local.LocalSongLoader;
+import com.lauzy.freedom.data.local.loader.LocalAlbumLoader;
+import com.lauzy.freedom.data.local.loader.LocalArtistLoader;
+import com.lauzy.freedom.data.local.loader.LocalSongLoader;
 import com.lauzy.freedom.data.net.RetrofitHelper;
 import com.lauzy.freedom.data.net.api.SongService;
 

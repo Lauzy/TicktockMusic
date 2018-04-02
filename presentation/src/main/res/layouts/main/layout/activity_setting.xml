@@ -21,7 +21,8 @@
         android:paddingBottom="@dimen/dp_15"
         android:paddingLeft="@dimen/dp_20"
         android:paddingRight="@dimen/dp_20"
-        android:paddingTop="@dimen/dp_15">
+        android:paddingTop="@dimen/dp_15"
+        android:focusable="true">
 
         <com.lauzy.freedom.librarys.widght.TickTextView
             android:layout_width="0dp"
@@ -39,5 +40,35 @@
             android:src="@color/theme_color_primary"/>
 
     </com.lauzy.freedom.librarys.widght.TickLinearLayout>
+
+    <com.lauzy.freedom.librarys.widght.TickLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/dp_15"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:paddingTop="@dimen/dp_15"
+        android:focusable="true">
+
+        <com.lauzy.freedom.librarys.widght.TickTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="@string/mobile_network_enable_switch"
+            app:tv_enable_font_type="false"
+            app:tv_enable_ripple="false"/>
+
+        <com.bilibili.magicasakura.widgets.TintSwitchCompat
+            android:id="@+id/switch_network"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_24"
+            android:src="@color/theme_color_primary"/>
+
+    </com.lauzy.freedom.librarys.widght.TickLinearLayout>
+
 
 </com.lauzy.freedom.librarys.widght.TickLinearLayout>

@@ -1,10 +1,11 @@
-package com.lauzy.freedom.data.local;
+package com.lauzy.freedom.data.local.loader;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
 import com.freedom.lauzy.model.LocalAlbumBean;
+import com.lauzy.freedom.data.local.LocalUtil;
 
 import java.util.ArrayList;
 import java.util.List;
