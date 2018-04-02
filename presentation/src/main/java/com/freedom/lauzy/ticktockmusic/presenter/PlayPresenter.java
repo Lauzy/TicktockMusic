@@ -146,6 +146,7 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                         return Observable.just(file);
                     }
                     if (entity.type.equals(BaseDb.QueueParam.LOCAL)) {
+                        LogUtil.i(TAG, "load local lrc");
                         return mLrcUseCase.buildObservable(param)
                                 .flatMap(responseBody -> {
                                     boolean saveFile = FileManager.getInstance().saveFile
@@ -153,6 +154,7 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                                     return saveFile ? Observable.just(file) : null;
                                 });
                     } else {
+                        LogUtil.i(TAG, "load net lrc");
                         return mLrcUseCase.getBaiduLrcData(NetConstants.Value.METHOD_LRC, entity.id)
                                 .flatMap(s -> {
                                     boolean saveFile = FileManager.getInstance().saveFile(new

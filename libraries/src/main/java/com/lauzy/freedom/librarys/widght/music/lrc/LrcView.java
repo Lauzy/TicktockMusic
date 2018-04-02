@@ -16,6 +16,7 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -175,7 +176,7 @@ public class LrcView extends View {
     public void setLrcData(List<Lrc> lrcData) {
         resetView(DEFAULT_CONTENT);
         mLrcData = lrcData;
-        postInvalidate();
+        invalidate();
     }
 
     @Override
@@ -207,7 +208,8 @@ public class LrcView extends View {
         if (isShowTimeIndicator) {
             mPlayDrawable.draw(canvas);
             long time = mLrcData.get(indicatePosition).getTime();
-            mIndicatorPaint.getTextBounds(LrcHelper.formatTime(time), 0, (LrcHelper.formatTime(time)).length(), mIndicateTimeBounds);
+            mIndicatorPaint.getTextBounds(LrcHelper.formatTime(time), 0,
+                    (LrcHelper.formatTime(time)).length(), mIndicateTimeBounds);
             canvas.drawLine(mPlayRect.right + mIconLineGap, getHeight() / 2,
                     getWidth() - mIndicateTimeBounds.width() * 1.4f, getHeight() / 2, mIndicatorPaint);
             int baseX = (int) (getWidth() - mIndicateTimeBounds.width() * 1.2f);
@@ -223,12 +225,13 @@ public class LrcView extends View {
         String text = mLrcData.get(i).getText();
         StaticLayout staticLayout = mLrcMap.get(text);
         if (staticLayout == null) {
-            staticLayout = new StaticLayout(text, mTextPaint,
-                    getLrcWidth(), Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false);
+            mTextPaint.setTextSize(mLrcTextSize);
+            staticLayout = new StaticLayout(text, mTextPaint, getLrcWidth(),
+                    Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false);
             mLrcMap.put(text, staticLayout);
         }
         canvas.save();
-        canvas.translate(x, y - getTextHeight(i) / 2 - mOffset);
+        canvas.translate(x, y - staticLayout.getHeight() / 2 - mOffset);
         staticLayout.draw(canvas);
         canvas.restore();
     }
@@ -326,7 +329,7 @@ public class LrcView extends View {
     private float getItemOffsetY(int linePosition) {
         float tempY = 0;
         for (int i = 1; i <= linePosition; i++) {
-            tempY += getTextHeight(i) + mLrcLineSpaceHeight;
+            tempY += (getTextHeight(i - 1) + getTextHeight(i)) / 2 + mLrcLineSpaceHeight;
         }
         return tempY;
     }
@@ -337,6 +340,7 @@ public class LrcView extends View {
         String text = mLrcData.get(linePosition).getText();
         StaticLayout staticLayout = mStaticLayoutHashMap.get(text);
         if (staticLayout == null) {
+            mTextPaint.setTextSize(mLrcTextSize);
             staticLayout = new StaticLayout(text, mTextPaint,
                     getLrcWidth(), Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false);
             mStaticLayoutHashMap.put(text, staticLayout);
@@ -385,7 +389,7 @@ public class LrcView extends View {
                     }
                     float maxHeight = getItemOffsetY(getLrcCount() - 1);
                     if (mOffset > maxHeight) {
-                        mOffset = Math.min(mOffset, maxHeight + getTextHeight(0) + mLrcLineSpaceHeight);
+                        mOffset = Math.min(mOffset, maxHeight + getTextHeight(getLrcCount() - 1) + mLrcLineSpaceHeight);
                     }
                     mLastMotionY = event.getY();
                     postInvalidate();
@@ -436,7 +440,8 @@ public class LrcView extends View {
         float absYVelocity = Math.abs(YVelocity);
         if (absYVelocity > mMinimumFlingVelocity) {
             mOverScroller.fling(0, (int) mOffset, 0, (int) (-YVelocity), 0,
-                    0, 0, (int) getItemOffsetY(getLrcCount() - 1), 0, (int) getTextHeight(0));
+                    0, 0, (int) getItemOffsetY(getLrcCount() - 1),
+                    0, (int) getTextHeight(0));
             postInvalidate();
         }
         releaseVelocityTracker();
@@ -482,9 +487,10 @@ public class LrcView extends View {
         mCurrentLine = 0;
         mOffset = 0;
         isUserScroll = false;
+        isDragging = false;
         mDefaultContent = defaultContent;
         removeCallbacks(mScrollRunnable);
-        postInvalidate();
+        invalidate();
     }
 
     @Override
@@ -638,6 +644,11 @@ public class LrcView extends View {
     public void setPlayDrawable(Drawable playDrawable) {
         mPlayDrawable = playDrawable;
         mPlayDrawable.setBounds(mPlayRect);
+        postInvalidate();
+    }
+
+    public void setIndicatorTextColor(int indicatorTextColor) {
+        mIndicatorTextColor = indicatorTextColor;
         postInvalidate();
     }
 }
