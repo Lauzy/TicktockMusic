@@ -2,8 +2,8 @@ package com.freedom.lauzy.ticktockmusic.model.mapper;
 
 import com.freedom.lauzy.model.NetSongBean;
 import com.freedom.lauzy.model.NetSongEntity;
+import com.freedom.lauzy.model.SongType;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
-import com.lauzy.freedom.data.database.BaseDb;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +35,7 @@ public class NetEntityMapper {
             songEntity.title = netSongEntity.title;
             songEntity.size = Long.parseLong(netSongEntity.size);
             songEntity.songLength = netSongEntity.songLength;
-            songEntity.type = BaseDb.QueueParam.NET;
+            songEntity.type = SongType.NET;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -59,7 +59,7 @@ public class NetEntityMapper {
             songEntity.duration = netSongEntity.duration;
             songEntity.title = netSongEntity.title;
             songEntity.songLength = netSongEntity.songLength;
-            songEntity.type = BaseDb.QueueParam.NET;
+            songEntity.type = SongType.NET;
         } catch (Exception e) {
             e.printStackTrace();
         }

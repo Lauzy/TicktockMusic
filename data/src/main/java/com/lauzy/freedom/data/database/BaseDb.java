@@ -50,9 +50,6 @@ public interface BaseDb {
         static final String DURATION = "duration";
         static final String LENGTH = "length";
 //        static final String ALBUM_BITMAP = "albumBitmap";
-
-        public static final String NET = "NET";
-        public static final String LOCAL = "LOCAL";
     }
 
     class FavoriteParam {

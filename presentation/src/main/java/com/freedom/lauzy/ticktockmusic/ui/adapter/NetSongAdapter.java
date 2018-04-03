@@ -8,6 +8,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.freedom.lauzy.model.NetSongBean;
 import com.freedom.lauzy.ticktockmusic.R;
+import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.model.mapper.NetEntityMapper;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
@@ -43,15 +44,27 @@ public class NetSongAdapter extends BaseQuickAdapter<NetSongBean, BaseViewHolder
                         .into(helper.getView(R.id.img_song_pic))
                         .build());
 
-        helper.getView(R.id.layout_song_item).setOnClickListener(v ->
-                CheckNetwork.checkNetwork(mContext, new CheckNetwork.OnPositiveListener() {
-                    @Override
-                    public void onPositive() {
-                        MusicManager.getInstance().playMusic(NetEntityMapper.transform(mData),
-                                MusicUtil.getSongIds(NetEntityMapper.transform(mData)), helper.getAdapterPosition());
-                    }
-                })
-        );
+        helper.getView(R.id.layout_song_item).setOnClickListener(playListener(helper, item));
         helper.getView(R.id.img_item_menu).setVisibility(View.GONE);
+    }
+
+    private View.OnClickListener playListener(BaseViewHolder helper, NetSongBean item) {
+        return v -> {
+            SongEntity currentSong = MusicManager.getInstance().getCurrentSong();
+            if (currentSong == null) {
+                CheckNetwork.checkNetwork(mContext, () -> playSong(helper.getAdapterPosition()));
+                return;
+            }
+            if (String.valueOf(currentSong.id).equals(item.songId)) {
+                playSong(helper.getAdapterPosition());
+                return;
+            }
+            CheckNetwork.checkNetwork(mContext, () -> playSong(helper.getAdapterPosition()));
+        };
+    }
+
+    private void playSong(int position) {
+        MusicManager.getInstance().playMusic(NetEntityMapper.transform(mData), MusicUtil
+                .getSongIds(NetEntityMapper.transform(mData)), position);
     }
 }

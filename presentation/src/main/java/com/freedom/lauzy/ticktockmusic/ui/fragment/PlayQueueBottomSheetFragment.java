@@ -31,7 +31,6 @@ import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.service.MusicService;
 import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.PlayQueueAdapter;
-import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.lauzy.freedom.librarys.common.ScreenUtils;
 import com.lauzy.freedom.librarys.widght.TickBottomSheetDialog;
 
@@ -116,7 +115,8 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment impl
     }
 
     private void setModeView() {
-        switch (SharePrefHelper.getRepeatMode(mActivity.getApplicationContext())) {
+        int repeatMode = mQueuePresenter.getRepeatMode(MusicService.REPEAT_ALL_MODE);
+        switch (repeatMode) {
             case MusicService.REPEAT_SINGLE_MODE:
                 mImgMode.setImageResource(R.drawable.ic_repeat_one_black);
                 mTxtPlayMode.setText(R.string.repeat_single_mode);
@@ -157,19 +157,20 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment impl
     }
 
     private void switchMode() {
-        switch (SharePrefHelper.getRepeatMode(mActivity.getApplicationContext())) {
+        int repeatMode = mQueuePresenter.getRepeatMode(MusicService.REPEAT_ALL_MODE);
+        switch (repeatMode) {
             case MusicService.REPEAT_SINGLE_MODE:
-                SharePrefHelper.setRepeatMode(mActivity.getApplicationContext(), MusicService.REPEAT_RANDOM_MODE);
+                mQueuePresenter.setRepeatMode(MusicService.REPEAT_RANDOM_MODE);
                 mImgMode.setImageResource(R.drawable.ic_shuffle_black);
                 mTxtPlayMode.setText(R.string.repeat_shuffle_mode);
                 break;
             case MusicService.REPEAT_ALL_MODE:
-                SharePrefHelper.setRepeatMode(mActivity.getApplicationContext(), MusicService.REPEAT_SINGLE_MODE);
+                mQueuePresenter.setRepeatMode(MusicService.REPEAT_SINGLE_MODE);
                 mImgMode.setImageResource(R.drawable.ic_repeat_one_black);
                 mTxtPlayMode.setText(R.string.repeat_single_mode);
                 break;
             case MusicService.REPEAT_RANDOM_MODE:
-                SharePrefHelper.setRepeatMode(mActivity.getApplicationContext(), MusicService.REPEAT_ALL_MODE);
+                mQueuePresenter.setRepeatMode(MusicService.REPEAT_ALL_MODE);
                 mImgMode.setImageResource(R.drawable.ic_repeat_black);
                 mTxtPlayMode.setText(R.string.repeat_loop_mode);
                 break;

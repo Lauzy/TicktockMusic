@@ -31,7 +31,6 @@ import com.freedom.lauzy.ticktockmusic.presenter.PlayPresenter;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.service.MusicService;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.PlayQueueBottomSheetFragment;
-import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;
 import com.lauzy.freedom.data.local.LocalUtil;
 import com.lauzy.freedom.librarys.view.util.ScrimUtil;
@@ -147,7 +146,8 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
      * 设置播放模式
      */
     private void setModeView() {
-        switch (SharePrefHelper.getRepeatMode(this)) {
+        int repeatMode = mPresenter.getRepeatMode(MusicService.REPEAT_ALL_MODE);
+        switch (repeatMode) {
             case MusicService.REPEAT_SINGLE_MODE:
                 mImgPlayMode.setImageResource(R.drawable.ic_repeat_one_black);
                 break;
@@ -158,6 +158,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
                 mImgPlayMode.setImageResource(R.drawable.ic_shuffle_black);
                 break;
         }
+        mImgPlayMode.getDrawable().setTint(isDarkStyle ? Color.WHITE : Color.BLACK);
     }
 
     @Override
@@ -448,17 +449,18 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     }
 
     private void switchMode() {
-        switch (SharePrefHelper.getRepeatMode(this)) {
+        int repeatMode = mPresenter.getRepeatMode(MusicService.REPEAT_ALL_MODE);
+        switch (repeatMode) {
             case MusicService.REPEAT_SINGLE_MODE:
-                SharePrefHelper.setRepeatMode(this, MusicService.REPEAT_RANDOM_MODE);
+                mPresenter.setRepeatMode(MusicService.REPEAT_RANDOM_MODE);
                 mImgPlayMode.setImageResource(R.drawable.ic_shuffle_black);
                 break;
             case MusicService.REPEAT_ALL_MODE:
-                SharePrefHelper.setRepeatMode(this, MusicService.REPEAT_SINGLE_MODE);
+                mPresenter.setRepeatMode(MusicService.REPEAT_SINGLE_MODE);
                 mImgPlayMode.setImageResource(R.drawable.ic_repeat_one_black);
                 break;
             case MusicService.REPEAT_RANDOM_MODE:
-                SharePrefHelper.setRepeatMode(this, MusicService.REPEAT_ALL_MODE);
+                mPresenter.setRepeatMode(MusicService.REPEAT_ALL_MODE);
                 mImgPlayMode.setImageResource(R.drawable.ic_repeat_black);
                 break;
         }

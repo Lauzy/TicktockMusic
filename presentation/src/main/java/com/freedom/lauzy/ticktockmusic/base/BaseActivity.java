@@ -3,7 +3,6 @@ package com.freedom.lauzy.ticktockmusic.base;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.os.Bundle;
-import android.support.annotation.IntegerRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -49,8 +48,8 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setViews();
         initInject();
+        setViews();
         subscribeThemeEvent();
         if (null != mPresenter) {
             mPresenter.attachView(this);
@@ -58,7 +57,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
         loadData();
     }
 
-    protected  void initInject(){
+    protected void initInject() {
 
     }
 
@@ -70,13 +69,14 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
         initViews();
     }
 
-    protected abstract @LayoutRes int getLayoutRes();
+    protected abstract @LayoutRes
+    int getLayoutRes();
 
-    protected void initViews(){
+    protected void initViews() {
 
     }
 
-    protected void loadData(){
+    protected void loadData() {
 
     }
 

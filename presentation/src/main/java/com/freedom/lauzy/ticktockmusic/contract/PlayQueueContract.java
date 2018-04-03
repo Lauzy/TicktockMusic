@@ -19,6 +19,10 @@ public interface PlayQueueContract {
         void deleteQueueData(String[] ids, int position, SongEntity entity);
 
         void deleteAllQueueData(String[] ids);
+
+        void setRepeatMode(int mode);
+
+        int getRepeatMode(int defaultMode);
     }
 
     interface View extends IBaseView {

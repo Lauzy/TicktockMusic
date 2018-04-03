@@ -8,6 +8,7 @@ import android.widget.PopupMenu;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.freedom.lauzy.model.SongType;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.navigation.Navigator;
@@ -48,6 +49,10 @@ public class FavoriteAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolder
                 Navigator navigator = new Navigator();
                 navigator.navigateToPlayActivity(mContext, helper.getView(R.id.img_song_pic));
             } else {
+                if (item.type.equals(SongType.LOCAL)) {
+                    MusicManager.getInstance().playMusic(mData, MusicUtil.getSongIds(mData), helper.getAdapterPosition());
+                    return;
+                }
                 CheckNetwork.checkNetwork(mContext, () -> MusicManager.getInstance()
                         .playMusic(mData, MusicUtil.getSongIds(mData), helper.getAdapterPosition()));
             }
@@ -61,8 +66,7 @@ public class FavoriteAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolder
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.menu_item_play:
-                        CheckNetwork.checkNetwork(mContext, () -> MusicManager.getInstance()
-                                .playMusic(mData, MusicUtil.getSongIds(mData), helper.getAdapterPosition()));
+                        playSong(songEntity, helper.getAdapterPosition());
                         break;
                     case R.id.menu_item_singer:
                         gotoSingerDetail(songEntity);
@@ -80,8 +84,32 @@ public class FavoriteAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolder
                 return false;
             });
             popupMenu.inflate(R.menu.menu_play_list_item);
+            if (songEntity.type.equals(SongType.NET)) {
+                popupMenu.getMenu().findItem(R.id.menu_item_singer).setVisible(false);
+                popupMenu.getMenu().findItem(R.id.menu_item_album).setVisible(false);
+                popupMenu.getMenu().findItem(R.id.menu_item_share).setVisible(false);
+            }
             popupMenu.show();
         };
+    }
+
+    private void playSong(SongEntity item, int position) {
+        if (item.type.equals(SongType.LOCAL)) {
+            MusicManager.getInstance().playMusic(mData, MusicUtil.getSongIds(mData), position);
+            return;
+        }
+        if (MusicManager.getInstance().getCurrentSong() == null) {
+            CheckNetwork.checkNetwork(mContext, () -> MusicManager.getInstance().playMusic(mData,
+                    MusicUtil.getSongIds(mData), position));
+            return;
+        }
+        if (item.id == MusicManager.getInstance().getCurrentSong().id) {
+            MusicManager.getInstance().playMusic(mData, MusicUtil.getSongIds(mData), position);
+            return;
+        }
+
+        CheckNetwork.checkNetwork(mContext, () -> MusicManager.getInstance().playMusic(mData,
+                MusicUtil.getSongIds(mData), position));
     }
 
     private void deleteSong(BaseViewHolder helper, SongEntity songEntity) {

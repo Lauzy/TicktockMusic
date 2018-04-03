@@ -12,6 +12,8 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static com.freedom.lauzy.model.SongType.NET;
+
 /**
  * Desc : SongListMapper 将Json默认生成格式的SongListEntity转化为直接使用的NetSongBean
  * Author : Lauzy
@@ -54,7 +56,7 @@ public class SongListMapper {
             netSongBean.rank = entity.rank;
             netSongBean.duration = entity.file_duration;
             netSongBean.songLength = LocalUtil.formatTime(entity.file_duration);
-            netSongBean.type = BaseDb.QueueParam.NET;
+            netSongBean.type = NET;
         }
         return netSongBean;
     }

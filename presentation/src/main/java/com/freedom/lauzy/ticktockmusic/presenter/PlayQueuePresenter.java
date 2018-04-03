@@ -1,5 +1,6 @@
 package com.freedom.lauzy.ticktockmusic.presenter;
 
+import com.freedom.lauzy.interactor.ConfigManagerUseCase;
 import com.freedom.lauzy.interactor.GetQueueUseCase;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
 import com.freedom.lauzy.ticktockmusic.contract.PlayQueueContract;
@@ -20,10 +21,12 @@ public class PlayQueuePresenter extends BaseRxPresenter<PlayQueueContract.View>
         implements PlayQueueContract.Presenter {
 
     private GetQueueUseCase mGetQueueUseCase;
+    private ConfigManagerUseCase mConfigManagerUseCase;
 
     @Inject
-    PlayQueuePresenter(GetQueueUseCase getQueueUseCase) {
+    PlayQueuePresenter(GetQueueUseCase getQueueUseCase, ConfigManagerUseCase configManagerUseCase) {
         mGetQueueUseCase = getQueueUseCase;
+        mConfigManagerUseCase = configManagerUseCase;
     }
 
     @Override
@@ -77,5 +80,15 @@ public class PlayQueuePresenter extends BaseRxPresenter<PlayQueueContract.View>
                     }
                     getView().deleteAllQueueData();
                 });
+    }
+
+    @Override
+    public void setRepeatMode(int mode) {
+        mConfigManagerUseCase.setRepeatMode(mode);
+    }
+
+    @Override
+    public int getRepeatMode(int defaultMode) {
+        return mConfigManagerUseCase.getRepeatMode(defaultMode);
     }
 }

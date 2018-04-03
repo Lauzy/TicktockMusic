@@ -1,5 +1,6 @@
 package com.freedom.lauzy.ticktockmusic.service;
 
+import com.freedom.lauzy.interactor.ConfigManagerUseCase;
 import com.freedom.lauzy.interactor.GetQueueUseCase;
 import com.freedom.lauzy.interactor.NetSongUseCase;
 import com.freedom.lauzy.interactor.RecentSongUseCase;
@@ -9,6 +10,7 @@ import com.freedom.lauzy.ticktockmusic.model.mapper.NetEntityMapper;
 import com.freedom.lauzy.ticktockmusic.model.mapper.RecentMapper;
 import com.freedom.lauzy.ticktockmusic.model.mapper.SongMapper;
 import com.lauzy.freedom.data.net.constants.NetConstants;
+import com.lauzy.freedom.data.repository.ConfigDataManagerImpl;
 import com.lauzy.freedom.data.repository.NetSongRepositoryImpl;
 import com.lauzy.freedom.data.repository.QueueRepositoryImpl;
 import com.lauzy.freedom.data.repository.RecentRepositoryImpl;
@@ -27,9 +29,10 @@ import io.reactivex.Observable;
 @SuppressWarnings("WeakerAccess")
 public class QueueManager {
 
-    private GetQueueUseCase mGetQueueUseCase;
-    private RecentSongUseCase mRecentSongUseCase;
-    private NetSongUseCase mNetSongUseCase;
+    private final ConfigManagerUseCase mConfigManagerUseCase;
+    private final GetQueueUseCase mGetQueueUseCase;
+    private final RecentSongUseCase mRecentSongUseCase;
+    private final NetSongUseCase mNetSongUseCase;
 
     /**
      * 初始化 useCase
@@ -38,10 +41,12 @@ public class QueueManager {
         mGetQueueUseCase = new GetQueueUseCase(new QueueRepositoryImpl(TicktockApplication.getInstance()), null, null);
         mRecentSongUseCase = new RecentSongUseCase(new RecentRepositoryImpl(TicktockApplication.getInstance()), null, null);
         mNetSongUseCase = new NetSongUseCase(new NetSongRepositoryImpl(), null, null);
+        mConfigManagerUseCase = new ConfigManagerUseCase(new ConfigDataManagerImpl(TicktockApplication.getInstance()));
     }
 
     /**
      * 播放队列 Observable
+     *
      * @param ids songIds
      * @return Observable
      */
@@ -51,7 +56,8 @@ public class QueueManager {
 
     /**
      * 添加并获取播放队列 Observable
-     * @param ids songIds
+     *
+     * @param ids          songIds
      * @param songEntities 待添加的数据
      * @return Observable
      */
@@ -62,6 +68,7 @@ public class QueueManager {
 
     /**
      * 添加数据到最近播放队列
+     *
      * @param entity 播放的音乐
      * @return Observable
      */
@@ -72,11 +79,16 @@ public class QueueManager {
 
     /**
      * 根据songId 获取网络音乐数据
+     *
      * @param songId songId
      * @return Observable
      */
     public Observable<SongEntity> netSongEntityObservable(long songId) {
         return mNetSongUseCase.buildObservable(new NetSongUseCase.Params(NetConstants.Value.METHOD_PLAY,
                 songId)).map(NetEntityMapper::transform);
+    }
+
+    public int getRepeatMode(int defaultMode) {
+        return mConfigManagerUseCase.getRepeatMode(defaultMode);
     }
 }

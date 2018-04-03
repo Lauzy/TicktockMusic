@@ -1,8 +1,8 @@
 package com.freedom.lauzy.ticktockmusic.model.mapper;
 
 import com.freedom.lauzy.model.LocalSongBean;
+import com.freedom.lauzy.model.SongType;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
-import com.lauzy.freedom.data.database.BaseDb;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,6 +57,7 @@ public class LocalSongMapper {
 
     /**
      * 重要：本地默认修改type为LOCAL
+     *
      * @param localSongBean SongEntity
      * @return SongEntity
      */
@@ -76,12 +77,13 @@ public class LocalSongMapper {
         songEntity.size = localSongBean.size;
         songEntity.title = localSongBean.title;
         songEntity.songLength = localSongBean.songLength;
-        songEntity.type = BaseDb.QueueParam.LOCAL;
+        songEntity.type = SongType.LOCAL;
         return songEntity;
     }
 
     /**
      * 转换为本地播放音乐（由于前期设计有所缺陷，所以播放本地音乐时都用此方法转换对象）
+     *
      * @param localSongBeen 音乐数据
      * @return 音乐
      */

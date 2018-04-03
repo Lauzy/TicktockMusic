@@ -6,6 +6,8 @@ import com.freedom.lauzy.executor.PostExecutionThread;
 import com.freedom.lauzy.executor.ThreadExecutor;
 import com.freedom.lauzy.repository.FavoriteRepository;
 import com.freedom.lauzy.repository.FolderSongsRepository;
+import com.freedom.lauzy.repository.ICacheDataManager;
+import com.freedom.lauzy.repository.IConfigDataManager;
 import com.freedom.lauzy.repository.LocalSongRepository;
 import com.freedom.lauzy.repository.LrcRepository;
 import com.freedom.lauzy.repository.MusicFolderRepository;
@@ -16,6 +18,8 @@ import com.freedom.lauzy.ticktockmusic.TicktockApplication;
 import com.freedom.lauzy.ticktockmusic.function.UIThread;
 import com.freedom.lauzy.ticktockmusic.injection.scope.ContextLife;
 import com.lauzy.freedom.data.executor.JobExecutor;
+import com.lauzy.freedom.data.repository.CacheDataManagerImpl;
+import com.lauzy.freedom.data.repository.ConfigDataManagerImpl;
 import com.lauzy.freedom.data.repository.FavoriteRepositoryImpl;
 import com.lauzy.freedom.data.repository.FolderSongsRepositoryImpl;
 import com.lauzy.freedom.data.repository.LocalSongRepositoryImpl;
@@ -111,5 +115,17 @@ public class ApplicationModule {
     @Singleton
     LrcRepository provideLrcRepository() {
         return new LrcRepositoryImpl();
+    }
+
+    @Provides
+    @Singleton
+    IConfigDataManager provideDataManager() {
+        return new ConfigDataManagerImpl(mApplication);
+    }
+
+    @Provides
+    @Singleton
+    ICacheDataManager provideCacheManager() {
+        return new CacheDataManagerImpl(mApplication);
     }
 }

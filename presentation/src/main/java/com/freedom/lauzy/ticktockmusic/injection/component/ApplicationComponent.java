@@ -6,6 +6,8 @@ import com.freedom.lauzy.executor.PostExecutionThread;
 import com.freedom.lauzy.executor.ThreadExecutor;
 import com.freedom.lauzy.repository.FavoriteRepository;
 import com.freedom.lauzy.repository.FolderSongsRepository;
+import com.freedom.lauzy.repository.ICacheDataManager;
+import com.freedom.lauzy.repository.IConfigDataManager;
 import com.freedom.lauzy.repository.LocalSongRepository;
 import com.freedom.lauzy.repository.LrcRepository;
 import com.freedom.lauzy.repository.MusicFolderRepository;
@@ -14,6 +16,7 @@ import com.freedom.lauzy.repository.RecentRepository;
 import com.freedom.lauzy.repository.SongRepository;
 import com.freedom.lauzy.ticktockmusic.injection.module.ApplicationModule;
 import com.freedom.lauzy.ticktockmusic.injection.scope.ContextLife;
+import com.lauzy.freedom.data.local.data.DataManager;
 
 import javax.inject.Singleton;
 
@@ -53,4 +56,8 @@ public interface ApplicationComponent {
     FolderSongsRepository folderSongsRepository();
 
     LrcRepository lrcRepository();
+
+    IConfigDataManager configManagerRepo();
+
+    ICacheDataManager cacheManagerRepo();
 }

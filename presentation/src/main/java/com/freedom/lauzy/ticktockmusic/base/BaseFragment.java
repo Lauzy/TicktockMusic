@@ -109,15 +109,15 @@ public abstract class BaseFragment<T extends IPresenter> extends Fragment implem
 
     protected abstract int getLayoutRes();
 
-    protected void initInjector(){
+    protected void initInjector() {
 
     }
 
-    protected void initViews(){
+    protected void initViews() {
 
     }
 
-    protected void loadData(){
+    protected void loadData() {
 
     }
 

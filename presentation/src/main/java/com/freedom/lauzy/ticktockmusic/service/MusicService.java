@@ -14,12 +14,11 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.freedom.lauzy.model.SongType;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
-import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
-import com.lauzy.freedom.data.database.BaseDb;
 import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.common.ToastUtils;
 
@@ -157,11 +156,11 @@ public class MusicService extends Service {
      */
     @SuppressLint("CheckResult")
     private void play(SongEntity entity) {
-        if (entity.type.equals(BaseDb.QueueParam.LOCAL)) {//本地音乐
+        if (entity.type.equals(SongType.LOCAL)) {//本地音乐
             //直接获取到音乐专辑图片的bitmap，便于更新通知
             MusicUtil.albumCoverObservable(this, entity)
                     .subscribe(bitmap -> playMusic(entity, bitmap));
-        } else if (entity.type.equals(BaseDb.QueueParam.NET)) {//网络音乐
+        } else if (entity.type.equals(SongType.NET)) {//网络音乐
             playNetSong(entity);
         }
     }
@@ -248,7 +247,7 @@ public class MusicService extends Service {
     private void skipToNext() {
         if (mSongData != null && !mSongData.isEmpty()) {
             setState(PlaybackState.STATE_SKIPPING_TO_NEXT);
-            switch (SharePrefHelper.getRepeatMode(this.getApplicationContext())) {
+            switch (mQueueManager.getRepeatMode(REPEAT_ALL_MODE)) {
                 case REPEAT_ALL_MODE:
                     if (mCurrentPosition < mSongData.size() - 1) {
                         mCurrentPosition++;
@@ -270,7 +269,7 @@ public class MusicService extends Service {
     private void skipToPrevious() {
         if (mSongData != null && !mSongData.isEmpty()) {
             setState(PlaybackState.STATE_SKIPPING_TO_PREVIOUS);
-            switch (SharePrefHelper.getRepeatMode(this.getApplicationContext())) {
+            switch (mQueueManager.getRepeatMode(REPEAT_ALL_MODE)) {
                 case REPEAT_ALL_MODE:
                     if (mCurrentPosition > 0) {
                         mCurrentPosition--;

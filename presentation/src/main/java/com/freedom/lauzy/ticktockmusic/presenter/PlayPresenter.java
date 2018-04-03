@@ -4,8 +4,10 @@ import android.graphics.Bitmap;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.freedom.lauzy.interactor.ConfigManagerUseCase;
 import com.freedom.lauzy.interactor.FavoriteSongUseCase;
 import com.freedom.lauzy.interactor.LrcUseCase;
+import com.freedom.lauzy.model.SongType;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
 import com.freedom.lauzy.ticktockmusic.contract.PlayContract;
 import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
@@ -14,7 +16,6 @@ import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.model.mapper.FavoriteMapper;
 import com.freedom.lauzy.ticktockmusic.utils.FileManager;
 import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;
-import com.lauzy.freedom.data.database.BaseDb;
 import com.lauzy.freedom.data.net.constants.NetConstants;
 import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
@@ -48,15 +49,17 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
 
     private FavoriteSongUseCase mFavoriteSongUseCase;
     private LrcUseCase mLrcUseCase;
+    private ConfigManagerUseCase mConfigManagerUseCase;
     private FavoriteMapper mFavoriteMapper;
     private static final String TAG = "PlayPresenter";
     private HashMap<String, Integer> mColorMap = new HashMap<>();
 
     @Inject
     PlayPresenter(FavoriteSongUseCase favoriteSongUseCase, LrcUseCase lrcUseCase,
-                  FavoriteMapper favoriteMapper) {
+                  ConfigManagerUseCase configManagerUseCase, FavoriteMapper favoriteMapper) {
         mFavoriteSongUseCase = favoriteSongUseCase;
         mLrcUseCase = lrcUseCase;
+        mConfigManagerUseCase = configManagerUseCase;
         mFavoriteMapper = favoriteMapper;
     }
 
@@ -145,8 +148,7 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                     if (file.exists() && file.canRead()) {
                         return Observable.just(file);
                     }
-                    if (entity.type.equals(BaseDb.QueueParam.LOCAL)) {
-                        LogUtil.i(TAG, "load local lrc");
+                    if (entity.type.equals(SongType.LOCAL)) {
                         return mLrcUseCase.buildObservable(param)
                                 .flatMap(responseBody -> {
                                     boolean saveFile = FileManager.getInstance().saveFile
@@ -154,7 +156,6 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                                     return saveFile ? Observable.just(file) : null;
                                 });
                     } else {
-                        LogUtil.i(TAG, "load net lrc");
                         return mLrcUseCase.getBaiduLrcData(NetConstants.Value.METHOD_LRC, entity.id)
                                 .flatMap(s -> {
                                     boolean saveFile = FileManager.getInstance().saveFile(new
@@ -198,5 +199,15 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                         getView().downloadFailed(e);
                     }
                 });
+    }
+
+    @Override
+    public void setRepeatMode(int mode) {
+        mConfigManagerUseCase.setRepeatMode(mode);
+    }
+
+    @Override
+    public int getRepeatMode(int defaultMode) {
+        return mConfigManagerUseCase.getRepeatMode(defaultMode);
     }
 }

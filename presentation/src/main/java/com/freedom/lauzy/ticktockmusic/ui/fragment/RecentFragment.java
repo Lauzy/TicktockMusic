@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bilibili.magicasakura.utils.ThemeUtils;
+import com.freedom.lauzy.model.SongType;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
 import com.freedom.lauzy.ticktockmusic.contract.RecentContract;
@@ -19,7 +20,6 @@ import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.RecentAdapter;
 import com.freedom.lauzy.ticktockmusic.utils.CheckNetwork;
-import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
 
 import java.util.ArrayList;
@@ -113,11 +113,33 @@ public class RecentFragment extends BaseFragment<RecentPresenter> implements Rec
      */
     @Override
     public void playRecent(SongEntity entity, int position) {
-        CheckNetwork.checkNetwork(mActivity, () -> {
-            MusicManager.getInstance().playMusic(mSongEntities,
-                    MusicUtil.getSongIds(mSongEntities), position);
-            MusicManager.getInstance().setRecentUpdateListener(() -> mPresenter.loadRecentSongs());
-        });
+        if (entity.type.equals(SongType.LOCAL)) {
+            playSong(position);
+            return;
+        }
+        CheckNetwork.checkNetwork(mActivity, () -> playSong(position));
+    }
+
+    @Override
+    public void playItemSong(SongEntity entity, int position) {
+        if (entity.type.equals(SongType.LOCAL)) {
+            playSong(position);
+            return;
+        }
+        if (MusicManager.getInstance().getCurrentSong() == null) {
+            CheckNetwork.checkNetwork(mActivity, () -> playSong(position));
+            return;
+        }
+        if (entity.id == MusicManager.getInstance().getCurrentSong().id) {
+            playSong(position);
+            return;
+        }
+        CheckNetwork.checkNetwork(mActivity, () -> playSong(position));
+    }
+
+    private void playSong(int position) {
+        MusicManager.getInstance().playMusic(mSongEntities, MusicUtil.getSongIds(mSongEntities), position);
+        MusicManager.getInstance().setRecentUpdateListener(() -> mPresenter.loadRecentSongs());
     }
 
     @Override

@@ -1,12 +1,15 @@
 package com.lauzy.freedom.data.repository;
 
 import android.content.Context;
+import android.text.format.DateUtils;
+import android.util.Log;
 
 import com.freedom.lauzy.model.NetSongBean;
 import com.freedom.lauzy.repository.SongRepository;
 import com.lauzy.freedom.data.database.NetMusicDb;
 import com.lauzy.freedom.data.entity.MusicEntity;
 import com.lauzy.freedom.data.entity.mapper.SongListMapper;
+import com.lauzy.freedom.data.local.data.DataManager;
 import com.lauzy.freedom.data.net.RetrofitHelper;
 import com.lauzy.freedom.data.net.api.SongService;
 
@@ -34,6 +37,7 @@ import io.reactivex.functions.Function;
 @Singleton
 public class SongRepositoryImpl implements SongRepository {
 
+    private static final String TAG = "SongRepositoryImpl";
     private Context mContext;
 
     @Inject
@@ -60,7 +64,13 @@ public class SongRepositoryImpl implements SongRepository {
                     @Override
                     public void accept(@NonNull List<NetSongBean> songListBeen) throws Exception {
                         if (!songListBeen.isEmpty()) {
-                            NetMusicDb.getInstance(mContext).removeData(type);
+                            long thenTime = DataManager.getInstance(mContext).getCacheRepo().getLong("db_cache_time");
+                            if (!DateUtils.isToday(thenTime)) {//如果缓存数据不是当天的数据，则清空数据库
+                                DataManager.getInstance(mContext).getCacheRepo().put("db_cache_time",
+                                        System.currentTimeMillis());
+                                NetMusicDb.getInstance(mContext).removeData(type);
+                                Log.i(TAG, "delete db");
+                            }
                             NetMusicDb.getInstance(mContext).addNetSongData(type, songListBeen);
                         }
                     }

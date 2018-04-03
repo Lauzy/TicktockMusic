@@ -2,19 +2,22 @@ package com.freedom.lauzy.ticktockmusic.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
-import android.widget.CompoundButton;
 
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.bilibili.magicasakura.widgets.TintSwitchCompat;
+import com.freedom.lauzy.interactor.ConfigManagerUseCase;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseActivity;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
-import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
+import com.freedom.lauzy.ticktockmusic.presenter.SettingPresenter;
 import com.freedom.lauzy.ticktockmusic.utils.ThemeHelper;
 import com.lauzy.freedom.librarys.widght.CircleImageView;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -26,7 +29,7 @@ import butterknife.OnClick;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class SettingActivity extends BaseActivity implements ColorChooserDialog.ColorCallback {
+public class SettingActivity extends BaseActivity<SettingPresenter> implements ColorChooserDialog.ColorCallback {
 
     @BindView(R.id.img_choose_color)
     CircleImageView mImgChooseColor;
@@ -43,12 +46,18 @@ public class SettingActivity extends BaseActivity implements ColorChooserDialog.
     }
 
     @Override
+    protected void initInject() {
+        getActivityComponent().inject(this);
+    }
+
+    @Override
     protected void initViews() {
         showBackIcon();
         setToolbarTitle(getResources().getString(R.string.drawer_setting));
-        mSwitchCompat.setChecked(SharePrefHelper.isEnablePlayByNetwork(this));
+        mSwitchCompat.setChecked(mPresenter.isEnablePlayByNetwork());
         mSwitchCompat.setOnCheckedChangeListener((buttonView, isChecked) ->
-                SharePrefHelper.enablePlayByNetwork(SettingActivity.this, isChecked));
+                mPresenter.enablePlayByNetwork(isChecked));
+
     }
 
     @OnClick(R.id.layout_choose_theme)

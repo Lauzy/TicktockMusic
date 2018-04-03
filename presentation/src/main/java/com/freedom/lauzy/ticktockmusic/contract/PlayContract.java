@@ -50,5 +50,9 @@ public interface PlayContract {
         void deleteFavoriteSong(long songId);
 
         void loadLrc(SongEntity entity);
+
+        void setRepeatMode(int mode);
+
+        int getRepeatMode(int defautMode);
     }
 }

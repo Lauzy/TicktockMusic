@@ -16,8 +16,8 @@ import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
+import com.freedom.lauzy.ticktockmusic.presenter.ArtistDetailPresenter;
 import com.freedom.lauzy.ticktockmusic.ui.adapter.ArtistDetailPagerAdapter;
-import com.freedom.lauzy.ticktockmusic.utils.SharePrefHelper;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.widght.TickToolbar;
@@ -35,8 +35,13 @@ import io.reactivex.disposables.Disposable;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public class ArtistDetailFragment extends BaseFragment {
+public class ArtistDetailFragment extends BaseFragment<ArtistDetailPresenter> {
 
+    private static final String ARTIST_NAME = "artist_name";
+    private static final String ARTIST_ID = "artist_id";
+    private static final String TRANS_NAME = "trans_name";
+    private static final String ALBUM_NUM = "album_num";
+    private static final String SONG_NUM = "song_num";
     @BindView(R.id.img_singer)
     ImageView mImgSinger;
     @BindView(R.id.toolbar_common)
@@ -47,11 +52,6 @@ public class ArtistDetailFragment extends BaseFragment {
     TabLayout mTabSingerDetail;
     @BindView(R.id.vp_singer_detail)
     ViewPager mVpSingerDetail;
-    private static final String ARTIST_NAME = "artist_name";
-    private static final String ARTIST_ID = "artist_id";
-    private static final String TRANS_NAME = "trans_name";
-    private static final String ALBUM_NUM = "album_num";
-    private static final String SONG_NUM = "song_num";
     private String mArtistName;
     private long mArtistId;
     private String mTransName;
@@ -74,6 +74,12 @@ public class ArtistDetailFragment extends BaseFragment {
     @Override
     protected int getLayoutRes() {
         return R.layout.fragment_artist_detail;
+    }
+
+    @Override
+    protected void initInjector() {
+        super.initInjector();
+        getFragmentComponent().inject(this);
     }
 
     @Override
@@ -134,7 +140,7 @@ public class ArtistDetailFragment extends BaseFragment {
     @Override
     protected void loadData() {
         ImageLoader.INSTANCE.display(mActivity, new ImageConfig.Builder()
-                .url(SharePrefHelper.getArtistAvatar(mActivity, mArtistName))
+                .url(mPresenter.getArtistAvatarUrl(mArtistName))
                 .isRound(false)
                 .cacheStrategy(ImageConfig.CACHE_ALL)
                 .placeholder(R.drawable.ic_default)
