@@ -36,7 +36,7 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements C
     @BindView(R.id.switch_network)
     TintSwitchCompat mSwitchCompat;
 
-    public static Intent newInstance(Context context) {
+    public static Intent newIntent(Context context) {
         return new Intent(context, SettingActivity.class);
     }
 

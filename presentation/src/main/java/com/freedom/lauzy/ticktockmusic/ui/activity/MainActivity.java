@@ -32,8 +32,8 @@ import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.AlbumDetailFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.ArtistDetailFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.FavoriteFragment;
-import com.freedom.lauzy.ticktockmusic.ui.fragment.MusicFolderFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.LocalMusicFragment;
+import com.freedom.lauzy.ticktockmusic.ui.fragment.MusicFolderFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.RecentFragment;
 import com.lauzy.freedom.librarys.common.LogUtil;
@@ -218,6 +218,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
                 mNavigator.navigateToSetting(MainActivity.this);
                 break;
             case R.id.nav_about:
+                mNavigator.navigateToAbout(MainActivity.this);
                 break;
             case R.id.nav_exit:
                 MusicManager.getInstance().quit();
@@ -357,7 +358,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
      * @param songEntity 当前播放音乐
      */
     private void setNavHeadView(SongEntity songEntity) {
-        if (songEntity==null) {
+        if (songEntity == null) {
             return;
         }
         mNavTitle.setText(songEntity.title);
@@ -383,6 +384,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
             ImageLoader.INSTANCE.display(MainActivity.this,
                     new ImageConfig.Builder()
                             .url(songEntity.albumCover)
+                            .isRound(false)
                             .placeholder(R.drawable.ic_default)
                             .into(mImgCurSong).build());
         }

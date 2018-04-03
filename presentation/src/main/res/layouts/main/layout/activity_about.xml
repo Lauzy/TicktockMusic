@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:divider="@drawable/divider"
+              android:orientation="vertical"
+              android:showDividers="middle">
+
+    <include layout="@layout/layout_toolbar"/>
+
+    <TextView
+        android:id="@+id/tv_github"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingMultiplier="1.2"
+        android:paddingBottom="@dimen/dp_10"
+        android:paddingLeft="@dimen/dp_15"
+        android:paddingRight="@dimen/dp_15"
+        android:paddingTop="@dimen/dp_10"
+        android:text="@string/my_github"
+        android:textSize="@dimen/sp_12"/>
+
+    <TextView
+        android:id="@+id/tv_js"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingMultiplier="1.2"
+        android:paddingBottom="@dimen/dp_10"
+        android:paddingLeft="@dimen/dp_15"
+        android:paddingRight="@dimen/dp_15"
+        android:paddingTop="@dimen/dp_10"
+        android:text="@string/my_blog"
+        android:textSize="@dimen/sp_12"/>
+
+    <TextView
+        android:id="@+id/tv_bugs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_15"
+        android:text="@string/report_bugs"
+        android:textColor="@color/txt_black"
+        android:textSize="@dimen/sp_15"/>
+
+    <TextView
+        android:id="@+id/tv_star"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_15"
+        android:text="@string/give_star"
+        android:textColor="@color/txt_black"
+        android:textSize="@dimen/sp_15"/>
+
+</LinearLayout>

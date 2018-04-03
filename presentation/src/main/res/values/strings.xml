@@ -69,4 +69,13 @@
     <string name="network_error">Connected failed, please check your network</string>
     <string name="mobile_network_tip">You are using the mobile network, are you sure you want to continue?</string>
     <string name="mobile_network_enable_switch">Allow playing with mobile network</string>
+
+    <string name="my_github">Github: \nhttps://github.com/Lauzy</string>
+    <string name="my_blog">Blog: \nhttps://www.jianshu.com/u/e76853f863a9</string>
+    <string name="report_bugs">Report any bugs</string>
+    <string name="give_star">Give me a star</string>
+    <string name="github_website">https://github.com/Lauzy</string>
+    <string name="blog_website">https://www.jianshu.com/u/e76853f863a9</string>
+    <string name="issues_website">https://github.com/Lauzy/TicktockMusic/issues</string>
+    <string name="star_website">https://github.com/Lauzy/TicktockMusic</string>
 </resources>

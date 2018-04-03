@@ -58,6 +58,7 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment impl
     private ImageView mImgMode;
     private List<SongEntity> mSongEntities = new ArrayList<>();
     private static final int DELETE_DELAY = 150; //删除后更新Item视图延迟时间
+    private RecyclerView mRvPlayQueue;
 
     @Override
     public void onAttach(Context context) {
@@ -94,7 +95,7 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment impl
 
     private void setUpBottomView(View view) {
         setViewSize(view);
-        setUpRv(view);
+        setupRv(view);
         mTxtPlayMode = (TextView) view.findViewById(R.id.txt_play_mode);
         mImgMode = (ImageView) view.findViewById(R.id.img_queue_mode);
         setModeView();
@@ -103,12 +104,12 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment impl
         MusicManager.getInstance().setPlayQueueListener(() -> mAdapter.notifyDataSetChanged());
     }
 
-    private void setUpRv(View view) {
-        RecyclerView rvPlayQueue = (RecyclerView) view.findViewById(R.id.rv_play_queue);
-        rvPlayQueue.setLayoutManager(new LinearLayoutManager(mActivity));
-        ((SimpleItemAnimator) rvPlayQueue.getItemAnimator()).setSupportsChangeAnimations(false);
+    private void setupRv(View view) {
+        mRvPlayQueue = (RecyclerView) view.findViewById(R.id.rv_play_queue);
+        mRvPlayQueue.setLayoutManager(new LinearLayoutManager(mActivity));
+        ((SimpleItemAnimator) mRvPlayQueue.getItemAnimator()).setSupportsChangeAnimations(false);
         mAdapter = new PlayQueueAdapter(R.layout.layout_play_queue_item, mSongEntities);
-        rvPlayQueue.setAdapter(mAdapter);
+        mRvPlayQueue.setAdapter(mAdapter);
         mAdapter.setDeleteQueueItemListener(this);
         String[] curIds = MusicManager.getInstance().getCurIds();
         mQueuePresenter.loadQueueData(curIds);
@@ -184,6 +185,12 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment impl
         mSongEntities.clear();
         mSongEntities.addAll(songEntities);
         mAdapter.notifyDataSetChanged();
+        SongEntity currentSong = MusicManager.getInstance().getCurrentSong();
+        if (currentSong==null) {
+            return;
+        }
+        int index = mSongEntities.indexOf(currentSong);
+        mRvPlayQueue.scrollToPosition(index);
     }
 
     @Override

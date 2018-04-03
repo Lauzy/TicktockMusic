@@ -95,7 +95,7 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     private boolean isDarkStyle = true;
     private boolean isFavorite;
 
-    public static Intent newInstance(Context context) {
+    public static Intent newIntent(Context context) {
         return new Intent(context, PlayActivity.class);
     }
 

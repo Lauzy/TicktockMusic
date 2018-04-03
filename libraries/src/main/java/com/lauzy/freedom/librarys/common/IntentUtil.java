@@ -1,10 +1,12 @@
 package com.lauzy.freedom.librarys.common;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 
 import com.lauzy.freedom.librarys.R;
@@ -49,5 +51,15 @@ public class IntentUtil {
         }
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         context.startActivity(Intent.createChooser(intent, context.getResources().getString(R.string.share)));
+    }
+
+    /**
+     * 打开浏览器
+     * @param context context
+     * @param url url
+     */
+    public static void browser(@NonNull Context context, @NonNull String url) throws ActivityNotFoundException {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        context.startActivity(intent);
     }
 }

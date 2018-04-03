@@ -1,13 +1,14 @@
 package com.freedom.lauzy.ticktockmusic.ui.adapter;
 
+import android.content.res.ColorStateList;
 import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.PopupMenu;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.freedom.lauzy.ticktockmusic.R;
@@ -40,16 +41,32 @@ public class LocalSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
         String singerAlbum = item.artistName + " 丨 " + item.albumName;
         helper.setText(R.id.txt_song_title, item.title)
                 .setText(R.id.txt_song_singer, singerAlbum);
+
+        SongEntity currentSong = MusicManager.getInstance().getCurrentSong();
+        if (currentSong != null && currentSong.equals(item)) {
+            ColorStateList csl = ThemeUtils.getThemeColorStateList(mContext, R.color.color_tab);
+            helper.setTextColor(R.id.txt_song_title, csl.getDefaultColor());
+            helper.setTextColor(R.id.txt_song_singer, csl.getDefaultColor());
+        } else {
+            helper.setTextColor(R.id.txt_song_title, ContextCompat.getColor(mContext, R.color.txt_black));
+            helper.setTextColor(R.id.txt_song_singer, ContextCompat.getColor(mContext, R.color.gray_dark));
+        }
+
         ImageLoader.INSTANCE.display(mContext,
                 new ImageConfig.Builder()
                         .url(item.albumCover)
+                        .isRound(false)
                         .placeholder(R.drawable.ic_album_default)
                         .into(helper.getView(R.id.img_song_pic))
                         .build());
-        helper.getView(R.id.layout_song_item).setOnClickListener(v ->
-                MusicManager.getInstance().playMusic(LocalSongMapper.transformLocal(mData),
-                        MusicUtil.getSongIds(mData), helper.getAdapterPosition()));
+        helper.getView(R.id.layout_song_item).setOnClickListener(v -> playSong(helper.getAdapterPosition()));
         helper.getView(R.id.img_item_menu).setOnClickListener(menuListener(helper, item));
+
+    }
+
+    private void playSong(int position) {
+        MusicManager.getInstance().playMusic(LocalSongMapper.transformLocal(mData),
+                MusicUtil.getSongIds(mData), position);
     }
 
     private View.OnClickListener menuListener(BaseViewHolder helper, SongEntity songEntity) {
@@ -58,8 +75,7 @@ public class LocalSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.menu_item_play:
-                        MusicManager.getInstance().playMusic(LocalSongMapper.transformLocal(mData),
-                                MusicUtil.getSongIds(mData), helper.getAdapterPosition());
+                        playSong(helper.getAdapterPosition());
                         break;
                     case R.id.menu_item_singer:
                         gotoSingerDetail(songEntity);

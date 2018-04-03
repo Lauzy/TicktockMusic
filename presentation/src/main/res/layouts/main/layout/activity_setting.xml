@@ -16,13 +16,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:focusable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/dp_15"
         android:paddingLeft="@dimen/dp_20"
         android:paddingRight="@dimen/dp_20"
-        android:paddingTop="@dimen/dp_15"
-        android:focusable="true">
+        android:paddingTop="@dimen/dp_15">
 
         <com.lauzy.freedom.librarys.widght.TickTextView
             android:layout_width="0dp"
@@ -45,13 +45,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:focusable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/dp_15"
         android:paddingLeft="@dimen/dp_20"
         android:paddingRight="@dimen/dp_20"
-        android:paddingTop="@dimen/dp_15"
-        android:focusable="true">
+        android:paddingTop="@dimen/dp_15">
 
         <com.lauzy.freedom.librarys.widght.TickTextView
             android:layout_width="0dp"
@@ -65,8 +65,11 @@
         <com.bilibili.magicasakura.widgets.TintSwitchCompat
             android:id="@+id/switch_network"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_24"
-            android:src="@color/theme_color_primary"/>
+            android:layout_height="wrap_content"
+            app:thumbTint="@color/selector_switch_thumb"
+            app:thumbTintMode="src_in"
+            app:trackTint="@color/selector_switch_track"
+            app:trackTintMode="src_in"/>
 
     </com.lauzy.freedom.librarys.widght.TickLinearLayout>
 

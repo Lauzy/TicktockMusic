@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.freedom.lauzy.ticktockmusic.R;
+import com.freedom.lauzy.ticktockmusic.ui.activity.AboutActivity;
 import com.freedom.lauzy.ticktockmusic.ui.activity.PlayActivity;
 import com.freedom.lauzy.ticktockmusic.ui.activity.SettingActivity;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.AlbumDetailFragment;
@@ -33,7 +34,7 @@ public class Navigator {
 
     public void navigateToSetting(Context context) {
         if (context != null) {
-            Intent intent = SettingActivity.newInstance(context);
+            Intent intent = SettingActivity.newIntent(context);
             context.startActivity(intent);
         }
     }
@@ -57,7 +58,7 @@ public class Navigator {
         if (context == null) {
             return;
         }
-        Intent intent = PlayActivity.newInstance(context);
+        Intent intent = PlayActivity.newIntent(context);
         if (imageView == null) {
             context.startActivity(intent);
             return;
@@ -90,5 +91,12 @@ public class Navigator {
                 .add(R.id.layout_main, fragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    public void navigateToAbout(Context context){
+        if (context != null) {
+            Intent intent = AboutActivity.newIntent(context);
+            context.startActivity(intent);
+        }
     }
 }

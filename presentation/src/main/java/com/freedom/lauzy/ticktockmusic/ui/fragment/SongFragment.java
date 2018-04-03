@@ -62,7 +62,10 @@ public class SongFragment extends BaseFragment<LocalMusicPresenter> implements L
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(ThemeEvent.class,
-                themeEvent -> setThemeLayoutBg());
+                themeEvent -> {
+                    setThemeLayoutBg();
+                    mAdapter.notifyDataSetChanged();
+                });
         RxBus.INSTANCE.addDisposable(this, disposable);
 
         Disposable updateDisposable = RxBus.INSTANCE.doStickySubscribe(MediaUpdateEvent.class,
@@ -88,6 +91,7 @@ public class SongFragment extends BaseFragment<LocalMusicPresenter> implements L
         mAdapter = new LocalSongAdapter(R.layout.layout_song_item, mLocalSongBeen);
         mRvLocalSong.setAdapter(mAdapter);
         mAdapter.setOnDeleteSongListener((position, songEntity) -> mPresenter.deleteSong(position, songEntity));
+        MusicManager.getInstance().setPlayQueueListener(() -> mAdapter.notifyDataSetChanged());
     }
 
     @Override
@@ -96,6 +100,12 @@ public class SongFragment extends BaseFragment<LocalMusicPresenter> implements L
         mLocalSongBeen.addAll(localSongBeen);
         mAdapter.notifyDataSetChanged();
         mSrlLocalSong.setRefreshing(false);
+        SongEntity currentSong = MusicManager.getInstance().getCurrentSong();
+        if (currentSong == null) {
+            return;
+        }
+        int index = mLocalSongBeen.indexOf(currentSong);
+        mRvLocalSong.scrollToPosition(index);
     }
 
     @Override
