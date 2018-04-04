@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseFragment;
 import com.freedom.lauzy.ticktockmusic.contract.LocalMusicContract;
+import com.freedom.lauzy.ticktockmusic.event.ClearQueueEvent;
 import com.freedom.lauzy.ticktockmusic.event.MediaUpdateEvent;
 import com.freedom.lauzy.ticktockmusic.event.ThemeEvent;
 import com.freedom.lauzy.ticktockmusic.function.RxBus;
@@ -68,9 +69,22 @@ public class SongFragment extends BaseFragment<LocalMusicPresenter> implements L
                 });
         RxBus.INSTANCE.addDisposable(this, disposable);
 
+        subscribeQueueEvent();
+
         Disposable updateDisposable = RxBus.INSTANCE.doStickySubscribe(MediaUpdateEvent.class,
                 mediaUpdateEvent -> mPresenter.loadLocalSong());
         RxBus.INSTANCE.addDisposable(this, updateDisposable);
+    }
+
+    private void subscribeQueueEvent() {
+        Disposable disposable = RxBus.INSTANCE.doDefaultSubscribe(ClearQueueEvent.class, clearQueueEvent -> {
+            if (mAdapter == null) {
+                return;
+            }
+            mAdapter.notifyDataSetChanged();
+            MusicManager.getInstance().setPlayQueueListener(() -> mAdapter.notifyDataSetChanged());
+        });
+        RxBus.INSTANCE.addDisposable(this, disposable);
     }
 
     @Override
@@ -100,12 +114,6 @@ public class SongFragment extends BaseFragment<LocalMusicPresenter> implements L
         mLocalSongBeen.addAll(localSongBeen);
         mAdapter.notifyDataSetChanged();
         mSrlLocalSong.setRefreshing(false);
-        SongEntity currentSong = MusicManager.getInstance().getCurrentSong();
-        if (currentSong == null) {
-            return;
-        }
-        int index = mLocalSongBeen.indexOf(currentSong);
-        mRvLocalSong.scrollToPosition(index);
     }
 
     @Override

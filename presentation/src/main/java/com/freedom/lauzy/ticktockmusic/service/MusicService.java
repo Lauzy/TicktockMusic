@@ -3,6 +3,7 @@ package com.freedom.lauzy.ticktockmusic.service;
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaMetadata;
@@ -19,6 +20,7 @@ import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
 import com.freedom.lauzy.ticktockmusic.function.RxHelper;
 import com.freedom.lauzy.ticktockmusic.model.SongEntity;
+import com.freedom.lauzy.ticktockmusic.receiver.BecomingNoisyReceiver;
 import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.common.ToastUtils;
 
@@ -38,7 +40,6 @@ import static android.media.session.PlaybackState.STATE_PLAYING;
  * Email : freedompaladin@gmail.com
  */
 @SuppressWarnings("WeakerAccess")
-@SuppressLint("CheckResult")
 public class MusicService extends Service {
 
     private static final String TAG = "MusicService";
@@ -61,6 +62,9 @@ public class MusicService extends Service {
     private SongEntity mCurrentSong;
     private QueueManager mQueueManager;
     private int mDuration;
+    private IntentFilter mNoisyIntentFilter;
+    private BecomingNoisyReceiver mNoisyReceiver;
+    private AudioManager mAudioManager;
 
     @Nullable
     @Override
@@ -86,6 +90,9 @@ public class MusicService extends Service {
                 MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
         // 设置音频流类型
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mNoisyIntentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        mNoisyReceiver = new BecomingNoisyReceiver();
+        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
     }
 
     @Override
@@ -133,18 +140,18 @@ public class MusicService extends Service {
      * 播放音乐
      */
     private void play() {
-        if (mSongData != null && mSongData.size() != 0) {
-//                SongEntity entity = mSongData.get(mCurrentPosition);
-            SongEntity entity = getPlaySong();//获取当前播放音乐
-            if (getPlaybackState().getState() == PlaybackState.STATE_SKIPPING_TO_NEXT
-                    || getPlaybackState().getState() == PlaybackState.STATE_SKIPPING_TO_PREVIOUS) {
-                play(entity);//跳转状态直接重新播放
-            } else {//其他状态判断重新播放还是继续播放
-                if (!entity.equals(mCurrentSong)) {
-                    play(entity);
-                } else {
-                    start();
-                }
+        if (mSongData == null || mSongData.isEmpty()) {
+            return;
+        }
+        SongEntity entity = getPlaySong();//获取当前播放音乐
+        if (getPlaybackState().getState() == PlaybackState.STATE_SKIPPING_TO_NEXT
+                || getPlaybackState().getState() == PlaybackState.STATE_SKIPPING_TO_PREVIOUS) {
+            play(entity);//跳转状态直接重新播放
+        } else {//其他状态判断重新播放还是继续播放
+            if (!entity.equals(mCurrentSong)) {
+                play(entity);
+            } else {
+                start();
             }
         }
     }
@@ -226,11 +233,23 @@ public class MusicService extends Service {
         });
     }
 
+    private AudioManager.OnAudioFocusChangeListener mAudioFocusChangeListener = focusChange -> {
+        switch (focusChange) {
+            case AudioManager.AUDIOFOCUS_LOSS:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                pause();
+                break;
+        }
+    };
+
     public void start() {
         mMediaPlayer.start();
         mDuration = mMediaPlayer.getDuration();
         setState(PlaybackState.STATE_PLAYING);
         mTickNotification.notifyPlay(this);
+        registerReceiver(mNoisyReceiver, mNoisyIntentFilter);
+        mAudioManager.requestAudioFocus(mAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         if (mUpdateListener != null) {
             mUpdateListener.startPlay();
         }
@@ -241,6 +260,8 @@ public class MusicService extends Service {
             mMediaPlayer.pause();
             setState(STATE_PAUSED);
             mTickNotification.notifyPause(this);
+            unregisterReceiver(mNoisyReceiver);
+            mAudioManager.abandonAudioFocus(mAudioFocusChangeListener);
         }
     }
 
@@ -300,7 +321,7 @@ public class MusicService extends Service {
         }
     }
 
-    public void stopPlayer() {
+    private void stopPlayer() {
         mMediaPlayer.pause();
         mMediaPlayer.reset();
         mCurrentSong = null;//重置
@@ -370,6 +391,7 @@ public class MusicService extends Service {
         @Override
         public void onStop() {
             super.onStop();
+            stopPlayer();
         }
 
         @Override

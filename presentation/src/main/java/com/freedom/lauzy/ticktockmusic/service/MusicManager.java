@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.freedom.lauzy.ticktockmusic.TicktockApplication;
 import com.freedom.lauzy.ticktockmusic.event.ClearQueueEvent;
@@ -317,7 +316,8 @@ public class MusicManager {
     public void clearPlayData() {
         mMusicService.setSongData(Collections.emptyList());
         mProgressHandler.removeCallbacks(mProgressRunnable);
-        mMusicService.stopPlayer();
+//        mMusicService.stopPlayer();
+        mMediaController.getTransportControls().stop();
         RxBus.INSTANCE.post(new ClearQueueEvent());
     }
 
