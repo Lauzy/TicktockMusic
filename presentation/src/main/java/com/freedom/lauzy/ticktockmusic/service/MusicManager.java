@@ -323,9 +323,7 @@ public class MusicManager {
 
     public void quit() {
         mProgressHandler.removeCallbacks(mProgressRunnable);
-        mMusicService.getMediaPlayer().reset();
-        mMusicService.getMediaPlayer().release();
-        mMusicService.stopSelf();
+        mMusicService.quit();
         unbindService();
         stopService();
     }

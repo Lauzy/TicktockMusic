@@ -329,6 +329,18 @@ public class MusicService extends Service {
         setState(PlaybackState.STATE_STOPPED);
     }
 
+    public void quit() {
+        mMediaPlayer.reset();
+        mMediaPlayer.release();
+        mSongData = null;
+        mCurrentSong = null;
+        mCurrentPosition = -1;
+        mAudioManager.abandonAudioFocus(mAudioFocusChangeListener);
+        mAudioFocusChangeListener = null;
+        unregisterReceiver(mNoisyReceiver);
+        stopSelf();
+    }
+
     private void setState(int state) {
         mPlaybackState = new PlaybackState.Builder()
                 .setActions(PlaybackState.ACTION_PLAY |
