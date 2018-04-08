@@ -40,9 +40,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
     compile project(':domain')
-    compile presentationDependencies.rxJava
-    compile presentationDependencies.dagger
-    annotationProcessor presentationDependencies.daggerCompiler
+    compile dataDependencies.rxJava
+    compile dataDependencies.dagger
+    annotationProcessor dataDependencies.daggerCompiler
     compile dataDependencies.okHttp
     compile dataDependencies.okHttpInterceptor
     compile dataDependencies.gson

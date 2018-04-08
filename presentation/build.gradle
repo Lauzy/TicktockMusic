@@ -85,15 +85,10 @@ dependencies {
     compile presentationDependencies.rxPermission
     annotationProcessor presentationDependencies.butterKnifeCompiler
     testCompile testDependencies.junit
-    //    releaseCompile project(path: ':Libraries', configuration: 'release')
-    //    debugCompile project(path: ':Libraries', configuration: 'debug')
-    //    releaseCompile project(path: ':Data', configuration: 'release')
-    //    debugCompile project(path: ':Data', configuration: 'debug')
     releaseImplementation project(':data')
     releaseImplementation project(':libraries')
     debugImplementation project(':data')
     debugImplementation project(':libraries')
-    compile 'com.github.lsjwzh.RecyclerViewPager:lib:v1.1.2@aar'
 }
 
 configurations.all {

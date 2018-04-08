@@ -10,7 +10,7 @@ dependencies {
     provided domainDependencies.javaxAnnotation
     compile domainDependencies.javaxInject
     compile domainDependencies.rxJava
-    compile dataDependencies.okHttp
+    compile domainDependencies.okHttp
 }
 
 tasks.withType(JavaCompile) {
