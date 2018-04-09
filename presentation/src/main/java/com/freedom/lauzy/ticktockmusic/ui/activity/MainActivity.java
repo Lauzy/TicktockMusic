@@ -240,8 +240,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.layout_main);
-        getMenuInflater().inflate(!(fragment instanceof FavoriteFragment || fragment instanceof RecentFragment)
-                ? R.menu.menu_search : R.menu.menu_delete, menu);
+        if (fragment instanceof FavoriteFragment || fragment instanceof RecentFragment) {
+            getMenuInflater().inflate(R.menu.menu_delete, menu);
+        }
         return !(fragment instanceof MusicFolderFragment);
     }
 
@@ -255,9 +256,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
                     super.onBackPressed();
                 }
                 return true;
-            case R.id.action_search:
-                LogUtil.i(TAG, "Search");
-                return true;
+//            case R.id.action_search:
+//                LogUtil.i(TAG, "Search");
+//                return true;
             case R.id.action_clear:
                 postClearEvent();
                 return true;
