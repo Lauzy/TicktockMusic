@@ -23,14 +23,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    buildToolsVersion '26.0.2'
 }
-
-//greendao {
-//    schemaVersion 1
-//    targetGenDir 'src/main/java'
-//    daoPackage 'com.lauzy.freedom.data.dao'
-//}
 
 dependencies {
     def testDependencies = rootProject.ext.testDependencies

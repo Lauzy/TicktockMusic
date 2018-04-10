@@ -1,6 +1,10 @@
 package com.freedom.lauzy.ticktockmusic.presenter;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -8,6 +12,7 @@ import com.freedom.lauzy.interactor.ConfigManagerUseCase;
 import com.freedom.lauzy.interactor.FavoriteSongUseCase;
 import com.freedom.lauzy.interactor.LrcUseCase;
 import com.freedom.lauzy.model.SongType;
+import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.base.BaseRxPresenter;
 import com.freedom.lauzy.ticktockmusic.contract.PlayContract;
 import com.freedom.lauzy.ticktockmusic.function.DefaultDisposableObserver;
@@ -110,6 +115,19 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                                     } else {
                                         getView().showDarkViews(isFavorite);
                                     }
+                                }
+
+                                @Override
+                                public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                                    super.onLoadFailed(errorDrawable);
+                                    if (getView() == null) {
+                                        return;
+                                    }
+                                    getView().showDarkViews(isFavorite);
+                                    Bitmap bitmap = BitmapFactory.decodeResource(getView().getContext().getResources(), R.drawable.ic_default);
+                                    getView().setPlayView(bitmap);
+                                    getView().setViewBgColor(ContextCompat.getColor(getView().getContext(), R.color.gray_dark));
+                                    getView().setCoverBackground(bitmap);
                                 }
                             }).build());
                 });
