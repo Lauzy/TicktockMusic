@@ -79,7 +79,7 @@ public class LocalSongRepositoryImpl implements LocalSongRepository {
 
     @Override
     public Observable<ArtistAvatar> getArtistAvatar(String method, String apiKey, String artistName, String format) {
-        return RetrofitHelper.INSTANCE
+        return RetrofitHelper.getInstance()
                 .createApi(SongService.class)
                 .getSingerAvatar(method, apiKey, artistName, format)
                 .map(new Function<SingerAvatarEntity, ArtistAvatar>() {

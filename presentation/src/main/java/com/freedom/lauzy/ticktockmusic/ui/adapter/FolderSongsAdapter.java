@@ -39,7 +39,7 @@ public class FolderSongsAdapter extends BaseQuickAdapter<SongEntity, BaseViewHol
         String singerAlbum = item.artistName + " 丨 " + item.albumName;
         helper.setText(R.id.txt_song_title, item.title)
                 .setText(R.id.txt_song_singer, singerAlbum);
-        ImageLoader.INSTANCE.display(mContext,
+        ImageLoader.getInstance().display(mContext,
                 new ImageConfig.Builder()
                         .url(item.albumCover)
                         .placeholder(R.drawable.ic_album_default)

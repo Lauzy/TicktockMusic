@@ -63,7 +63,7 @@ public class PlayCoverFragment extends BaseFragment {
     @Override
     protected void loadData() {
         if (mIvCover != null) {
-            ImageLoader.INSTANCE.display(mActivity, new ImageConfig.Builder()
+            ImageLoader.getInstance().display(mActivity, new ImageConfig.Builder()
                     .isRound(false)
                     .url(mSongEntity.albumCover)
                     .cacheStrategy(ImageConfig.CACHE_ALL)

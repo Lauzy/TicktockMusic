@@ -68,7 +68,7 @@ public class NetMusicCategoryPresenter extends BaseRxPresenter<NetMusicCategoryC
         if (getView() == null) {
             return;
         }
-        ImageLoader.INSTANCE.display(getView().context(),
+        ImageLoader.getInstance().display(getView().context(),
                 new ImageConfig.Builder()
                         .url(imgUrl)
                         .asBitmap(true)

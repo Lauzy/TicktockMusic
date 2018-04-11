@@ -52,7 +52,7 @@ public class LocalSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolde
             helper.setTextColor(R.id.txt_song_singer, ContextCompat.getColor(mContext, R.color.gray_dark));
         }
 
-        ImageLoader.INSTANCE.display(mContext,
+        ImageLoader.getInstance().display(mContext,
                 new ImageConfig.Builder()
                         .url(item.albumCover)
                         .isRound(false)

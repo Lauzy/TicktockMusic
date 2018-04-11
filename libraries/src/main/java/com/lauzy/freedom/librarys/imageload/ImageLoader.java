@@ -12,14 +12,25 @@ import com.lauzy.freedom.librarys.imageload.glide.GlideImageLoaderStrategy;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public enum ImageLoader implements IBaseImageStrategy {
+public class ImageLoader implements IBaseImageStrategy {
 
-    INSTANCE;
-
+    private static ImageLoader INSTANCE;
     private IBaseImageStrategy mImageStrategy;
 
-    ImageLoader() {
+
+    {
         mImageStrategy = new GlideImageLoaderStrategy();
+    }
+
+    public static ImageLoader getInstance() {
+        if (INSTANCE == null) {
+            synchronized (ImageLoader.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new ImageLoader();
+                }
+            }
+        }
+        return INSTANCE;
     }
 
     @Override

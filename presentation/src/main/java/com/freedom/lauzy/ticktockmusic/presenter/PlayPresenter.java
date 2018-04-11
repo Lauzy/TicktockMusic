@@ -80,7 +80,7 @@ public class PlayPresenter extends BaseRxPresenter<PlayContract.View>
                     if (getView() == null) {
                         return;
                     }
-                    ImageLoader.INSTANCE.display(getView().getContext(), new ImageConfig.Builder()
+                    ImageLoader.getInstance().display(getView().getContext(), new ImageConfig.Builder()
                             .asBitmap(true)
                             .url(url)
                             .isRound(false)

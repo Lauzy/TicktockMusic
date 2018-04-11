@@ -74,7 +74,7 @@ public class ArtistFragment extends BaseFragment<LocalArtistPresenter> implement
 
     @Override
     public void loadAvatarResult(String picUrl, ImageView imageView) {
-        ImageLoader.INSTANCE.display(mActivity,
+        ImageLoader.getInstance().display(mActivity,
                 new ImageConfig.Builder()
                         .isRound(false)
                         .url(picUrl)

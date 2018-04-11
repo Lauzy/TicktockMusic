@@ -80,7 +80,7 @@ public class MusicUtil {
                     @Override
                     public ObservableSource<NetMusicData> apply(@NonNull SongEntity entity) throws Exception {
                         return observer ->
-                                ImageLoader.INSTANCE.display(context, new ImageConfig.Builder()
+                                ImageLoader.getInstance().display(context, new ImageConfig.Builder()
                                         .asBitmap(true)
                                         .url(entity.albumCover)
                                         .placeholder(R.drawable.ic_default)

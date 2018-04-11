@@ -21,7 +21,7 @@ import io.reactivex.functions.Function;
 public class NetSongRepositoryImpl implements NetSongRepository {
     @Override
     public Observable<NetSongEntity> getNetSongData(String method, long songId) {
-        return RetrofitHelper.INSTANCE.createApi(SongService.class)
+        return RetrofitHelper.getInstance().createApi(SongService.class)
                 .getOnlineSongData(method, songId)
                 .map(new Function<OnlineSongEntity, NetSongEntity>() {
                     @Override

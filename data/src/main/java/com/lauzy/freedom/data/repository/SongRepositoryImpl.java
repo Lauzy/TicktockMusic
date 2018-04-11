@@ -49,7 +49,7 @@ public class SongRepositoryImpl implements SongRepository {
     public Observable<List<NetSongBean>> getSongList(final String method, final int type,
                                                      final int offset, final int size) {
 
-        return RetrofitHelper.INSTANCE.createApi(SongService.class)
+        return RetrofitHelper.getInstance().createApi(SongService.class)
                 .getMusicData(method, type, offset, size)
                 .map(new Function<MusicEntity, List<NetSongBean>>() {
                     @Override

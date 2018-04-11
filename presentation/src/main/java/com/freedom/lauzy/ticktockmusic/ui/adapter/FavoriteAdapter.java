@@ -38,7 +38,7 @@ public class FavoriteAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolder
     protected void convert(BaseViewHolder helper, SongEntity item) {
         helper.setText(R.id.txt_song_title, item.title)
                 .setText(R.id.txt_song_singer, item.artistName);
-        ImageLoader.INSTANCE.display(mContext,
+        ImageLoader.getInstance().display(mContext,
                 new ImageConfig.Builder()
                         .url(item.albumCover)
                         .placeholder(R.drawable.ic_default)

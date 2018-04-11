@@ -26,7 +26,7 @@ import okhttp3.ResponseBody;
 public class LrcRepositoryImpl implements LrcRepository {
     @Override
     public Observable<ResponseBody> getLrcData(String songName, String singer) {
-        return RetrofitHelper.INSTANCE.createApi(SongService.class)
+        return RetrofitHelper.getInstance().createApi(SongService.class)
                 .getOnLrcData(songName, singer)
                 .map(new Function<OnLineLrcEntity, List<LrcBean>>() {
                     @Override
@@ -50,7 +50,7 @@ public class LrcRepositoryImpl implements LrcRepository {
                         if (lrcBean == null) {
                             return null;
                         }
-                        return RetrofitHelper.INSTANCE.createApi(SongService.class)
+                        return RetrofitHelper.getInstance().createApi(SongService.class)
                                 .downloadLrcFile(lrcBean.lrc);
                     }
                 });
@@ -58,7 +58,7 @@ public class LrcRepositoryImpl implements LrcRepository {
 
     @Override
     public Observable<String> getBaiduLrcData(String method, long songId) {
-        return RetrofitHelper.INSTANCE.createApi(SongService.class)
+        return RetrofitHelper.getInstance().createApi(SongService.class)
                 .getBaiduLrcData(method, songId)
                 .map(new Function<BaiduLrcEntity, String>() {
                     @Override

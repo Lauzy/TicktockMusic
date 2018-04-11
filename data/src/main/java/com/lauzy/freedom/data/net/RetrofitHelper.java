@@ -19,13 +19,23 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Blog : http://www.jianshu.com/u/e76853f863a9
  * Email : freedompaladin@gmail.com
  */
-public enum RetrofitHelper {
+public class RetrofitHelper {
 
-    INSTANCE;
-
+    private static RetrofitHelper INSTANCE;
     private Retrofit mRetrofit;
 
-    RetrofitHelper() {
+    public static RetrofitHelper getInstance() {
+        if (INSTANCE == null) {
+            synchronized (RetrofitHelper.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new RetrofitHelper();
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
+    {
         mRetrofit = new Retrofit.Builder()
                 .client(initOkHttp())
                 .baseUrl(NetConstants.BASE_URL)
@@ -34,6 +44,7 @@ public enum RetrofitHelper {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
     }
+
 
     public <T> T createApi(Class<T> paramClass) {
         return mRetrofit.create(paramClass);

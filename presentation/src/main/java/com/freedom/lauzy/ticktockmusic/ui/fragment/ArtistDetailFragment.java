@@ -139,7 +139,7 @@ public class ArtistDetailFragment extends BaseFragment<ArtistDetailPresenter> {
 
     @Override
     protected void loadData() {
-        ImageLoader.INSTANCE.display(mActivity, new ImageConfig.Builder()
+        ImageLoader.getInstance().display(mActivity, new ImageConfig.Builder()
                 .url(mPresenter.getArtistAvatarUrl(mArtistName))
                 .isRound(false)
                 .cacheStrategy(ImageConfig.CACHE_ALL)

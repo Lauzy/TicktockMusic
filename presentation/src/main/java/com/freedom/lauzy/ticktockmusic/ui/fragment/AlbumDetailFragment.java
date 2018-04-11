@@ -132,7 +132,7 @@ public class AlbumDetailFragment extends BaseFragment<LocalMusicPresenter>
 
     @Override
     protected void loadData() {
-        ImageLoader.INSTANCE.display(mActivity,
+        ImageLoader.getInstance().display(mActivity,
                 new ImageConfig.Builder()
                         .url(LocalUtil.getCoverUri(mAlbumId)).isRound(false)
                         .into(mImgAlbum)

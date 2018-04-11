@@ -34,7 +34,7 @@ public class ArtistAlbumAdapter extends BaseQuickAdapter<LocalAlbumBean, BaseVie
         helper.setText(R.id.txt_song_title, item.albumName)
                 .setText(R.id.txt_song_singer, songNum);
         helper.getView(R.id.img_item_menu).setVisibility(View.GONE);
-        ImageLoader.INSTANCE.display(mContext, new ImageConfig.Builder()
+        ImageLoader.getInstance().display(mContext, new ImageConfig.Builder()
                 .url(item.albumCover)
                 .placeholder(R.drawable.ic_default)
                 .into(helper.getView(R.id.img_song_pic))

@@ -37,7 +37,7 @@ public class ArtistSongAdapter extends BaseQuickAdapter<SongEntity, BaseViewHold
         String singerAlbum = item.artistName + "  |  " + item.albumName;
         helper.setText(R.id.txt_song_title, item.title)
                 .setText(R.id.txt_song_singer, singerAlbum);
-        ImageLoader.INSTANCE.display(mContext, new ImageConfig.Builder()
+        ImageLoader.getInstance().display(mContext, new ImageConfig.Builder()
                 .url(item.albumCover)
                 .placeholder(R.drawable.ic_default)
                 .into(helper.getView(R.id.img_song_pic))

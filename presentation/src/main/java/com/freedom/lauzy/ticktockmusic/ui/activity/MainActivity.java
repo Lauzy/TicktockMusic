@@ -118,7 +118,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
             mPbCurSong.setProgress(0);
             mTxtCurSong.setText(R.string.app_name);
             mTxtCurSinger.setText(R.string.app_name);
-            ImageLoader.INSTANCE.clean(MainActivity.this, mImgCurSong);
+            ImageLoader.getInstance().clean(MainActivity.this, mImgCurSong);
             mImgCurSong.setImageResource(R.drawable.ic_default);
             mPlayPauseView.pause();
             mPlayPauseView.setPlaying(false);
@@ -364,7 +364,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
         }
         mNavTitle.setText(songEntity.title);
         mNavSinger.setText(songEntity.artistName);
-        ImageLoader.INSTANCE.display(MainActivity.this, new ImageConfig.Builder()
+        ImageLoader.getInstance().display(MainActivity.this, new ImageConfig.Builder()
                 .url(songEntity.albumCover)
                 .isRound(false)
                 .placeholder(R.drawable.ic_default)
@@ -382,7 +382,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
         if (!this.isDestroyed() && songEntity != null) {
             mTxtCurSong.setText(SubTextUtil.addEllipsis(songEntity.title, 15));
             mTxtCurSinger.setText(SubTextUtil.addEllipsis(songEntity.artistName, 15));
-            ImageLoader.INSTANCE.display(MainActivity.this,
+            ImageLoader.getInstance().display(MainActivity.this,
                     new ImageConfig.Builder()
                             .url(songEntity.albumCover)
                             .isRound(false)
