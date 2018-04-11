@@ -15,7 +15,7 @@ import retrofit2.Converter;
 import retrofit2.Retrofit;
 
 /**
- * Desc : 自定义Gson解析转换器
+ * Desc : 自定义Gson解析转换器。弃用，接口使用较多，规则不同，可以在 observer/disposeable 中具体分析
  * Author : Lauzy
  * Date : 2017/7/11
  * Blog : http://www.jianshu.com/u/e76853f863a9

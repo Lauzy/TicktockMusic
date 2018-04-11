@@ -93,6 +93,7 @@ public class MusicService extends Service {
         mNoisyIntentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         mNoisyReceiver = new BecomingNoisyReceiver();
         mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        registerReceiver(mNoisyReceiver, mNoisyIntentFilter);
     }
 
     @Override
@@ -248,7 +249,6 @@ public class MusicService extends Service {
         mDuration = mMediaPlayer.getDuration();
         setState(PlaybackState.STATE_PLAYING);
         mTickNotification.notifyPlay(this);
-        registerReceiver(mNoisyReceiver, mNoisyIntentFilter);
         mAudioManager.requestAudioFocus(mAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         if (mUpdateListener != null) {
             mUpdateListener.startPlay();

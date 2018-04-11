@@ -3,7 +3,7 @@ package com.lauzy.freedom.librarys.view.blur;
 import android.graphics.Bitmap;
 
 /**
- * Desc :
+ * Desc : 图片模糊显示
  * Author : Lauzy
  * Date : 2017/10/11
  * Blog : http://www.jianshu.com/u/e76853f863a9
