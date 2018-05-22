@@ -13,6 +13,7 @@ import com.freedom.lauzy.repository.LrcRepository;
 import com.freedom.lauzy.repository.MusicFolderRepository;
 import com.freedom.lauzy.repository.QueueRepository;
 import com.freedom.lauzy.repository.RecentRepository;
+import com.freedom.lauzy.repository.SearchSongRepository;
 import com.freedom.lauzy.repository.SongRepository;
 import com.freedom.lauzy.ticktockmusic.TicktockApplication;
 import com.freedom.lauzy.ticktockmusic.function.UIThread;
@@ -27,6 +28,7 @@ import com.lauzy.freedom.data.repository.LrcRepositoryImpl;
 import com.lauzy.freedom.data.repository.MusicFolderRepositoryImpl;
 import com.lauzy.freedom.data.repository.QueueRepositoryImpl;
 import com.lauzy.freedom.data.repository.RecentRepositoryImpl;
+import com.lauzy.freedom.data.repository.SearchSongRepositoryImpl;
 import com.lauzy.freedom.data.repository.SongRepositoryImpl;
 
 import javax.inject.Singleton;
@@ -127,5 +129,11 @@ public class ApplicationModule {
     @Singleton
     ICacheDataManager provideCacheManager() {
         return new CacheDataManagerImpl(mApplication);
+    }
+
+    @Provides
+    @Singleton
+    SearchSongRepository provideSearchSongRepository() {
+        return new SearchSongRepositoryImpl(mApplication);
     }
 }

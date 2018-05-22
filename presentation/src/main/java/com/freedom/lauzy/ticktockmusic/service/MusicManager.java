@@ -22,6 +22,7 @@ import com.lauzy.freedom.librarys.common.LogUtil;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -90,8 +91,10 @@ public class MusicManager {
             if (mRecentUpdateListener != null) {
                 mRecentUpdateListener.startPlay();
             }
-            if (mPlayQueueListener != null) {
-                mPlayQueueListener.playSuccess();
+            if (mPlayQueueListeners != null && mPlayQueueListeners.size() != 0) {
+                for (PlayQueueListener playQueueListener : mPlayQueueListeners) {
+                    playQueueListener.playSuccess();
+                }
             }
         }
 
@@ -488,10 +491,13 @@ public class MusicManager {
     private MusicManageListener mMusicManageListener;
     private PlayProgressListener mPlayProgressListener;
     private RecentUpdateListener mRecentUpdateListener;
-    private PlayQueueListener mPlayQueueListener;
+    private List<PlayQueueListener> mPlayQueueListeners;
 
-    public void setPlayQueueListener(PlayQueueListener playQueueListener) {
-        mPlayQueueListener = playQueueListener;
+    public void addPlayQueueListener(PlayQueueListener playQueueListener) {
+        if (mPlayQueueListeners == null) {
+            mPlayQueueListeners = new ArrayList<>();
+        }
+        mPlayQueueListeners.add(playQueueListener);
     }
 
     public void setManageListener(MusicManageListener updateListener) {

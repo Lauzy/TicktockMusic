@@ -6,6 +6,7 @@ import com.freedom.lauzy.ticktockmusic.injection.module.ActivityModule;
 import com.freedom.lauzy.ticktockmusic.injection.scope.PerActivity;
 import com.freedom.lauzy.ticktockmusic.ui.activity.MainActivity;
 import com.freedom.lauzy.ticktockmusic.ui.activity.PlayActivity;
+import com.freedom.lauzy.ticktockmusic.ui.activity.SearchActivity;
 import com.freedom.lauzy.ticktockmusic.ui.activity.SettingActivity;
 
 import dagger.Component;
@@ -28,5 +29,7 @@ public interface ActivityComponent {
     void inject(PlayActivity playActivity);
 
     void inject(SettingActivity settingActivity);
+
+    void inject(SearchActivity searchActivity);
 
 }

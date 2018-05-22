@@ -13,6 +13,7 @@ import com.freedom.lauzy.repository.LrcRepository;
 import com.freedom.lauzy.repository.MusicFolderRepository;
 import com.freedom.lauzy.repository.QueueRepository;
 import com.freedom.lauzy.repository.RecentRepository;
+import com.freedom.lauzy.repository.SearchSongRepository;
 import com.freedom.lauzy.repository.SongRepository;
 import com.freedom.lauzy.ticktockmusic.injection.module.ApplicationModule;
 import com.freedom.lauzy.ticktockmusic.injection.scope.ContextLife;
@@ -60,4 +61,6 @@ public interface ApplicationComponent {
     IConfigDataManager configManagerRepo();
 
     ICacheDataManager cacheManagerRepo();
+
+    SearchSongRepository searchSongRepository();
 }

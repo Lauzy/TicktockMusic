@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <com.lauzy.freedom.librarys.widght.TickToolbar
+        android:id="@+id/toolbar_common"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/theme_color_primary"
+        android:elevation="@dimen/dp_3"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextColor="@android:color/white">
+
+        <com.bilibili.magicasakura.widgets.TintEditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_32"
+            android:layout_marginRight="@dimen/dp_20"
+            android:background="@drawable/bg_edittext"
+            android:hint="@string/action_search"
+            android:inputType="text"
+            android:paddingLeft="@dimen/dp_20"
+            android:textSize="@dimen/sp_13"
+            android:paddingRight="@dimen/dp_20"
+            android:textColor="@color/gray_darker"
+            android:textColorHint="@color/gray_light"/>
+
+    </com.lauzy.freedom.librarys.widght.TickToolbar>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

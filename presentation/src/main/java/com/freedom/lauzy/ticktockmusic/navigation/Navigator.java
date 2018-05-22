@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import com.freedom.lauzy.ticktockmusic.R;
 import com.freedom.lauzy.ticktockmusic.ui.activity.AboutActivity;
 import com.freedom.lauzy.ticktockmusic.ui.activity.PlayActivity;
+import com.freedom.lauzy.ticktockmusic.ui.activity.SearchActivity;
 import com.freedom.lauzy.ticktockmusic.ui.activity.SettingActivity;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.AlbumDetailFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.ArtistDetailFragment;
@@ -93,10 +94,17 @@ public class Navigator {
                 .commit();
     }
 
-    public void navigateToAbout(Context context){
+    public void navigateToAbout(Context context) {
         if (context != null) {
             Intent intent = AboutActivity.newIntent(context);
             context.startActivity(intent);
         }
+    }
+
+    public void navigeteToSearch(Context context) {
+        if (context == null) {
+            return;
+        }
+        context.startActivity(SearchActivity.newIntent(context));
     }
 }

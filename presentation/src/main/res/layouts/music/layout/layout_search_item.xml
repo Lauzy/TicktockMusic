@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_72"
+    android:layout_marginLeft="@dimen/dp_5"
+    android:layout_marginRight="@dimen/dp_5"
+    android:layout_marginTop="@dimen/dp_003"
+    app:cardCornerRadius="@dimen/dp_3"
+    app:cardElevation="@dimen/dp_2">
+
+    <com.lauzy.freedom.librarys.widght.TickRelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/layout_song_item"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingBottom="@dimen/dp_10"
+        android:paddingStart="@dimen/dp_20"
+        android:paddingEnd="@dimen/dp_15"
+        android:paddingTop="@dimen/dp_10">
+
+        <ImageView
+            android:id="@+id/img_song_pic"
+            android:layout_width="@dimen/dp_48"
+            android:layout_height="@dimen/dp_48"
+            android:layout_centerVertical="true"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_album_default"/>
+
+        <com.lauzy.freedom.librarys.widght.TickTextView
+            android:id="@+id/txt_song_title"
+            style="@style/MarqueeTxtStyle"
+            android:layout_marginTop="@dimen/dp_6"
+            android:layout_toEndOf="@id/img_song_pic"
+            tools:text="@string/app_name"/>
+
+        <com.lauzy.freedom.librarys.widght.TickTextView
+            android:id="@+id/txt_song_singer"
+            style="@style/MarqueeTxtStyle"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_6"
+            android:layout_toEndOf="@id/img_song_pic"
+            android:textColor="@color/gray_dark"
+            android:textSize="@dimen/sp_1205"
+            tools:text="@string/app_name"/>
+
+    </com.lauzy.freedom.librarys.widght.TickRelativeLayout>
+</android.support.v7.widget.CardView>

@@ -52,6 +52,12 @@ public class LocalSongLoader {
         return queryLocalSongs(cursor);
     }
 
+    public static List<LocalSongBean> getSearchSongList(Context context, String searchContent) {
+        Cursor cursor = getSongCursor(context, MediaStore.Files.FileColumns.TITLE
+                + " like ? ", new String[]{"%" + searchContent + "%"});
+        return queryLocalSongs(cursor);
+    }
+
     private static List<LocalSongBean> queryLocalSongs(Cursor cursor) {
         List<LocalSongBean> songBeen = new ArrayList<>();
         if (cursor == null) {

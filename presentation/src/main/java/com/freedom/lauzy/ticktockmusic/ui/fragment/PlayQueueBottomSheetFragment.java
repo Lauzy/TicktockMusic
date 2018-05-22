@@ -101,7 +101,7 @@ public class PlayQueueBottomSheetFragment extends BottomSheetDialogFragment impl
         setModeView();
         view.findViewById(R.id.img_clear_queue).setOnClickListener(this);
         mImgMode.setOnClickListener(this);
-        MusicManager.getInstance().setPlayQueueListener(() -> mAdapter.notifyDataSetChanged());
+        MusicManager.getInstance().addPlayQueueListener(() -> mAdapter.notifyDataSetChanged());
     }
 
     private void setupRv(View view) {

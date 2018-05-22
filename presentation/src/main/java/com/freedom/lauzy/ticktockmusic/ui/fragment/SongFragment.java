@@ -82,7 +82,7 @@ public class SongFragment extends BaseFragment<LocalMusicPresenter> implements L
                 return;
             }
             mAdapter.notifyDataSetChanged();
-            MusicManager.getInstance().setPlayQueueListener(() -> mAdapter.notifyDataSetChanged());
+            MusicManager.getInstance().addPlayQueueListener(() -> mAdapter.notifyDataSetChanged());
         });
         RxBus.INSTANCE.addDisposable(this, disposable);
     }
@@ -105,7 +105,7 @@ public class SongFragment extends BaseFragment<LocalMusicPresenter> implements L
         mAdapter = new LocalSongAdapter(R.layout.layout_song_item, mLocalSongBeen);
         mRvLocalSong.setAdapter(mAdapter);
         mAdapter.setOnDeleteSongListener((position, songEntity) -> mPresenter.deleteSong(position, songEntity));
-        MusicManager.getInstance().setPlayQueueListener(() -> mAdapter.notifyDataSetChanged());
+        MusicManager.getInstance().addPlayQueueListener(() -> mAdapter.notifyDataSetChanged());
     }
 
     @Override
