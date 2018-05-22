@@ -256,7 +256,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
                 }
                 return true;
             case R.id.action_search:
-                mNavigator.navigeteToSearch(this);
+                mNavigator.navigateToSearch(this);
                 return true;
             case R.id.action_clear:
                 postClearEvent();

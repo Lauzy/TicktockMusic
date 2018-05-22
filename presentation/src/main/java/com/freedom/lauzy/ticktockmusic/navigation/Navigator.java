@@ -101,7 +101,7 @@ public class Navigator {
         }
     }
 
-    public void navigeteToSearch(Context context) {
+    public void navigateToSearch(Context context) {
         if (context == null) {
             return;
         }
