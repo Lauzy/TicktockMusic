@@ -13,6 +13,7 @@ import com.freedom.lauzy.ticktockmusic.model.SongEntity;
 import com.freedom.lauzy.ticktockmusic.model.mapper.LocalSongMapper;
 import com.freedom.lauzy.ticktockmusic.service.MusicManager;
 import com.freedom.lauzy.ticktockmusic.service.MusicUtil;
+import com.freedom.lauzy.ticktockmusic.utils.HighlightFormatUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 
@@ -27,14 +28,20 @@ import java.util.List;
  */
 public class SearchAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolder> {
 
+    private String mContent;
+
     public SearchAdapter(@LayoutRes int layoutResId, @Nullable List<SongEntity> data) {
         super(layoutResId, data);
     }
 
     @Override
     protected void convert(BaseViewHolder helper, SongEntity item) {
+        ColorStateList stateList = ThemeUtils.getThemeColorStateList(mContext, R.color.color_tab);
+        CharSequence titleResult = new HighlightFormatUtil(item.title,
+                mContent, stateList.getDefaultColor()).fillColor().getResult();
+
         String singerAlbum = item.artistName + " 丨 " + item.albumName;
-        helper.setText(R.id.txt_song_title, item.title)
+        helper.setText(R.id.txt_song_title, titleResult)
                 .setText(R.id.txt_song_singer, singerAlbum);
 
         SongEntity currentSong = MusicManager.getInstance().getCurrentSong();
@@ -62,4 +69,7 @@ public class SearchAdapter extends BaseQuickAdapter<SongEntity, BaseViewHolder> 
                 MusicUtil.getSongIds(mData), position);
     }
 
+    public void setSearchContent(String content) {
+        mContent = content;
+    }
 }

@@ -71,6 +71,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements Sea
             @Override
             public void afterTextChanged(Editable s) {
                 String content = s.toString();
+                mAdapter.setSearchContent(content);
                 if (content.length() > 0) {
                     mPresenter.searchSongs(content);
                 } else {

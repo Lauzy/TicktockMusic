@@ -20,14 +20,15 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_32"
             android:layout_marginRight="@dimen/dp_20"
-            android:background="@drawable/bg_edittext"
+            android:background="@drawable/bg_edit_text"
             android:hint="@string/action_search"
             android:inputType="text"
             android:paddingLeft="@dimen/dp_20"
-            android:textSize="@dimen/sp_13"
             android:paddingRight="@dimen/dp_20"
             android:textColor="@color/gray_darker"
-            android:textColorHint="@color/gray_light"/>
+            android:textColorHint="@color/gray_light"
+            android:textCursorDrawable="@drawable/edit_text_cursor"
+            android:textSize="@dimen/sp_13"/>
 
     </com.lauzy.freedom.librarys.widght.TickToolbar>
 
