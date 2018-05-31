@@ -26,7 +26,10 @@
 - [Timber](https://github.com/naman14/Timber)
 
 ## 博客介绍
-简书：[https://www.jianshu.com/p/15ea0fecb61d](https://www.jianshu.com/p/15ea0fecb61d) (更新中)
+项目架构：[https://www.jianshu.com/p/15ea0fecb61d](https://www.jianshu.com/p/15ea0fecb61d)
+开源库封装：[https://www.jianshu.com/p/1645b81dc994](https://www.jianshu.com/p/1645b81dc994)
+自定义播放暂停按钮：[https://www.jianshu.com/p/74f38e9b16fc](https://www.jianshu.com/p/74f38e9b16fc)
+自定义歌词View: [https://www.jianshu.com/p/ab735509cc74](https://www.jianshu.com/p/ab735509cc74)
 
 ## License
 
