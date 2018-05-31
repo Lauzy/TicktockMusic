@@ -329,8 +329,8 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
     @Override
     public void downloadLrcSuccess(List<Lrc> lrcs) {
         if (lrcs == null || lrcs.isEmpty()) {
-            mLvSimple.setDefaultContent("暂无歌词");
-            mLvFull.setDefaultContent("暂无歌词");
+            mLvSimple.setEmptyContent("暂无歌词");
+            mLvFull.setEmptyContent("暂无歌词");
             return;
         }
         mLvSimple.setCurrentPlayLineColor(ThemeHelper.getThemeColorResId(this));
@@ -345,8 +345,8 @@ public class PlayActivity extends BaseActivity<PlayPresenter> implements
 
     @Override
     public void downloadFailed(Throwable e) {
-        mLvSimple.setDefaultContent("暂无歌词");
-        mLvFull.setDefaultContent("暂无歌词");
+        mLvSimple.setEmptyContent("暂无歌词");
+        mLvFull.setEmptyContent("暂无歌词");
     }
 
     @Override

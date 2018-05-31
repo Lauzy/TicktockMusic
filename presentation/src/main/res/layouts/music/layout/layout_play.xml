@@ -20,8 +20,9 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/dp_20"
             android:layout_marginTop="@dimen/dp_100"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_15"
             app:indicatorTextSize="@dimen/sp_11"
-            app:lrcHorizontalPadding="@dimen/dp_15"
             app:lrcLineSpaceSize="@dimen/dp_12"
             app:lrcNormalTextColor="@color/gray_light"
             app:lrcTextSize="@dimen/sp_16"/>

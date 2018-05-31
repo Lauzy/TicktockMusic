@@ -28,7 +28,8 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/dp_20"
         android:layout_marginTop="@dimen/dp_40"
-        app:lrcHorizontalPadding="@dimen/dp_20"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
         app:lrcLineSpaceSize="@dimen/dp_13"
         app:lrcNormalTextColor="@color/gray_light"
         app:lrcTextSize="@dimen/sp_17"/>
