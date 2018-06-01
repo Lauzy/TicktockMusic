@@ -13,6 +13,12 @@
 ## 下载
 [下载地址](http://fir.im/w3dl) (最低版本：Android 5.0)
 
+## 博客介绍
+- 项目架构：[https://www.jianshu.com/p/15ea0fecb61d](https://www.jianshu.com/p/15ea0fecb61d)
+- 开源库封装：[https://www.jianshu.com/p/1645b81dc994](https://www.jianshu.com/p/1645b81dc994)
+- 自定义播放暂停按钮：[https://www.jianshu.com/p/74f38e9b16fc](https://www.jianshu.com/p/74f38e9b16fc)
+- 自定义歌词View: [https://www.jianshu.com/p/ab735509cc74](https://www.jianshu.com/p/ab735509cc74)
+
 ## 特点
 - Material design
 - MediaSession + MediaController 控制音乐播放
@@ -28,12 +34,6 @@
 [BaseRecyclerViewAdapterHelper](https://github.com/CymChad/BaseRecyclerViewAdapterHelper)、[MagicaSakura](https://github.com/Bilibili/MagicaSakura) 等
 - [LastFmApi](https://www.last.fm/api)、[百度音乐Api](https://www.jianshu.com/p/a6718b11fdf1) 、[歌词迷Api](https://github.com/solos/geci.me-api)
 - [Timber](https://github.com/naman14/Timber)
-
-## 博客介绍
-- 项目架构：[https://www.jianshu.com/p/15ea0fecb61d](https://www.jianshu.com/p/15ea0fecb61d)
-- 开源库封装：[https://www.jianshu.com/p/1645b81dc994](https://www.jianshu.com/p/1645b81dc994)
-- 自定义播放暂停按钮：[https://www.jianshu.com/p/74f38e9b16fc](https://www.jianshu.com/p/74f38e9b16fc)
-- 自定义歌词View: [https://www.jianshu.com/p/ab735509cc74](https://www.jianshu.com/p/ab735509cc74)
 
 ## License
 
