@@ -17,8 +17,7 @@ public class ImageLoader implements IBaseImageStrategy {
     private static ImageLoader INSTANCE;
     private IBaseImageStrategy mImageStrategy;
 
-
-    {
+    private ImageLoader(){
         mImageStrategy = new GlideImageLoaderStrategy();
     }
 

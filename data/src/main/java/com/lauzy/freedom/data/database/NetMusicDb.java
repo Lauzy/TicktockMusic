@@ -72,6 +72,8 @@ public class NetMusicDb implements BaseDb {
     public List<NetSongBean> querySongData(int type) {
         SQLiteDatabase db = mTickDaoHelper.getReadableDatabase();
         Cursor cursor = null;
+        List<NetSongBean> netSongBeans = new ArrayList<>();
+        db.beginTransaction();
         try {
             cursor = db.query(TickDaoHelper.NET_MUSIC_TABLE, null,
                     NetParam.TYPE + " = ?",
@@ -92,15 +94,17 @@ public class NetMusicDb implements BaseDb {
                     listBean.rank = cursor.getInt(cursor.getColumnIndex(NetParam.RANK));
                     listBeen.add(listBean);
                 }
-                return listBeen;
+                netSongBeans = listBeen;
             }
+            db.setTransactionSuccessful();
+            return netSongBeans;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         } finally {
             if (cursor != null) {
                 cursor.close();
             }
+            db.endTransaction();
             db.close();
         }
         return null;
@@ -142,6 +146,7 @@ public class NetMusicDb implements BaseDb {
 
     /**
      * 移除特定分类数据
+     *
      * @param type 分类
      */
     public void removeData(int type) {

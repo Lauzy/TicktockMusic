@@ -18,7 +18,7 @@ public class DataManager {
     private final ConfigRepo mConfigRepo;
     private volatile static DataManager INSTANCE;
 
-    public DataManager(Context context) {
+    private DataManager(Context context) {
         mCacheRepo = new CacheRepoImpl(context);
         mConfigRepo = new ConfigRepoImpl(context);
     }
