@@ -36,7 +36,6 @@ import com.freedom.lauzy.ticktockmusic.ui.fragment.LocalMusicFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.MusicFolderFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.NetSongFragment;
 import com.freedom.lauzy.ticktockmusic.ui.fragment.RecentFragment;
-import com.lauzy.freedom.librarys.common.LogUtil;
 import com.lauzy.freedom.librarys.imageload.ImageConfig;
 import com.lauzy.freedom.librarys.imageload.ImageLoader;
 import com.lauzy.freedom.librarys.widght.TickProgressBar;
@@ -358,7 +357,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
      * @param songEntity 当前播放音乐
      */
     private void setNavHeadView(SongEntity songEntity) {
-        if (songEntity == null) {
+        if (songEntity == null || isDestroyed()) {
             return;
         }
         mNavTitle.setText(songEntity.title);
@@ -378,16 +377,17 @@ public class MainActivity extends BaseActivity<MainPresenter> implements
      * @param songEntity 当前播放音乐
      */
     private void setMusicBarView(SongEntity songEntity) {
-        if (!this.isDestroyed() && songEntity != null) {
-            mTxtCurSong.setText(SubTextUtil.addEllipsis(songEntity.title, 15));
-            mTxtCurSinger.setText(SubTextUtil.addEllipsis(songEntity.artistName, 15));
-            ImageLoader.getInstance().display(MainActivity.this,
-                    new ImageConfig.Builder()
-                            .url(songEntity.albumCover)
-                            .isRound(false)
-                            .placeholder(R.drawable.ic_default)
-                            .into(mImgCurSong).build());
+        if (songEntity == null || isDestroyed()) {
+            return;
         }
+        mTxtCurSong.setText(SubTextUtil.addEllipsis(songEntity.title, 15));
+        mTxtCurSinger.setText(SubTextUtil.addEllipsis(songEntity.artistName, 15));
+        ImageLoader.getInstance().display(MainActivity.this,
+                new ImageConfig.Builder()
+                        .url(songEntity.albumCover)
+                        .isRound(false)
+                        .placeholder(R.drawable.ic_default)
+                        .into(mImgCurSong).build());
     }
 
     @Override
