@@ -6,11 +6,11 @@ configurations {
 
 dependencies {
     def domainDependencies = rootProject.ext.domainDependencies
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    provided domainDependencies.javaxAnnotation
-    compile domainDependencies.javaxInject
-    compile domainDependencies.rxJava
-    compile domainDependencies.okHttp
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation domainDependencies.javaxAnnotation
+    implementation domainDependencies.javaxInject
+    implementation domainDependencies.rxJava
+    implementation domainDependencies.okHttp
 }
 
 tasks.withType(JavaCompile) {

@@ -14,7 +14,7 @@ android {
         testInstrumentationRunner globalConfiguration["testInstrumentationRunner"]
         ndk {
             moduleName = 'ImageBlurJni'
-            abiFilters "armeabi", "armeabi-v7a","x86"
+            abiFilters /*"armeabi",*/ "armeabi-v7a", "x86", "arm64-v8a"
             ldLibs "jnigraphics"
 //            ldLibs.addAll(['m', 'log', 'jnigraphics'])
             //abiFilters.addAll(['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64', 'mips', 'mips64'])
@@ -42,22 +42,22 @@ dependencies {
     def supportDependencies = rootProject.ext.supportDependencies
     def testDependencies = rootProject.ext.testDependencies
     def libDependencies = rootProject.ext.libDependencies
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile testDependencies.espresso, {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation testDependencies.espresso, {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    compile supportDependencies.appcompatV7
-    compile libDependencies.design
-    compile libDependencies.cardView
-    compile libDependencies.rxJava
-    compile libDependencies.log
-    compile libDependencies.glide
-    compile libDependencies.skinChange
-    compile libDependencies.materialDialog
-    compile libDependencies.baseAdapter
-    compile libDependencies.palette
-    compile libDependencies.rxAndroid
+    api supportDependencies.appcompatV7
+    api libDependencies.design
+    api libDependencies.cardView
+    api libDependencies.rxJava
+    api libDependencies.log
+    api libDependencies.glide
+    api libDependencies.skinChange
+    api libDependencies.materialDialog
+    api libDependencies.baseAdapter
+    api libDependencies.palette
+    api libDependencies.rxAndroid
     annotationProcessor libDependencies.glideCompiler
-    testCompile testDependencies.junit
+    testImplementation testDependencies.junit
 
 }

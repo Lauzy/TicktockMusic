@@ -28,22 +28,22 @@ android {
 dependencies {
     def testDependencies = rootProject.ext.testDependencies
     def dataDependencies = rootProject.ext.dataDependencies
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile testDependencies.espresso, {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation testDependencies.espresso, {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    compile project(':domain')
-    compile dataDependencies.rxJava
-    compile dataDependencies.dagger
+    api project(':domain')
+    api dataDependencies.rxJava
+    api dataDependencies.dagger
     annotationProcessor dataDependencies.daggerCompiler
-    compile dataDependencies.okHttp
-    compile dataDependencies.okHttpInterceptor
-    compile dataDependencies.gson
-    compile dataDependencies.retrofit
-    compile dataDependencies.gsonConverter
-    compile dataDependencies.rxJava2Adapter
-    compile dataDependencies.javaxInject
-    compile dataDependencies.androidAnnotations
-    compile dataDependencies.log
-    testCompile testDependencies.junit
+    api dataDependencies.okHttp
+    api dataDependencies.okHttpInterceptor
+    api dataDependencies.gson
+    api dataDependencies.retrofit
+    api dataDependencies.gsonConverter
+    api dataDependencies.rxJava2Adapter
+    api dataDependencies.javaxInject
+    api dataDependencies.androidAnnotations
+    api dataDependencies.log
+    testImplementation testDependencies.junit
 }

@@ -72,23 +72,21 @@ dependencies {
     def supportDependencies = rootProject.ext.supportDependencies
     def presentationDependencies = rootProject.ext.presentationDependencies
     def testDependencies = rootProject.ext.testDependencies
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile testDependencies.espresso, {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation testDependencies.espresso, {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    compile supportDependencies.appcompatV7
-    compile supportDependencies.constraint
-    compile presentationDependencies.rxAndroid
-    compile presentationDependencies.dagger
+    implementation supportDependencies.appcompatV7
+    implementation supportDependencies.constraint
+    implementation presentationDependencies.rxAndroid
+    implementation presentationDependencies.dagger
     annotationProcessor presentationDependencies.daggerCompiler
-    compile presentationDependencies.butterKnife
-    compile presentationDependencies.rxPermission
+    implementation presentationDependencies.butterKnife
+    implementation presentationDependencies.rxPermission
     annotationProcessor presentationDependencies.butterKnifeCompiler
-    testCompile testDependencies.junit
-    releaseImplementation project(':data')
-    releaseImplementation project(':libraries')
-    debugImplementation project(':data')
-    debugImplementation project(':libraries')
+    testImplementation testDependencies.junit
+    implementation project(':data')
+    implementation project(':libraries')
 }
 
 configurations.all {
